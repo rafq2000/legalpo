@@ -1,0 +1,104 @@
+/* Estilos para contenedores de anuncios */
+.ad-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto;
+  overflow: hidden;
+  max-width: 100%;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  min-height: 90px; /* Altura mínima para evitar saltos de contenido */
+}
+
+.ad-container:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.ad-container.horizontal {
+  height: 90px;
+  max-width: 728px;
+}
+
+.ad-container.rectangle {
+  height: 250px;
+  max-width: 300px;
+}
+
+.ad-container.vertical {
+  height: 600px;
+  max-width: 160px;
+}
+
+.ad-container.in-content {
+  margin: 1.5rem auto;
+  background-color: #f0f4f8; /* Color ligeramente diferente para anuncios en contenido */
+}
+
+.ad-container.sidebar {
+  margin: 1rem 0;
+}
+
+/* Placeholder para desarrollo o cuando hay errores */
+.ad-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(45deg, #f0f4f8, #f0f4f8 10px, #e5e7eb 10px, #e5e7eb 20px);
+  color: #6b7280;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Etiqueta de anuncio para cumplir con las políticas de AdSense */
+.ad-container::before {
+  content: "Anuncio";
+  display: block;
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .ad-container.horizontal {
+    height: auto;
+    min-height: 50px;
+  }
+
+  .ad-container.sidebar {
+    display: none; /* Ocultar anuncios de sidebar en móviles */
+  }
+
+  /* Reducir márgenes en móviles */
+  .ad-container {
+    margin: 0.75rem auto;
+  }
+
+  .ad-container.in-content {
+    margin: 1rem auto;
+  }
+}
+
+/* Animación sutil para mejorar la visibilidad */
+@keyframes adFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.ad-container {
+  animation: adFadeIn 0.5s ease-in-out;
+}
