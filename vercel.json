@@ -1,0 +1,6 @@
+{
+  "buildCommand": "NEXT_SKIP_ERROR_PAGES=true next build",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next"
+}

@@ -18,17 +18,24 @@ const nextConfig = {
   // Desactivar optimizaciones que causan problemas
   optimizeFonts: false,
   compress: false,
-  // Tiempo suficiente para la generación de páginas
-  staticPageGenerationTimeout: 180, // 3 minutos
+  // Desactivar completamente la prerenderización de páginas de error
+  excludeDefaultMomentLocales: true,
   experimental: {
     // Configuración mínima necesaria
     serverActions: {
       allowedOrigins: ["localhost:3000", "docuscan.vercel.app"],
     },
+    // Desactivar prerenderización de páginas de error
+    disableOptimizedLoading: true,
+    esmExternals: "loose",
   },
-  // Desactivar completamente la prerenderización
-  // https://nextjs.org/docs/pages/building-your-application/deploying/static-exports
-  generateBuildId: () => "build-" + Date.now(),
+  // Desactivar la generación de páginas específicas
+  exportPathMap: async (defaultPathMap) => {
+    // Eliminar las rutas problemáticas
+    delete defaultPathMap["/404"]
+    delete defaultPathMap["/_not-found"]
+    return defaultPathMap
+  },
   async rewrites() {
     return [
       {
@@ -36,6 +43,11 @@ const nextConfig = {
         destination: "/api/ads-txt",
       },
     ]
+  },
+  // Desactivar la generación de páginas de error
+  onDemandEntries: {
+    maxInactiveAge: 60 * 60 * 1000,
+    pagesBufferLength: 2,
   },
 }
 
