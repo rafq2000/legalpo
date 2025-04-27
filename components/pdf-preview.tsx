@@ -9,7 +9,7 @@ const pdfjsWorker = await import("pdfjs-dist/build/pdf.worker.entry")
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 interface PDFPreviewProps {
-  file: File
+  file: File | null
   className?: string
 }
 
@@ -24,10 +24,15 @@ export function PDFPreview({ file, className = "" }: PDFPreviewProps) {
         setLoading(true)
         setError(null)
 
+        if (!file) {
+          console.warn("No file provided to loadPDF")
+          return
+        }
+
         // Convertir el archivo a ArrayBuffer
         const arrayBuffer = await file.arrayBuffer()
 
-        // Cargar el documento PDF
+        // Cargar el document PDF
         const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise
 
         // Obtener la primera página
@@ -68,6 +73,9 @@ export function PDFPreview({ file, className = "" }: PDFPreviewProps) {
 
     if (file && file.type === "application/pdf") {
       loadPDF()
+    } else {
+      setPageUrl(null)
+      setLoading(false)
     }
 
     return () => {

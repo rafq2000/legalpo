@@ -10,7 +10,7 @@ import { PageLayout } from "@/components/page-layout"
 export default function CaracteristicasPage() {
   return (
     <PageLayout
-      title="Características de DocuScan AI"
+      title="Características de LegalPO"
       description="Descubre todas las herramientas y funcionalidades que ofrecemos para el análisis de documentos y consultas legales"
     >
       <section className="w-full py-12 md:py-24 lg:py-32">
@@ -198,7 +198,7 @@ export default function CaracteristicasPage() {
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">¿Listo para comenzar?</h2>
               <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Prueba DocuScan AI hoy mismo y descubre todas sus funcionalidades
+                Prueba LegalPO hoy mismo y descubre todas sus funcionalidades
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">

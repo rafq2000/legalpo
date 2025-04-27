@@ -1,10 +1,47 @@
 import Link from "next/link"
-import { Shield, FileText, Calculator, MessageSquare, CheckCircle, HelpCircle, Scale, Lightbulb } from "lucide-react"
+import { Shield, HelpCircle, Scale, Lightbulb } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { SiteHeader } from "@/components/site-header"
-import { LegalDisclaimer } from "@/components/legal-disclaimer"
-import { WhatsappContactButton } from "@/components/whatsapp-contact-button"
+import type { Metadata } from "next"
+import { FileText, Calculator, MessageSquare, CheckCircle } from "lucide-react"
+import { SiteFooter } from "@/components/site-footer"
+import SuggestionList from "@/components/suggestion-list"
+
+export const metadata: Metadata = {
+  title: "LegalPO - Herramientas legales con IA para documentos y consultas jurídicas en Chile",
+  description:
+    "Analiza documentos legales, calcula finiquitos, pensiones alimenticias y obtén respuestas a tus consultas sobre deudas y derecho laboral en Chile con inteligencia artificial.",
+  keywords:
+    "documentos legales, análisis legal, finiquito, pensión alimenticia, deudas, derecho laboral, Chile, asesoría legal, inteligencia artificial",
+  authors: [{ name: "LegalPO" }],
+  creator: "LegalPO",
+  publisher: "LegalPO",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    title: "LegalPO - Análisis de documentos legales y consultas jurídicas en Chile",
+    description:
+      "Analiza documentos legales, calcula finiquitos, pensiones alimenticias y obtén respuestas a tus consultas sobre deudas y derecho laboral en Chile.",
+    url: "https://legalpo.cl",
+    siteName: "LegalPO",
+    locale: "es_CL",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LegalPO - Análisis de documentos legales y consultas jurídicas en Chile",
+    description:
+      "Analiza documentos legales, calcula finiquitos, pensiones alimenticias y obtén respuestas a tus consultas sobre deudas y derecho laboral en Chile.",
+  },
+  generator: "Next.js",
+}
 
 export default function Home() {
   return (
@@ -24,14 +61,14 @@ export default function Home() {
               <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl">¿Tienes dudas legales?</h1>
               <h2 className="text-4xl font-semibold text-green-300">Nosotros te las explicamos claro, sin vueltas.</h2>
               <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-                Legal Po analiza tus documentos, responde tus consultas laborales o de deudas, y calcula lo que te
+                LegalPO analiza tus documentos, responde tus consultas laborales o deudas, y calcula lo que te
                 corresponde. Todo en lenguaje simple.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="text-lg">
-                <Link href="/upload">Analizar documento</Link>
+                <Link href="/analyze">Analizar documento</Link>
               </Button>
               <Button
                 asChild
@@ -40,6 +77,14 @@ export default function Home() {
                 className="bg-transparent border-white text-white hover:bg-blue-700 text-lg"
               >
                 <Link href="/ask">Hacer una consulta</Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="bg-transparent border-white text-white hover:bg-blue-700 text-lg"
+              >
+                <Link href="/calculadora-herencia">Calculadora Herencia</Link>
               </Button>
             </div>
           </div>
@@ -93,11 +138,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 md:py-24 bg-gradient-to-br from-blue-50 to-blue-100">
         <div className="container px-4 mx-auto">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col lg:flex-row gap-8">
-              <div className="lg:w-2/3">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex flex-col lg:flex-row items-center gap-12">
+              <div className="lg:w-1/2">
                 <div className="flex flex-col md:flex-row items-center bg-white rounded-2xl shadow-xl overflow-hidden h-full">
                   <div className="md:w-1/3 bg-gradient-to-br from-blue-500 to-blue-700 p-8 text-white flex items-center justify-center">
                     <div className="text-center">
@@ -110,8 +155,9 @@ export default function Home() {
 
                   <div className="md:w-2/3 p-8 md:p-10">
                     <p className="text-xl text-gray-700 italic mb-6 leading-relaxed">
-                      "Tenía miedo de que me estuvieran cobrando de más en mi finiquito. Usé la calculadora y descubrí
-                      que me debían 3 meses más. Gracias a Legal Po pude reclamar lo que me correspondía por ley."
+                      &quot;Tenía miedo de que me estuvieran cobrando de más en mi finiquito. Usé la calculadora y
+                      descubrí que me debían 3 meses más. Gracias a LegalPO pude reclamar lo que me correspondía por
+                      ley.&quot;
                     </p>
                     <div className="flex items-center">
                       <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
@@ -154,9 +200,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {/* Tarjeta 1 */}
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all rounded-xl overflow-hidden">
+            <div className="border-0 shadow-lg hover:shadow-xl transition-all rounded-xl overflow-hidden">
               <div className="h-2 bg-blue-600"></div>
-              <CardContent className="pt-6">
+              <div className="pt-6 p-4">
                 <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-5">
                   <FileText className="w-7 h-7 text-blue-600" />
                 </div>
@@ -167,13 +213,13 @@ export default function Home() {
                 <Button asChild variant="outline" className="w-full border-blue-200 text-blue-700 hover:bg-blue-50">
                   <Link href="/analyze">Subir documento</Link>
                 </Button>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Tarjeta 2 */}
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all rounded-xl overflow-hidden">
+            <div className="border-0 shadow-lg hover:shadow-xl transition-all rounded-xl overflow-hidden">
               <div className="h-2 bg-green-600"></div>
-              <CardContent className="pt-6">
+              <div className="pt-6 p-4">
                 <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-5">
                   <Calculator className="w-7 h-7 text-green-600" />
                 </div>
@@ -188,14 +234,17 @@ export default function Home() {
                   <Button asChild variant="outline" className="border-green-200 text-green-700 hover:bg-green-50">
                     <Link href="/calculadora-finiquito">Finiquito</Link>
                   </Button>
+                  <Button asChild variant="outline" className="border-green-200 text-green-700 hover:bg-green-50">
+                    <Link href="/calculadora-herencia">Herencia</Link>
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Tarjeta 3 */}
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all rounded-xl overflow-hidden">
+            <div className="border-0 shadow-lg hover:shadow-xl transition-all rounded-xl overflow-hidden">
               <div className="h-2 bg-purple-600"></div>
-              <CardContent className="pt-6">
+              <div className="pt-6 p-4">
                 <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-5">
                   <MessageSquare className="w-7 h-7 text-purple-600" />
                 </div>
@@ -211,13 +260,13 @@ export default function Home() {
                     <Link href="/ask">Deudas</Link>
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Tarjeta 4 */}
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all rounded-xl overflow-hidden">
+            <div className="border-0 shadow-lg hover:shadow-xl transition-all rounded-xl overflow-hidden">
               <div className="h-2 bg-amber-600"></div>
-              <CardContent className="pt-6">
+              <div className="pt-6 p-4">
                 <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-5">
                   <CheckCircle className="w-7 h-7 text-amber-600" />
                 </div>
@@ -228,109 +277,8 @@ export default function Home() {
                 <Button asChild variant="outline" className="w-full border-amber-200 text-amber-700 hover:bg-amber-50">
                   <Link href="/generador-contratos">Crear documento</Link>
                 </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Sección de confianza y alivio */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-blue-50 to-blue-100">
-        <div className="container px-4 mx-auto">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
-              <div className="flex flex-col md:flex-row items-center">
-                <div className="md:w-1/3 mb-8 md:mb-0 md:pr-10">
-                  <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                    <Shield className="w-12 h-12 text-blue-600" />
-                  </div>
-                </div>
-
-                <div className="md:w-2/3 text-center md:text-left">
-                  <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-4">
-                    Tranquilo, estás en el lugar correcto
-                  </h2>
-                  <p className="text-lg text-gray-600 mb-6">
-                    Sabemos que enfrentar temas legales puede ser estresante y confuso. Por eso creamos Legal Po: para
-                    que puedas entender tus derechos sin necesidad de ser abogado o gastar en consultas caras.
-                  </p>
-                  <Button asChild size="lg" className="bg-blue-700 hover:bg-blue-800 text-white px-8">
-                    <Link href="/ask">Resolver mi duda ahora</Link>
-                  </Button>
-                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-8 bg-white border-t border-b border-gray-200">
-        <div className="container px-4 mx-auto">
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-gray-100 rounded-xl p-6">
-              <div className="flex flex-col md:flex-row items-center justify-between">
-                <div className="mb-4 md:mb-0">
-                  <p className="text-sm text-gray-500 font-medium mb-2">Publicidad</p>
-                  <p className="text-gray-700 font-medium">Espacio publicitario - Banner horizontal secundario</p>
-                </div>
-                <Button variant="outline" size="sm" className="text-xs">
-                  Anunciar aquí
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Preguntas frecuentes */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="container px-4 mx-auto">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-6">Preguntas frecuentes</h2>
-            <p className="text-xl text-gray-600">Respuestas claras a tus dudas más comunes</p>
-          </div>
-
-          <div className="max-w-3xl mx-auto space-y-6">
-            <Card className="border border-gray-200">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold text-blue-900 mb-3">¿Cómo funciona Legal Po?</h3>
-                <p className="text-gray-600">
-                  Simplemente sube tu documento o escribe tu consulta. Nuestro sistema analiza el contenido y te da una
-                  explicación clara, en lenguaje simple, sobre lo que significa y cuáles son tus derechos.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-gray-200">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold text-blue-900 mb-3">¿Es seguro subir mis documentos?</h3>
-                <p className="text-gray-600">
-                  Absolutamente. Todos los documentos se procesan de forma segura y confidencial. No almacenamos tus
-                  documentos más tiempo del necesario para analizarlos y nunca compartimos tu información.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-gray-200">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold text-blue-900 mb-3">¿Necesito registrarme para usar Legal Po?</h3>
-                <p className="text-gray-600">
-                  No es necesario para usar las herramientas básicas. Sin embargo, crear una cuenta te permite acceder a
-                  todas las funcionalidades de la plataforma.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-gray-200">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold text-blue-900 mb-3">¿Las calculadoras son precisas?</h3>
-                <p className="text-gray-600">
-                  Nuestras calculadoras utilizan las fórmulas y parámetros establecidos por la ley actual. Sin embargo,
-                  cada caso puede tener particularidades, por lo que te recomendamos usar los resultados como una
-                  referencia informativa.
-                </p>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>
@@ -345,7 +293,7 @@ export default function Home() {
                   Crea tu cuenta gratuita y accede a todas las herramientas
                 </h2>
                 <p className="text-xl text-blue-100 mb-8">
-                  Regístrate para acceder a todas las funcionalidades de Legal Po.
+                  Regístrate para acceder a todas las funcionalidades de LegalPO.
                 </p>
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-start">
@@ -399,7 +347,7 @@ export default function Home() {
                       <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center mr-3">
                         <Shield className="w-5 h-5 text-white" />
                       </div>
-                      <span className="font-semibold text-lg">Legal Po</span>
+                      <span className="font-semibold text-lg">LegalPO</span>
                     </div>
                     <div className="bg-green-500/20 text-green-300 text-xs font-medium px-3 py-1 rounded-full">
                       Cuenta Gratuita
@@ -439,17 +387,13 @@ export default function Home() {
       </section>
 
       {/* Footer con mensaje final de empatía */}
-      <footer className="bg-blue-900 text-white py-6">
-        <div className="container mx-auto px-4 text-center">
-          <p>© {new Date().getFullYear()} Legal Po. Todos los derechos reservados.</p>
+      <section className="py-8 bg-white">
+        <div className="container px-4 mx-auto">
+          <h2 className="text-2xl font-bold text-blue-900 mb-4">Sugerencias Recientes</h2>
+          <SuggestionList />
         </div>
-      </footer>
-
-      {/* Legal Disclaimer */}
-      <LegalDisclaimer />
-
-      {/* WhatsApp Contact Button */}
-      <WhatsappContactButton />
+      </section>
+      <SiteFooter />
     </div>
   )
 }

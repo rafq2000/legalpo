@@ -22,15 +22,13 @@ export default function QuienesSomosPage() {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="text-3xl font-bold text-center">Quiénes Somos</CardTitle>
-            <CardDescription className="text-center text-lg">
-              Conoce más sobre DocuScan AI y nuestro equipo
-            </CardDescription>
+            <CardDescription className="text-center text-lg">Conoce más sobre LegalPO y nuestro equipo</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
               <h2 className="text-2xl font-semibold mb-3">Nuestra Misión</h2>
               <p className="text-gray-700 dark:text-gray-300">
-                En DocuScan AI, nuestra misión es democratizar el acceso a la información legal en Chile, proporcionando
+                En LegalPO, nuestra misión es democratizar el acceso a la información legal en Chile, proporcionando
                 herramientas tecnológicas que permitan a cualquier persona entender y gestionar sus asuntos legales de
                 manera sencilla y eficiente.
               </p>

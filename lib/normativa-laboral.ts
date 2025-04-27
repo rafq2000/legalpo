@@ -8,7 +8,7 @@ export const normativaLaboral = {
       "8": "Toda prestación de servicios en los términos señalados en el artículo anterior, hace presumir la existencia de un contrato de trabajo.",
       "9": "El contrato de trabajo es consensual; deberá constar por escrito en los plazos a que se refiere el inciso siguiente, y firmarse por ambas partes en dos ejemplares, quedando uno en poder de cada contratante.",
       "10": "El contrato de trabajo debe contener, a lo menos, las siguientes estipulaciones: 1.- lugar y fecha del contrato; 2.- individualización de las partes con indicación de la nacionalidad y fechas de nacimiento e ingreso del trabajador; 3.- determinación de la naturaleza de los servicios y del lugar o ciudad en que hayan de prestarse; 4.- monto, forma y período de pago de la remuneración acordada; 5.- duración y distribución de la jornada de trabajo, salvo que en la empresa existiere el sistema de trabajo por turno, caso en el cual se estará a lo dispuesto en el reglamento interno; 6.- plazo del contrato, y 7.- demás pactos que acordaren las partes.",
-      "22": "La duración de la jornada ordinaria de trabajo no excederá de cuarenta y cinco horas semanales.",
+      "22": "La duración de la jornada ordinaria de trabajo no excederá de cuarenta y cinco horas semanales. A partir del 26 de abril de 2023, con la entrada en vigencia de la Ley 21.505, se inicia la reducción progresiva de la jornada laboral de 45 a 40 horas semanales, según el siguiente calendario: a) A partir del 3 de mayo de 2024: reducción a 44 horas semanales; b) A partir del 3 de mayo de 2026: reducción a 42 horas semanales; c) A partir del 3 de mayo de 2028: reducción a 40 horas semanales. Las empresas con ventas anuales inferiores a 75.000 UF tendrán un plazo adicional de 18 meses para implementar cada etapa de reducción.",
       "28": "El máximo semanal establecido en el inciso primero del artículo 22 no podrá distribuirse en más de seis ni en menos de cinco días.",
       "31": "En las faenas en que la labor diaria deba dividirse en dos partes, con un descanso que no sea inferior a media hora, se considerará como trabajado el período de descanso.",
       "32": "Las horas extraordinarias sólo podrán pactarse para atender necesidades o situaciones temporales de la empresa. Dichos pactos deberán constar por escrito y tener una vigencia transitoria no superior a tres meses, pudiendo renovarse por acuerdo de las partes.",
@@ -99,7 +99,14 @@ export const normativaLaboral = {
         "Los equipos, las herramientas y los materiales para el trabajo a distancia o para el teletrabajo, incluidos los elementos de protección personal, deberán ser proporcionados por el empleador al trabajador, y este último no podrá ser obligado a utilizar elementos de su propiedad.",
     },
   },
+  "LEY-21505_26-ABR-2023": {
+    titulo: "REDUCE LA JORNADA LABORAL A 40 HORAS SEMANALES",
+    articulos: {
+      "1": "Modifícase el Código del Trabajo en el siguiente sentido: 1) Reemplázase, en el inciso primero del artículo 22, la expresión 'cuarenta y cinco' por 'cuarenta'.",
+      "2": "La reducción de la jornada ordinaria máxima semanal dispuesta en esta ley será gradual, de acuerdo al siguiente cronograma: a) A contar del 3 de mayo de 2024, la jornada ordinaria máxima semanal será de cuarenta y cuatro horas. b) A contar del 3 de mayo de 2026, la jornada ordinaria máxima semanal será de cuarenta y dos horas. c) A contar del 3 de mayo de 2028, la jornada ordinaria máxima semanal será de cuarenta horas.",
+      "3": "Las micro, pequeñas y medianas empresas, de conformidad con lo dispuesto en el inciso segundo del artículo 505 bis del Código del Trabajo, tendrán un plazo adicional de dieciocho meses para implementar cada una de las etapas de reducción de jornada.",
+      "4": "La reducción de la jornada ordinaria de trabajo deberá ir acompañada de medidas de adaptabilidad pactadas, que podrán considerar: a) Distribución de la jornada en 4 días, con un máximo de 10 horas diarias. b) Bolsas de horas extraordinarias. c) Pactos sobre distribución de jornada y descansos para sectores especiales.",
+      "5": "La reducción de la jornada no podrá significar una disminución de las remuneraciones de los trabajadores.",
+    },
+  },
 }
-
-// Declare PK to fix the error
-const PK = null

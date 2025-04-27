@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { Shield } from "lucide-react"
-import { useSession as useNextAuthSession, signOut } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -16,9 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useEffect, useState } from "react"
 
 export function SiteHeader() {
-  const session = useNextAuthSession()
-  const status = session?.status || "unauthenticated"
-  const userData = session?.data
+  const { data: session, status } = useSession()
   const [mounted, setMounted] = useState(false)
 
   // Este useEffect asegura que el componente solo se renderice en el cliente
@@ -40,7 +38,7 @@ export function SiteHeader() {
   }
 
   // Obtener el nombre para mostrar
-  const displayName = userData?.user?.name || (userData?.user?.email ? userData.user.email.split("@")[0] : "Usuario")
+  const displayName = session?.user?.name || (session?.user?.email ? session.user.email.split("@")[0] : "Usuario")
 
   return (
     <header className="bg-blue-900 text-white py-4 sticky top-0 z-50 w-full border-b border-blue-800">
@@ -48,35 +46,24 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <Shield className="h-6 w-6" />
           <Link href="/" className="font-bold text-xl">
-            Legal Po
+            LegalPO
           </Link>
         </div>
 
-        {mounted && status === "authenticated" && userData?.user ? (
+        {mounted && status === "authenticated" && session?.user ? (
           <div className="flex items-center gap-4">
             <span className="text-white font-medium">Bienvenido, {displayName}</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={userData?.user?.image || ""} alt={displayName} />
+                    <AvatarImage src={session.user.image || ""} alt={displayName} />
                     <AvatarFallback className="bg-blue-700">{getInitials(displayName)}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Link href="/profile" className="w-full">
-                    Perfil
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/dashboard" className="w-full">
-                    Dashboard
-                  </Link>
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })} className="text-red-600 cursor-pointer">
                   Cerrar sesión

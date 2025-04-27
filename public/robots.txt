@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://v0-docu-scan.vercel.app/sitemap.xml

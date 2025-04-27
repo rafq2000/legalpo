@@ -7,35 +7,26 @@ import { useEffect, useState } from "react"
 import { Loader2 } from "lucide-react"
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const session = useSession()
+  const { data: session, status } = useSession()
   const router = useRouter()
   const pathname = usePathname()
   const [isLoading, setIsLoading] = useState(true)
-  const [isClient, setIsClient] = useState(false)
-
-  // Detectar si estamos en el cliente
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
 
   useEffect(() => {
-    // Solo ejecutar la lógica de redirección en el cliente
-    if (!isClient) return
-
-    if (session.status === "loading") {
+    if (status === "loading") {
       setIsLoading(true)
       return
     }
 
-    if (session.status === "unauthenticated") {
+    if (status === "unauthenticated") {
       router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`)
     } else {
       setIsLoading(false)
     }
-  }, [session.status, router, pathname, isClient])
+  }, [status, router, pathname])
 
-  // Si estamos en el servidor o cargando, mostrar un placeholder
-  if (!isClient || isLoading || session.status === "loading") {
+  // Mientras carga o verifica la sesión, mostramos un spinner
+  if (isLoading || status === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />

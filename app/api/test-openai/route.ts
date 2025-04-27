@@ -1,25 +1,25 @@
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
 
-// Usar la variable de entorno para la API key
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY
-
-export async function GET() {
-  try {
-    // Verificar si la API key está disponible
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "API key de OpenAI no configurada.",
-        },
-        { status: 500 },
-      )
-    }
-
-    const openai = new OpenAI({
+// Configuración de OpenAI con la API key proporcionada
+const openai = process.env.OPENAI_API_KEY
+  ? new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     })
+  : null
+
+export async function GET(req: Request) {
+  try {
+    // Check if OpenAI client is available
+    if (!openai || !process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        {
+          error: "OPENAI_API_KEY no está configurada",
+          status: "error",
+        },
+        { status: 503 },
+      )
+    }
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",

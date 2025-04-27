@@ -10,7 +10,7 @@ export default function PrivacidadPage() {
           <div className="mr-4 flex">
             <Link href="/" className="mr-6 flex items-center space-x-2">
               <Shield className="h-6 w-6 text-primary" />
-              <span className="font-bold">DocuScan AI</span>
+              <span className="font-bold">LegalPO</span>
             </Link>
             <Button variant="ghost" size="sm" asChild className="gap-1">
               <Link href="/">
@@ -24,14 +24,14 @@ export default function PrivacidadPage() {
 
       <main className="flex-1 container py-12">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Política de Privacidad</h1>
+          <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Política de Privacidad</h1>
 
           <div className="prose max-w-none">
             <p>Última actualización: 25 de marzo de 2025</p>
 
             <h2>1. Introducción</h2>
             <p>
-              En DocuScan AI, accesible desde v0-docu-scan.vercel.app, una de nuestras principales prioridades es la
+              En LegalPO, accesible desde v0-docu-scan.vercel.app, una de nuestras principales prioridades es la
               privacidad de nuestros visitantes. Esta Política de Privacidad documenta los tipos de información que
               recopilamos y registramos y cómo la utilizamos.
             </p>
@@ -60,9 +60,9 @@ export default function PrivacidadPage() {
 
             <h2>4. Cookies</h2>
             <p>
-              DocuScan AI utiliza cookies para mejorar la experiencia del usuario. Las cookies son pequeños archivos que
-              un sitio o su proveedor de servicios transfiere al disco duro de tu computadora a través de tu navegador
-              web (si lo permites).
+              LegalPO utiliza cookies para mejorar la experiencia del usuario. Las cookies son pequeños archivos que un
+              sitio o su proveedor de servicios transfiere al disco duro de tu computadora a través de tu navegador web
+              (si lo permites).
             </p>
 
             <h2>5. Servicios de terceros</h2>
@@ -89,7 +89,7 @@ export default function PrivacidadPage() {
             <h2>8. Contacto</h2>
             <p>
               Si tienes alguna pregunta sobre esta Política de Privacidad, puedes contactarnos por correo electrónico a:
-              privacy@docuscan-ai.com
+              privacy@legalpo.com
             </p>
           </div>
         </div>
@@ -98,7 +98,7 @@ export default function PrivacidadPage() {
       <footer className="w-full border-t py-6 md:py-0">
         <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            © 2025 DocuScan AI. Todos los derechos reservados.
+            © 2025 LegalPO. Todos los derechos reservados.
           </p>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <Link href="/terminos" className="underline underline-offset-4">

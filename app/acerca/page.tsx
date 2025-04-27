@@ -14,7 +14,7 @@ export default function AcercaPage() {
           <div className="mr-4 flex">
             <Link href="/" className="mr-6 flex items-center space-x-2">
               <Shield className="h-6 w-6 text-primary" />
-              <span className="font-bold">DocuScan AI</span>
+              <span className="font-bold">LegalPO AI</span>
             </Link>
             <Button variant="ghost" size="sm" asChild className="gap-1">
               <Link href="/">
@@ -36,7 +36,7 @@ export default function AcercaPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Acerca de DocuScan AI</h1>
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Acerca de LegalPO AI</h1>
                 <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Nuestra misión es hacer que la información legal sea accesible para todos a través de tecnología
                   avanzada
@@ -52,7 +52,7 @@ export default function AcercaPage() {
               <div className="space-y-4">
                 <h2 className="text-3xl font-bold tracking-tighter">Nuestra historia</h2>
                 <p className="text-muted-foreground md:text-xl/relaxed">
-                  DocuScan AI nació en 2023 con la visión de democratizar el acceso a la información legal. Fundada por
+                  LegalPO AI nació en 2023 con la visión de democratizar el acceso a la información legal. Fundada por
                   un equipo de abogados y desarrolladores de software, nuestra plataforma combina experiencia legal con
                   tecnología de vanguardia.
                 </p>
@@ -68,7 +68,7 @@ export default function AcercaPage() {
                   escaneados o fotografiados.
                 </p>
                 <p className="text-muted-foreground md:text-xl/relaxed">
-                  Hoy, DocuScan AI se ha convertido en una herramienta esencial para estudiantes, profesionales y
+                  Hoy, LegalPO AI se ha convertido en una herramienta esencial para estudiantes, profesionales y
                   cualquier persona que necesite comprender documentos legales o consultar sobre sus derechos.
                 </p>
 

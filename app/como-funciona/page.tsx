@@ -32,9 +32,9 @@ export default function ComoFuncionaPage() {
 
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle className="text-3xl font-bold text-center">Cómo Funciona</CardTitle>
+            <CardTitle className="text-3xl font-bold text-center">Cómo Funciona LegalPO</CardTitle>
             <CardDescription className="text-center text-lg">
-              Descubre cómo DocuScan AI puede ayudarte con tus consultas legales
+              Descubre cómo LegalPO puede ayudarte con tus consultas legales
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-8">

@@ -1,8 +1,10 @@
 "use client"
 
+import { Label } from "@/components/ui/label"
+
 import type React from "react"
 import { useState, useEffect } from "react"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -11,11 +13,10 @@ import { Shield, Mail, Lock, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
-import { Label } from "@/components/ui/label"
-import { useSafeSession } from "@/hooks/use-safe-session" // Importar el hook seguro
 
 export default function LoginPage() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams?.get("callbackUrl") || "/"
 
@@ -23,23 +24,19 @@ export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
-  const { data: session, status } = useSafeSession() // Usa el hook seguro en lugar de useSession()
-  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  useEffect(() => {
-    if (isClient && status === "authenticated") {
+    if (status === "authenticated") {
       router.push(callbackUrl)
     }
-  }, [callbackUrl, router, status, isClient])
+  }, [status, router, callbackUrl])
 
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true)
       setError("")
+      // Set the disclaimer as accepted when signing in with Google
+      localStorage.setItem("legalpo-disclaimer-accepted", "true")
       await signIn("google", { callbackUrl })
     } catch (error) {
       setError("Ocurrió un error al iniciar sesión con Google. Por favor, intenta de nuevo.")
@@ -80,7 +77,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
       <SiteHeader />
       <main className="flex-1 container py-10">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
@@ -98,57 +95,12 @@ export default function LoginPage() {
           )}
 
           <div className="grid gap-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid gap-2">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Correo electrónico</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      placeholder="nombre@ejemplo.com"
-                      type="email"
-                      autoCapitalize="none"
-                      autoComplete="email"
-                      autoCorrect="off"
-                      disabled={isLoading}
-                      className="pl-9"
-                    />
-                  </div>
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="password">Contraseña</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      placeholder="••••••••"
-                      type="password"
-                      autoCapitalize="none"
-                      autoComplete="current-password"
-                      disabled={isLoading}
-                      className="pl-9"
-                    />
-                  </div>
-                </div>
-                <Button disabled={isLoading} type="submit" className="bg-primary text-primary-foreground">
-                  {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
-                </Button>
-              </div>
-            </form>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">O continúa con</span>
-              </div>
-            </div>
+            {/* Primero el botón de Google */}
             <Button
               variant="outline"
               type="button"
               disabled={isLoading}
-              onClick={() => router.push("/auth/google")}
+              onClick={handleGoogleSignIn}
               className="flex items-center justify-center gap-2"
             >
               <svg width="20" height="20" viewBox="0 0 24 24">
@@ -171,6 +123,73 @@ export default function LoginPage() {
               </svg>
               Iniciar sesión con Google
             </Button>
+
+            {/* Luego el disclaimer */}
+            <div className="bg-amber-50 p-3 border border-amber-200 rounded-md text-sm">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="text-amber-600 mt-0.5 h-4 w-4 flex-shrink-0" />
+                <p className="text-amber-800 text-xs">
+                  LegalPO es una herramienta informativa que no reemplaza la asesoría profesional de un abogado. La
+                  información proporcionada es solo una guía educativa y no constituye consejo legal. Para situaciones
+                  específicas, recomendamos consultar con un profesional del derecho calificado. Al iniciar sesión con
+                  Google, aceptas estos términos.
+                </p>
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">O con correo y contraseña</span>
+              </div>
+            </div>
+
+            {/* Finalmente el formulario de correo y contraseña */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid gap-2">
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Correo electrónico</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      placeholder="nombre@ejemplo.com"
+                      type="email"
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      disabled={isLoading}
+                      className="pl-9"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="password">Contraseña</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      placeholder="••••••••"
+                      type="password"
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      disabled={isLoading}
+                      className="pl-9"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  <Button disabled={isLoading} type="submit" className="bg-primary text-primary-foreground">
+                    {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
+                  </Button>
+                </div>
+              </div>
+            </form>
           </div>
 
           <p className="px-8 text-center text-sm text-muted-foreground">

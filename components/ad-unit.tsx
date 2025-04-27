@@ -17,20 +17,13 @@ export function AdUnit({ slot, format = "auto", responsive = true, className = "
 
   useEffect(() => {
     // Solo ejecutar en el cliente y solo si el sitio está en producción
-    if (typeof window !== "undefined" && process.env.NODE_ENV === "production") {
+    if (typeof window !== "undefined") {
       try {
         // Crear un observador de intersección para cargar los anuncios solo cuando son visibles
         const observer = new IntersectionObserver(
           (entries) => {
             if (entries[0].isIntersecting && !isLoaded) {
               setIsVisible(true)
-
-              // Establecer un timeout para detectar si el anuncio no se carga
-              const timeout = setTimeout(() => {
-                if (adRef.current && adRef.current.clientHeight <= 10) {
-                  setAdError(true)
-                }
-              }, 3000)
 
               // Cargar el anuncio
               try {
@@ -40,8 +33,6 @@ export function AdUnit({ slot, format = "auto", responsive = true, className = "
                 console.error("Error al cargar el anuncio:", error)
                 setAdError(true)
               }
-
-              return () => clearTimeout(timeout)
             }
           },
           { threshold: 0.1 },
@@ -73,12 +64,11 @@ export function AdUnit({ slot, format = "auto", responsive = true, className = "
   }
 
   return (
-    <div className={`ad-container relative ${className}`}>
-      <div className="text-xs text-gray-500 text-center mb-1">Anuncio</div>
+    <div className={`ad-container ${className}`}>
       <ins
         ref={adRef}
         className="adsbygoogle"
-        style={{ display: "block" }}
+        style={{ display: "block", width: "100%", height: "100%" }}
         data-ad-client="ca-pub-3753519605655251"
         data-ad-slot={slot}
         data-ad-format={format}

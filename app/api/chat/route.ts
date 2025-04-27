@@ -16,7 +16,9 @@ export async function POST(req: Request) {
   }
 }
 
-// Modificar la función analizarConsulta para enfocarse en deudas
+// El problema es que la respuesta podría estar usando formato Markdown implícitamente.
+// Vamos a modificar la función analizarConsulta para asegurarnos de que no use formato Markdown.
+
 function analizarConsulta(consulta: string) {
   // Siempre enfocarse en deudas, independientemente de la consulta
   if (consulta.includes("5 millones") || consulta.includes("deuda grande")) {

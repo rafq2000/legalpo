@@ -10,10 +10,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { TextToSpeech } from "@/components/text-to-speech"
 import { ShareButton } from "@/components/share-button"
 
+// Importar desde el archivo de client-analytics
+import { trackEvent } from "@/lib/client-analytics"
+
 interface Message {
   role: "user" | "assistant"
   content: string
-  model?: string
 }
 
 interface DocumentChatProps {
@@ -85,7 +87,6 @@ export function DocumentChat({ documentText }: DocumentChatProps) {
           role: "assistant",
           content:
             data.analysis || "No pude analizar el documento correctamente. Por favor, intenta con otra pregunta.",
-          model: data.model || "IA",
         }
 
         setMessages((prev) => [...prev, assistantMessage])
@@ -101,6 +102,11 @@ export function DocumentChat({ documentText }: DocumentChatProps) {
       } finally {
         setIsLoading(false)
       }
+
+      trackEvent("document_chat", {
+        question: messageText.trim() || input,
+        documentLength: documentText.length,
+      })
     },
     [input, documentText, isLoading],
   )
@@ -141,7 +147,7 @@ export function DocumentChat({ documentText }: DocumentChatProps) {
           <TextToSpeech text={getAllMessagesText()} label="Leer conversación" />
           {messages.length > 1 && (
             <ShareButton
-              title="Consulta sobre documento en Legal Po"
+              title="Consulta sobre documento en LegalPO"
               text={getAllMessagesText()}
               size="sm"
               variant="ghost"
@@ -175,16 +181,7 @@ export function DocumentChat({ documentText }: DocumentChatProps) {
             }`}
           >
             <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <p className="whitespace-pre-wrap text-sm sm:text-base">{message.content}</p>
-                {message.model && message.role === "assistant" && (
-                  <div className="mt-2">
-                    <Badge variant="outline" className="text-xs">
-                      Modelo: {message.model}
-                    </Badge>
-                  </div>
-                )}
-              </div>
+              <p className="whitespace-pre-wrap text-sm sm:text-base">{message.content}</p>
               {message.role === "assistant" && (
                 <div className="ml-2 mt-1 flex-shrink-0">
                   <TextToSpeech text={message.content} label="Leer respuesta" />

@@ -4,14 +4,16 @@ import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Send, Shield, Loader2, MessageSquare } from "lucide-react"
+import { useSession } from "next-auth/react"
+import { ArrowLeft, Send, Shield, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { TextToSpeech } from "@/components/text-to-speech"
-import { Badge } from "@/components/ui/badge"
-import { useSafeSession } from "@/hooks/use-safe-session" // Use the safe session hook
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Separator } from "@/components/ui/separator"
 
 // Importa el componente AdUnit al inicio del archivo
 import { AdUnit } from "@/components/ad-unit"
@@ -24,11 +26,10 @@ interface Message {
   role: string
   content: string
   title?: string
-  model?: string
 }
 
 export default function AskPage() {
-  const { data: session, status } = useSafeSession() // Use the safe session hook
+  const { data: session, status } = useSession()
   const router = useRouter()
   const [userId, setUserId] = useState<string | null>(null)
   const [input, setInput] = useState<string>("")
@@ -36,24 +37,15 @@ export default function AskPage() {
     {
       role: "assistant",
       content:
-        "Hola, soy el asistente legal especializado en deudas de Legal Po. ¿En qué puedo ayudarte con tus consultas sobre deudas?",
-      title: "Asistente Legal Legal Po",
+        "Hola, soy el asistente legal especializado en deudas de LegalPO. ¿En qué puedo ayudarte con tus consultas sobre deudas?",
+      title: "Asistente Legal LegalPO",
     },
   ])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true)
-  const [isClient, setIsClient] = useState<boolean>(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Set isClient to true when component mounts (client-side only)
   useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  useEffect(() => {
-    // Only run auth check on client side
-    if (!isClient) return
-
     // Verificar si el usuario está autenticado
     if (status === "loading") {
       setIsAuthChecking(true)
@@ -73,17 +65,15 @@ export default function AskPage() {
     if (storedUserId) {
       setUserId(storedUserId)
     }
-  }, [status, router, isClient])
+  }, [status, router])
 
   useEffect(() => {
     // Scroll to bottom when messages change
-    if (isClient) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-    }
-  }, [messages, isClient])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
 
   // Si está cargando o no está autenticado, mostrar pantalla de carga
-  if (!isClient || isAuthChecking || status === "loading" || status === "unauthenticated") {
+  if (isAuthChecking || status === "loading" || status === "unauthenticated") {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
@@ -126,8 +116,7 @@ export default function AskPage() {
       const assistantMessage: Message = {
         role: "assistant",
         content: data.response || "No pude procesar tu consulta. Por favor, intenta con otra pregunta.",
-        title: "Asistente Legal Legal Po",
-        model: data.model || "IA",
+        title: "Asistente Legal LegalPO",
       }
 
       setMessages((prev) => [...prev, assistantMessage])
@@ -140,7 +129,7 @@ export default function AskPage() {
           role: "assistant",
           content:
             "Entiendo tu situación. Para poder ayudarte mejor, ¿podrías proporcionar más detalles sobre tus deudas? Por ejemplo, ¿qué tipo de deudas tienes y hace cuánto tiempo dejaste de pagarlas?",
-          title: "Asistente Legal Legal Po",
+          title: "Asistente Legal LegalPO",
         },
       ])
     } finally {
@@ -160,7 +149,7 @@ export default function AskPage() {
           <div className="mr-4 flex">
             <Link href="/" className="mr-6 flex items-center space-x-2">
               <Shield className="h-6 w-6 text-primary" />
-              <span className="font-bold">Legal Po</span>
+              <span className="font-bold">LegalPO</span>
             </Link>
             <Button variant="ghost" size="sm" asChild className="gap-1">
               <Link href="/">
@@ -172,122 +161,202 @@ export default function AskPage() {
         </div>
       </header>
 
-      {/* Anuncio en la parte superior */}
-      <div className="container py-4 mt-2">
-        <AdUnit slot="6543210987" format="horizontal" className="horizontal" />
-      </div>
+      <main className="flex-1">
+        <div className="container mx-auto py-6">
+          <h1 className="text-3xl font-bold mb-2 text-center">Consulta sobre deudas</h1>
+          <p className="text-center mb-6 text-muted-foreground">
+            Haz preguntas sobre deudas, cobranzas y tus derechos como deudor
+          </p>
 
-      <main className="flex-1 container py-4 sm:py-6 px-4 sm:px-6">
-        <div className="mx-auto max-w-3xl">
-          <div className="flex justify-between items-center mb-4 sm:mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold">Consulta sobre deudas</h1>
-            <TextToSpeech text={getAllMessagesText()} label="Leer conversación" />
+          {/* Anuncio en la parte superior - movido aquí para mantener el flujo */}
+          <div className="mb-6">
+            <AdUnit slot="6543210987" format="horizontal" className="horizontal" />
           </div>
 
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Asistente legal especializado en deudas</CardTitle>
-              <CardDescription>
-                Realiza consultas sobre tus deudas, cobranzas y tus derechos como deudor
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="bg-muted p-4 rounded-lg mb-4">
-                <p className="text-sm">Este asistente puede ayudarte con información sobre:</p>
-                <ul className="list-disc pl-5 mt-2 space-y-1 text-sm">
-                  <li>Prescripción de deudas</li>
-                  <li>Procesos de cobranza judicial y extrajudicial</li>
-                  <li>Derechos del deudor</li>
-                  <li>Negociación con acreedores</li>
-                  <li>Procedimientos de reorganización de deudas</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mx-auto max-w-4xl">
+            <Tabs defaultValue="chat" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 bg-blue-50">
+                <TabsTrigger value="chat">Chat</TabsTrigger>
+                <TabsTrigger value="info">Información</TabsTrigger>
+              </TabsList>
 
-          {/* Anuncio entre la información y el chat - optimizado */}
-          <div className="my-6">
-            <AdUnit slot="3456789012" format="horizontal" className="horizontal in-content" />
-          </div>
-
-          <div className="bg-card border rounded-lg overflow-hidden">
-            <div className="p-4 border-b bg-muted">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <MessageSquare className="h-5 w-5 mr-2 text-primary" />
-                  <h2 className="font-semibold">Chat con asistente legal</h2>
-                </div>
-                <div className="flex items-center gap-2">
-                  <TextToSpeech text={getAllMessagesText()} label="Leer conversación" />
-                  {messages.length > 1 && (
-                    <ShareButton
-                      title="Consulta legal en Legal Po"
-                      text={getAllMessagesText()}
-                      size="sm"
-                      variant="ghost"
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 h-[300px] sm:h-[400px] overflow-y-auto">
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`mb-4 ${message.role === "user" ? "flex justify-end" : "flex justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[80%] p-3 rounded-lg ${
-                      message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
-                    }`}
-                  >
-                    <div className="flex justify-between items-start">
-                      {message.title && message.role === "assistant" && (
-                        <div className="font-semibold text-xs mb-1">{message.title}</div>
-                      )}
-                      {message.role === "assistant" && (
-                        <div className="ml-2 mt-1 flex-shrink-0">
-                          <TextToSpeech text={message.content} label="Leer respuesta" />
+              <TabsContent value="chat" className="mt-6">
+                <Card className="border-blue-100">
+                  <CardHeader className="bg-blue-50 border-b border-blue-100">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Asistente Legal de Deudas</CardTitle>
+                        <CardDescription>
+                          Haz preguntas sobre deudas, cobranzas y tus derechos como deudor
+                        </CardDescription>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <TextToSpeech text={getAllMessagesText()} label="Leer conversación" />
+                        {messages.length > 1 && (
+                          <ShareButton
+                            title="Consulta sobre deudas en LegalPO"
+                            text={messages
+                              .map((msg) => `${msg.role === "user" ? "Yo: " : "Asistente: "}${msg.content}`)
+                              .join("\n\n")}
+                            size="sm"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <div className="space-y-4 h-[400px] overflow-y-auto p-4 rounded-lg border-0">
+                      {messages.map((message, index) => (
+                        <div
+                          key={index}
+                          className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                        >
+                          <div
+                            className={`max-w-[80%] p-3 rounded-lg ${
+                              message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+                            }`}
+                          >
+                            <div className="flex justify-between items-start">
+                              {message.title && message.role === "assistant" && (
+                                <div className="font-semibold text-xs mb-1">{message.title}</div>
+                              )}
+                              {message.role === "assistant" && (
+                                <div className="ml-2 mt-1 flex-shrink-0">
+                                  <TextToSpeech text={message.content} label="Leer respuesta" />
+                                </div>
+                              )}
+                            </div>
+                            <div className="whitespace-pre-wrap">{message.content}</div>
+                          </div>
+                        </div>
+                      ))}
+                      {isLoading && (
+                        <div className="flex justify-start mb-4">
+                          <div className="bg-muted p-3 rounded-lg flex items-center">
+                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                            <span>Procesando tu consulta...</span>
+                          </div>
                         </div>
                       )}
+                      <div ref={messagesEndRef} />
                     </div>
-                    <div className="whitespace-pre-wrap">{message.content}</div>
-                    {message.model && message.role === "assistant" && (
-                      <div className="mt-2">
-                        <Badge variant="outline" className="text-xs">
-                          Modelo: {message.model}
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-              {isLoading && (
-                <div className="flex justify-start mb-4">
-                  <div className="bg-muted p-3 rounded-lg flex items-center">
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    <span>Procesando tu consulta...</span>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
 
-            <div className="p-4 border-t">
-              <form onSubmit={handleSubmit} className="flex gap-2">
-                <Textarea
-                  placeholder="Escribe tu consulta sobre deudas..."
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  className="flex-1 min-h-[60px] sm:min-h-[80px]"
-                  disabled={isLoading}
-                />
-                <Button type="submit" size="icon" disabled={isLoading || !input.trim()} className="h-10 w-10">
-                  <Send className="h-4 w-4" />
-                  <span className="sr-only">Enviar mensaje</span>
-                </Button>
-              </form>
+                    <div className="p-4 border-t">
+                      <form onSubmit={handleSubmit} className="flex gap-2">
+                        <Textarea
+                          placeholder="Escribe tu consulta sobre deudas..."
+                          value={input}
+                          onChange={(e) => setInput(e.target.value)}
+                          className="flex-1 min-h-[60px] sm:min-h-[80px]"
+                          disabled={isLoading}
+                        />
+                        <Button type="submit" size="icon" disabled={isLoading || !input.trim()} className="h-10 w-10">
+                          <Send className="h-4 w-4" />
+                          <span className="sr-only">Enviar mensaje</span>
+                        </Button>
+                      </form>
+                    </div>
+                  </CardContent>
+                </Card>
+                <div className="mt-4 text-sm text-muted-foreground p-2 bg-gray-50 rounded-lg">
+                  <strong>Nota:</strong> Este asistente proporciona información general basada en la legislación
+                  chilena. Para asesoría legal específica, consulta con un abogado.
+                </div>
+              </TabsContent>
+
+              <TabsContent value="info" className="mt-6">
+                <Card className="border-blue-100">
+                  <CardHeader className="bg-blue-50 border-b border-blue-100">
+                    <CardTitle>Normativa sobre Deudas en Chile</CardTitle>
+                    <CardDescription>
+                      Información sobre las principales leyes relacionadas con deudas en Chile
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4 py-4">
+                    <p>
+                      La legislación chilena contiene diversas normas que regulan las deudas, su cobro y los derechos de
+                      los deudores. A continuación encontrarás información sobre las principales normativas.
+                    </p>
+
+                    <Separator className="my-4" />
+
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="item-1">
+                        <AccordionTrigger>Código Civil</AccordionTrigger>
+                        <AccordionContent>
+                          <p>
+                            El Código Civil regula las obligaciones y contratos, incluyendo las deudas. Establece los
+                            plazos de prescripción:
+                          </p>
+                          <ul className="list-disc pl-6 mt-2 space-y-1">
+                            <li>Acciones ejecutivas: prescriben en 5 años</li>
+                            <li>Acciones ordinarias: prescriben en 10 años</li>
+                            <li>La prescripción debe ser alegada en tribunales, no opera automáticamente</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="item-2">
+                        <AccordionTrigger>Ley 19.496 (Protección al Consumidor)</AccordionTrigger>
+                        <AccordionContent>
+                          <p>La Ley de Protección al Consumidor regula las gestiones de cobranza extrajudicial:</p>
+                          <ul className="list-disc pl-6 mt-2 space-y-1">
+                            <li>Prohíbe el hostigamiento al deudor</li>
+                            <li>
+                              Establece horarios permitidos para contactar al deudor (8:00 a 20:00 hrs en días hábiles)
+                            </li>
+                            <li>Regula los costos de cobranza extrajudicial</li>
+                            <li>Prohíbe informar públicamente la morosidad</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="item-3">
+                        <AccordionTrigger>Ley 20.720 (Reorganización y Liquidación)</AccordionTrigger>
+                        <AccordionContent>
+                          <p>La Ley 20.720 establece procedimientos para personas con problemas de insolvencia:</p>
+                          <ul className="list-disc pl-6 mt-2 space-y-1">
+                            <li>Procedimiento Concursal de Renegociación: para deudas superiores a 80 UF</li>
+                            <li>Procedimiento Concursal de Liquidación: para liquidar bienes y pagar a acreedores</li>
+                            <li>Superintendencia de Insolvencia y Reemprendimiento: organismo fiscalizador</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="item-4">
+                        <AccordionTrigger>Código de Procedimiento Civil</AccordionTrigger>
+                        <AccordionContent>
+                          <p>Regula los procedimientos de cobranza judicial:</p>
+                          <ul className="list-disc pl-6 mt-2 space-y-1">
+                            <li>Juicio ejecutivo: procedimiento para cobrar deudas con título ejecutivo</li>
+                            <li>Embargo: solo se pueden embargar bienes que sean propiedad del deudor</li>
+                            <li>Bienes inembargables: aquellos necesarios para la subsistencia</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="item-5">
+                        <AccordionTrigger>Derechos del Deudor</AccordionTrigger>
+                        <AccordionContent>
+                          <p>Los principales derechos del deudor incluyen:</p>
+                          <ul className="list-disc pl-6 mt-2 space-y-1">
+                            <li>Derecho a ser tratado con respeto y dignidad</li>
+                            <li>Derecho a conocer el estado de la deuda</li>
+                            <li>Derecho a solicitar la prescripción de la deuda</li>
+                            <li>Derecho a negociar condiciones de pago</li>
+                            <li>Derecho a que se respeten los bienes inembargables</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+
+            {/* Anuncio entre la información y el chat - optimizado */}
+            <div className="my-4">
+              <AdUnit slot="3456789012" format="horizontal" className="horizontal in-content" />
             </div>
           </div>
         </div>

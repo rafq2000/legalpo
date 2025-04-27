@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Shield, Mail, Lock, AlertCircle } from "lucide-react"
+import { Shield, Mail, Lock, AlertCircle, Info, CheckCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
@@ -21,6 +21,8 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("")
+  const [waitingList, setWaitingList] = useState(false)
+  const [successMessage, setSuccessMessage] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,22 +40,41 @@ export default function RegisterPage() {
     try {
       setIsLoading(true)
       setError("")
+      setSuccessMessage("")
+      setWaitingList(false)
 
-      // Simulación de registro exitoso
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
 
-      // Crear un usuario simulado
-      const mockUser = {
-        id: "1",
-        name: name,
-        email: email,
+      const data = await response.json()
+
+      if (data.error) {
+        setError(data.error)
+      } else if (data.waitingList) {
+        setWaitingList(true)
+        setSuccessMessage(data.message)
+      } else {
+        // Simulación de registro exitoso
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        // Crear un usuario simulado
+        const mockUser = {
+          id: "1",
+          name: name,
+          email: email,
+        }
+
+        // Guardar en localStorage para mantener la sesión
+        localStorage.setItem("user", JSON.stringify(mockUser))
+
+        // Redirigir al usuario
+        router.push("/")
       }
-
-      // Guardar en localStorage para mantener la sesión
-      localStorage.setItem("user", JSON.stringify(mockUser))
-
-      // Redirigir al usuario
-      router.push("/")
     } catch (error) {
       console.error("Error al registrarse:", error)
       setError("Error al crear la cuenta. Por favor, intenta nuevamente.")
@@ -62,7 +83,6 @@ export default function RegisterPage() {
     }
   }
 
-  // Mover el botón de Google arriba del formulario para hacerlo más visible
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
       <SiteHeader />
@@ -71,13 +91,20 @@ export default function RegisterPage() {
           <div className="flex flex-col space-y-2 text-center">
             <Shield className="mx-auto h-10 w-10 text-primary" />
             <h1 className="text-2xl font-semibold tracking-tight">Crear cuenta</h1>
-            <p className="text-sm text-muted-foreground">Ingresa tus datos para registrarte en DocuScan AI</p>
+            <p className="text-sm text-muted-foreground">Ingresa tus datos para registrarte en LegalPO</p>
           </div>
 
           {error && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {successMessage && waitingList && (
+            <Alert variant="success">
+              <CheckCircle className="h-4 w-4" />
+              <AlertDescription>{successMessage}</AlertDescription>
             </Alert>
           )}
 
@@ -109,6 +136,19 @@ export default function RegisterPage() {
             </svg>
             Continuar con Google
           </Button>
+
+          {/* Disclaimer legal */}
+          <div className="bg-amber-50 border border-amber-200 rounded-md p-3 text-sm">
+            <div className="flex items-start gap-2">
+              <Info className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
+              <p className="text-amber-800 text-xs">
+                LegalPO es una herramienta informativa que no reemplaza la asesoría profesional de un abogado. La
+                información proporcionada es solo una guía educativa y no constituye consejo legal. Para situaciones
+                específicas, recomendamos consultar con un profesional del derecho calificado. Al iniciar sesión con
+                Google, aceptas estos términos.
+              </p>
+            </div>
+          </div>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">

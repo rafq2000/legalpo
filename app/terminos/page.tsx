@@ -10,7 +10,7 @@ export default function TerminosPage() {
           <div className="mr-4 flex">
             <Link href="/" className="mr-6 flex items-center space-x-2">
               <Shield className="h-6 w-6 text-primary" />
-              <span className="font-bold">DocuScan AI</span>
+              <span className="font-bold">LegalPO</span>
             </Link>
             <Button variant="ghost" size="sm" asChild className="gap-1">
               <Link href="/">
@@ -31,9 +31,9 @@ export default function TerminosPage() {
 
             <h2>1. Introducción</h2>
             <p>
-              Estos Términos de Servicio ("Términos") rigen tu acceso y uso de DocuScan AI (el "Servicio"), accesible
-              desde v0-docu-scan.vercel.app. Al acceder o utilizar el Servicio, aceptas estar sujeto a estos Términos.
-              Si no estás de acuerdo con alguna parte de los términos, no podrás acceder al Servicio.
+              Estos Términos de Servicio ("Términos") rigen tu acceso y uso de LegalPO (el "Servicio"), accesible desde
+              v0-docu-scan.vercel.app. Al acceder o utilizar el Servicio, aceptas estar sujeto a estos Términos. Si no
+              estás de acuerdo con alguna parte de los términos, no podrás acceder al Servicio.
             </p>
 
             <h2>2. Cuentas</h2>
@@ -62,13 +62,13 @@ export default function TerminosPage() {
             <h2>4. Propiedad Intelectual</h2>
             <p>
               El Servicio y su contenido original, características y funcionalidad son y seguirán siendo propiedad
-              exclusiva de DocuScan AI y sus licenciantes. El Servicio está protegido por derechos de autor, marcas
+              exclusiva de LegalPO y sus licenciantes. El Servicio está protegido por derechos de autor, marcas
               registradas y otras leyes.
             </p>
 
             <h2>5. Limitación de Responsabilidad</h2>
             <p>
-              En ningún caso DocuScan AI, ni sus directores, empleados, socios, agentes, proveedores o afiliados, serán
+              En ningún caso LegalPO, ni sus directores, empleados, socios, agentes, proveedores o afiliados, serán
               responsables por cualquier daño indirecto, incidental, especial, consecuente o punitivo, incluyendo sin
               limitación, pérdida de beneficios, datos, uso, buena voluntad, u otras pérdidas intangibles, resultantes
               de:
@@ -82,9 +82,9 @@ export default function TerminosPage() {
 
             <h2>6. Descargo de Responsabilidad</h2>
             <p>
-              El análisis legal proporcionado por DocuScan AI es solo para fines informativos y no constituye
-              asesoramiento legal. Siempre debes consultar con un profesional legal calificado para obtener
-              asesoramiento específico para tu situación.
+              El análisis legal proporcionado por LegalPO es solo para fines informativos y no constituye asesoramiento
+              legal. Siempre debes consultar con un profesional legal calificado para obtener asesoramiento específico
+              para tu situación.
             </p>
 
             <h2>7. Cambios</h2>
@@ -106,7 +106,7 @@ export default function TerminosPage() {
       <footer className="w-full border-t py-6 md:py-0">
         <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            © 2025 DocuScan AI. Todos los derechos reservados.
+            © 2025 LegalPO. Todos los derechos reservados.
           </p>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <Link href="/terminos" className="underline underline-offset-4">

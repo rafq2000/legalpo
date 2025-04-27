@@ -30,7 +30,7 @@ export default function DudasLaboralesPage() {
     {
       role: "assistant",
       content:
-        "Hola, soy el asistente legal de DocuScan AI especializado en normativa laboral chilena. Puedo ayudarte con consultas sobre contratos de trabajo, jornada laboral, remuneraciones, término de contrato, acoso laboral y otros temas relacionados con el Código del Trabajo. ¿En qué puedo ayudarte hoy?",
+        "Hola, soy el asistente legal de LegalPO especializado en normativa laboral chilena. Puedo ayudarte con consultas sobre contratos de trabajo, jornada laboral, remuneraciones, término de contrato, acoso laboral y otros temas relacionados con el Código del Trabajo. ¿En qué puedo ayudarte hoy?",
     },
   ])
   const [input, setInput] = useState("")
@@ -136,7 +136,7 @@ export default function DudasLaboralesPage() {
                 </div>
                 {messages.length > 1 && (
                   <ShareButton
-                    title="Consulta laboral en DocuScan AI"
+                    title="Consulta laboral en LegalPO"
                     text={messages
                       .map((msg) => `${msg.role === "user" ? "Yo: " : "Asistente: "}${msg.content}`)
                       .join("\n\n")}
@@ -153,7 +153,9 @@ export default function DudasLaboralesPage() {
                       <Avatar>
                         <AvatarFallback>{message.role === "user" ? "U" : "AI"}</AvatarFallback>
                         {message.role === "assistant" && <AvatarImage src="/logo.png" />}
-                        {message.role === "user" && session?.user?.image && <AvatarImage src={session.user.image} />}
+                        {message.role === "user" && session?.user?.image && (
+                          <AvatarImage src={session.user.image || "/placeholder.svg"} />
+                        )}
                       </Avatar>
                       <div
                         className={`rounded-lg px-4 py-2 max-w-[80%] ${
@@ -192,6 +194,10 @@ export default function DudasLaboralesPage() {
               </div>
             </CardFooter>
           </Card>
+          <div className="mt-4 text-sm text-muted-foreground p-2 bg-gray-50 rounded-lg">
+            <strong>Nota:</strong> Este asistente proporciona información general basada en la legislación chilena. Para
+            asesoría legal específica, consulta con un abogado.
+          </div>
         </TabsContent>
 
         <TabsContent value="info" className="mt-6">

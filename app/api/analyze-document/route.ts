@@ -1,88 +1,113 @@
 import { NextResponse } from "next/server"
-import OpenAI from "openai"
-import { generateQwenResponse } from "@/lib/sambanova-service"
+import axios from "axios"
+import { registrarDocumento } from "@/app/actions/analytics-actions"
 
-// Configuración de OpenAI con la API key proporcionada
-const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null
-
-// Determinar qué modelo usar (SambaNova o OpenAI)
-const useSambaNova = process.env.SAMBANOVA_API_KEY ? true : false
+// Configuración de Google AI Studio API
+const GOOGLE_AI_API_KEY = process.env.GEMINI_API_KEY
+const GOOGLE_AI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
 
 export async function POST(req: Request) {
   try {
-    const { text } = await req.json()
+    const { text, userId } = await req.json()
 
-    if (!text) {
-      return NextResponse.json({ error: "No se proporcionó texto para analizar" }, { status: 400 })
+    // Registrar el análisis de documento y obtener ID de usuario
+    const userIdUpdated = await registrarDocumento(userId)
+
+    if (!text || text.trim().length < 10) {
+      return NextResponse.json(
+        {
+          error: "El texto proporcionado es demasiado corto para ser analizado.",
+        },
+        { status: 400 },
+      )
     }
 
+    // Check if Google AI API key is available
+    if (!GOOGLE_AI_API_KEY) {
+      console.error("Error: GEMINI_API_KEY no está configurada")
+      return NextResponse.json(
+        {
+          error: "El servicio de análisis no está disponible en este momento. Por favor, contacte al administrador.",
+        },
+        { status: 503 },
+      )
+    }
+
+    console.log("Analizando documento...")
+
+    // Limitar el texto si es muy largo para evitar exceder los límites de tokens
+    const maxLength = 6000 // Ajustado para Gemini
+    const truncatedText = text.length > maxLength ? text.substring(0, maxLength) + "... [texto truncado]" : text
+
     try {
-      let analysis = ""
+      // Preparar el prompt para Google AI
+      const systemPrompt = `Eres un asistente especializado en análisis de documentos legales. 
+      Analiza el siguiente texto de un documento y proporciona un resumen detallado que incluya:
+      1. Tipo de documento
+      2. Partes involucradas
+      3. Fechas importantes
+      4. Montos o valores mencionados
+      5. Cláusulas o términos importantes
+      6. Posibles riesgos o advertencias
+      7. Recomendaciones generales
+      
+      Documento a analizar:
+      ${truncatedText}`
 
-      // Intentar usar SambaNova si está disponible
-      if (useSambaNova) {
-        try {
-          console.log("Usando modelo Qwen de SambaNova para análisis de documento")
-          const systemPrompt = `Eres un asistente legal especializado en análisis de documentos legales.
-Tu tarea es analizar el documento proporcionado y responder a la pregunta del usuario.
-Proporciona información precisa y detallada basada en el contenido del documento.
-Usa un tono profesional pero accesible.
-Estructura tus respuestas de forma clara.`
-
-          analysis = await generateQwenResponse([{ role: "user", content: text }], systemPrompt)
-        } catch (sambanovaError) {
-          console.error("Error con SambaNova, intentando con OpenAI:", sambanovaError)
-          // Si falla SambaNova, intentar con OpenAI si está disponible
-          if (!openai || !process.env.OPENAI_API_KEY) {
-            throw new Error("No hay modelos de IA disponibles")
-          }
-        }
-      }
-
-      // Si no se usó SambaNova o falló, usar OpenAI
-      if (!analysis && openai && process.env.OPENAI_API_KEY) {
-        console.log("Usando modelo de OpenAI para análisis de documento")
-        const completion = await openai.chat.completions.create({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: `Eres un asistente legal especializado en análisis de documentos legales.
-Tu tarea es analizar el documento proporcionado y responder a la pregunta del usuario.
-Proporciona información precisa y detallada basada en el contenido del documento.
-Usa un tono profesional pero accesible.
-Estructura tus respuestas de forma clara.`,
-            },
-            { role: "user", content: text },
-          ],
+      // Preparar el payload para la API de Google AI
+      const payload = {
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: systemPrompt }],
+          },
+        ],
+        generationConfig: {
           temperature: 0.5,
-          max_tokens: 1000,
-        })
-
-        analysis = completion.choices[0].message.content || ""
+          maxOutputTokens: 1024,
+          topP: 0.95,
+          topK: 40,
+        },
       }
 
-      // Si no se pudo obtener respuesta de ningún modelo
-      if (!analysis) {
-        throw new Error("No se pudo obtener análisis de ningún modelo disponible")
-      }
+      // Llamar a la API de Google AI
+      const response = await axios.post(`${GOOGLE_AI_API_URL}?key=${GOOGLE_AI_API_KEY}`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+
+      // Extraer la respuesta
+      const analysis = response.data.candidates[0].content.parts[0].text
 
       return NextResponse.json({
         analysis,
-        model: useSambaNova ? "Qwen2.5-72B-Instruct" : "gpt-3.5-turbo",
+        userId: userIdUpdated,
       })
-    } catch (modelError) {
-      console.error("Error al analizar el documento:", modelError)
+    } catch (apiError: any) {
+      console.error("Error al analizar el documento con Google AI:", apiError)
+
+      const errorMessage = "Error al analizar el documento. Por favor, intenta nuevamente."
+
+      if (apiError.response) {
+        console.error("Google AI Error Status:", apiError.response.status)
+        console.error("Google AI Error Data:", apiError.response.data)
+      }
+
       return NextResponse.json(
-        { error: "Error al analizar el documento. Por favor, intenta nuevamente." },
-        { status: 200 }, // Cambiado a 200 para evitar errores en el cliente
+        {
+          error: errorMessage,
+        },
+        { status: 500 },
       )
     }
   } catch (error) {
-    console.error("Error en el servidor:", error)
+    console.error("Error al analizar el documento:", error)
     return NextResponse.json(
-      { error: "Error en el servidor. Por favor, intenta nuevamente." },
-      { status: 200 }, // Cambiado a 200 para evitar errores en el cliente
+      {
+        error: "Error al analizar el documento. Por favor, intenta nuevamente.",
+      },
+      { status: 500 },
     )
   }
 }

@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { ArrowLeft, Send, Shield, Loader2, MessageSquare, FileText, HelpCircle } from "lucide-react"
+import { ArrowLeft, Send, Shield, Loader2, MessageSquare, FileText, HelpCircle, Info } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -24,7 +24,7 @@ interface Message {
 }
 
 export default function AyudaAnalizadorPage() {
-  const session = useSession()
+  const { data: session, status } = useSession()
   const router = useRouter()
   const [userId, setUserId] = useState<string | null>(null)
   const [input, setInput] = useState<string>("")
@@ -32,8 +32,8 @@ export default function AyudaAnalizadorPage() {
     {
       role: "assistant",
       content:
-        "Hola, soy el asistente del Analizador de Documentos de DocuScan AI. ¿En qué puedo ayudarte? Puedes preguntarme sobre cómo usar el analizador, qué tipos de documentos soporta, o cualquier otra duda.",
-      title: "Asistente DocuScan AI",
+        "Hola, soy el asistente del Analizador de Documentos de LegalPO. ¿En qué puedo ayudarte? Puedes preguntarme sobre cómo usar el analizador, qué tipos de documentos soporta, o cualquier otra duda.",
+      title: "Asistente LegalPO",
     },
   ])
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -52,12 +52,12 @@ export default function AyudaAnalizadorPage() {
 
   useEffect(() => {
     // Verificar si el usuario está autenticado
-    if (session.status === "loading") {
+    if (status === "loading") {
       setIsAuthChecking(true)
       return
     }
 
-    if (session.status === "unauthenticated") {
+    if (status === "unauthenticated") {
       // Redirigir a la página de login si no está autenticado
       router.push(`/login?callbackUrl=${encodeURIComponent(window.location.pathname)}`)
       return
@@ -78,7 +78,7 @@ export default function AyudaAnalizadorPage() {
   }, [messages])
 
   // Si está cargando o no está autenticado, mostrar pantalla de carga
-  if (isAuthChecking || session.status === "loading" || session.status === "unauthenticated") {
+  if (isAuthChecking || status === "loading" || status === "unauthenticated") {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
@@ -106,7 +106,7 @@ export default function AyudaAnalizadorPage() {
       const question = input.toLowerCase()
 
       if (question.includes("tipos de documentos") || question.includes("qué documentos")) {
-        response = `El analizador de DocuScan AI puede procesar varios tipos de documentos:
+        response = `El analizador de LegalPO puede procesar varios tipos de documentos:
 
 1. Imágenes (JPG, PNG): Documentos escaneados o fotografiados
 2. PDFs: Tanto PDFs con texto seleccionable como PDFs escaneados
@@ -116,7 +116,7 @@ El sistema está optimizado para documentos legales como contratos, demandas, se
       } else if (question.includes("ocr") || question.includes("reconocimiento")) {
         response = `El OCR (Reconocimiento Óptico de Caracteres) es la tecnología que permite extraer texto de imágenes. 
 
-En DocuScan AI utilizamos una tecnología OCR avanzada que:
+En LegalPO utilizamos una tecnología OCR avanzada que:
 - Preprocesa las imágenes para mejorar la calidad (ajustando brillo y contraste)
 - Detecta y corrige la orientación del texto
 - Reconoce múltiples idiomas (optimizado para español)
@@ -156,7 +156,7 @@ Además, puedes hacer preguntas específicas sobre el documento en la pestaña "
 
 Esta función es útil cuando el OCR no reconoce perfectamente alguna parte del texto o cuando quieres eliminar secciones irrelevantes antes del análisis.`
       } else {
-        response = `Gracias por tu pregunta. El Analizador de Documentos de DocuScan AI es una herramienta que te permite:
+        response = `Gracias por tu pregunta. El Analizador de Documentos de LegalPO es una herramienta que te permite:
 
 1. Extraer texto de documentos escaneados, fotos y PDFs
 2. Analizar automáticamente el contenido legal del documento
@@ -169,7 +169,7 @@ Para comenzar, ve a la sección "Analizar documento" y sube un archivo o pega el
       const assistantMessage: Message = {
         role: "assistant",
         content: response,
-        title: "Asistente DocuScan AI",
+        title: "Asistente LegalPO",
       }
 
       setMessages((prev) => [...prev, assistantMessage])
@@ -182,7 +182,7 @@ Para comenzar, ve a la sección "Analizar documento" y sube un archivo o pega el
           role: "assistant",
           content:
             "Lo siento, tuve un problema al procesar tu consulta. Por favor, intenta reformular tu pregunta o contacta con soporte si el problema persiste.",
-          title: "Asistente DocuScan AI",
+          title: "Asistente LegalPO",
         },
       ])
     } finally {
@@ -215,7 +215,7 @@ Para comenzar, ve a la sección "Analizar documento" y sube un archivo o pega el
           <div className="mr-4 flex">
             <Link href="/" className="mr-6 flex items-center space-x-2">
               <Shield className="h-6 w-6 text-primary" />
-              <span className="font-bold">DocuScan AI</span>
+              <span className="font-bold">LegalPO AI</span>
             </Link>
             <Button variant="ghost" size="sm" asChild className="gap-1">
               <Link href="/">
@@ -285,6 +285,7 @@ Para comenzar, ve a la sección "Analizar documento" y sube un archivo o pega el
                       <MessageSquare className="h-5 w-5 mr-2 text-primary" />
                       <h2 className="font-semibold">Chat con asistente del analizador</h2>
                     </div>
+                    <TextToSpeech text={getAllMessagesText()} label="Leer conversación" />
                   </div>
                 </div>
 
@@ -325,21 +326,23 @@ Para comenzar, ve a la sección "Analizar documento" y sube un archivo o pega el
                 </div>
 
                 {/* Sugerencias de preguntas */}
-                <div className="px-4 py-2 border-t">
-                  <p className="text-sm text-muted-foreground mb-2">Preguntas sugeridas:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {questionSuggestions.map((suggestion, index) => (
-                      <Badge
-                        key={index}
-                        variant="outline"
-                        className="cursor-pointer hover:bg-secondary transition-colors"
-                        onClick={() => handleSuggestionClick(suggestion)}
-                      >
-                        {suggestion}
-                      </Badge>
-                    ))}
+                {messages.length < 3 && (
+                  <div className="px-4 py-2 border-t">
+                    <p className="text-sm text-muted-foreground mb-2">Preguntas sugeridas:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {questionSuggestions.map((suggestion, index) => (
+                        <Badge
+                          key={index}
+                          variant="outline"
+                          className="cursor-pointer hover:bg-secondary transition-colors"
+                          onClick={() => handleSuggestionClick(suggestion)}
+                        >
+                          {suggestion}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="p-4 border-t">
                   <form onSubmit={handleSubmit} className="flex gap-2">
@@ -379,14 +382,14 @@ Para comenzar, ve a la sección "Analizar documento" y sube un archivo o pega el
                           <TextToSpeech
                             text={getFaqText(
                               "¿Qué tipos de documentos puedo analizar?",
-                              "El analizador de DocuScan AI puede procesar varios tipos de documentos: Imágenes como JPG y PNG, PDFs con texto seleccionable o escaneados, y Documentos Word. El sistema está optimizado para documentos legales como contratos, demandas, sentencias judiciales, pagarés, y otros documentos similares.",
+                              "El analizador de LegalPO puede procesar varios tipos de documentos: Imágenes como JPG y PNG, PDFs con texto seleccionable o escaneados, y Documentos Word. El sistema está optimizado para documentos legales como contratos, demandas, sentencias judiciales, pagarés, y otros documentos similares.",
                             )}
                             label="Leer respuesta"
                           />
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        <p>El analizador de DocuScan AI puede procesar varios tipos de documentos:</p>
+                        <p>El analizador de LegalPO puede procesar varios tipos de documentos:</p>
                         <ul className="list-disc pl-5 mt-2 space-y-1">
                           <li>Imágenes (JPG, PNG): Documentos escaneados o fotografiados</li>
                           <li>PDFs: Tanto PDFs con texto seleccionable como PDFs escaneados</li>
@@ -408,7 +411,7 @@ Para comenzar, ve a la sección "Analizar documento" y sube un archivo o pega el
                           <TextToSpeech
                             text={getFaqText(
                               "¿Cómo funciona el OCR?",
-                              "El OCR (Reconocimiento Óptico de Caracteres) es la tecnología que permite extraer texto de imágenes. En DocuScan AI utilizamos una tecnología OCR avanzada que preprocesa las imágenes, detecta y corrige la orientación del texto, reconoce múltiples idiomas, e identifica estructuras como tablas y listas.",
+                              "El OCR (Reconocimiento Óptico de Caracteres) es la tecnología que permite extraer texto de imágenes. En LegalPO utilizamos una tecnología OCR avanzada que preprocesa las imágenes, detecta y corrige la orientación del texto, reconoce múltiples idiomas, e identifica estructuras como tablas y listas.",
                             )}
                             label="Leer respuesta"
                           />
@@ -417,7 +420,7 @@ Para comenzar, ve a la sección "Analizar documento" y sube un archivo o pega el
                       <AccordionContent>
                         <p>
                           El OCR (Reconocimiento Óptico de Caracteres) es la tecnología que permite extraer texto de
-                          imágenes. En DocuScan AI utilizamos una tecnología OCR avanzada que:
+                          imágenes. En LegalPO utilizamos una tecnología OCR avanzada que:
                         </p>
                         <ul className="list-disc pl-5 mt-2 space-y-1">
                           <li>Preprocesa las imágenes para mejorar la calidad (ajustando brillo y contraste)</li>
@@ -549,6 +552,29 @@ Para comenzar, ve a la sección "Analizar documento" y sube un archivo o pega el
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
+
+                  <div className="mt-6 p-4 bg-muted rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Info className="h-5 w-5 text-primary" />
+                      <h3 className="font-medium">¿No encuentras lo que buscas?</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Si no encuentras respuesta a tu pregunta, puedes usar la pestaña "Preguntar" para consultar
+                      directamente con nuestro asistente o ir a la sección de análisis para probar el analizador.
+                    </p>
+                    <div className="flex gap-4 mt-4">
+                      <Button variant="outline" onClick={() => setActiveTab("chat")}>
+                        <MessageSquare className="h-4 w-4 mr-2" />
+                        Preguntar al asistente
+                      </Button>
+                      <Button asChild>
+                        <Link href="/analyze">
+                          <FileText className="h-4 w-4 mr-2" />
+                          Ir al analizador
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

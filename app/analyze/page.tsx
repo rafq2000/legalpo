@@ -6,7 +6,7 @@ import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useSafeSession } from "@/hooks/use-safe-session"
+import { useSession } from "next-auth/react"
 import {
   ArrowLeft,
   Upload,
@@ -48,9 +48,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { ShareButton } from "@/components/share-button"
 
 export default function AnalyzePage() {
-  const sessionResult = useSafeSession()
-  const session = sessionResult?.data || null
-  const status = sessionResult?.status || "loading"
+  const { data: session, status } = useSession()
   const router = useRouter()
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
@@ -160,7 +158,7 @@ export default function AnalyzePage() {
     setIsPDF(firstFile.type === "application/pdf")
     setIsWord(
       firstFile.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-        file.type === "application/msword",
+        firstFile.type === "application/msword",
     )
     setAnalysis(null)
     setPdfError(null)
@@ -178,7 +176,7 @@ export default function AnalyzePage() {
     // Tomar el primer archivo para la vista previa inicial
     const firstFile = droppedFiles[0]
     setFile(firstFile)
-    const fileUrl = URL.createObjectURL(firstFile)
+    const fileUrl = URL.createObjectURL(file)
     setPreview(fileUrl)
     setExtractedText("")
     setBrightness(100)
@@ -193,8 +191,6 @@ export default function AnalyzePage() {
 
     // Guardar todos los archivos seleccionados en un estado
     setSelectedFiles(Array.from(droppedFiles))
-
-    const droppedFile = droppedFiles[0]
   }
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -657,7 +653,7 @@ export default function AnalyzePage() {
           <div className="mr-4 flex">
             <Link href="/" className="mr-6 flex items-center space-x-2">
               <FileImage className="h-6 w-6 text-primary" />
-              <span className="font-bold">DocuScan AI</span>
+              <span className="font-bold">LegalPO</span>
             </Link>
             <Button variant="ghost" size="sm" asChild className="gap-1">
               <Link href="/">
@@ -712,7 +708,7 @@ export default function AnalyzePage() {
                         <h3 className="text-lg font-medium mb-1">Arrastra y suelta tus archivos aquí</h3>
                         <p className="text-sm text-muted-foreground mb-4">o haz clic para seleccionar archivos</p>
                         <p className="text-xs text-muted-foreground">
-                          Formatos soportados: JPG, PNG, PDF, DOCX, DOC (máx. 10MB por archivo)
+                          Formatos soportados: JPG, JPEG, PNG, PDF, DOCX, DOC (máx. 10MB por archivo)
                         </p>
                         <input
                           id="file-upload"
@@ -763,10 +759,7 @@ export default function AnalyzePage() {
                           placeholder="Pega aquí el texto del documento legal que deseas analizar..."
                           className="min-h-[300px] font-mono text-sm"
                           value={extractedText}
-                          onChange={(e) => {
-                            const text = e.target.value
-                            setExtractedText(text)
-                          }}
+                          onChange={(e) => setExtractedText(e.target.value)}
                         />
                         <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
                           <div className="text-sm text-muted-foreground">

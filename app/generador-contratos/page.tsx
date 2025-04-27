@@ -1,13 +1,13 @@
 import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { FileText } from "lucide-react"
 
-export default function GeneradorContratosPage() {
+function GeneradorContratosPageContent() {
   return (
     <div className="container mx-auto py-6">
       <div className="flex items-center mb-4">
         <Link href="/" className="flex items-center text-blue-600 hover:text-blue-800">
-          <FileText className="h-4 w-4 mr-1" />
+          <ArrowLeft className="h-4 w-4 mr-1" />
           <span>Volver al inicio</span>
         </Link>
       </div>
@@ -48,7 +48,7 @@ export default function GeneradorContratosPage() {
           </div>
 
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-100 hover:shadow-md transition-shadow">
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Contrato de Servicios</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Contrato General</h3>
             <p className="text-gray-600 mb-4">Crea un contrato para servicios profesionales independientes</p>
             <ul className="list-disc list-inside text-gray-600 mb-4 text-sm">
               <li>Descripción de servicios</li>
@@ -56,7 +56,7 @@ export default function GeneradorContratosPage() {
               <li>Plazos de entrega</li>
               <li>Confidencialidad</li>
             </ul>
-            <Link href="/contratos/servicios" className="w-full">
+            <Link href="/contratos/general" className="w-full">
               <Button className="w-full bg-blue-600 hover:bg-blue-700">Crear contrato</Button>
             </Link>
           </div>
@@ -66,7 +66,7 @@ export default function GeneradorContratosPage() {
           <p className="font-medium">¿Necesitas un tipo de contrato diferente?</p>
           <p className="mt-1">Puedes crear un contrato personalizado adaptado a tus necesidades específicas.</p>
           <div className="mt-3">
-            <Link href="/contratos/general">
+            <Link href="/contratos/personalizado">
               <Button variant="outline" className="border-amber-200 hover:bg-amber-100 text-amber-800">
                 Crear contrato personalizado
               </Button>
@@ -76,4 +76,8 @@ export default function GeneradorContratosPage() {
       </div>
     </div>
   )
+}
+
+export default function GeneradorContratosPage() {
+  return <GeneradorContratosPageContent />
 }
