@@ -1,6 +1,11 @@
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
+// Esta función evita la generación estática de esta página
+export function generateStaticParams() {
+  return []
+}
+
 export default function LegacyNotFoundPage() {
   return (
     <div style={{ padding: 24, textAlign: "center" }}>

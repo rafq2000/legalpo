@@ -18,8 +18,8 @@ const nextConfig = {
   // Desactivar optimizaciones que causan problemas
   optimizeFonts: false,
   compress: false,
-  // Desactivar completamente la prerenderización de páginas de error
-  excludeDefaultMomentLocales: true,
+  // Tiempo suficiente para la generación de páginas
+  staticPageGenerationTimeout: 180, // 3 minutos
   experimental: {
     // Configuración mínima necesaria
     serverActions: {
@@ -29,13 +29,7 @@ const nextConfig = {
     disableOptimizedLoading: true,
     esmExternals: "loose",
   },
-  // Desactivar la generación de páginas específicas
-  exportPathMap: async (defaultPathMap) => {
-    // Eliminar las rutas problemáticas
-    delete defaultPathMap["/404"]
-    delete defaultPathMap["/_not-found"]
-    return defaultPathMap
-  },
+  // Eliminado exportPathMap que no es compatible con App Router
   async rewrites() {
     return [
       {
@@ -43,11 +37,6 @@ const nextConfig = {
         destination: "/api/ads-txt",
       },
     ]
-  },
-  // Desactivar la generación de páginas de error
-  onDemandEntries: {
-    maxInactiveAge: 60 * 60 * 1000,
-    pagesBufferLength: 2,
   },
 }
 
