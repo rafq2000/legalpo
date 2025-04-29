@@ -1,12 +1,10 @@
-export default function NotFound() {
+export default function InternalNotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
       <div className="text-center space-y-6 max-w-md">
         <h1 className="text-4xl font-bold tracking-tight">404</h1>
         <h2 className="text-2xl font-semibold">Página no encontrada</h2>
-
         <p className="text-muted-foreground">Lo sentimos, no pudimos encontrar la página que estás buscando.</p>
-
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="/"

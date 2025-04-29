@@ -64,7 +64,7 @@ async function extractTextFromWord(file: File, onProgress?: (progress: Processin
 
     // Para documentos Word, mostraremos un mensaje informativo
     return `Este es un documento Word (.${file.name.split(".").pop()}). 
-    
+   
 Por limitaciones técnicas del navegador, no podemos procesar directamente el contenido de documentos Word. 
 
 Recomendaciones:

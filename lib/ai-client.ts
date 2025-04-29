@@ -119,7 +119,9 @@ async function generateGeminiResponse(prompt: string, systemContext?: string) {
 
     let fullPrompt = prompt
     if (systemContext) {
-      fullPrompt = `${systemContext}\n\n${prompt}`
+      fullPrompt = `${systemContext}
+
+${prompt}`
     }
 
     const result = await model.generateContent(fullPrompt)

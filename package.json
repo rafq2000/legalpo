@@ -62,19 +62,19 @@
     "nodemailer": "latest",
     "ws": "latest",
     "@emotion/is-prop-valid": "latest",
-    "tesseract.js": "latest",
-    "pdfjs-dist": "latest",
     "next-auth": "latest",
     "openai": "latest",
     "resend": "latest",
     "@supabase/supabase-js": "latest",
+    "pdfjs-dist": "latest",
     "axios": "latest",
     "google-auth-library": "latest",
     "fs": "latest",
     "path": "latest",
     "os": "latest",
     "framer-motion": "latest",
-    "@google/generative-ai": "latest"
+    "@google/generative-ai": "latest",
+    "tesseract.js": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
