@@ -44,6 +44,16 @@ export interface FiltrosEventos {
   email?: string
 }
 
+// Función para verificar si Firestore está disponible
+const isFirestoreAvailable = () => {
+  const firestore = db()
+  if (!firestore) {
+    console.error("Firestore no está disponible")
+    return false
+  }
+  return true
+}
+
 // Función para obtener eventos con paginación
 export async function obtenerEventos(
   filtros: FiltrosEventos = {},
@@ -51,7 +61,12 @@ export async function obtenerEventos(
   limite = 50,
 ): Promise<{ eventos: EventoStats[]; ultimoDoc: QueryDocumentSnapshot<DocumentData> | null }> {
   try {
-    let q = query(collection(db, "eventos"), orderBy("timestamp", "desc"), limit(limite))
+    if (!isFirestoreAvailable()) {
+      return { eventos: [], ultimoDoc: null }
+    }
+
+    const firestore = db()
+    let q = query(collection(firestore, "eventos"), orderBy("timestamp", "desc"), limit(limite))
 
     // Aplicar filtros
     if (filtros.startDate) {
@@ -102,6 +117,11 @@ export async function obtenerEventos(
 // Función para obtener eventos por día
 export async function obtenerEventosPorDia(filtros: FiltrosEventos = {}, dias = 30): Promise<EventosPorDia[]> {
   try {
+    if (!isFirestoreAvailable()) {
+      return []
+    }
+
+    const firestore = db()
     const endDate = filtros.endDate || new Date()
     const startDate = filtros.startDate || new Date(endDate.getTime() - dias * 24 * 60 * 60 * 1000)
 
@@ -117,7 +137,7 @@ export async function obtenerEventosPorDia(filtros: FiltrosEventos = {}, dias = 
 
     // Obtener todos los eventos en el rango de fechas
     let q = query(
-      collection(db, "eventos"),
+      collection(firestore, "eventos"),
       where("timestamp", ">=", Timestamp.fromDate(startDate)),
       where("timestamp", "<=", Timestamp.fromDate(endDate)),
       orderBy("timestamp", "asc"),
@@ -159,11 +179,16 @@ export async function obtenerEventosPorDia(filtros: FiltrosEventos = {}, dias = 
 // Función para obtener eventos por tipo
 export async function obtenerEventosPorTipo(filtros: FiltrosEventos = {}): Promise<EventosPorTipo[]> {
   try {
+    if (!isFirestoreAvailable()) {
+      return []
+    }
+
+    const firestore = db()
     const endDate = filtros.endDate || new Date()
     const startDate = filtros.startDate || new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000)
 
     const q = query(
-      collection(db, "eventos"),
+      collection(firestore, "eventos"),
       where("timestamp", ">=", Timestamp.fromDate(startDate)),
       where("timestamp", "<=", Timestamp.fromDate(endDate)),
     )
@@ -197,6 +222,10 @@ export async function obtenerEventosPorTipo(filtros: FiltrosEventos = {}): Promi
 // Función para exportar eventos a Excel
 export async function exportarEventosExcel(filtros: FiltrosEventos = {}): Promise<Blob> {
   try {
+    if (!isFirestoreAvailable()) {
+      throw new Error("Firestore no está disponible")
+    }
+
     const eventos: EventoStats[] = []
     let ultimoDoc: QueryDocumentSnapshot<DocumentData> | null = null
     let hayMas = true
