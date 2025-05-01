@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 
 import { cn } from "@/lib/utils"
 
-export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
+export function MainNav({ className, isAdmin, ...props }: React.HTMLAttributes<HTMLElement> & { isAdmin?: boolean }) {
   const pathname = usePathname()
 
   const routes = [
@@ -33,6 +33,8 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
     },
   ]
 
+  const linkClasses = "text-sm font-medium transition-colors hover:text-primary"
+
   return (
     <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)} {...props}>
       {routes.map((route) => (
@@ -47,6 +49,19 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
           {route.label}
         </Link>
       ))}
+      {isAdmin && (
+        <>
+          <Link href="/admin/analytics" className={cn(linkClasses)}>
+            Analytics
+          </Link>
+          <Link href="/admin/feedback" className={cn(linkClasses)}>
+            Feedback
+          </Link>
+          <Link href="/admin/cache" className={cn(linkClasses)}>
+            Caché
+          </Link>
+        </>
+      )}
     </nav>
   )
 }

@@ -1,46 +1,51 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { AlertCircle, CheckCircle } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 
 export function ConfigChecker() {
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
-  const [message, setMessage] = useState<string>("")
+  const [missingConfigs, setMissingConfigs] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const checkConfig = async () => {
+    async function checkConfigs() {
       try {
-        // Verificar la configuración de autenticación
-        const authResponse = await fetch("/api/auth/check", { method: "GET" })
-        if (!authResponse.ok) throw new Error("Error en la configuración de autenticación")
+        const response = await fetch("/api/auth/check")
+        const data = await response.json()
 
-        // Verificar la configuración de OpenAI
-        const openaiResponse = await fetch("/api/test-openai", { method: "GET" })
-        if (!openaiResponse.ok) throw new Error("Error en la configuración de OpenAI")
+        if (!response.ok) {
+          throw new Error(data.error || "Error al verificar configuración")
+        }
 
-        // Verificar la configuración de Analytics
-        const analyticsResponse = await fetch("/api/analytics/check", { method: "GET" })
-        if (!analyticsResponse.ok) throw new Error("Error en la configuración de Analytics")
-
-        setStatus("success")
-        setMessage("Todas las configuraciones están correctas")
+        setMissingConfigs(data.missingConfigs || [])
       } catch (error) {
-        setStatus("error")
-        setMessage(error instanceof Error ? error.message : "Error desconocido en la configuración")
+        console.error("Error al verificar configuración:", error)
+        // No mostrar errores específicos al usuario
+      } finally {
+        setIsLoading(false)
       }
     }
 
-    checkConfig()
+    checkConfigs()
   }, [])
 
-  if (status === "loading") return null
+  if (isLoading || missingConfigs.length === 0) {
+    return null
+  }
 
   return (
-    <Alert variant={status === "success" ? "default" : "destructive"}>
-      {status === "success" ? <CheckCircle className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
-      <AlertTitle>Estado de configuración</AlertTitle>
-      <AlertDescription>{message}</AlertDescription>
+    <Alert variant="destructive" className="mb-4">
+      <AlertCircle className="h-4 w-4" />
+      <AlertTitle>Configuración incompleta</AlertTitle>
+      <AlertDescription>
+        <p>Faltan las siguientes variables de entorno:</p>
+        <ul className="list-disc pl-5 mt-2">
+          {missingConfigs.map((config) => (
+            <li key={config}>{config}</li>
+          ))}
+        </ul>
+      </AlertDescription>
     </Alert>
   )
 }

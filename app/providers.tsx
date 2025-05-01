@@ -1,15 +1,18 @@
 "use client"
 
 import type React from "react"
+
 import { SessionProvider } from "next-auth/react"
-import { ThemeProvider } from "@/components/theme-provider"
+import { CookieConsentProvider } from "@/hooks/use-cookie-consent"
+import EventTracker from "@/components/event-tracker"
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      <CookieConsentProvider>
         {children}
-      </ThemeProvider>
+        <EventTracker />
+      </CookieConsentProvider>
     </SessionProvider>
   )
 }

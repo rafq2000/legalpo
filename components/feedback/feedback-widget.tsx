@@ -9,8 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
-import { submitFeedback } from "@/app/actions/feedback-actions"
-import { trackEvent } from "@/lib/client-analytics"
+import { submitFeedback } from "@/lib/feedback-service"
 
 type FeedbackType = "quick" | "detailed" | null
 type QuickRating = "positive" | "negative" | null
@@ -108,14 +107,6 @@ export function FeedbackWidget() {
     try {
       await submitFeedback(feedbackData)
       setIsSuccess(true)
-
-      // Track feedback submission event
-      trackEvent("feedback_submitted", {
-        feedbackType: feedbackType,
-        quickRating: quickRating,
-        detailedRating: detailedRating,
-        serviceUsed: serviceType,
-      })
 
       // Reset form after 3 seconds and close
       setTimeout(() => {
@@ -254,7 +245,6 @@ export function FeedbackWidget() {
                           )}
                           onClick={() => {
                             setQuickRating("positive")
-                            trackEvent("quick_feedback_positive", { serviceUsed: serviceType })
                             setTimeout(() => handleSubmit(), 500)
                           }}
                         >

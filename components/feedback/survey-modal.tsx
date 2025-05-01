@@ -14,6 +14,11 @@ interface SurveyModalProps {
   completionAction?: string
 }
 
+export function SurveyModal({ \
+  serviceType,   | "timer" | "exit"
+  completionAction?: string
+}
+
 export function SurveyModal({ serviceType, trigger = "completion", completionAction }: SurveyModalProps) {
   const { data: session } = useSession()
   const [isOpen, setIsOpen] = useState(false)
@@ -38,10 +43,10 @@ export function SurveyModal({ serviceType, trigger = "completion", completionAct
         return () => clearTimeout(timer)
       }
 
-      // Para trigger de tipo "exit", mostrar cuando el user intenta salir
+      // Para trigger de tipo "exit", mostrar cuando el usuario intenta salir
       if (trigger === "exit") {
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-          // Solo mostrar si el user ha pasado al menos 30 segundos en la página
+          // Solo mostrar si el usuario ha pasado al menos 30 segundos en la página
           if (document.visibilityState === "visible") {
             setIsOpen(true)
             recordFeedbackShown(session?.user?.email || null)

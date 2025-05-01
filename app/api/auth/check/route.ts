@@ -1,19 +1,36 @@
 import { NextResponse } from "next/server"
+import { getToken } from "next-auth/jwt"
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    // Verificar que las variables de entorno de autenticación estén configuradas
-    if (!process.env.NEXTAUTH_SECRET || !process.env.NEXTAUTH_URL) {
-      return NextResponse.json({ error: "Faltan variables de entorno de autenticación" }, { status: 500 })
+    // Verificar token de autenticación
+    const token = await getToken({
+      req,
+      secret: process.env.NEXTAUTH_SECRET,
+    }).catch(() => null)
+
+    // Verificar configuraciones críticas
+    const requiredConfigs = ["NEXTAUTH_SECRET", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "OPENAI_API_KEY"]
+
+    const missingConfigs = requiredConfigs.filter((config) => !process.env[config])
+
+    // Si es administrador, mostrar configuraciones faltantes
+    if (token?.email === process.env.ADMIN_EMAIL) {
+      return NextResponse.json({
+        isAuthenticated: !!token,
+        isAdmin: true,
+        missingConfigs,
+      })
     }
 
-    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-      return NextResponse.json({ error: "Faltan variables de entorno de Google Auth" }, { status: 500 })
-    }
-
-    return NextResponse.json({ status: "ok" })
+    // Para usuarios normales, solo indicar si está autenticado
+    return NextResponse.json({
+      isAuthenticated: !!token,
+      isAdmin: false,
+      // No enviar missingConfigs a usuarios normales
+    })
   } catch (error) {
-    console.error("Error al verificar la configuración de autenticación:", error)
-    return NextResponse.json({ error: "Error al verificar la configuración de autenticación" }, { status: 500 })
+    console.error("Error en verificación de autenticación:", error)
+    return NextResponse.json({ error: "Error al verificar autenticación" }, { status: 500 })
   }
 }

@@ -1,135 +1,309 @@
 import { NextResponse } from "next/server"
-import { generateAIResponse } from "@/lib/ai-client"
-import { getFallbackResponse, genericFallbackResponse } from "@/lib/fallback-responses"
-import { createClient } from "@supabase/supabase-js"
+import OpenAI from "openai"
+import { normativaLaboral } from "@/lib/normativa-laboral"
 
-// Contexto del sistema para el asistente
-const SYSTEM_CONTEXT = `
-Eres un asistente legal especializado en normativa laboral chilena. 
-Proporciona respuestas precisas y basadas en la legislación vigente.
-Cita artículos del Código del Trabajo cuando sea relevante.
-Si no estás seguro de una respuesta, indícalo claramente.
-No inventes información legal.
-Sé conciso pero completo en tus respuestas.
-`
+// Respuestas predefinidas solo para casos de error
+const RESPUESTAS = {
+  ERROR: `Lo siento, en este momento no puedo procesar tu consulta. Por favor, intenta nuevamente en unos minutos o reformula tu pregunta de otra manera.`,
 
-// Crear cliente de Supabase
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!
-const supabase = createClient(supabaseUrl, supabaseServiceKey)
+  DEFAULT: `Para brindarte información precisa sobre normativa laboral chilena, necesito más detalles sobre tu consulta específica:
 
-// Función para normalizar una consulta
-function normalizeQuery(query: string): string {
-  return query.toLowerCase().trim().replace(/\s+/g, " ")
+- ¿Tu consulta se refiere a contratos, jornada laboral, remuneraciones, término de contrato u otro tema?
+- ¿Necesitas información sobre derechos específicos como vacaciones, licencias médicas o protección a la maternidad?
+- ¿Estás consultando como trabajador, empleador o por información general?
+
+El Código del Trabajo es la principal normativa que regula las relaciones laborales en Chile, estableciendo derechos y obligaciones para trabajadores y empleadores.
+
+Puedo proporcionarte información más específica si me indicas exactamente qué aspecto de la normativa laboral te interesa conocer.`,
+}
+
+// Configuración de OpenAI con la API key proporcionada
+const openai = process.env.OPENAI_API_KEY
+  ? new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
+  : null
+
+// Función para preparar el contexto normativo relevante
+function prepararContextoNormativo(consulta: string) {
+  // Convertir la consulta a minúsculas y sin acentos para facilitar la búsqueda
+  const consultaNormalizada = consulta
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+
+  const contextosRelevantes: string[] = []
+  let articulosRelevantes: string[] = []
+
+  // Palabras clave para buscar en la normativa
+  const palabrasClave = [
+    // Términos generales
+    "contrato",
+    "trabajo",
+    "laboral",
+    "empleador",
+    "trabajador",
+    "jornada",
+    "remuneracion",
+    "sueldo",
+    "salario",
+    "despido",
+    "finiquito",
+    "vacaciones",
+    "licencia",
+    "feriado",
+    "descanso",
+
+    // Términos específicos
+    "acoso",
+    "discriminacion",
+    "fuero",
+    "prenatal",
+    "postnatal",
+    "horas extra",
+    "extraordinarias",
+    "sindicato",
+    "negociacion",
+    "colectiva",
+    "renuncia",
+    "indemnizacion",
+    "preaviso",
+    "aviso",
+
+    // Causales de término
+    "articulo 159",
+    "articulo 160",
+    "articulo 161",
+    "necesidades",
+    "mutuo acuerdo",
+    "renuncia",
+    "muerte",
+    "vencimiento",
+    "conclusion",
+    "caso fortuito",
+    "fuerza mayor",
+    "falta",
+    "probidad",
+    "ausencia",
+
+    // Protección a la maternidad
+    "embarazo",
+    "maternal",
+    "sala cuna",
+    "alimentacion",
+    "lactancia",
+
+    // Teletrabajo
+    "teletrabajo",
+    "distancia",
+    "remoto",
+    "virtual",
+    "equipos",
+
+    // Acoso laboral
+    "hostigamiento",
+    "maltrato",
+    "humillacion",
+    "menoscabo",
+    "dignidad",
+
+    // Igualdad de remuneraciones
+    "igualdad",
+    "brecha",
+    "genero",
+    "discriminacion salarial",
+
+    // Prescripción
+    "prescripcion",
+    "plazo",
+    "caducar",
+    "caducidad",
+    "deuda",
+    "cobro",
+  ]
+
+  // Buscar términos relevantes en la consulta
+  const terminosEncontrados = palabrasClave.filter((termino) => consultaNormalizada.includes(termino))
+
+  // Si no hay términos encontrados, devolver un contexto general
+  if (terminosEncontrados.length === 0) {
+    return `
+    El Código del Trabajo de Chile (DFL-1) es la principal normativa que regula las relaciones laborales.
+    
+    Algunos aspectos importantes incluyen:
+    - Contrato de trabajo: consensual, debe constar por escrito.
+    - Jornada laboral: máximo 45 horas semanales.
+    - Remuneraciones: deben pagarse en la forma y periodicidad pactada.
+    - Término del contrato: por causales específicas (arts. 159, 160, 161).
+    - Prescripción de derechos laborales: 2 años como regla general, 6 meses para algunos casos específicos.
+    `
+  }
+
+  // Buscar artículos relevantes en la normativa
+  for (const ley in normativaLaboral) {
+    const normativa = normativaLaboral[ley]
+
+    for (const numArticulo in normativa.articulos) {
+      const contenidoArticulo = normativa.articulos[numArticulo].toLowerCase()
+
+      // Verificar si el artículo contiene alguno de los términos encontrados
+      if (terminosEncontrados.some((termino) => contenidoArticulo.includes(termino))) {
+        articulosRelevantes.push(`${normativa.titulo} - Artículo ${numArticulo}: ${normativa.articulos[numArticulo]}`)
+      }
+    }
+  }
+
+  // Limitar la cantidad de artículos para no exceder el contexto
+  if (articulosRelevantes.length > 5) {
+    articulosRelevantes = articulosRelevantes.slice(0, 5)
+  }
+
+  // Si se menciona prescripción, agregar información específica sobre plazos
+  if (
+    consultaNormalizada.includes("prescripcion") ||
+    consultaNormalizada.includes("plazo") ||
+    consultaNormalizada.includes("deuda")
+  ) {
+    contextosRelevantes.push(`
+    INFORMACIÓN SOBRE PRESCRIPCIÓN DE DERECHOS LABORALES:
+    
+    - Regla general (Art. 510 Código del Trabajo): Los derechos laborales prescriben en el plazo de dos años contados desde la fecha en que se hicieron exigibles.
+    
+    - Excepciones:
+      * Derechos con origen en actos o contratos que concluyeron: 6 meses desde la terminación de servicios.
+      * Cobro de horas extraordinarias: 6 meses desde que debieron ser pagadas.
+      
+    - NO existe plazo de prescripción de 10 años para deudas laborales en Chile.
+    
+    - La prescripción se interrumpe conforme a los artículos 2523 y 2524 del Código Civil.
+    `)
+  }
+
+  // Agregar artículos relevantes al contexto
+  if (articulosRelevantes.length > 0) {
+    contextosRelevantes.push("ARTÍCULOS RELEVANTES DE LA NORMATIVA LABORAL:\n\n" + articulosRelevantes.join("\n\n"))
+  }
+
+  // Si no hay contextos específicos, usar un contexto general
+  if (contextosRelevantes.length === 0) {
+    contextosRelevantes.push(`
+    El Código del Trabajo de Chile (DFL-1) es la principal normativa que regula las relaciones laborales.
+    
+    Algunos aspectos importantes incluyen:
+    - Contrato de trabajo: consensual, debe constar por escrito.
+    - Jornada laboral: máximo 45 horas semanales.
+    - Remuneraciones: deben pagarse en la forma y periodicidad pactada.
+    - Término del contrato: por causales específicas (arts. 159, 160, 161).
+    - Prescripción de derechos laborales: 2 años como regla general, 6 meses para algunos casos específicos.
+    `)
+  }
+
+  return contextosRelevantes.join("\n\n")
 }
 
 export async function POST(req: Request) {
   try {
-    // Obtener los mensajes del usuario
     const { messages, userId } = await req.json()
 
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return NextResponse.json({ error: "Formato de mensajes inválido" }, { status: 400 })
+    // Verificar que messages es un array y tiene al menos un mensaje
+    if (!Array.isArray(messages) || messages.length === 0) {
+      throw new Error("Formato de mensajes inválido")
     }
 
-    // Obtener el último mensaje del usuario
-    const userMessage = messages[messages.length - 1]
-    if (userMessage.role !== "user" || !userMessage.content) {
-      return NextResponse.json({ error: "Mensaje de usuario inválido" }, { status: 400 })
-    }
+    const userMessage = messages[messages.length - 1].content
+    console.log("Procesando consulta laboral:", userMessage)
 
-    const query = userMessage.content
+    // Preparar el contexto normativo relevante para la consulta
+    const contextoNormativo = prepararContextoNormativo(userMessage)
 
-    console.log("Procesando consulta laboral:", query.substring(0, 50) + "...")
-
-    // Registrar la consulta en analytics
-    try {
-      await supabase.from("analytics").insert({
-        type: "chat_laboral",
-        user_id: userId || "anonymous",
-        content: query,
-        timestamp: new Date().toISOString(),
+    // Check if OpenAI client is available
+    if (!openai || !process.env.OPENAI_API_KEY) {
+      console.log("API key de OpenAI no configurada, usando respuesta predefinida")
+      return NextResponse.json({
+        response: RESPUESTAS.DEFAULT,
+        userId: userId || "anonymous-user",
       })
-    } catch (error) {
-      console.error("Error al registrar consulta:", error)
-      // Continuar con el proceso aunque falle el registro
     }
 
-    // Verificar si hay una respuesta predefinida para la consulta
-    const fallbackResponse = getFallbackResponse(query)
-    if (fallbackResponse) {
-      console.log("Usando respuesta predefinida")
-      return NextResponse.json({ response: fallbackResponse })
-    }
-
-    // Verificar si hay una respuesta en caché
     try {
-      const normalizedQuery = normalizeQuery(query)
-      const { data: cachedData } = await supabase
-        .from("response_cache")
-        .select("response")
-        .eq("normalized_query", normalizedQuery)
-        .single()
+      // Crear la conversación para OpenAI
+      const conversationHistory = messages.slice(0, -1).map((msg) => ({
+        role: msg.role === "user" ? "user" : "assistant",
+        content: msg.content,
+      }))
 
-      if (cachedData) {
-        console.log("Usando respuesta en caché")
-        return NextResponse.json({ response: cachedData.response, source: "cache" })
-      }
-    } catch (error) {
-      console.error("Error al buscar en caché:", error)
-      // Continuar si hay error en la caché
-    }
+      // En el archivo de chat laboral, hay instrucciones específicas para NO usar formato Markdown,
+      // pero vamos a reforzarlas y asegurarnos de que se estén aplicando correctamente.
 
-    // Preparar el prompt completo con el historial de conversación
-    const conversationHistory = messages
-      .map((msg) => `${msg.role === "user" ? "Usuario" : "Asistente"}: ${msg.content}`)
-      .join("\n\n")
+      // Modificar las instrucciones del sistema para OpenAI
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: `Eres un asistente legal especializado en normativa laboral chilena. Tu objetivo es proporcionar información precisa basada en la legislación vigente.
 
-    const fullPrompt = `${conversationHistory}\n\nAsistente:`
+INSTRUCCIONES IMPORTANTES:
+1. Usa un tono profesional pero accesible.
+2. Estructura tus respuestas de forma clara con secciones.
+3. NO uses formato markdown con asteriscos (*) o almohadillas (#).
+4. NO uses negritas, cursivas ni ningún tipo de formato especial.
+5. Presenta la información en texto plano, usando párrafos y listas con guiones o números.
+6. SIEMPRE basa tus respuestas en la normativa laboral chilena vigente.
+7. Si no tienes información específica sobre algún tema, indícalo claramente.
+8. NUNCA inventes plazos, requisitos o procedimientos que no estén en la normativa.
+9. Para plazos de prescripción, usa EXCLUSIVAMENTE los establecidos en el Código del Trabajo:
+   - Regla general: 2 años desde que se hicieron exigibles los derechos
+   - Excepciones: 6 meses para derechos con origen en actos que concluyeron
+   - NO existe plazo de prescripción de 10 años para deudas laborales
 
-    // Intentar generar respuesta con IA
-    try {
-      console.log("Generando respuesta con IA...")
-      const aiResponse = await generateAIResponse(fullPrompt, SYSTEM_CONTEXT)
+CONTEXTO NORMATIVO RELEVANTE PARA ESTA CONSULTA:
+${contextoNormativo}`,
+          },
+          ...conversationHistory,
+          { role: "user", content: userMessage },
+        ],
+        temperature: 0.5, // Reducido para mayor precisión
+        max_tokens: 800,
+      })
 
-      // Guardar en caché
-      try {
-        await supabase.from("response_cache").insert({
-          query,
-          normalized_query: normalizeQuery(query),
-          response: aiResponse.text,
-          provider: aiResponse.provider,
-          created_at: new Date().toISOString(),
-        })
-      } catch (cacheError) {
-        console.error("Error al guardar en caché:", cacheError)
+      // Asegurarnos de que la respuesta no tenga formato Markdown
+      // Podríamos añadir una función para limpiar cualquier formato Markdown residual
+      const aiResponse = completion.choices[0].message.content
+
+      // Función para eliminar posibles formatos Markdown (opcional)
+      function limpiarMarkdown(texto) {
+        if (!texto) return ""
+        // Eliminar negritas y cursivas
+        return texto
+          .replace(/\*\*(.*?)\*\*/g, "$1")
+          .replace(/\*(.*?)\*/g, "$1")
+          .replace(/__(.*?)__/g, "$1")
+          .replace(/_(.*?)_/g, "$1")
+          .replace(/#{1,6}\s/g, "")
+          .replace(/`(.*?)`/g, "$1")
       }
 
       return NextResponse.json({
-        response: aiResponse.text,
-        source: aiResponse.provider,
+        response: limpiarMarkdown(aiResponse) || RESPUESTAS.DEFAULT,
+        userId: userId || "anonymous-user",
       })
-    } catch (aiError) {
-      console.error("Error al generar respuesta con IA:", aiError)
+    } catch (openaiError) {
+      console.error("Error de OpenAI:", openaiError)
 
-      // Si hay un error con la IA, usar respuesta genérica
+      // Si hay error con OpenAI, usar respuesta predefinida como fallback
       return NextResponse.json({
-        response: genericFallbackResponse,
-        source: "fallback",
-        error: aiError.message,
+        response: RESPUESTAS.ERROR,
+        userId: userId || "anonymous-user",
       })
     }
   } catch (error) {
-    console.error("Error general en el endpoint de chat laboral:", error)
+    console.error("Error en el servidor:", error)
     return NextResponse.json(
       {
-        error: `Error: ${error.message || "Error desconocido"}`,
-        response:
-          "Lo siento, ha ocurrido un error al procesar tu consulta. Por favor, intenta nuevamente en unos momentos.",
+        response: RESPUESTAS.ERROR,
       },
-      { status: 500 },
+      { status: 200 }, // Cambiado a 200 para evitar errores en el cliente
     )
   }
 }
-
-export const dynamic = "force-dynamic"

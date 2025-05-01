@@ -1,6 +1,3 @@
-// Asegurarnos de que no haya importaciones de 'fs' en este archivo
-// Si hay alguna, la eliminaremos o modificaremos según sea necesario
-
 // Tipos de documentos legales
 export type DocumentType =
   | "judicial_cautelar_familia"
@@ -35,30 +32,331 @@ export interface DocumentAnalysis {
   fechas?: Record<string, string>
   montos?: Record<string, string>
   clausulasImportantes?: Record<string, string>
+  confianza?: number // Nivel de confianza en la clasificación
 }
 
-// Mock functions for extraction (replace with actual implementations)
+// Expresiones regulares mejoradas para extracción de entidades
+const regexPatterns = {
+  // Fechas en formato DD/MM/YYYY, DD-MM-YYYY, DD.MM.YYYY
+  dates:
+    /(\d{1,2})[/\-.](0?[1-9]|1[0-2])[/\-.](\d{4}|\d{2})|(\d{1,2}) de (enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)( de | )(\d{4}|\d{2})/gi,
+
+  // Montos en diferentes formatos
+  amounts: /\$\s*[\d.,]+|\d+[\d.,]*\s*(pesos|dólares|euros|UF|UTM)/gi,
+
+  // RUT chileno
+  rut: /\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]/gi,
+
+  // Nombres de personas (patrones comunes en documentos legales)
+  names: /(?:don|doña|sr\.|sra\.|señor|señora)\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){1,3})/gi,
+
+  // Direcciones
+  addresses: /(?:domiciliado en|domicilio en|dirección|ubicado en|ubicada en)\s+([^,;.]+)/gi,
+}
+
+// Función mejorada para extraer fechas con formato
 function extractDates(text: string): Record<string, string> {
-  return { date1: "01/01/2024", date2: "02/02/2024" }
+  const dates: Record<string, string> = {}
+  const currentYear = new Date().getFullYear()
+
+  // Buscar fechas con regex
+  let match
+  const dateRegex = regexPatterns.dates
+
+  while ((match = dateRegex.exec(text)) !== null) {
+    const fullMatch = match[0]
+
+    // Buscar contexto (qué tipo de fecha es)
+    const contextStart = Math.max(0, match.index - 50)
+    const contextEnd = Math.min(text.length, match.index + fullMatch.length + 50)
+    const context = text.substring(contextStart, contextEnd).toLowerCase()
+
+    let dateType = "Fecha"
+
+    // Determinar tipo de fecha según contexto
+    if (/vencimiento|vence|caduca|expira/.test(context)) {
+      dateType = "Vencimiento"
+    } else if (/firma|suscripción|suscrito|celebrado/.test(context)) {
+      dateType = "Firma"
+    } else if (/nacimiento|nació|nacido/.test(context)) {
+      dateType = "Nacimiento"
+    } else if (/plazo|término|finaliza|termina/.test(context)) {
+      dateType = "Plazo"
+    } else if (/audiencia|comparendo|citación/.test(context)) {
+      dateType = "Audiencia"
+    } else if (/pago|abono|cancelación/.test(context)) {
+      dateType = "Pago"
+    }
+
+    // Normalizar formato de fecha
+    const normalizedDate = fullMatch
+
+    // Evitar duplicados
+    if (!dates[dateType]) {
+      dates[dateType] = normalizedDate
+    } else if (!dates[dateType].includes(normalizedDate)) {
+      // Si ya existe este tipo, añadir como numerado
+      let counter = 2
+      while (dates[`${dateType} ${counter}`]) {
+        counter++
+      }
+      dates[`${dateType} ${counter}`] = normalizedDate
+    }
+  }
+
+  return dates
 }
 
+// Función mejorada para extraer montos
 function extractAmounts(text: string): Record<string, string> {
-  return { amount1: "$100", amount2: "€50" }
+  const amounts: Record<string, string> = {}
+
+  // Buscar montos con regex
+  let match
+  const amountRegex = regexPatterns.amounts
+
+  while ((match = amountRegex.exec(text)) !== null) {
+    const fullMatch = match[0]
+
+    // Buscar contexto (qué tipo de monto es)
+    const contextStart = Math.max(0, match.index - 50)
+    const contextEnd = Math.min(text.length, match.index + fullMatch.length + 50)
+    const context = text.substring(contextStart, contextEnd).toLowerCase()
+
+    let amountType = "Monto"
+
+    // Determinar tipo de monto según contexto
+    if (/precio|valor|costo|total/.test(context)) {
+      amountType = "Precio total"
+    } else if (/mensual|mensualidad|canon|renta|arriendo/.test(context)) {
+      amountType = "Pago mensual"
+    } else if (/indemnización|compensación|resarcimiento/.test(context)) {
+      amountType = "Indemnización"
+    } else if (/multa|penalidad|sanción/.test(context)) {
+      amountType = "Multa"
+    } else if (/garantía|caución|fianza/.test(context)) {
+      amountType = "Garantía"
+    } else if (/honorarios|remuneración|sueldo|salario/.test(context)) {
+      amountType = "Remuneración"
+    }
+
+    // Evitar duplicados
+    if (!amounts[amountType]) {
+      amounts[amountType] = fullMatch
+    } else if (!amounts[amountType].includes(fullMatch)) {
+      // Si ya existe este tipo, añadir como numerado
+      let counter = 2
+      while (amounts[`${amountType} ${counter}`]) {
+        counter++
+      }
+      amounts[`${amountType} ${counter}`] = fullMatch
+    }
+  }
+
+  return amounts
 }
 
+// Función mejorada para extraer partes involucradas
 function extractParties(text: string, documentType: DocumentType): Record<string, string> {
-  return { party1: "John Doe", party2: "Jane Smith" }
+  const parties: Record<string, string> = {}
+
+  // Patrones específicos según tipo de documento
+  const partyPatterns: Record<string, Record<string, RegExp>> = {
+    judicial_demanda_civil: {
+      Demandante:
+        /(?:demandante|actor)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+      Demandado:
+        /(?:demandado|demandada)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+    },
+    judicial_demanda_laboral: {
+      Trabajador:
+        /(?:trabajador|demandante)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+      Empleador:
+        /(?:empleador|demandado|empresa)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+    },
+    contrato_arrendamiento: {
+      Arrendador:
+        /(?:arrendador|arrendadora)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+      Arrendatario:
+        /(?:arrendatario|arrendataria)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+    },
+    contrato_compraventa: {
+      Vendedor:
+        /(?:vendedor|vendedora)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+      Comprador:
+        /(?:comprador|compradora)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+    },
+    contrato_trabajo: {
+      Empleador:
+        /(?:empleador|empresa)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+      Trabajador:
+        /(?:trabajador|empleado)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+    },
+    // Patrones genéricos para otros tipos
+    default: {
+      "Parte 1":
+        /(?:comparece|parte|otorgante)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+      "Parte 2":
+        /(?:otra parte|segundo compareciente|segundo otorgante)(?:\s+es|\s*:\s*|\s+don|\s+doña|\s+sr\.|\s+sra\.|\s+señor|\s+señora)\s+([^,;.]+)/i,
+    },
+  }
+
+  // Seleccionar patrones según tipo de documento o usar default
+  const patternsToUse = partyPatterns[documentType] || partyPatterns.default
+
+  // Buscar coincidencias para cada patrón
+  for (const [role, pattern] of Object.entries(patternsToUse)) {
+    const match = text.match(pattern)
+    if (match && match[1]) {
+      parties[role] = match[1].trim()
+    }
+  }
+
+  // Buscar RUTs asociados a las partes
+  const rutMatches = [...text.matchAll(regexPatterns.rut)]
+  if (rutMatches.length > 0) {
+    // Intentar asociar RUTs con las partes ya identificadas
+    for (const rutMatch of rutMatches) {
+      const rut = rutMatch[0]
+      const contextStart = Math.max(0, rutMatch.index! - 50)
+      const contextEnd = Math.min(text.length, rutMatch.index! + rut.length + 20)
+      const context = text.substring(contextStart, contextEnd).toLowerCase()
+
+      // Asociar RUT con la parte correspondiente
+      for (const [role, name] of Object.entries(parties)) {
+        if (context.includes(name.toLowerCase())) {
+          parties[`${role} RUT`] = rut
+          break
+        }
+      }
+    }
+  }
+
+  // Si no se encontraron partes específicas, buscar nombres genéricos
+  if (Object.keys(parties).length === 0) {
+    const nameMatches = [...text.matchAll(regexPatterns.names)]
+    if (nameMatches.length >= 1) {
+      parties["Parte 1"] = nameMatches[0][1].trim()
+
+      if (nameMatches.length >= 2) {
+        parties["Parte 2"] = nameMatches[1][1].trim()
+      }
+    }
+  }
+
+  return parties
 }
 
+// Función para extraer cláusulas importantes
 function extractImportantClauses(text: string, documentType: DocumentType): Record<string, string> {
-  return { clause1: "Clause A", clause2: "Clause B" }
+  const clauses: Record<string, string> = {}
+
+  // Patrones para identificar cláusulas según tipo de documento
+  const clausePatterns: Record<string, string[]> = {
+    contrato_arrendamiento: [
+      "plazo del arriendo",
+      "renta mensual",
+      "garantía",
+      "prohibición de subarrendar",
+      "terminación anticipada",
+      "gastos comunes",
+      "estado del inmueble",
+    ],
+    contrato_trabajo: [
+      "jornada de trabajo",
+      "remuneración",
+      "duración del contrato",
+      "funciones",
+      "beneficios adicionales",
+      "causales de término",
+    ],
+    contrato_compraventa: [
+      "precio de venta",
+      "forma de pago",
+      "entrega del bien",
+      "garantías",
+      "responsabilidad por vicios",
+    ],
+    // Añadir más patrones según sea necesario
+  }
+
+  // Seleccionar patrones según tipo de documento
+  const patternsToUse = clausePatterns[documentType] || []
+
+  // Buscar cláusulas importantes
+  for (const clauseKeyword of patternsToUse) {
+    const regex = new RegExp(
+      `(?:cláusula|artículo|punto)\\s+(?:\\w+\\s+)?(?:sobre|de|del|referente a)?\\s*${clauseKeyword}[^.]*\\.(?:[^.]+\\.){0,3}`,
+      "i",
+    )
+    const match = text.match(regex)
+
+    if (match) {
+      const clauseTitle = clauseKeyword.charAt(0).toUpperCase() + clauseKeyword.slice(1)
+      clauses[clauseTitle] = match[0].trim()
+    }
+  }
+
+  // Buscar cláusulas numeradas
+  const numberedClauseRegex = /(?:CLÁUSULA|ARTÍCULO|CLAUSULA)\s+(\w+|\d+)[.:]\s*([^.]+(?:\.[^.]+){0,3})/gi
+  let match
+
+  while ((match = numberedClauseRegex.exec(text)) !== null) {
+    const clauseNumber = match[1]
+    const clauseContent = match[2].trim()
+
+    // Analizar el contenido para determinar importancia
+    const lowerContent = clauseContent.toLowerCase()
+    if (
+      /termin|resol|rescis|incumpl|garant|prohib|oblig|derecho|plazo|pago|precio|multa|penalidad/i.test(lowerContent) &&
+      clauseContent.length < 500 // Evitar cláusulas demasiado largas
+    ) {
+      clauses[`Cláusula ${clauseNumber}`] = clauseContent
+    }
+  }
+
+  return clauses
 }
 
+// Función para extraer puntos clave
 function extractKeyPoints(text: string, documentType: DocumentType): string[] {
-  return ["Point 1", "Point 2"]
+  const keyPoints: string[] = []
+
+  // Buscar frases que indiquen puntos importantes
+  const keyPhrases = [
+    "es importante destacar",
+    "cabe señalar",
+    "se hace presente",
+    "es fundamental",
+    "se deja constancia",
+    "las partes acuerdan",
+    "se establece expresamente",
+    "queda prohibido",
+    "es obligación",
+    "se obliga a",
+    "deberá",
+    "no podrá",
+  ]
+
+  for (const phrase of keyPhrases) {
+    const regex = new RegExp(`${phrase}[^.]*\\.`, "gi")
+    const matches = text.match(regex)
+
+    if (matches) {
+      for (const match of matches) {
+        if (match.length > 10 && match.length < 300) {
+          // Evitar coincidencias demasiado cortas o largas
+          keyPoints.push(match.trim())
+        }
+      }
+    }
+  }
+
+  // Limitar a 10 puntos clave para no sobrecargar
+  return [...new Set(keyPoints)].slice(0, 10)
 }
 
-// Modificar la función analyzeDocument para detectar demandas y sus tipos
+// Modificar la función analyzeDocument para detectar demandas y sus tipos con mayor precisión
 export function analyzeDocument(text: string): DocumentAnalysis {
   // Convertir texto a minúsculas para facilitar la búsqueda
   const lowerText = text.toLowerCase()
@@ -161,11 +459,15 @@ export function analyzeDocument(text: string): DocumentAnalysis {
     unknown: 0,
   }
 
-  // Contar coincidencias
+  // Contar coincidencias con ponderación
   Object.entries(patterns).forEach(([type, keywords]) => {
     keywords.forEach((keyword) => {
-      if (lowerText.includes(keyword)) {
-        matches[type as DocumentType]++
+      // Buscar todas las ocurrencias de la palabra clave
+      const regex = new RegExp(`\\b${keyword}\\b`, "gi")
+      const occurrences = (lowerText.match(regex) || []).length
+
+      if (occurrences > 0) {
+        matches[type as DocumentType] += occurrences
       }
     })
   })
@@ -173,6 +475,7 @@ export function analyzeDocument(text: string): DocumentAnalysis {
   // Determinar el tipo de documento con más coincidencias
   let documentType: DocumentType = "unknown"
   let maxMatches = 0
+  let confidence = 0
 
   Object.entries(matches).forEach(([type, count]) => {
     if (count > maxMatches) {
@@ -181,13 +484,29 @@ export function analyzeDocument(text: string): DocumentAnalysis {
     }
   })
 
-  // Si no hay suficientes coincidencias, marcar como desconocido
-  if (maxMatches < 2) {
+  // Calcular nivel de confianza (0-100%)
+  const totalMatches = Object.values(matches).reduce((sum, count) => sum + count, 0)
+  if (totalMatches > 0) {
+    confidence = Math.min(100, Math.round((maxMatches / totalMatches) * 100))
+  }
+
+  // Si no hay suficientes coincidencias o la confianza es baja, marcar como desconocido
+  if (maxMatches < 3 || confidence < 40) {
     documentType = "unknown"
   }
 
   // Generar análisis según el tipo de documento
-  return generateAnalysis(documentType, text)
+  const analysis = generateAnalysis(documentType, text)
+
+  // Extraer entidades
+  analysis.fechas = extractDates(text)
+  analysis.montos = extractAmounts(text)
+  analysis.partes = extractParties(text, documentType)
+  analysis.clausulasImportantes = extractImportantClauses(text, documentType)
+  analysis.puntosClaves = extractKeyPoints(text, documentType)
+  analysis.confianza = confidence
+
+  return analysis
 }
 
 // Modificar la función generateAnalysis para incluir información sobre plazos
@@ -212,6 +531,7 @@ function generateAnalysis(documentType: DocumentType, text: string): DocumentAna
       "✗ Podría no reflejar la legislación más reciente",
     ],
     puntosClaves: [],
+    confianza: 0,
   }
 
   // Análisis específicos según el tipo de documento
@@ -295,6 +615,7 @@ function generateAnalysis(documentType: DocumentType, text: string): DocumentAna
         },
       }
 
+    // Mantener los demás casos existentes...
     case "judicial_demanda_laboral":
       return {
         tipo: "Demanda Laboral",
@@ -334,6 +655,8 @@ function generateAnalysis(documentType: DocumentType, text: string): DocumentAna
           "Audiencia de juicio": "Segunda audiencia donde se rinde la prueba y se dicta sentencia.",
         },
       }
+
+    // Añadir más casos según sea necesario...
 
     case "judicial_querella_penal":
       return {

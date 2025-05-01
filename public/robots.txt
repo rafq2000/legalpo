@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
-Sitemap: https://v0-docu-scan.vercel.app/sitemap.xml
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/
+
+Sitemap: https://legalpo.cl/sitemap.xml

@@ -69,6 +69,7 @@ export default function CalculadoraFiniquito() {
   const [expandedDetails, setExpandedDetails] = useState<string[]>([])
   const [isCalculating, setIsCalculating] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Opciones de causales
   const causalesOptions = [
@@ -97,8 +98,9 @@ export default function CalculadoraFiniquito() {
 
   // Función para calcular el finiquito
   const calcularFiniquito = () => {
+    setError(null) // Limpiar errores previos
+
     if (!validarFormulario()) {
-      alert("Por favor completa todos los campos obligatorios.")
       return
     }
 
@@ -106,18 +108,68 @@ export default function CalculadoraFiniquito() {
 
     // Simulamos un pequeño retraso para mostrar la animación
     setTimeout(() => {
-      const datos = obtenerDatosFormulario()
-      const resultadoCalculado = calcular(datos)
-      setResultado(resultadoCalculado)
-      setIsCalculating(false)
-      setActiveTab("resultado")
+      try {
+        const datos = obtenerDatosFormulario()
+        const resultadoCalculado = calcular(datos)
+        setResultado(resultadoCalculado)
+        setIsCalculating(false)
+        setActiveTab("resultado")
+      } catch (error) {
+        console.error("Error al calcular finiquito:", error)
+        setError("Ocurrió un error al calcular el finiquito. Por favor verifica los datos ingresados.")
+        setIsCalculating(false)
+      }
     }, 1200)
   }
 
   // Validación del formulario
   const validarFormulario = () => {
-    const { causalTermino, fechaIngreso, fechaTermino, sueldoBase } = formData
-    return causalTermino && fechaIngreso && fechaTermino && sueldoBase > 0
+    // Validación de la primera pestaña (datos)
+    if (activeTab === "datos") {
+      const { causalTermino, fechaIngreso, fechaTermino } = formData
+      if (!causalTermino) {
+        alert("Por favor selecciona una causal de término.")
+        return false
+      }
+      if (!fechaIngreso) {
+        alert("Por favor ingresa la fecha de ingreso.")
+        return false
+      }
+      if (!fechaTermino) {
+        alert("Por favor ingresa la fecha de término.")
+        return false
+      }
+
+      // Validar que la fecha de término sea posterior a la fecha de ingreso
+      if (new Date(fechaTermino) <= new Date(fechaIngreso)) {
+        alert("La fecha de término debe ser posterior a la fecha de ingreso.")
+        return false
+      }
+
+      return true
+    }
+
+    // Validación de la segunda pestaña (remuneraciones)
+    if (activeTab === "remuneraciones") {
+      const { sueldoBase } = formData
+      if (!sueldoBase || sueldoBase <= 0) {
+        alert("Por favor ingresa un sueldo base válido.")
+        return false
+      }
+
+      // Si tiene remuneración variable, validar que haya ingresado al menos un valor
+      if (formData.remuneracionVariable) {
+        const hasVariableValue = formData.variableUltimosTresMeses.some((value) => value > 0)
+        if (!hasVariableValue) {
+          alert("Has seleccionado remuneración variable. Por favor ingresa al menos un valor.")
+          return false
+        }
+      }
+
+      return true
+    }
+
+    return true
   }
 
   // Obtener datos del formulario
@@ -363,26 +415,26 @@ export default function CalculadoraFiniquito() {
   return (
     <div className="container py-8 font-sans">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-2 text-blue-900">Calculadora de Finiquito</h1>
+        <h1 className="text-3xl font-bold mb-2 text-foreground">Calculadora de Finiquito</h1>
         <p className="text-muted-foreground">
           Calcula de forma simple y rápida el finiquito que corresponde según la ley laboral chilena.
         </p>
       </div>
 
-      <Card className="max-w-4xl mx-auto shadow-lg border-blue-100">
-        <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-100">
+      <Card className="max-w-4xl mx-auto shadow-lg border-border">
+        <CardHeader className="bg-gradient-to-r from-background to-muted border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <Calculator className="h-8 w-8 text-blue-700" />
-              <CardTitle className="text-xl text-blue-900">Simulador de Finiquito</CardTitle>
+              <Calculator className="h-8 w-8 text-foreground" />
+              <CardTitle className="text-xl text-foreground">Simulador de Finiquito</CardTitle>
             </div>
-            <Button variant="ghost" size="sm" className="text-blue-700" onClick={() => setShowHelp(!showHelp)}>
+            <Button variant="ghost" size="sm" className="text-foreground" onClick={() => setShowHelp(!showHelp)}>
               <HelpCircle className="h-5 w-5 mr-1" />
               <span>Ayuda</span>
             </Button>
           </div>
           {showHelp && (
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-800">
+            <div className="mt-4 p-4 bg-muted rounded-lg text-sm text-foreground">
               <h3 className="font-medium mb-2">¿Cómo usar esta calculadora?</h3>
               <ol className="list-decimal pl-5 space-y-1">
                 <li>Selecciona la causal de término del contrato</li>
@@ -398,12 +450,12 @@ export default function CalculadoraFiniquito() {
         </CardHeader>
         <CardContent className="p-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-3 mb-6 bg-blue-50">
+            <TabsList className="grid grid-cols-3 mb-6 bg-muted">
               <TabsTrigger
                 value="datos"
                 className={cn(
-                  "data-[state=active]:bg-blue-600 data-[state=active]:text-white",
-                  "data-[state=inactive]:text-blue-800",
+                  "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
+                  "data-[state=inactive]:text-foreground",
                 )}
               >
                 <Calendar className="h-4 w-4 mr-2" />
@@ -412,8 +464,8 @@ export default function CalculadoraFiniquito() {
               <TabsTrigger
                 value="remuneraciones"
                 className={cn(
-                  "data-[state=active]:bg-blue-600 data-[state=active]:text-white",
-                  "data-[state=inactive]:text-blue-800",
+                  "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
+                  "data-[state=inactive]:text-foreground",
                 )}
               >
                 <DollarSign className="h-4 w-4 mr-2" />
@@ -423,8 +475,8 @@ export default function CalculadoraFiniquito() {
                 value="resultado"
                 disabled={!resultado && !isCalculating}
                 className={cn(
-                  "data-[state=active]:bg-blue-600 data-[state=active]:text-white",
-                  "data-[state=inactive]:text-blue-800",
+                  "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
+                  "data-[state=inactive]:text-foreground",
                   "data-[state=inactive]:opacity-50",
                 )}
               >
@@ -435,20 +487,20 @@ export default function CalculadoraFiniquito() {
 
             <TabsContent value="datos" className="space-y-6">
               <div className="space-y-6">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="text-blue-800 font-medium mb-2 flex items-center">
-                    <Calendar className="h-5 w-5 mr-2 text-blue-700" />
+                <div className="bg-muted p-4 rounded-lg">
+                  <h3 className="text-foreground font-medium mb-2 flex items-center">
+                    <Calendar className="h-5 w-5 mr-2 text-foreground" />
                     Información del contrato
                   </h3>
                   <div>
-                    <Label htmlFor="causalTermino" className="text-blue-900 mb-1 block">
+                    <Label htmlFor="causalTermino" className="text-foreground mb-1 block">
                       Causa de finalización del vínculo laboral*
                     </Label>
                     <Select
                       value={formData.causalTermino}
                       onValueChange={(value) => handleInputChange("causalTermino", value)}
                     >
-                      <SelectTrigger id="causalTermino" className="w-full border-blue-200 focus:border-blue-400">
+                      <SelectTrigger id="causalTermino" className="w-full border-border focus:border-gray-400">
                         <SelectValue placeholder="Selecciona una causal" />
                       </SelectTrigger>
                       <SelectContent>
@@ -463,40 +515,48 @@ export default function CalculadoraFiniquito() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                     <div>
-                      <Label htmlFor="fechaIngreso" className="text-blue-900 mb-1 block">
+                      <Label htmlFor="fechaIngreso" className="text-foreground mb-1 block">
                         Fecha de ingreso*
                       </Label>
-                      <Input
-                        id="fechaIngreso"
-                        type="date"
-                        value={formData.fechaIngreso}
-                        onChange={(e) => handleInputChange("fechaIngreso", e.target.value)}
-                        className="border-blue-200 focus:border-blue-400"
-                      />
+                      <div className="relative">
+                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                        <Input
+                          id="fechaIngreso"
+                          type="date"
+                          value={formData.fechaIngreso}
+                          onChange={(e) => handleInputChange("fechaIngreso", e.target.value)}
+                          className="border-border focus:border-gray-400 pl-10"
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">Formato: DD/MM/AAAA</p>
                     </div>
                     <div>
-                      <Label htmlFor="fechaTermino" className="text-blue-900 mb-1 block">
+                      <Label htmlFor="fechaTermino" className="text-foreground mb-1 block">
                         Fecha fin de contrato*
                       </Label>
-                      <Input
-                        id="fechaTermino"
-                        type="date"
-                        value={formData.fechaTermino}
-                        onChange={(e) => handleInputChange("fechaTermino", e.target.value)}
-                        className="border-blue-200 focus:border-blue-400"
-                      />
+                      <div className="relative">
+                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                        <Input
+                          id="fechaTermino"
+                          type="date"
+                          value={formData.fechaTermino}
+                          onChange={(e) => handleInputChange("fechaTermino", e.target.value)}
+                          className="border-border focus:border-gray-400 pl-10"
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">Formato: DD/MM/AAAA</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="text-blue-800 font-medium mb-2 flex items-center">
-                    <FileText className="h-5 w-5 mr-2 text-blue-700" />
+                <div className="bg-muted p-4 rounded-lg">
+                  <h3 className="text-foreground font-medium mb-2 flex items-center">
+                    <FileText className="h-5 w-5 mr-2 text-foreground" />
                     Información adicional
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <Label htmlFor="diasVacaciones" className="text-blue-900 mb-1 block">
+                      <Label htmlFor="diasVacaciones" className="text-foreground mb-1 block">
                         Días de vacaciones tomadas*
                       </Label>
                       <Input
@@ -505,11 +565,11 @@ export default function CalculadoraFiniquito() {
                         min="0"
                         value={formData.diasVacaciones}
                         onChange={(e) => handleInputChange("diasVacaciones", Number.parseInt(e.target.value))}
-                        className="border-blue-200 focus:border-blue-400"
+                        className="border-border focus:border-gray-400"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="avisoPrevio" className="text-blue-900 mb-1 block">
+                      <Label htmlFor="avisoPrevio" className="text-foreground mb-1 block">
                         ¿Se dio aviso previo de 30 días?
                       </Label>
                       <Select
@@ -520,7 +580,7 @@ export default function CalculadoraFiniquito() {
                         <SelectTrigger
                           id="avisoPrevio"
                           className={cn(
-                            "w-full border-blue-200 focus:border-blue-400",
+                            "w-full border-border focus:border-gray-400",
                             formData.causalTermino !== "art161" && "opacity-60",
                           )}
                         >
@@ -545,8 +605,12 @@ export default function CalculadoraFiniquito() {
 
                 <div className="flex justify-end">
                   <Button
-                    onClick={() => setActiveTab("remuneraciones")}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    onClick={() => {
+                      if (validarFormulario()) {
+                        setActiveTab("remuneraciones")
+                      }
+                    }}
+                    className="bg-primary hover:bg-primary/90 text-white"
                   >
                     Siguiente
                     <ChevronRight className="ml-2 h-4 w-4" />
@@ -557,34 +621,34 @@ export default function CalculadoraFiniquito() {
 
             <TabsContent value="remuneraciones" className="space-y-6">
               <div className="space-y-6">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="text-blue-800 font-medium mb-2 flex items-center">
-                    <DollarSign className="h-5 w-5 mr-2 text-blue-700" />
+                <div className="bg-muted p-4 rounded-lg">
+                  <h3 className="text-foreground font-medium mb-2 flex items-center">
+                    <DollarSign className="h-5 w-5 mr-2 text-foreground" />
                     Remuneraciones fijas
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <Label htmlFor="sueldoBase" className="text-blue-900 mb-1 block">
+                      <Label htmlFor="sueldoBase" className="text-foreground mb-1 block">
                         Sueldo base*
                       </Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                         <Input
                           id="sueldoBase"
                           type="number"
                           min="0"
                           value={formData.sueldoBase}
                           onChange={(e) => handleInputChange("sueldoBase", Number.parseInt(e.target.value))}
-                          className="border-blue-200 focus:border-blue-400 pl-8"
+                          className="border-border focus:border-gray-400 pl-8"
                         />
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="otrasRemuneracionesImponibles" className="text-blue-900 mb-1 block">
+                      <Label htmlFor="otrasRemuneracionesImponibles" className="text-foreground mb-1 block">
                         Otras remuneraciones fijas imponibles
                       </Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                         <Input
                           id="otrasRemuneracionesImponibles"
                           type="number"
@@ -593,7 +657,7 @@ export default function CalculadoraFiniquito() {
                           onChange={(e) =>
                             handleInputChange("otrasRemuneracionesImponibles", Number.parseInt(e.target.value))
                           }
-                          className="border-blue-200 focus:border-blue-400 pl-8"
+                          className="border-border focus:border-gray-400 pl-8"
                         />
                       </div>
                     </div>
@@ -601,11 +665,11 @@ export default function CalculadoraFiniquito() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                     <div>
-                      <Label htmlFor="otrasRemuneracionesNoImponibles" className="text-blue-900 mb-1 block">
+                      <Label htmlFor="otrasRemuneracionesNoImponibles" className="text-foreground mb-1 block">
                         Otras remuneraciones fijas no imponibles
                       </Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                         <Input
                           id="otrasRemuneracionesNoImponibles"
                           type="number"
@@ -614,12 +678,12 @@ export default function CalculadoraFiniquito() {
                           onChange={(e) =>
                             handleInputChange("otrasRemuneracionesNoImponibles", Number.parseInt(e.target.value))
                           }
-                          className="border-blue-200 focus:border-blue-400 pl-8"
+                          className="border-border focus:border-gray-400 pl-8"
                         />
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="gratificacionesProrrateo" className="text-blue-900 mb-1 block">
+                      <Label htmlFor="gratificacionesProrrateo" className="text-foreground mb-1 block">
                         Las gratificaciones están incluidas en el sueldo
                       </Label>
                       <Select
@@ -628,7 +692,7 @@ export default function CalculadoraFiniquito() {
                       >
                         <SelectTrigger
                           id="gratificacionesProrrateo"
-                          className="w-full border-blue-200 focus:border-blue-400"
+                          className="w-full border-border focus:border-gray-400"
                         >
                           <SelectValue placeholder="Selecciona" />
                         </SelectTrigger>
@@ -641,14 +705,14 @@ export default function CalculadoraFiniquito() {
                   </div>
                 </div>
 
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="text-blue-800 font-medium mb-2 flex items-center">
-                    <Calculator className="h-5 w-5 mr-2 text-blue-700" />
+                <div className="bg-muted p-4 rounded-lg">
+                  <h3 className="text-foreground font-medium mb-2 flex items-center">
+                    <Calculator className="h-5 w-5 mr-2 text-foreground" />
                     Remuneración variable
                   </h3>
                   <div className="space-y-4">
                     <div>
-                      <Label className="text-blue-900 mb-2 block">¿Recibe remuneración variable?*</Label>
+                      <Label className="text-foreground mb-2 block">¿Recibe remuneración variable?*</Label>
                       <div className="flex space-x-3">
                         <Button
                           variant={formData.remuneracionVariable ? "default" : "outline"}
@@ -656,8 +720,8 @@ export default function CalculadoraFiniquito() {
                           className={cn(
                             "flex-1",
                             formData.remuneracionVariable
-                              ? "bg-blue-600 hover:bg-blue-700 text-white"
-                              : "border-blue-200 text-blue-800",
+                              ? "bg-primary hover:bg-primary/90 text-white"
+                              : "border-border text-foreground",
                           )}
                         >
                           Sí
@@ -668,8 +732,8 @@ export default function CalculadoraFiniquito() {
                           className={cn(
                             "flex-1",
                             !formData.remuneracionVariable
-                              ? "bg-blue-600 hover:bg-blue-700 text-white"
-                              : "border-blue-200 text-blue-800",
+                              ? "bg-primary hover:bg-primary/90 text-white"
+                              : "border-border text-foreground",
                           )}
                         >
                           No
@@ -678,52 +742,52 @@ export default function CalculadoraFiniquito() {
                     </div>
 
                     {formData.remuneracionVariable && (
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2 p-3 bg-white rounded-lg">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2 p-3 bg-background rounded-lg">
                         <div>
-                          <Label htmlFor="variableMes1" className="text-blue-900 mb-1 block">
+                          <Label htmlFor="variableMes1" className="text-foreground mb-1 block">
                             Último mes
                           </Label>
                           <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                             <Input
                               id="variableMes1"
                               type="number"
                               min="0"
                               value={formData.variableUltimosTresMeses[0]}
                               onChange={(e) => handleVariableChange(0, Number.parseInt(e.target.value))}
-                              className="border-blue-200 focus:border-blue-400 pl-8"
+                              className="border-border focus:border-gray-400 pl-8"
                             />
                           </div>
                         </div>
                         <div>
-                          <Label htmlFor="variableMes2" className="text-blue-900 mb-1 block">
+                          <Label htmlFor="variableMes2" className="text-foreground mb-1 block">
                             Penúltimo mes
                           </Label>
                           <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                             <Input
                               id="variableMes2"
                               type="number"
                               min="0"
                               value={formData.variableUltimosTresMeses[1]}
                               onChange={(e) => handleVariableChange(1, Number.parseInt(e.target.value))}
-                              className="border-blue-200 focus:border-blue-400 pl-8"
+                              className="border-border focus:border-gray-400 pl-8"
                             />
                           </div>
                         </div>
                         <div>
-                          <Label htmlFor="variableMes3" className="text-blue-900 mb-1 block">
+                          <Label htmlFor="variableMes3" className="text-foreground mb-1 block">
                             Antepenúltimo mes
                           </Label>
                           <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                             <Input
                               id="variableMes3"
                               type="number"
                               min="0"
                               value={formData.variableUltimosTresMeses[2]}
                               onChange={(e) => handleVariableChange(2, Number.parseInt(e.target.value))}
-                              className="border-blue-200 focus:border-blue-400 pl-8"
+                              className="border-border focus:border-gray-400 pl-8"
                             />
                           </div>
                         </div>
@@ -736,14 +800,14 @@ export default function CalculadoraFiniquito() {
                   <Button
                     variant="outline"
                     onClick={() => setActiveTab("datos")}
-                    className="border-blue-200 text-blue-800"
+                    className="border-border text-foreground"
                   >
                     <ChevronRight className="mr-2 h-4 w-4 rotate-180" />
                     Anterior
                   </Button>
                   <Button
                     onClick={calcularFiniquito}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    className="bg-primary hover:bg-primary/90 text-white"
                     disabled={isCalculating}
                   >
                     {isCalculating ? (
@@ -761,35 +825,288 @@ export default function CalculadoraFiniquito() {
                 </div>
               </div>
             </TabsContent>
+
+            <TabsContent value="resultado" className="space-y-6">
+              {resultado && (
+                <div className="space-y-6">
+                  <div className="bg-muted p-4 rounded-lg">
+                    <h3 className="text-foreground font-medium mb-4 flex items-center">
+                      <FileText className="h-5 w-5 mr-2 text-foreground" />
+                      Resultado del cálculo de finiquito
+                    </h3>
+
+                    <div className="grid gap-4">
+                      <div className="bg-background p-4 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-medium text-foreground">Información general</h4>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-muted-foreground">Causal de término</p>
+                            <p className="font-medium">{getCausalText(formData.causalTermino)}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Tiempo de servicio</p>
+                            <p className="font-medium">{resultado.tiempoServicio}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-background p-4 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-medium text-foreground">Detalle del finiquito</h4>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="flex justify-between py-1 border-border/50">
+                            <span>Remuneraciones pendientes</span>
+                            <span className="font-medium">{formatMoney(resultado.remuneracionesPendientes)}</span>
+                          </div>
+
+                          {resultado.indemnizacionAvisoPrevio > 0 && (
+                            <div className="flex justify-between py-1 border-border/50">
+                              <span>Indemnización aviso previo</span>
+                              <span className="font-medium">{formatMoney(resultado.indemnizacionAvisoPrevio)}</span>
+                            </div>
+                          )}
+
+                          {resultado.indemnizacionAnosServicio > 0 && (
+                            <div className="flex justify-between py-1 border-border/50">
+                              <span>Indemnización años de servicio</span>
+                              <span className="font-medium">{formatMoney(resultado.indemnizacionAnosServicio)}</span>
+                            </div>
+                          )}
+
+                          {resultado.vacacionesProporcionales > 0 && (
+                            <div className="flex justify-between py-1 border-border/50">
+                              <span>Vacaciones proporcionales</span>
+                              <span className="font-medium">{formatMoney(resultado.vacacionesProporcionales)}</span>
+                            </div>
+                          )}
+
+                          {resultado.feriadoProporcional > 0 && (
+                            <div className="flex justify-between py-1 border-border/50">
+                              <span>Feriado proporcional</span>
+                              <span className="font-medium">{formatMoney(resultado.feriadoProporcional)}</span>
+                            </div>
+                          )}
+
+                          {resultado.gratificacionesProporcionales > 0 && (
+                            <div className="flex justify-between py-1 border-border/50">
+                              <span>Gratificaciones proporcionales</span>
+                              <span className="font-medium">
+                                {formatMoney(resultado.gratificacionesProporcionales)}
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="flex justify-between py-2 font-bold text-lg">
+                            <span>Total a pagar</span>
+                            <span className="text-primary font-bold">{formatMoney(resultado.total)}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-background p-4 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-medium text-foreground">Detalle del cálculo</h4>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              setExpandedDetails(
+                                expandedDetails.length
+                                  ? []
+                                  : [
+                                      "remuneraciones",
+                                      "indemnizacionAviso",
+                                      "indemnizacionAnos",
+                                      "vacaciones",
+                                      "feriado",
+                                      "gratificaciones",
+                                    ],
+                              )
+                            }
+                          >
+                            {expandedDetails.length ? "Ocultar todo" : "Mostrar todo"}
+                          </Button>
+                        </div>
+                        <div className="space-y-3">
+                          <div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-full justify-between text-left font-normal"
+                              onClick={() => toggleDetail("remuneraciones")}
+                            >
+                              <span>Remuneraciones pendientes</span>
+                              <ChevronRight
+                                className={`h-4 w-4 transition-transform ${expandedDetails.includes("remuneraciones") ? "rotate-90" : ""}`}
+                              />
+                            </Button>
+                            {expandedDetails.includes("remuneraciones") && (
+                              <div className="p-3 text-sm bg-muted rounded mt-1">
+                                <p>{resultado.formulas.remuneraciones}</p>
+                              </div>
+                            )}
+                          </div>
+
+                          <div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-full justify-between text-left font-normal"
+                              onClick={() => toggleDetail("indemnizacionAviso")}
+                            >
+                              <span>Indemnización aviso previo</span>
+                              <ChevronRight
+                                className={`h-4 w-4 transition-transform ${expandedDetails.includes("indemnizacionAviso") ? "rotate-90" : ""}`}
+                              />
+                            </Button>
+                            {expandedDetails.includes("indemnizacionAviso") && (
+                              <div className="p-3 text-sm bg-muted rounded mt-1">
+                                <p>{resultado.formulas.indemnizacionAviso}</p>
+                              </div>
+                            )}
+                          </div>
+
+                          <div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-full justify-between text-left font-normal"
+                              onClick={() => toggleDetail("indemnizacionAnos")}
+                            >
+                              <span>Indemnización años de servicio</span>
+                              <ChevronRight
+                                className={`h-4 w-4 transition-transform ${expandedDetails.includes("indemnizacionAnos") ? "rotate-90" : ""}`}
+                              />
+                            </Button>
+                            {expandedDetails.includes("indemnizacionAnos") && (
+                              <div className="p-3 text-sm bg-muted rounded mt-1">
+                                <p>{resultado.formulas.indemnizacionAnos}</p>
+                              </div>
+                            )}
+                          </div>
+
+                          <div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-full justify-between text-left font-normal"
+                              onClick={() => toggleDetail("vacaciones")}
+                            >
+                              <span>Vacaciones proporcionales</span>
+                              <ChevronRight
+                                className={`h-4 w-4 transition-transform ${expandedDetails.includes("vacaciones") ? "rotate-90" : ""}`}
+                              />
+                            </Button>
+                            {expandedDetails.includes("vacaciones") && (
+                              <div className="p-3 text-sm bg-muted rounded mt-1">
+                                <p>{resultado.formulas.vacaciones}</p>
+                              </div>
+                            )}
+                          </div>
+
+                          <div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-full justify-between text-left font-normal"
+                              onClick={() => toggleDetail("feriado")}
+                            >
+                              <span>Feriado proporcional</span>
+                              <ChevronRight
+                                className={`h-4 w-4 transition-transform ${expandedDetails.includes("feriado") ? "rotate-90" : ""}`}
+                              />
+                            </Button>
+                            {expandedDetails.includes("feriado") && (
+                              <div className="p-3 text-sm bg-muted rounded mt-1">
+                                <p>{resultado.formulas.feriado}</p>
+                              </div>
+                            )}
+                          </div>
+
+                          <div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-full justify-between text-left font-normal"
+                              onClick={() => toggleDetail("gratificaciones")}
+                            >
+                              <span>Gratificaciones proporcionales</span>
+                              <ChevronRight
+                                className={`h-4 w-4 transition-transform ${expandedDetails.includes("gratificaciones") ? "rotate-90" : ""}`}
+                              />
+                            </Button>
+                            {expandedDetails.includes("gratificaciones") && (
+                              <div className="p-3 text-sm bg-muted rounded mt-1">
+                                <p>{resultado.formulas.gratificaciones}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <Button
+                      variant="outline"
+                      onClick={() => setActiveTab("remuneraciones")}
+                      className="border-border text-foreground"
+                    >
+                      <ChevronRight className="mr-2 h-4 w-4 rotate-180" />
+                      Volver a editar
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        // Aquí podríamos agregar funcionalidad para imprimir o exportar
+                        window.print()
+                      }}
+                      className="bg-primary hover:bg-primary/90 text-white"
+                    >
+                      Imprimir resultado
+                      <FileText className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+            {error && (
+              <Alert variant="destructive" className="mt-4">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
           </Tabs>
         </CardContent>
-        <CardFooter className="bg-gradient-to-r from-blue-50 to-blue-100 border-t border-blue-100 p-4 text-center">
-          <p className="text-sm text-blue-700 w-full">
+        <CardFooter className="bg-gradient-to-r from-background to-muted border-t border-border p-4 text-center">
+          <p className="text-sm text-foreground w-full">
             © 2025 LegalPO - Calculadora basada en la legislación laboral chilena vigente
           </p>
         </CardFooter>
       </Card>
 
       <div className="mt-8 max-w-3xl mx-auto">
-        <h2 className="text-xl font-semibold text-blue-900 mb-4">Preguntas frecuentes</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">Preguntas frecuentes</h2>
         <div className="space-y-4">
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-100">
-            <h3 className="font-medium text-blue-800 mb-2">¿Qué es un finiquito?</h3>
-            <p className="text-gray-700">
+          <div className="bg-background p-4 rounded-lg shadow-sm border-border">
+            <h3 className="font-medium text-foreground mb-2">¿Qué es un finiquito?</h3>
+            <p className="text-foreground">
               El finiquito es un documento que formaliza el término de la relación laboral entre empleador y trabajador.
               En él se detallan los montos que el empleador debe pagar al trabajador al finalizar el contrato.
             </p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-100">
-            <h3 className="font-medium text-blue-800 mb-2">¿Es obligatorio firmar el finiquito?</h3>
-            <p className="text-gray-700">
+          <div className="bg-background p-4 rounded-lg shadow-sm border-border">
+            <h3 className="font-medium text-foreground mb-2">¿Es obligatorio firmar el finiquito?</h3>
+            <p className="text-foreground">
               No es obligatorio firmar el finiquito si no estás de acuerdo con su contenido. Sin embargo, es
               recomendable revisar detalladamente los montos y conceptos antes de tomar una decisión.
             </p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-100">
-            <h3 className="font-medium text-blue-800 mb-2">¿Dónde puedo validar mi finiquito?</h3>
-            <p className="text-gray-700">
+          <div className="bg-background p-4 rounded-lg shadow-sm border-border">
+            <h3 className="font-medium text-foreground mb-2">¿Dónde puedo validar mi finiquito?</h3>
+            <p className="text-foreground">
               Los finiquitos pueden ser firmados ante un notario, un inspector del trabajo o un funcionario del
               sindicato. Estas opciones le dan validez legal al documento.
             </p>

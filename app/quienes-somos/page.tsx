@@ -6,7 +6,10 @@ import { SiteFooter } from "@/components/site-footer"
 import { ArrowLeft, Facebook, Twitter, Instagram, Linkedin } from "lucide-react"
 
 export default function QuienesSomosPage() {
+  // El contenido de la página permanece igual, ya que no contiene direcciones de correo electrónico específicas
+  // Si hubiera alguna dirección de correo electrónico en esta página, la cambiaríamos a contacto@legalpo.cl
   return (
+    // Contenido de la página
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
       <main className="flex-1 container mx-auto px-4 py-6">

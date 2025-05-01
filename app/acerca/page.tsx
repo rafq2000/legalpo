@@ -7,7 +7,10 @@ import { SidebarAd } from "@/components/sidebar-ad"
 import { SiteFooter } from "@/components/site-footer"
 
 export default function AcercaPage() {
+  // El contenido de la página permanece igual, ya que no contiene direcciones de correo electrónico específicas
+  // Si hubiera alguna dirección de correo electrónico en esta página, la cambiaríamos a contacto@legalpo.cl
   return (
+    // Contenido de la página
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center">

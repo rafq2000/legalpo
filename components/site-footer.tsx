@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { Shield } from "lucide-react"
 
@@ -51,31 +53,31 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-4">Información</h3>
+            <h3 className="font-semibold text-lg mb-4">Información Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/quienes-somos" className="text-blue-200 hover:text-white transition-colors">
-                  Quiénes somos
+                <Link href="/accidentes-transito" className="text-blue-200 hover:text-white transition-colors">
+                  Accidentes de tránsito
                 </Link>
               </li>
               <li>
-                <Link href="/como-funciona" className="text-blue-200 hover:text-white transition-colors">
-                  Cómo funciona
+                <Link href="/pension-alimentos" className="text-blue-200 hover:text-white transition-colors">
+                  Pensión de alimentos
                 </Link>
               </li>
               <li>
-                <Link href="/caracteristicas" className="text-blue-200 hover:text-white transition-colors">
-                  Características
+                <Link href="/herencias" className="text-blue-200 hover:text-white transition-colors">
+                  Herencias
                 </Link>
               </li>
               <li>
-                <Link href="/terminos" className="text-blue-200 hover:text-white transition-colors">
-                  Términos de servicio
+                <Link href="/finiquito-chile" className="text-blue-200 hover:text-white transition-colors">
+                  Finiquito laboral
                 </Link>
               </li>
               <li>
-                <Link href="/privacidad" className="text-blue-200 hover:text-white transition-colors">
-                  Política de privacidad
+                <Link href="/derechos-consumidor" className="text-blue-200 hover:text-white transition-colors">
+                  Derechos del consumidor
                 </Link>
               </li>
             </ul>
@@ -91,6 +93,12 @@ export function SiteFooter() {
             <p className="text-blue-200">
               <strong>WhatsApp:</strong> +56 9 6145 8118
             </p>
+            <p className="text-blue-200 mt-4">
+              <strong>Datos personales:</strong>{" "}
+              <Link href="/privacidad" className="underline hover:text-white">
+                Derechos ARCO
+              </Link>
+            </p>
           </div>
         </div>
 
@@ -98,6 +106,20 @@ export function SiteFooter() {
           <p>
             LegalPO proporciona información con fines educativos y orientativos. No constituye asesoramiento legal
             profesional.
+          </p>
+          <p className="mt-2">
+            <button
+              onClick={() => {
+                // @ts-ignore
+                if (typeof window !== "undefined" && window.openCookieConsent) {
+                  // @ts-ignore
+                  window.openCookieConsent()
+                }
+              }}
+              className="underline hover:text-white cursor-pointer"
+            >
+              Configurar cookies
+            </button>
           </p>
         </div>
       </div>

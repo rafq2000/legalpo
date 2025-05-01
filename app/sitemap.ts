@@ -22,6 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/terminos",
     "/terminos-legales",
     "/ayuda-analizador",
+    // Nuevas páginas de contenido legal
+    "/accidentes-transito",
+    "/pension-alimentos",
+    "/herencias",
+    "/finiquito-chile",
+    "/derechos-consumidor",
   ]
 
   return routes.map((route) => ({

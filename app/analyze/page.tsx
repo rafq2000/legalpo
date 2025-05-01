@@ -1,256 +1,337 @@
 "use client"
 
-import { CardFooter } from "@/components/ui/card"
-
 import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+
+import { useState, useCallback, useRef, useEffect } from "react"
 import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
+import { Slider } from "@/components/ui/slider"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 import {
-  ArrowLeft,
+  Loader2,
   Upload,
   FileText,
-  Loader2,
   FileImage,
+  FileUp,
+  Settings,
+  Zap,
   Download,
-  AlertCircle,
   Copy,
   Check,
-  FileIcon as FileWord,
+  AlertCircle,
+  Crop,
+  RotateCw,
+  X,
   MessageSquare,
-  Calendar,
-  DollarSign,
-  Users,
-  FileSignature,
-  ListChecks,
-  Clipboard,
-  Info,
 } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Slider } from "@/components/ui/slider"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { processDocument } from "@/lib/document-processor"
-import { analyzeDocument, type DocumentAnalysis } from "@/lib/document-analyzer"
-import { DocumentChat } from "@/components/document-chat"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { TextToSpeech } from "@/components/text-to-speech"
-// Importa el componente AdUnit al inicio del archivo
+import { Progress } from "@/components/ui/progress"
+import { toast } from "@/components/ui/use-toast"
+import { analyzeDocument } from "@/lib/document-analyzer"
 import { AdUnit } from "@/components/ad-unit"
 import { SiteFooter } from "@/components/site-footer"
-// Añadir la importación del ShareButton en la sección de importaciones
+import { DocumentChat } from "@/components/document-chat"
+import { TextToSpeech } from "@/components/text-to-speech"
 import { ShareButton } from "@/components/share-button"
 
+// Componente principal
 export default function AnalyzePage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [file, setFile] = useState<File | null>(null)
-  const [preview, setPreview] = useState<string | null>(null)
-  const [isProcessing, setIsProcessing] = useState(false)
   const [extractedText, setExtractedText] = useState("")
-  const [brightness, setBrightness] = useState(100)
-  const [contrast, setContrast] = useState(100)
-  const [analysis, setAnalysis] = useState<DocumentAnalysis | null>(null)
+  const [manualText, setManualText] = useState("")
+  const [isProcessing, setIsProcessing] = useState(false)
   const [processingProgress, setProcessingProgress] = useState(0)
+  const [processingStatus, setProcessingStatus] = useState("")
+  const [analysisResult, setAnalysisResult] = useState<any>(null)
+  const [activeTab, setActiveTab] = useState("upload")
+  const [resultTab, setResultTab] = useState("analysis")
+  const [error, setError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const imageRef = useRef<HTMLImageElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [copied, setCopied] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [isPDF, setIsPDF] = useState(false)
   const [isWord, setIsWord] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const [showPreview, setShowPreview] = useState(false)
-  const [activeTab, setActiveTab] = useState("analysis")
-  const [userId, setUserId] = useState<string | null>(null)
-  const [inputMethod, setInputMethod] = useState<"upload" | "paste">("upload")
-  const [pdfError, setPdfError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  // Agregar estado para manejar múltiples archivos
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
-  // Agregar componente para mostrar miniaturas de múltiples archivos
-  const renderFilesThumbnails = () => {
-    if (!selectedFiles || selectedFiles.length <= 1) return null
+  // Opciones de OCR
+  const [ocrOptions, setOcrOptions] = useState({
+    language: "spa",
+    brightness: 100,
+    contrast: 100,
+    threshold: 128,
+    denoise: true,
+    scale: 1.5,
+  })
 
-    return (
-      <div className="mt-4">
-        <p className="text-sm font-medium mb-2">Archivos seleccionados ({selectedFiles.length}):</p>
-        <div className="flex flex-wrap gap-2">
-          {selectedFiles.map((file, index) => (
-            <div
-              key={index}
-              className={`border rounded p-2 text-xs flex items-center ${file === selectedFiles[0] ? "bg-primary/10 border-primary" : ""}`}
-              onClick={() => {
-                // Cambiar la vista previa al archivo seleccionado
-                setFile(file)
-                const fileUrl = URL.createObjectURL(file)
-                setPreview(fileUrl)
-                setIsPDF(file.type === "application/pdf")
-                setIsWord(
-                  file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-                    file.type === "application/msword",
-                )
-              }}
-            >
-              {file.type.includes("image") ? (
-                <FileImage className="h-4 w-4 mr-1 text-primary" />
-              ) : file.type.includes("pdf") ? (
-                <FileText className="h-4 w-4 mr-1 text-red-500" />
-              ) : (
-                <FileWord className="h-4 w-4 mr-1 text-blue-500" />
-              )}
-              {file.name.length > 15 ? file.name.substring(0, 12) + "..." : file.name}
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
+  // Área de selección para OCR
+  const [selectionArea, setSelectionArea] = useState<{
+    x: number
+    y: number
+    width: number
+    height: number
+  } | null>(null)
+  const [isSelecting, setIsSelecting] = useState(false)
+  const [selectionStart, setSelectionStart] = useState({ x: 0, y: 0 })
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false)
+  const [rotation, setRotation] = useState(0)
 
+  // Verificar autenticación
   useEffect(() => {
-    // Verificar si el usuario está autenticado
-    if (status === "loading") {
-      setIsLoading(true)
-      return
-    }
-
     if (status === "unauthenticated") {
-      // Redirigir a la página de login si no está autenticado
-      router.push(`/login?callbackUrl=${encodeURIComponent(window.location.pathname)}`)
-      return
-    }
-
-    setIsLoading(false)
-
-    // Intentar recuperar el userId del localStorage
-    const storedUserId = localStorage.getItem("docuscan_user_id")
-    if (storedUserId) {
-      setUserId(storedUserId)
+      router.push("/login?callbackUrl=/analyze")
     }
   }, [status, router])
 
-  // Analizar texto cuando cambia
-  useEffect(() => {
-    if (extractedText.trim()) {
-      const documentAnalysis = analyzeDocument(extractedText)
-      setAnalysis(documentAnalysis)
-    } else {
-      setAnalysis(null)
-    }
-  }, [extractedText])
-
-  // Modificar la función handleFileChange para permitir múltiples archivos
+  // Manejar cambio de archivo
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = e.target.files
-    if (!selectedFiles || selectedFiles.length === 0) return
+    const files = e.target.files
+    if (!files || files.length === 0) return
 
-    // Tomar el primer archivo para la vista previa inicial
-    const firstFile = selectedFiles[0]
-    setFile(firstFile)
-    const fileUrl = URL.createObjectURL(firstFile)
-    setPreview(fileUrl)
+    const selectedFile = files[0]
+    setFile(selectedFile)
+    setSelectedFiles(Array.from(files))
     setExtractedText("")
-    setBrightness(100)
-    setContrast(100)
-    setIsPDF(firstFile.type === "application/pdf")
+    setAnalysisResult(null)
+    setError(null)
+    setSelectionArea(null)
+    setRotation(0)
+
+    // Determinar tipo de archivo
+    setIsPDF(selectedFile.type === "application/pdf")
     setIsWord(
-      firstFile.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-        firstFile.type === "application/msword",
+      selectedFile.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+        selectedFile.type === "application/msword" ||
+        selectedFile.type === "application/rtf" ||
+        selectedFile.name.endsWith(".rtf"),
     )
-    setAnalysis(null)
-    setPdfError(null)
 
-    // Guardar todos los archivos seleccionados en un estado
-    setSelectedFiles(Array.from(selectedFiles))
+    // Si es una imagen, cargarla para previsualización y selección de área
+    if (selectedFile && selectedFile.type.startsWith("image/")) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        if (imageRef.current && event.target?.result) {
+          imageRef.current.src = event.target.result as string
+          imageRef.current.onload = () => {
+            drawImageOnCanvas()
+          }
+        }
+      }
+      reader.readAsDataURL(selectedFile)
+    } else {
+      // Limpiar canvas si no es una imagen
+      if (canvasRef.current) {
+        const ctx = canvasRef.current.getContext("2d")
+        if (ctx) {
+          ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+        }
+      }
+    }
   }
 
-  // Modificar la función handleDrop para permitir múltiples archivos
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    const droppedFiles = e.dataTransfer.files
-    if (!droppedFiles || droppedFiles.length === 0) return
+  // Dibujar imagen en el canvas
+  const drawImageOnCanvas = useCallback(() => {
+    if (!canvasRef.current || !imageRef.current) return
 
-    // Tomar el primer archivo para la vista previa inicial
-    const firstFile = droppedFiles[0]
-    setFile(firstFile)
-    const fileUrl = URL.createObjectURL(file)
-    setPreview(fileUrl)
-    setExtractedText("")
-    setBrightness(100)
-    setContrast(100)
-    setIsPDF(firstFile.type === "application/pdf")
-    setIsWord(
-      firstFile.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-        file.type === "application/msword",
-    )
-    setAnalysis(null)
-    setPdfError(null)
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
 
-    // Guardar todos los archivos seleccionados en un estado
-    setSelectedFiles(Array.from(droppedFiles))
+    // Ajustar tamaño del canvas al contenedor manteniendo la relación de aspecto
+    const container = canvas.parentElement
+    if (!container) return
+
+    const containerWidth = container.clientWidth
+    const imgWidth = imageRef.current.naturalWidth
+    const imgHeight = imageRef.current.naturalHeight
+    const scale = containerWidth / imgWidth
+
+    canvas.width = containerWidth
+    canvas.height = imgHeight * scale
+
+    // Guardar el estado actual del contexto
+    ctx.save()
+
+    // Limpiar el canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    // Trasladar al centro del canvas para la rotación
+    if (rotation !== 0) {
+      ctx.translate(canvas.width / 2, canvas.height / 2)
+      ctx.rotate((rotation * Math.PI) / 180)
+      ctx.translate(-canvas.width / 2, -canvas.height / 2)
+    }
+
+    // Dibujar imagen
+    ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height)
+
+    // Restaurar el contexto para dibujar el área de selección sin rotación
+    ctx.restore()
+
+    // Dibujar área de selección si existe
+    if (selectionArea) {
+      ctx.strokeStyle = "#3b82f6"
+      ctx.lineWidth = 2
+      ctx.strokeRect(selectionArea.x, selectionArea.y, selectionArea.width, selectionArea.height)
+
+      // Añadir un fondo semitransparente para resaltar el área seleccionada
+      ctx.fillStyle = "rgba(59, 130, 246, 0.2)"
+      ctx.fillRect(selectionArea.x, selectionArea.y, selectionArea.width, selectionArea.height)
+    }
+  }, [selectionArea, rotation])
+
+  // Actualizar canvas cuando cambia el área de selección o la rotación
+  useEffect(() => {
+    drawImageOnCanvas()
+  }, [selectionArea, rotation, drawImageOnCanvas])
+
+  // Eventos de mouse para selección de área
+  const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current) return
+
+    const rect = canvasRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    setIsSelecting(true)
+    setSelectionStart({ x, y })
+    setSelectionArea({ x, y, width: 0, height: 0 })
   }
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
+  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isSelecting || !canvasRef.current) return
+
+    const rect = canvasRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    const width = x - selectionStart.x
+    const height = y - selectionStart.y
+
+    setSelectionArea({
+      x: selectionStart.x,
+      y: selectionStart.y,
+      width,
+      height,
+    })
   }
 
-  // Modificar la función handleProcessDocument para procesar múltiples archivos
-  const handleProcessDocument = async () => {
-    if (!file) return
+  const handleCanvasMouseUp = () => {
+    setIsSelecting(false)
+    // Normalizar área de selección (asegurar que width y height sean positivos)
+    if (selectionArea) {
+      const normalizedArea = {
+        x: selectionArea.width < 0 ? selectionArea.x + selectionArea.width : selectionArea.x,
+        y: selectionArea.height < 0 ? selectionArea.y + selectionArea.height : selectionArea.y,
+        width: Math.abs(selectionArea.width),
+        height: Math.abs(selectionArea.height),
+      }
+      setSelectionArea(normalizedArea)
+    }
+  }
+
+  const clearSelection = () => {
+    setSelectionArea(null)
+  }
+
+  const rotateImage = () => {
+    setRotation((prev) => (prev + 90) % 360)
+  }
+
+  // Procesar documento
+  const processSelectedDocument = async () => {
+    if (!file && !manualText) {
+      setError("Por favor, seleccione un archivo o ingrese texto manualmente.")
+      return
+    }
 
     setIsProcessing(true)
     setProcessingProgress(0)
-    setPdfError(null)
+    setProcessingStatus("starting")
+    setError(null)
 
     try {
       let combinedText = ""
 
-      // Procesar cada archivo seleccionado
-      for (let i = 0; i < selectedFiles.length; i++) {
-        const currentFile = selectedFiles[i]
+      if (activeTab === "upload" && selectedFiles.length > 0) {
+        // Procesar cada archivo seleccionado
+        for (let i = 0; i < selectedFiles.length; i++) {
+          const currentFile = selectedFiles[i]
 
-        // Actualizar progreso para mostrar qué archivo se está procesando
-        setProcessingProgress((i / selectedFiles.length) * 50) // Usar la primera mitad del progreso para indicar el archivo actual
+          // Actualizar progreso para mostrar qué archivo se está procesando
+          setProcessingProgress((i / selectedFiles.length) * 50)
 
-        const text = await processDocument(
-          currentFile,
-          {
-            language: "spa",
-            brightness,
-            contrast,
-          },
-          (progress) => {
-            // Calcular el progreso total considerando el archivo actual y el progreso dentro de ese archivo
-            const fileProgress = progress.progress / 100 // Convertir a decimal
-            const overallProgress = ((i + fileProgress) / selectedFiles.length) * 100
-            setProcessingProgress(overallProgress)
+          // Procesar archivo en el cliente
+          const text = await processDocument(
+            currentFile,
+            {
+              ...ocrOptions,
+              area: currentFile === file ? selectionArea : null, // Solo aplicar área de selección al archivo actual
+            },
+            (progress) => {
+              // Calcular el progreso total considerando el archivo actual y el progreso dentro de ese archivo
+              const fileProgress = progress.progress / 100 // Convertir a decimal
+              const overallProgress = ((i + fileProgress) / selectedFiles.length) * 100
+              setProcessingProgress(overallProgress)
+              setProcessingStatus(progress.status)
+            },
+          )
 
-            if (progress.status === "complete" && progress.text && i === selectedFiles.length - 1) {
-              setExtractedText(combinedText + progress.text)
-            }
-          },
-        )
-
-        // Agregar un separador entre los textos de diferentes archivos
-        if (i > 0) {
-          combinedText += "\n\n--- NUEVO DOCUMENTO ---\n\n"
+          // Agregar un separador entre los textos de diferentes archivos
+          if (i > 0) {
+            combinedText += "\n\n--- NUEVO DOCUMENTO ---\n\n"
+          }
+          combinedText += text
         }
-        combinedText += text
+
+        setExtractedText(combinedText)
+      } else if (activeTab === "paste") {
+        combinedText = manualText
       }
 
-      setExtractedText(combinedText)
-      setShowPreview(true)
-    } catch (error) {
-      console.error("Error al procesar los documentos:", error)
-      setExtractedText("")
-      setPdfError(
-        "Error al procesar los documentos. Es posible que algún PDF esté protegido o dañado. Por favor, intenta copiar y pegar el texto directamente.",
-      )
+      if (combinedText.trim()) {
+        // Análisis local para respuesta inmediata
+        const analysis = analyzeDocument(combinedText)
+        setAnalysisResult(analysis)
+
+        // Enviar texto al servidor para análisis y registro
+        const formData = new FormData()
+        if (file) formData.append("file", file)
+        formData.append("extractedText", combinedText)
+
+        fetch("/api/analyze-document", {
+          method: "POST",
+          body: formData,
+        }).catch((error) => {
+          console.error("Error al enviar análisis al servidor:", error)
+        })
+
+        setShowPreview(true)
+      }
+    } catch (error: any) {
+      console.error("Error al procesar documento:", error)
+      setError(`Error: ${error.message || "Error desconocido al procesar el documento"}`)
+      toast({
+        title: "Error",
+        description: error.message || "Error desconocido al procesar el documento",
+        variant: "destructive",
+      })
     } finally {
       setIsProcessing(false)
+      setProcessingProgress(100)
     }
   }
 
@@ -279,389 +360,115 @@ export default function AnalyzePage() {
     URL.revokeObjectURL(url)
   }
 
+  // Renderizar miniaturas de múltiples archivos
+  const renderFilesThumbnails = () => {
+    if (!selectedFiles || selectedFiles.length <= 1) return null
+
+    return (
+      <div className="mt-4">
+        <p className="text-sm font-medium mb-2">Archivos seleccionados ({selectedFiles.length}):</p>
+        <div className="flex flex-wrap gap-2">
+          {selectedFiles.map((f, index) => (
+            <div
+              key={index}
+              className={`border rounded p-2 text-xs flex items-center ${f === file ? "bg-primary/10 border-primary" : ""}`}
+              onClick={() => {
+                // Cambiar la vista previa al archivo seleccionado
+                setFile(f)
+                setIsPDF(f.type === "application/pdf")
+                setIsWord(
+                  f.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                    f.type === "application/msword" ||
+                    f.type === "application/rtf" ||
+                    f.name.endsWith(".rtf"),
+                )
+
+                // Si es una imagen, cargarla para previsualización
+                if (f.type.startsWith("image/")) {
+                  const reader = new FileReader()
+                  reader.onload = (event) => {
+                    if (imageRef.current && event.target?.result) {
+                      imageRef.current.src = event.target.result as string
+                      imageRef.current.onload = () => {
+                        drawImageOnCanvas()
+                      }
+                    }
+                  }
+                  reader.readAsDataURL(f)
+                }
+              }}
+            >
+              {f.type.includes("image") ? (
+                <FileImage className="h-4 w-4 mr-1 text-primary" />
+              ) : f.type.includes("pdf") ? (
+                <FileText className="h-4 w-4 mr-1 text-red-500" />
+              ) : (
+                <FileText className="h-4 w-4 mr-1 text-blue-500" />
+              )}
+              {f.name.length > 15 ? f.name.substring(0, 12) + "..." : f.name}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   // Función para generar texto para la lectura del análisis
   const getAnalysisText = () => {
-    if (!analysis) return ""
+    if (!analysisResult) return ""
 
-    let text = `Análisis del documento: ${analysis.tipo}. ${analysis.descripcion} `
+    let text = `Análisis del documento: ${analysisResult.tipo}. ${analysisResult.descripcion} `
 
     // Añadir partes involucradas
-    if (analysis.partes && Object.keys(analysis.partes).length > 0) {
+    if (analysisResult.partes && Object.keys(analysisResult.partes).length > 0) {
       text += "Partes involucradas: "
-      Object.entries(analysis.partes).forEach(([rol, nombre]) => {
+      Object.entries(analysisResult.partes).forEach(([rol, nombre]) => {
         text += `${rol}: ${nombre}. `
       })
     }
 
     // Añadir fechas importantes
-    if (analysis.fechas && Object.keys(analysis.fechas).length > 0) {
+    if (analysisResult.fechas && Object.keys(analysisResult.fechas).length > 0) {
       text += "Fechas importantes: "
-      Object.entries(analysis.fechas).forEach(([tipo, fecha]) => {
+      Object.entries(analysisResult.fechas).forEach(([tipo, fecha]) => {
         text += `${tipo}: ${fecha}. `
       })
     }
 
     // Añadir montos
-    if (analysis.montos && Object.keys(analysis.montos).length > 0) {
+    if (analysisResult.montos && Object.keys(analysisResult.montos).length > 0) {
       text += "Montos y valores: "
-      Object.entries(analysis.montos).forEach(([tipo, monto]) => {
+      Object.entries(analysisResult.montos).forEach(([tipo, monto]) => {
         text += `${tipo}: ${monto}. `
-      })
-    }
-
-    // Añadir advertencias
-    if (analysis.advertencias && analysis.advertencias.length > 0) {
-      text += "Advertencias importantes: "
-      analysis.advertencias.forEach((adv) => {
-        text += `${adv}. `
-      })
-    }
-
-    // Añadir recomendaciones
-    if (analysis.recomendaciones && analysis.recomendaciones.length > 0) {
-      text += "Recomendaciones: "
-      analysis.recomendaciones.forEach((rec) => {
-        text += `${rec}. `
       })
     }
 
     return text
   }
 
-  // Renderizar el análisis del documento
-  const renderAnalysis = () => {
-    if (!analysis) return null
-
+  if (status === "loading") {
     return (
-      <Card className="h-full border-blue-100">
-        {/* Modificar el CardHeader en la función renderAnalysis para incluir el botón de compartir: */}
-        <CardHeader className="flex flex-row items-center justify-between bg-blue-50 border-b border-blue-100">
-          <div>
-            <CardTitle className="text-xl">{analysis.tipo}</CardTitle>
-            <CardDescription className="text-base">{analysis.descripcion}</CardDescription>
-          </div>
-          <div className="flex items-center gap-2">
-            <TextToSpeech text={getAnalysisText()} label="Leer análisis completo" />
-            <ShareButton title={`Análisis de documento: ${analysis.tipo}`} text={getAnalysisText()} size="sm" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            <Accordion type="single" collapsible className="w-full">
-              {analysis.partes && Object.keys(analysis.partes).length > 0 && (
-                <AccordionItem value="partes">
-                  <AccordionTrigger className="text-blue-600 font-medium flex items-center">
-                    <Users className="h-4 w-4 mr-2" />
-                    Partes involucradas
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-grow">
-                        <ul className="space-y-2 pl-2">
-                          {Object.entries(analysis.partes).map(([rol, nombre], i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <span className="font-semibold">{rol}:</span> {nombre}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <TextToSpeech
-                        text={Object.entries(analysis.partes)
-                          .map(([rol, nombre]) => `${rol}: ${nombre}`)
-                          .join(". ")}
-                        label="Leer partes"
-                      />
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-
-              {analysis.fechas && Object.keys(analysis.fechas).length > 0 && (
-                <AccordionItem value="fechas">
-                  <AccordionTrigger className="text-blue-600 font-medium flex items-center">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Fechas importantes
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-grow">
-                        <ul className="space-y-2 pl-2">
-                          {Object.entries(analysis.fechas).map(([tipo, fecha], i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <span className="font-semibold">{tipo}:</span> {fecha}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <TextToSpeech
-                        text={Object.entries(analysis.fechas)
-                          .map(([tipo, fecha]) => `${tipo}: ${fecha}`)
-                          .join(". ")}
-                        label="Leer fechas"
-                      />
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-
-              {analysis.montos && Object.keys(analysis.montos).length > 0 && (
-                <AccordionItem value="montos">
-                  <AccordionTrigger className="text-blue-600 font-medium flex items-center">
-                    <DollarSign className="h-4 w-4 mr-2" />
-                    Montos y valores
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-grow">
-                        <ul className="space-y-2 pl-2">
-                          {Object.entries(analysis.montos).map(([tipo, monto], i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <span className="font-semibold">{tipo}:</span> {monto}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <TextToSpeech
-                        text={Object.entries(analysis.montos)
-                          .map(([tipo, monto]) => `${tipo}: ${monto}`)
-                          .join(". ")}
-                        label="Leer montos"
-                      />
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-
-              {analysis.clausulasImportantes && Object.keys(analysis.clausulasImportantes).length > 0 && (
-                <AccordionItem value="clausulas">
-                  <AccordionTrigger className="text-blue-600 font-medium flex items-center">
-                    <FileSignature className="h-4 w-4 mr-2" />
-                    Cláusulas importantes
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-grow">
-                        <ul className="space-y-2 pl-2">
-                          {Object.entries(analysis.clausulasImportantes).map(([numero, contenido], i) => (
-                            <li key={i} className="flex flex-col gap-1">
-                              <span className="font-semibold">{numero}:</span>
-                              <p className="text-sm text-muted-foreground pl-4">{contenido}</p>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <TextToSpeech
-                        text={Object.entries(analysis.clausulasImportantes)
-                          .map(([numero, contenido]) => `${numero}: ${contenido}`)
-                          .join(". ")}
-                        label="Leer cláusulas"
-                      />
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-
-              {analysis.puntosClaves && analysis.puntosClaves.length > 0 && (
-                <AccordionItem value="puntos">
-                  <AccordionTrigger className="text-blue-600 font-medium flex items-center">
-                    <ListChecks className="h-4 w-4 mr-2" />
-                    Puntos clave
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-grow">
-                        <ul className="space-y-2 pl-2">
-                          {analysis.puntosClaves.map((punto, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <span className="mt-1">• {punto}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <TextToSpeech text={analysis.puntosClaves.join(". ")} label="Leer puntos clave" />
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-
-              <AccordionItem value="advertencias">
-                <AccordionTrigger className="text-red-500 font-medium">Advertencias importantes</AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-grow">
-                      <ul className="space-y-2 pl-2">
-                        {analysis.advertencias.map((adv, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <span className="mt-1">{adv}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <TextToSpeech text={analysis.advertencias.join(". ")} label="Leer advertencias" />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="ventajas">
-                <AccordionTrigger className="text-green-600 font-medium">Ventajas de este documento</AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-grow">
-                      <ul className="space-y-2 pl-2">
-                        {analysis.ventajas.map((ventaja, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <span className="mt-1">{ventaja}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <TextToSpeech text={analysis.ventajas.join(". ")} label="Leer ventajas" />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="riesgos">
-                <AccordionTrigger className="text-amber-600 font-medium">Riesgos a considerar</AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-grow">
-                      <ul className="space-y-2 pl-2">
-                        {analysis.riesgos.map((riesgo, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <span className="mt-1">{riesgo}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <TextToSpeech text={analysis.riesgos.join(". ")} label="Leer riesgos" />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="recomendaciones">
-                <AccordionTrigger className="text-blue-500 font-medium">Recomendaciones prácticas</AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-grow">
-                      <ul className="space-y-2 pl-2">
-                        {analysis.recomendaciones.map((rec, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <span className="mt-1">{rec}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <TextToSpeech text={analysis.recomendaciones.join(". ")} label="Leer recomendaciones" />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              {analysis.conceptosLegales && (
-                <AccordionItem value="conceptos">
-                  <AccordionTrigger className="text-purple-500 font-medium">Conceptos legales clave</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-grow">
-                        <dl className="space-y-4">
-                          {Object.entries(analysis.conceptosLegales).map(([concepto, definicion], i) => (
-                            <div key={i}>
-                              <dt className="font-semibold">{concepto}</dt>
-                              <dd className="text-muted-foreground pl-4 mt-1">{definicion}</dd>
-                            </div>
-                          ))}
-                        </dl>
-                      </div>
-                      <TextToSpeech
-                        text={Object.entries(analysis.conceptosLegales)
-                          .map(([concepto, definicion]) => `${concepto}: ${definicion}`)
-                          .join(". ")}
-                        label="Leer conceptos"
-                      />
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              )}
-            </Accordion>
-
-            <Alert className="bg-blue-50 border-blue-200">
-              <AlertCircle className="h-4 w-4 text-blue-500" />
-              <AlertTitle className="text-blue-700">Nota importante</AlertTitle>
-              <AlertDescription className="text-blue-600">
-                Este análisis es generado automáticamente y tiene carácter informativo. Para decisiones legales
-                importantes, siempre consulte con un profesional legal calificado.
-              </AlertDescription>
-            </Alert>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  // Modificar la función que procesa documentos para registrar la analítica
-  const handleAnalyzeDocument = async () => {
-    if (!extractedText.trim()) return
-
-    try {
-      const response = await fetch("/api/analyze-document", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: extractedText,
-          userId: userId,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error(`Error en la respuesta del servidor: ${response.status}`)
-      }
-
-      const data = await response.json()
-
-      // Guardar el userId si se recibió uno nuevo
-      if (data.userId && (!userId || userId !== data.userId)) {
-        setUserId(data.userId)
-        localStorage.setItem("docuscan_user_id", data.userId)
-      }
-
-      // Resto del código para manejar el análisis...
-    } catch (error) {
-      console.error("Error al analizar el documento:", error)
-      // Manejar el error...
-    }
-  }
-
-  // Si está cargando o no está autenticado, mostrar pantalla de carga
-  if (isLoading || status === "loading" || status === "unauthenticated") {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center">
+      <div className="flex justify-center items-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
         <p className="text-center">Verificando sesión...</p>
       </div>
     )
   }
 
-  // El resto del componente permanece igual...
-
-  // Continuar con el renderizado normal si el usuario está autenticado
   return (
     <div className="flex min-h-screen flex-col">
-      {/* Anuncio en la parte superior */}
+      {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center">
           <div className="mr-4 flex">
-            <Link href="/" className="mr-6 flex items-center space-x-2">
-              <FileImage className="h-6 w-6 text-primary" />
-              <span className="font-bold">LegalPO</span>
-            </Link>
             <Button variant="ghost" size="sm" asChild className="gap-1">
-              <Link href="/">
-                <ArrowLeft className="h-4 w-4" />
-                Volver al inicio
-              </Link>
+              <a href="/">
+                <FileImage className="h-6 w-6 text-primary" />
+                <span className="font-bold">LegalPO</span>
+              </a>
             </Button>
           </div>
+          <h1 className="text-xl font-semibold">Analizador de Documentos</h1>
         </div>
       </header>
 
@@ -672,279 +479,359 @@ export default function AnalyzePage() {
 
       <main className="flex-1 container py-6 px-4 sm:px-6">
         <div className="mx-auto max-w-7xl">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Analizar documento</h1>
-
-          {!file && !showPreview ? (
+          {!showPreview ? (
             <div className="space-y-6">
-              <Tabs defaultValue="upload" onValueChange={(value) => setInputMethod(value as "upload" | "paste")}>
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="grid w-full grid-cols-2 mb-6">
                   <TabsTrigger value="upload" className="flex items-center gap-2">
                     <Upload className="h-4 w-4" />
-                    Subir documento
+                    Subir Documento
                   </TabsTrigger>
                   <TabsTrigger value="paste" className="flex items-center gap-2">
-                    <Clipboard className="h-4 w-4" />
-                    Pegar texto
+                    <FileText className="h-4 w-4" />
+                    Pegar Texto
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="upload">
+                <TabsContent value="upload" className="space-y-4">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Sube tu documento</CardTitle>
+                      <CardTitle>Subir Documento</CardTitle>
                       <CardDescription>
                         Arrastra y suelta o selecciona un archivo para comenzar el análisis
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      {/* Modificar la sección de carga de archivos para permitir múltiples archivos */}
-                      <div
-                        className="border-2 border-dashed rounded-lg p-12 text-center hover:bg-muted/50 transition-colors cursor-pointer"
-                        onDrop={handleDrop}
-                        onDragOver={handleDragOver}
-                        onClick={() => document.getElementById("file-upload")?.click()}
-                      >
-                        <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                        <h3 className="text-lg font-medium mb-1">Arrastra y suelta tus archivos aquí</h3>
-                        <p className="text-sm text-muted-foreground mb-4">o haz clic para seleccionar archivos</p>
-                        <p className="text-xs text-muted-foreground">
-                          Formatos soportados: JPG, JPEG, PNG, PDF, DOCX, DOC (máx. 10MB por archivo)
-                        </p>
-                        <input
-                          id="file-upload"
-                          type="file"
-                          className="hidden"
-                          accept=".jpg,.jpeg,.png,.pdf,.docx,.doc"
-                          onChange={handleFileChange}
-                          multiple // Permitir selección múltiple
-                        />
+                      <div className="space-y-4">
+                        <div
+                          className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                          onClick={() => fileInputRef.current?.click()}
+                        >
+                          <FileUp className="h-10 w-10 mx-auto mb-2 text-gray-400" />
+                          <p>
+                            Arrastra y suelta tu archivo aquí o{" "}
+                            <span className="text-blue-500">haz clic para seleccionar</span>
+                          </p>
+                          <p className="text-sm text-gray-500 mt-1">Soporta PDF, Word, imágenes y archivos de texto</p>
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            className="hidden"
+                            accept=".pdf,.doc,.docx,.rtf,.txt,image/*"
+                            onChange={handleFileChange}
+                            multiple
+                          />
+                        </div>
+
+                        {file && (
+                          <div className="flex items-center gap-2 p-2 border rounded-md">
+                            {file.type.includes("image") ? (
+                              <FileImage className="h-5 w-5 text-primary" />
+                            ) : file.type.includes("pdf") ? (
+                              <FileText className="h-5 w-5 text-red-500" />
+                            ) : (
+                              <FileText className="h-5 w-5 text-blue-500" />
+                            )}
+                            <span className="flex-1 truncate">{file.name}</span>
+                            <span className="text-sm text-gray-500">{(file.size / 1024).toFixed(1)} KB</span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setFile(null)
+                                setSelectedFiles([])
+                                setExtractedText("")
+                                if (fileInputRef.current) fileInputRef.current.value = ""
+                              }}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
+
+                        {/* Renderizar miniaturas de múltiples archivos */}
+                        {renderFilesThumbnails()}
+
+                        {file && file.type.startsWith("image/") && (
+                          <div className="mt-4 space-y-2">
+                            <div className="relative border rounded-md overflow-hidden">
+                              <img
+                                ref={imageRef}
+                                src="/placeholder.svg"
+                                alt="Preview"
+                                className="hidden"
+                                onLoad={drawImageOnCanvas}
+                              />
+                              <canvas
+                                ref={canvasRef}
+                                className="w-full cursor-crosshair"
+                                onMouseDown={handleCanvasMouseDown}
+                                onMouseMove={handleCanvasMouseMove}
+                                onMouseUp={handleCanvasMouseUp}
+                                onMouseLeave={handleCanvasMouseUp}
+                              />
+                            </div>
+                            <div className="flex justify-between">
+                              <div className="flex gap-2">
+                                <Button variant="outline" size="sm" onClick={clearSelection}>
+                                  <Crop className="h-4 w-4 mr-1" />
+                                  Limpiar selección
+                                </Button>
+                                <Button variant="outline" size="sm" onClick={rotateImage}>
+                                  <RotateCw className="h-4 w-4 mr-1" />
+                                  Rotar
+                                </Button>
+                              </div>
+                              <p className="text-sm text-gray-500">
+                                {selectionArea
+                                  ? "Área seleccionada para OCR"
+                                  : "Selecciona un área específica para OCR"}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between">
+                          <Button
+                            variant="outline"
+                            type="button"
+                            onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
+                            className="flex items-center gap-2"
+                          >
+                            <Settings className="h-4 w-4" />
+                            {showAdvancedOptions ? "Ocultar opciones avanzadas" : "Mostrar opciones avanzadas"}
+                          </Button>
+
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  className="flex items-center gap-2"
+                                  onClick={() => {
+                                    setOcrOptions({
+                                      language: "spa",
+                                      brightness: 100,
+                                      contrast: 100,
+                                      threshold: 128,
+                                      denoise: true,
+                                      scale: 1.5,
+                                    })
+                                  }}
+                                >
+                                  <Zap className="h-4 w-4" />
+                                  Restablecer
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Restablecer opciones a valores predeterminados</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+
+                        {showAdvancedOptions && (
+                          <Accordion type="single" collapsible className="w-full">
+                            <AccordionItem value="ocr-options">
+                              <AccordionTrigger>Opciones de OCR</AccordionTrigger>
+                              <AccordionContent>
+                                <div className="space-y-4 pt-2">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="language">Idioma del documento</Label>
+                                    <p className="text-sm text-gray-500 mb-1">
+                                      Selecciona el idioma principal del texto en la imagen para mejorar el
+                                      reconocimiento
+                                    </p>
+                                    <Select
+                                      value={ocrOptions.language}
+                                      onValueChange={(value) => setOcrOptions({ ...ocrOptions, language: value })}
+                                    >
+                                      <SelectTrigger id="language">
+                                        <SelectValue placeholder="Seleccionar idioma" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="spa">Español</SelectItem>
+                                        <SelectItem value="eng">Inglés</SelectItem>
+                                        <SelectItem value="por">Portugués</SelectItem>
+                                        <SelectItem value="fra">Francés</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+
+                                  <div className="space-y-2">
+                                    <div className="flex justify-between">
+                                      <Label htmlFor="brightness">Brillo: {ocrOptions.brightness}%</Label>
+                                    </div>
+                                    <p className="text-sm text-gray-500 mb-1">
+                                      Ajusta el brillo si la imagen es muy oscura (aumentar) o muy clara (disminuir)
+                                    </p>
+                                    <Slider
+                                      id="brightness"
+                                      min={50}
+                                      max={150}
+                                      step={5}
+                                      value={[ocrOptions.brightness]}
+                                      onValueChange={(value) => setOcrOptions({ ...ocrOptions, brightness: value[0] })}
+                                    />
+                                  </div>
+
+                                  <div className="space-y-2">
+                                    <div className="flex justify-between">
+                                      <Label htmlFor="contrast">Contraste: {ocrOptions.contrast}%</Label>
+                                    </div>
+                                    <p className="text-sm text-gray-500 mb-1">
+                                      Aumenta el contraste si el texto no se distingue bien del fondo
+                                    </p>
+                                    <Slider
+                                      id="contrast"
+                                      min={50}
+                                      max={150}
+                                      step={5}
+                                      value={[ocrOptions.contrast]}
+                                      onValueChange={(value) => setOcrOptions({ ...ocrOptions, contrast: value[0] })}
+                                    />
+                                  </div>
+
+                                  <div className="space-y-2">
+                                    <div className="flex justify-between">
+                                      <Label htmlFor="threshold">Umbral de binarización: {ocrOptions.threshold}</Label>
+                                    </div>
+                                    <p className="text-sm text-gray-500 mb-1">
+                                      Determina qué se considera texto (negro) y qué se considera fondo (blanco)
+                                    </p>
+                                    <Slider
+                                      id="threshold"
+                                      min={0}
+                                      max={255}
+                                      step={5}
+                                      value={[ocrOptions.threshold]}
+                                      onValueChange={(value) => setOcrOptions({ ...ocrOptions, threshold: value[0] })}
+                                    />
+                                  </div>
+
+                                  <div className="flex items-center space-x-2">
+                                    <Switch
+                                      id="denoise"
+                                      checked={ocrOptions.denoise}
+                                      onCheckedChange={(checked) => setOcrOptions({ ...ocrOptions, denoise: checked })}
+                                    />
+                                    <div>
+                                      <Label htmlFor="denoise">Reducción de ruido</Label>
+                                      <p className="text-xs text-gray-500">
+                                        Elimina manchas y puntos que pueden confundirse con texto
+                                      </p>
+                                    </div>
+                                  </div>
+
+                                  <div className="space-y-2">
+                                    <div className="flex justify-between">
+                                      <Label htmlFor="scale">Escala: {ocrOptions.scale}x</Label>
+                                    </div>
+                                    <p className="text-sm text-gray-500 mb-1">
+                                      Aumenta el tamaño de la imagen para mejorar el reconocimiento de texto pequeño
+                                    </p>
+                                    <Slider
+                                      id="scale"
+                                      min={0.5}
+                                      max={2}
+                                      step={0.1}
+                                      value={[ocrOptions.scale]}
+                                      onValueChange={(value) => setOcrOptions({ ...ocrOptions, scale: value[0] })}
+                                    />
+                                  </div>
+
+                                  <div className="bg-blue-50 p-3 rounded-md mt-2">
+                                    <h4 className="text-sm font-medium text-blue-700 mb-1">
+                                      ¿Cómo mejorar el reconocimiento de texto?
+                                    </h4>
+                                    <ul className="text-xs text-blue-600 space-y-1">
+                                      <li>• Si el texto es muy pequeño: aumenta la escala</li>
+                                      <li>• Si la imagen tiene manchas: activa la reducción de ruido</li>
+                                      <li>• Si el texto es muy claro: aumenta el contraste y reduce el umbral</li>
+                                      <li>• Si el texto es muy oscuro: reduce el brillo</li>
+                                      <li>
+                                        • Para documentos escaneados: selecciona un área específica con el texto más
+                                        importante
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
+                        )}
                       </div>
                     </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <div className="text-sm text-muted-foreground">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className="flex items-center gap-1 cursor-help">
-                                <Info className="h-4 w-4" />
-                                <span>¿Problemas con PDFs?</span>
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-xs">
-                              Si tienes problemas con PDFs protegidos o complejos, usa la opción "Pegar texto" para
-                              copiar y pegar el contenido directamente.
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                      <Button variant="outline" onClick={() => setInputMethod("paste")}>
-                        <Clipboard className="h-4 w-4 mr-2" />
-                        Pegar texto en su lugar
-                      </Button>
-                    </CardFooter>
                   </Card>
                 </TabsContent>
 
-                <TabsContent value="paste">
+                <TabsContent value="paste" className="space-y-4">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Pega tu texto legal</CardTitle>
+                      <CardTitle>Pegar Texto</CardTitle>
                       <CardDescription>
                         Copia y pega directamente el contenido del documento para analizarlo
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-4">
-                        <Textarea
-                          placeholder="Pega aquí el texto del documento legal que deseas analizar..."
-                          className="min-h-[300px] font-mono text-sm"
-                          value={extractedText}
-                          onChange={(e) => setExtractedText(e.target.value)}
-                        />
-                        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
-                          <div className="text-sm text-muted-foreground">
-                            <p>Puedes pegar texto desde:</p>
-                            <ul className="list-disc pl-5 mt-1">
-                              <li>PDFs (selecciona el texto y cópialo)</li>
-                              <li>Documentos Word</li>
-                              <li>Páginas web</li>
-                              <li>Correos electrónicos</li>
-                            </ul>
-                          </div>
-                          <Button
-                            className="sm:self-end"
-                            disabled={!extractedText?.trim()}
-                            onClick={() => {
-                              if (extractedText?.trim()) {
-                                setShowPreview(true)
-                              }
-                            }}
-                          >
-                            <FileText className="mr-2 h-4 w-4" />
-                            Analizar texto
-                          </Button>
-                        </div>
-                      </div>
+                      <Textarea
+                        placeholder="Pega aquí el texto del documento que deseas analizar..."
+                        value={manualText}
+                        onChange={(e) => setManualText(e.target.value)}
+                        className="min-h-[300px]"
+                      />
                     </CardContent>
                   </Card>
                 </TabsContent>
               </Tabs>
-            </div>
-          ) : !showPreview ? (
-            // Agregar el renderizado de miniaturas en la sección de documento cargado
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Documento cargado</CardTitle>
-                <CardDescription>
-                  {isPDF
-                    ? "Archivo PDF cargado correctamente"
-                    : isWord
-                      ? "Documento Word cargado correctamente"
-                      : "Imagen cargada correctamente. Ajusta los parámetros para mejorar el OCR"}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 sm:gap-6">
-                  <div className="relative">
-                    {isPDF ? (
-                      <div className="flex flex-col items-center justify-center p-8 border rounded-lg bg-gray-50 h-64">
-                        <FileText className="h-16 w-16 text-primary mb-4" />
-                        <p className="text-center text-muted-foreground">Documento PDF cargado correctamente</p>
-                      </div>
-                    ) : isWord ? (
-                      <div className="flex flex-col items-center justify-center p-8 border rounded-lg bg-gray-50 h-64">
-                        <FileWord className="h-16 w-16 text-primary mb-4" />
-                        <p className="text-center text-muted-foreground">Documento Word cargado correctamente</p>
-                      </div>
-                    ) : (
-                      preview && (
-                        <img
-                          src={preview || "/placeholder.svg"}
-                          alt="Vista previa del documento"
-                          className="w-full h-auto rounded-lg border"
-                          style={{
-                            filter: `brightness(${brightness}%) contrast(${contrast}%)`,
-                          }}
-                        />
-                      )
-                    )}
+
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+
+              {isProcessing ? (
+                <div className="mt-6 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium">
+                      {processingStatus === "starting"
+                        ? "Iniciando procesamiento..."
+                        : processingStatus === "loading_pdf"
+                          ? "Cargando PDF..."
+                          : processingStatus === "extracting_text"
+                            ? "Extrayendo texto..."
+                            : processingStatus === "pdf_ocr_required"
+                              ? "Realizando OCR en PDF escaneado..."
+                              : processingStatus === "performing_ocr_on_pdf"
+                                ? "Realizando OCR en páginas del PDF..."
+                                : processingStatus === "loading_image"
+                                  ? "Cargando imagen..."
+                                  : processingStatus === "preprocessing_image"
+                                    ? "Preprocesando imagen..."
+                                    : processingStatus === "recognizing_text"
+                                      ? "Reconociendo texto..."
+                                      : processingStatus === "finalizing"
+                                        ? "Finalizando..."
+                                        : "Procesando..."}
+                    </span>
+                    <span className="text-sm">{Math.round(processingProgress)}%</span>
                   </div>
-                  <div className="space-y-4 sm:space-y-6">
-                    {(isPDF || isWord) && (
-                      <Alert>
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertTitle>Información</AlertTitle>
-                        <AlertDescription>
-                          {isPDF
-                            ? "Los archivos PDF se procesan directamente para extraer su texto. Los ajustes de imagen no aplican para este formato."
-                            : "Los documentos Word se procesan directamente para extraer su texto. Los ajustes de imagen no aplican para este formato."}
-                        </AlertDescription>
-                      </Alert>
-                    )}
-
-                    {!isPDF && !isWord && (
-                      <>
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <Label htmlFor="brightness">Brillo: {brightness}%</Label>
-                          </div>
-                          <Slider
-                            id="brightness"
-                            min={50}
-                            max={150}
-                            step={1}
-                            value={[brightness]}
-                            onValueChange={(value) => setBrightness(value[0])}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <div className="flex justify-between">
-                            <Label htmlFor="contrast">Contraste: {contrast}%</Label>
-                          </div>
-                          <Slider
-                            id="contrast"
-                            min={50}
-                            max={150}
-                            step={1}
-                            value={[contrast]}
-                            onValueChange={(value) => setContrast(value[0])}
-                          />
-                        </div>
-                      </>
-                    )}
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-2">Información del archivo:</p>
-                      <ul className="text-sm space-y-1">
-                        <li>
-                          <span className="font-medium">Nombre:</span> {file?.name}
-                        </li>
-                        <li>
-                          <span className="font-medium">Tamaño:</span> {file ? (file.size / 1024 / 1024).toFixed(2) : 0}{" "}
-                          MB
-                        </li>
-                        <li>
-                          <span className="font-medium">Tipo:</span> {file?.type || "Desconocido"}
-                        </li>
-                        {isProcessing && (
-                          <li>
-                            <span className="font-medium">Progreso:</span>
-                            <div className="w-full bg-gray-200 rounded-full h-2.5 mt-1">
-                              <div
-                                className="bg-primary h-2.5 rounded-full"
-                                style={{ width: `${processingProgress}%` }}
-                              ></div>
-                            </div>
-                          </li>
-                        )}
-                      </ul>
-                    </div>
-
-                    {/* Renderizar miniaturas de múltiples archivos */}
-                    {renderFilesThumbnails()}
-
-                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-                      <Button onClick={handleProcessDocument} disabled={isProcessing}>
-                        {isProcessing ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Procesando... {processingProgress.toFixed(0)}%
-                          </>
-                        ) : (
-                          <>
-                            <FileText className="mr-2 h-4 w-4" />
-                            {selectedFiles.length > 1 ? "Extraer texto de todos los archivos" : "Extraer texto"}
-                          </>
-                        )}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setFile(null)
-                          setPreview(null)
-                          setExtractedText("")
-                          setAnalysis(null)
-                          setIsPDF(false)
-                          setIsWord(false)
-                          setShowPreview(false)
-                          setPdfError(null)
-                          setSelectedFiles([])
-                        }}
-                      >
-                        Subir otros archivos
-                      </Button>
-                    </div>
-
-                    {pdfError && (
-                      <Alert variant="destructive" className="mt-4">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertTitle>Error al procesar el PDF</AlertTitle>
-                        <AlertDescription>{pdfError}</AlertDescription>
-                      </Alert>
-                    )}
-                  </div>
+                  <Progress value={processingProgress} className="w-full" />
                 </div>
-              </CardContent>
-            </Card>
+              ) : (
+                <Button
+                  onClick={processSelectedDocument}
+                  className="mt-6 w-full"
+                  size="lg"
+                  disabled={(!file && !manualText) || isProcessing}
+                >
+                  Analizar Documento
+                </Button>
+              )}
+            </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               <div>
@@ -959,21 +846,15 @@ export default function AnalyzePage() {
                       </CardDescription>
                     </div>
                     <div className="flex items-center gap-2">
-                      <TextToSpeech text={extractedText} label="Leer texto extraído" />
+                      <TextToSpeech text={extractedText || manualText} label="Leer texto extraído" />
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => {
-                          if (file) {
-                            setShowPreview(false)
-                          } else {
-                            setShowPreview(false)
-                            setExtractedText("")
-                            setAnalysis(null)
-                          }
+                          setShowPreview(false)
+                          setAnalysisResult(null)
                         }}
                       >
-                        <ArrowLeft className="h-4 w-4 mr-1" />
                         Volver
                       </Button>
                     </div>
@@ -982,8 +863,10 @@ export default function AnalyzePage() {
                     <div className="relative">
                       <Textarea
                         ref={textareaRef}
-                        value={extractedText || ""}
-                        onChange={(e) => setExtractedText(e.target.value)}
+                        value={extractedText || manualText}
+                        onChange={(e) =>
+                          activeTab === "upload" ? setExtractedText(e.target.value) : setManualText(e.target.value)
+                        }
                         className="min-h-[250px] sm:min-h-[400px] font-mono text-sm"
                         placeholder="El texto extraído aparecerá aquí. También puedes pegar o escribir texto manualmente."
                       />
@@ -1014,7 +897,12 @@ export default function AnalyzePage() {
                             : "Puedes editar el texto manualmente"}
                       </p>
                     </div>
-                    <Button variant="outline" size="sm" onClick={handleDownloadText} disabled={!extractedText}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleDownloadText}
+                      disabled={!extractedText && !manualText}
+                    >
                       <Download className="mr-2 h-4 w-4" />
                       Descargar como TXT
                     </Button>
@@ -1023,16 +911,15 @@ export default function AnalyzePage() {
               </div>
 
               {/* Añadir anuncio en medio del contenido cuando se muestra el análisis */}
-              {showPreview && (
-                <div className="my-6">
-                  <AdUnit slot="7654321098" format="horizontal" className="horizontal in-content" />
-                </div>
-              )}
+              <div className="my-6 lg:hidden">
+                <AdUnit slot="7654321098" format="horizontal" className="horizontal in-content" />
+              </div>
 
+              {/* Renderizar miniaturas de múltiples archivos */}
               {renderFilesThumbnails()}
 
               <div>
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
+                <Tabs value={resultTab} onValueChange={setResultTab} className="h-full">
                   <TabsList className="grid grid-cols-2 mb-4">
                     <TabsTrigger value="analysis" className="flex items-center">
                       <FileText className="h-4 w-4 mr-2" />
@@ -1045,8 +932,259 @@ export default function AnalyzePage() {
                   </TabsList>
 
                   <TabsContent value="analysis" className="h-full">
-                    {analysis ? (
-                      renderAnalysis()
+                    {analysisResult ? (
+                      <Card className="h-full border-blue-100">
+                        <CardHeader className="flex flex-row items-center justify-between bg-blue-50 border-b border-blue-100">
+                          <div>
+                            <CardTitle className="text-xl">{analysisResult.tipo}</CardTitle>
+                            <CardDescription className="text-base">{analysisResult.descripcion}</CardDescription>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <TextToSpeech text={getAnalysisText()} label="Leer análisis completo" />
+                            <ShareButton
+                              title={`Análisis de documento: ${analysisResult.tipo}`}
+                              text={getAnalysisText()}
+                              size="sm"
+                            />
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-6">
+                            {/* Introducción explicativa */}
+                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-6">
+                              <h3 className="text-lg font-medium text-blue-800 mb-2">¿Qué significa este análisis?</h3>
+                              <p className="text-blue-700">
+                                Hemos analizado tu documento y te presentamos un resumen de la información más
+                                importante. Te explicamos en palabras sencillas qué tipo de documento es, quiénes
+                                participan, fechas importantes y otros detalles que debes conocer.
+                              </p>
+                            </div>
+
+                            <Accordion type="single" collapsible className="w-full">
+                              {analysisResult.partes && Object.keys(analysisResult.partes).length > 0 && (
+                                <AccordionItem value="partes">
+                                  <AccordionTrigger className="text-blue-600 font-medium">
+                                    Partes involucradas
+                                  </AccordionTrigger>
+                                  <AccordionContent>
+                                    <div className="mb-3 text-gray-600">
+                                      <p>
+                                        Estas son las personas o empresas que participan en este documento. Es
+                                        importante identificar correctamente quién es quién para entender sus derechos y
+                                        obligaciones.
+                                      </p>
+                                    </div>
+                                    <ul className="space-y-2">
+                                      {Object.entries(analysisResult.partes).map(([rol, nombre], i) => (
+                                        <li key={i} className="flex items-start gap-2 bg-gray-50 p-2 rounded">
+                                          <span className="font-semibold">{rol}:</span> {nombre}
+                                          <span className="text-sm text-gray-500 ml-2">
+                                            {rol.toLowerCase().includes("demandante") ||
+                                            rol.toLowerCase().includes("actor")
+                                              ? "(Quien inicia la acción legal)"
+                                              : rol.toLowerCase().includes("demandado")
+                                                ? "(Contra quien se dirige la acción legal)"
+                                                : rol.toLowerCase().includes("arrendador")
+                                                  ? "(Quien alquila la propiedad)"
+                                                  : rol.toLowerCase().includes("arrendatario")
+                                                    ? "(Quien paga por usar la propiedad)"
+                                                    : rol.toLowerCase().includes("empleador")
+                                                      ? "(Quien contrata)"
+                                                      : rol.toLowerCase().includes("trabajador")
+                                                        ? "(Quien es contratado)"
+                                                        : rol.toLowerCase().includes("vendedor")
+                                                          ? "(Quien vende)"
+                                                          : rol.toLowerCase().includes("comprador")
+                                                            ? "(Quien compra)"
+                                                            : ""}
+                                          </span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              )}
+
+                              {analysisResult.fechas && Object.keys(analysisResult.fechas).length > 0 && (
+                                <AccordionItem value="fechas">
+                                  <AccordionTrigger className="text-blue-600 font-medium">
+                                    Fechas importantes
+                                  </AccordionTrigger>
+                                  <AccordionContent>
+                                    <div className="mb-3 text-gray-600">
+                                      <p>
+                                        Las fechas son muy importantes en documentos legales. Marcan plazos,
+                                        vencimientos y momentos clave que debes tener en cuenta.
+                                      </p>
+                                    </div>
+                                    <ul className="space-y-2">
+                                      {Object.entries(analysisResult.fechas).map(([tipo, fecha], i) => (
+                                        <li key={i} className="flex items-start gap-2 bg-gray-50 p-2 rounded">
+                                          <span className="font-semibold">{tipo}:</span> {fecha}
+                                          <span className="text-sm text-gray-500 ml-2">
+                                            {tipo.toLowerCase().includes("vencimiento")
+                                              ? "(Fecha límite que no debes olvidar)"
+                                              : tipo.toLowerCase().includes("firma")
+                                                ? "(Cuando se firmó el documento)"
+                                                : tipo.toLowerCase().includes("plazo")
+                                                  ? "(Tiempo límite para cumplir algo)"
+                                                  : tipo.toLowerCase().includes("audiencia")
+                                                    ? "(Día en que debes presentarte ante el tribunal)"
+                                                    : ""}
+                                          </span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              )}
+
+                              {analysisResult.montos && Object.keys(analysisResult.montos).length > 0 && (
+                                <AccordionItem value="montos">
+                                  <AccordionTrigger className="text-blue-600 font-medium">
+                                    Montos y valores
+                                  </AccordionTrigger>
+                                  <AccordionContent>
+                                    <div className="mb-3 text-gray-600">
+                                      <p>
+                                        Aquí se muestran las cantidades de dinero mencionadas en el documento. Es
+                                        importante verificar que estos montos sean correctos.
+                                      </p>
+                                    </div>
+                                    <ul className="space-y-2">
+                                      {Object.entries(analysisResult.montos).map(([tipo, monto], i) => (
+                                        <li key={i} className="flex items-start gap-2 bg-gray-50 p-2 rounded">
+                                          <span className="font-semibold">{tipo}:</span> {monto}
+                                          <span className="text-sm text-gray-500 ml-2">
+                                            {tipo.toLowerCase().includes("precio")
+                                              ? "(Cantidad total a pagar)"
+                                              : tipo.toLowerCase().includes("mensual") ||
+                                                  tipo.toLowerCase().includes("canon")
+                                                ? "(Pago que se hace cada mes)"
+                                                : tipo.toLowerCase().includes("garantía")
+                                                  ? "(Dinero que se deja como seguridad)"
+                                                  : tipo.toLowerCase().includes("multa")
+                                                    ? "(Lo que debes pagar si incumples)"
+                                                    : ""}
+                                          </span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              )}
+
+                              {analysisResult.advertencias && analysisResult.advertencias.length > 0 && (
+                                <AccordionItem value="advertencias">
+                                  <AccordionTrigger className="text-red-500 font-medium">
+                                    Advertencias importantes
+                                  </AccordionTrigger>
+                                  <AccordionContent>
+                                    <div className="mb-3 text-gray-600">
+                                      <p>
+                                        Estas son cosas a las que debes prestar especial atención. Son aspectos del
+                                        documento que podrían causarte problemas si no los tienes en cuenta.
+                                      </p>
+                                    </div>
+                                    <ul className="space-y-2">
+                                      {analysisResult.advertencias.map((adv: string, i: number) => (
+                                        <li key={i} className="bg-red-50 p-3 rounded border-l-4 border-red-400">
+                                          {adv}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              )}
+
+                              {analysisResult.recomendaciones && analysisResult.recomendaciones.length > 0 && (
+                                <AccordionItem value="recomendaciones">
+                                  <AccordionTrigger className="text-blue-500 font-medium">
+                                    Recomendaciones prácticas
+                                  </AccordionTrigger>
+                                  <AccordionContent>
+                                    <div className="mb-3 text-gray-600">
+                                      <p>
+                                        Estos son consejos útiles sobre qué hacer con este documento. Te ayudarán a
+                                        proteger tus derechos y cumplir con tus obligaciones.
+                                      </p>
+                                    </div>
+                                    <ul className="space-y-2">
+                                      {analysisResult.recomendaciones.map((rec: string, i: number) => (
+                                        <li key={i} className="bg-green-50 p-3 rounded border-l-4 border-green-400">
+                                          {rec}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              )}
+
+                              {analysisResult.conceptosLegales &&
+                                Object.keys(analysisResult.conceptosLegales).length > 0 && (
+                                  <AccordionItem value="conceptos">
+                                    <AccordionTrigger className="text-purple-600 font-medium">
+                                      Conceptos legales explicados
+                                    </AccordionTrigger>
+                                    <AccordionContent>
+                                      <div className="mb-3 text-gray-600">
+                                        <p>
+                                          Aquí te explicamos en palabras sencillas algunos términos legales que aparecen
+                                          en el documento y que pueden ser difíciles de entender.
+                                        </p>
+                                      </div>
+                                      <ul className="space-y-2">
+                                        {Object.entries(analysisResult.conceptosLegales).map(
+                                          ([concepto, explicacion], i) => (
+                                            <li key={i} className="bg-purple-50 p-3 rounded">
+                                              <span className="font-semibold block">{concepto}:</span>
+                                              <span className="text-gray-700">{explicacion}</span>
+                                            </li>
+                                          ),
+                                        )}
+                                      </ul>
+                                    </AccordionContent>
+                                  </AccordionItem>
+                                )}
+                            </Accordion>
+
+                            <Alert className="bg-yellow-50 border-yellow-200">
+                              <AlertCircle className="h-4 w-4 text-yellow-500" />
+                              <AlertTitle className="text-yellow-700">Recuerda</AlertTitle>
+                              <AlertDescription className="text-yellow-600">
+                                Este análisis es automático y sirve como guía general. Para decisiones importantes,
+                                siempre consulta con un abogado. Un profesional legal puede ver detalles que esta
+                                herramienta podría pasar por alto.
+                              </AlertDescription>
+                            </Alert>
+
+                            {/* Añadir sección de "Qué hacer ahora" */}
+                            <div className="bg-green-50 p-4 rounded-lg border border-green-100">
+                              <h3 className="text-lg font-medium text-green-800 mb-2">¿Qué hacer ahora?</h3>
+                              <ul className="space-y-2 text-green-700">
+                                <li className="flex items-start">
+                                  <span className="mr-2">✓</span>
+                                  <span>Lee con atención todas las advertencias y recomendaciones</span>
+                                </li>
+                                <li className="flex items-start">
+                                  <span className="mr-2">✓</span>
+                                  <span>Verifica que las fechas y montos sean correctos</span>
+                                </li>
+                                <li className="flex items-start">
+                                  <span className="mr-2">✓</span>
+                                  <span>
+                                    Si tienes dudas, usa la pestaña "Preguntar al AI" para consultas específicas
+                                  </span>
+                                </li>
+                                <li className="flex items-start">
+                                  <span className="mr-2">✓</span>
+                                  <span>Guarda una copia del documento y este análisis para referencia futura</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
                     ) : (
                       <Card className="h-full flex items-center justify-center border-blue-100">
                         <CardContent className="text-center py-12">
@@ -1057,12 +1195,13 @@ export default function AnalyzePage() {
                           </p>
                           <Button
                             onClick={() => {
-                              if (extractedText.trim()) {
-                                const documentAnalysis = analyzeDocument(extractedText)
-                                setAnalysis(documentAnalysis)
+                              const text = extractedText || manualText
+                              if (text.trim()) {
+                                const documentAnalysis = analyzeDocument(text)
+                                setAnalysisResult(documentAnalysis)
                               }
                             }}
-                            disabled={!extractedText.trim()}
+                            disabled={!(extractedText || manualText).trim()}
                           >
                             <FileText className="mr-2 h-4 w-4" />
                             Analizar texto
@@ -1083,9 +1222,19 @@ export default function AnalyzePage() {
                           Haz preguntas específicas sobre el documento y obtén respuestas inteligentes basadas en su
                           contenido
                         </CardDescription>
+                        <div className="mt-3 p-3 bg-white rounded-md border border-blue-100">
+                          <p className="text-sm text-gray-700 mb-2">Ejemplos de preguntas que puedes hacer:</p>
+                          <ul className="text-sm text-gray-600 space-y-1">
+                            <li>• "¿Cuáles son mis obligaciones principales en este contrato?"</li>
+                            <li>• "¿Qué plazo tengo para responder a esta demanda?"</li>
+                            <li>• "Explícame en palabras sencillas qué significa la cláusula sobre indemnización"</li>
+                            <li>• "¿Qué riesgos tiene para mí firmar este documento?"</li>
+                            <li>• "¿Qué documentos adicionales necesito presentar?"</li>
+                          </ul>
+                        </div>
                       </CardHeader>
                       <CardContent className="h-[350px] sm:h-[500px]">
-                        <DocumentChat documentText={extractedText} />
+                        <DocumentChat documentText={extractedText || manualText} />
                       </CardContent>
                     </Card>
                   </TabsContent>
@@ -1097,6 +1246,9 @@ export default function AnalyzePage() {
       </main>
 
       {/* Anuncio antes del footer */}
+      <div className="container py-4">
+        <AdUnit slot="7654321098" format="horizontal" className="horizontal" />
+      </div>
 
       <SiteFooter />
     </div>

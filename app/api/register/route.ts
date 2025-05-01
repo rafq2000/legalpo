@@ -1,169 +1,80 @@
 import { NextResponse } from "next/server"
-import { Resend } from "resend"
-import { createClient } from "@supabase/supabase-js"
-
-const resend = new Resend(process.env.RESEND_API_KEY)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Faltan las variables de entorno SUPABASE_URL o SUPABASE_SERVICE_KEY.")
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey)
-
-const MAX_DAILY_USERS = Number.parseInt(process.env.MAX_DAILY_USERS || "50")
-const MAX_WEEKLY_USERS = Number.parseInt(process.env.MAX_USERS || "200")
-
-async function checkDailyLimit() {
-  const today = new Date().toISOString().slice(0, 10)
-  const { data, error } = await supabase.from("daily_count").select("count").eq("date", today).single()
-
-  if (error) {
-    console.error("Error al verificar el límite diario:", error)
-    return false
-  }
-
-  return data ? data.count < MAX_DAILY_USERS : true
-}
-
-async function checkWeeklyLimit() {
-  const today = new Date()
-  const dayOfWeek = today.getDay() // 0 (Domingo) to 6 (Sábado)
-  const startDate = new Date(today)
-  startDate.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)) // Ajustar a Lunes
-
-  const startDateStr = startDate.toISOString().slice(0, 10)
-
-  const { data, error } = await supabase.from("weekly_count").select("count").eq("start_date", startDateStr).single()
-
-  if (error) {
-    console.error("Error al verificar el límite semanal:", error)
-    return false
-  }
-
-  return data ? data.count < MAX_WEEKLY_USERS : true
-}
-
-async function incrementDailyCount() {
-  const today = new Date().toISOString().slice(0, 10)
-  const { data, error } = await supabase
-    .from("daily_count")
-    .upsert({ date: today, count: 1 }, { onConflict: "date" })
-    .select()
-    .single()
-
-  if (error) {
-    console.error("Error al incrementar el contador diario:", error)
-    return false
-  }
-
-  return true
-}
-
-async function incrementWeeklyCount() {
-  const today = new Date()
-  const dayOfWeek = today.getDay() // 0 (Domingo) to 6 (Sábado)
-  const startDate = new Date(today)
-  startDate.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)) // Ajustar a Lunes
-
-  const startDateStr = startDate.toISOString().slice(0, 10)
-
-  const { data, error } = await supabase
-    .from("weekly_count")
-    .upsert({ start_date: startDateStr, count: 1 }, { onConflict: "start_date" })
-    .select()
-    .single()
-
-  if (error) {
-    console.error("Error al incrementar el contador semanal:", error)
-    return false
-  }
-  return true
-}
-
-async function addToWaitingList(email: string) {
-  // Get the current position in the waiting list
-  const { count, error: countError } = await supabase.from("waiting_list").select("*", { count: "exact" })
-
-  if (countError) {
-    console.error("Error getting waiting list count:", countError)
-    return { success: false, position: null }
-  }
-
-  const position = count + 1
-
-  const { data, error } = await supabase.from("waiting_list").insert([{ email }]).select().single()
-
-  if (error) {
-    console.error("Error al agregar a la lista de espera:", error)
-    return { success: false, position: null }
-  }
-
-  try {
-    await resend.emails.send({
-      from: "contacto@legalpo.cl",
-      to: email,
-      subject: "Has sido añadido a la lista de espera de LegalPO",
-      html: `<p>Hola ${email},</p><p>Gracias por tu interés en LegalPO.</p><p>Actualmente hemos alcanzado nuestro límite diario de nuevos usuarios. Te hemos añadido a nuestra lista de espera en la posición ${position}.</p><p>Te notificaremos tan pronto como se libere un espacio y puedas acceder a nuestra plataforma.</p><p>Apreciamos tu paciencia y esperamos poder darte acceso muy pronto.</p><p>Saludos cordiales,</p><p>Equipo de LegalPO</p>`,
-    })
-    console.log("Correo de lista de espera enviado correctamente")
-  } catch (resendError) {
-    console.error("Error al enviar correo de lista de espera:", resendError)
-  }
-  return { success: true, position: position }
-}
+import { getSupabaseClient } from "@/lib/supabase-client"
+import { sendEmail } from "@/lib/email-service"
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json()
+    // Verificar límites de usuarios
+    const maxUsers = Number.parseInt(process.env.MAX_USERS || "0", 10)
+    const maxDailyUsers = Number.parseInt(process.env.MAX_DAILY_USERS || "0", 10)
 
-    const isDailyLimitReached = !(await checkDailyLimit())
-    const isWeeklyLimitReached = !(await checkWeeklyLimit())
+    // Obtener datos del usuario
+    const { email, name } = await req.json()
 
-    if (isDailyLimitReached || isWeeklyLimitReached) {
-      const { success, position } = await addToWaitingList(email)
-      if (!success) {
-        return NextResponse.json({ error: "No se pudo agregar a la lista de espera." }, { status: 500 })
+    if (!email || !name) {
+      return NextResponse.json({ error: "Datos incompletos" }, { status: 400 })
+    }
+
+    // Verificar cliente de Supabase
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      return NextResponse.json({ error: "Servicio no disponible temporalmente" }, { status: 503 })
+    }
+
+    // Verificar si el usuario ya existe
+    const { data: existingUser } = await supabase.from("users").select("id").eq("email", email).single()
+
+    if (existingUser) {
+      return NextResponse.json({ error: "El usuario ya existe" }, { status: 409 })
+    }
+
+    // Verificar límites de usuarios si están configurados
+    if (maxUsers > 0) {
+      const { count } = await supabase.from("users").select("id", { count: "exact", head: true })
+
+      if (count !== null && count >= maxUsers) {
+        return NextResponse.json({ error: "Límite de usuarios alcanzado" }, { status: 403 })
       }
-
-      return NextResponse.json(
-        {
-          message: `Actualmente hemos alcanzado nuestra capacidad máxima. ¡Has sido añadido a la lista de espera y te notificaremos cuando un cupo esté disponible! Tu posición en la lista de espera es: ${position}`,
-          waitingList: true,
-        },
-        { status: 200 },
-      )
     }
 
-    // Simulate user creation
-    console.log("Simulando la creación del usuario:", email)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    // Verificar límites diarios si están configurados
+    if (maxDailyUsers > 0) {
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
 
-    const dailyIncremented = await incrementDailyCount()
-    const weeklyIncremented = await incrementWeeklyCount()
+      const { count } = await supabase
+        .from("users")
+        .select("id", { count: "exact", head: true })
+        .gte("created_at", today.toISOString())
 
-    if (!dailyIncremented || !weeklyIncremented) {
-      return NextResponse.json({ error: "No se pudieron incrementar los contadores." }, { status: 500 })
+      if (count !== null && count >= maxDailyUsers) {
+        return NextResponse.json({ error: "Límite diario de registros alcanzado" }, { status: 403 })
+      }
     }
 
-    try {
-      await resend.emails.send({
-        from: "contacto@legalpo.cl",
-        to: email,
-        subject: "Bienvenido a LegalPO - Registro exitoso",
-        html: `<p>Hola ${email},</p><p>¡Bienvenido a LegalPO! Tu registro ha sido completado exitosamente.</p><p>Ya puedes acceder a nuestra plataforma y comenzar a utilizar nuestros servicios legales con inteligencia artificial.</p><p>Para ingresar, simplemente visita legalpo.cl e inicia sesión con tu correo electrónico y contraseña.</p><p>Si tienes alguna pregunta, no dudes en contactarnos respondiendo a este correo.</p><p>Saludos cordiales,</p><p>Equipo de LegalPO</p>`,
-      })
-      console.log("Correo de bienvenida enviado correctamente")
-    } catch (resendError) {
-      console.error("Error al enviar correo de bienvenida:", resendError)
+    // Registrar usuario
+    const { data: newUser, error } = await supabase.from("users").insert([{ email, name }]).select().single()
+
+    if (error) {
+      throw new Error(`Error al registrar usuario: ${error.message}`)
     }
 
-    return NextResponse.json({ message: "¡Registro exitoso!", success: true }, { status: 200 })
-  } catch (error) {
-    console.error("Error de registro:", error)
-    return NextResponse.json({ error: "Registro fallido." }, { status: 500 })
+    // Enviar email de bienvenida (de forma segura)
+    await sendEmail({
+      to: email,
+      subject: "Bienvenido a nuestra plataforma",
+      html: `<p>Hola ${name}, gracias por registrarte.</p>`,
+    }).catch((error) => {
+      console.warn("Error al enviar email de bienvenida:", error)
+      // No fallamos la operación si el email falla
+    })
+
+    return NextResponse.json({
+      success: true,
+      user: { id: newUser.id, email: newUser.email, name: newUser.name },
+    })
+  } catch (error: any) {
+    console.error("Error en registro:", error)
+    return NextResponse.json({ error: "Error al procesar la solicitud", details: error.message }, { status: 500 })
   }
 }
-
-export const dynamic = "force-dynamic"

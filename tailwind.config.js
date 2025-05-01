@@ -52,6 +52,18 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Colores personalizados de LegalPO
+        legalpo: {
+          primary: "#1e40af", // Azul principal
+          secondary: "#1e3a8a", // Azul secundario
+          accent: "#3b82f6", // Azul acento
+          light: "#dbeafe", // Azul claro
+          dark: "#0f172a", // Azul oscuro
+          success: "#10b981", // Verde
+          warning: "#f59e0b", // Amarillo
+          danger: "#ef4444", // Rojo
+          info: "#6366f1", // Púrpura
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

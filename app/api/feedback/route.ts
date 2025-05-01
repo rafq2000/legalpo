@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/lib/auth"
+import { getToken } from "next-auth/jwt"
 import { trackEvent } from "@/lib/analytics"
 
 export async function POST(req: Request) {
   try {
-    // Verificar sesión (opcional)
-    const session = await getServerSession(authOptions)
+    // Verificar sesión usando getToken en lugar de getServerSession con authOptions
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+    const userEmail = token?.email || null
 
     // Obtener datos del feedback
     const feedbackData = await req.json()
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     // Añadir información de la sesión si está disponible
     const enhancedFeedback = {
       ...feedbackData,
-      userId: session?.user?.email || feedbackData.userId || "anonymous",
+      userId: userEmail || feedbackData.userId || "anonymous",
       timestamp: new Date().toISOString(),
     }
 
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
       feedbackType: enhancedFeedback.type,
       serviceUsed: enhancedFeedback.serviceUsed,
       rating: enhancedFeedback.quickRating || enhancedFeedback.detailedRating,
-      userType: session ? "registered" : "anonymous",
+      userType: token ? "registered" : "anonymous",
     })
 
     return NextResponse.json({ success: true })

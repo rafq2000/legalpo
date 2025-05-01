@@ -153,9 +153,7 @@ export default function DudasLaboralesPage() {
                       <Avatar>
                         <AvatarFallback>{message.role === "user" ? "U" : "AI"}</AvatarFallback>
                         {message.role === "assistant" && <AvatarImage src="/logo.png" />}
-                        {message.role === "user" && session?.user?.image && (
-                          <AvatarImage src={session.user.image || "/placeholder.svg"} />
-                        )}
+                        {message.role === "user" && session?.user?.image && <AvatarImage src={session.user.image} />}
                       </Avatar>
                       <div
                         className={`rounded-lg px-4 py-2 max-w-[80%] ${

@@ -10,9 +10,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { TextToSpeech } from "@/components/text-to-speech"
 import { ShareButton } from "@/components/share-button"
 
-// Importar desde el archivo de client-analytics
-import { trackEvent } from "@/lib/client-analytics"
-
 interface Message {
   role: "user" | "assistant"
   content: string
@@ -20,9 +17,10 @@ interface Message {
 
 interface DocumentChatProps {
   documentText: string
+  documentId?: string
 }
 
-export function DocumentChat({ documentText }: DocumentChatProps) {
+export function DocumentChat({ documentText, documentId }: DocumentChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -102,11 +100,6 @@ export function DocumentChat({ documentText }: DocumentChatProps) {
       } finally {
         setIsLoading(false)
       }
-
-      trackEvent("document_chat", {
-        question: messageText.trim() || input,
-        documentLength: documentText.length,
-      })
     },
     [input, documentText, isLoading],
   )

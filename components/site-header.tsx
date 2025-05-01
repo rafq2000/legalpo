@@ -16,14 +16,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useEffect, useState } from "react"
 
 export function SiteHeader() {
-  const { data: session, status } = useSession()
+  const session = useSession()
+  const status = session?.status || "unauthenticated"
+  const sessionData = session?.data
   const [mounted, setMounted] = useState(false)
 
   // Este useEffect asegura que el componente solo se renderice en el cliente
   useEffect(() => {
     setMounted(true)
     console.log("Session status:", status)
-    console.log("Session data:", session)
+    console.log("Session data:", sessionData)
   }, [session, status])
 
   // Función para obtener las iniciales del nombre del usuario
@@ -38,7 +40,8 @@ export function SiteHeader() {
   }
 
   // Obtener el nombre para mostrar
-  const displayName = session?.user?.name || (session?.user?.email ? session.user.email.split("@")[0] : "Usuario")
+  const displayName =
+    sessionData?.user?.name || (sessionData?.user?.email ? sessionData.user.email.split("@")[0] : "Usuario")
 
   return (
     <header className="bg-blue-900 text-white py-4 sticky top-0 z-50 w-full border-b border-blue-800">
@@ -50,14 +53,14 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        {mounted && status === "authenticated" && session?.user ? (
+        {mounted && status === "authenticated" && sessionData?.user ? (
           <div className="flex items-center gap-4">
             <span className="text-white font-medium">Bienvenido, {displayName}</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={session.user.image || ""} alt={displayName} />
+                    <AvatarImage src={sessionData?.user?.image || ""} alt={displayName} />
                     <AvatarFallback className="bg-blue-700">{getInitials(displayName)}</AvatarFallback>
                   </Avatar>
                 </Button>
