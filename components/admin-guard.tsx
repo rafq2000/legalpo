@@ -6,8 +6,6 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { Loader2 } from "lucide-react"
-import { db } from "@/utils/firebaseClient"
-import { doc, getDoc } from "firebase/firestore"
 
 interface AdminGuardProps {
   children: React.ReactNode
@@ -33,17 +31,6 @@ export default function AdminGuard({ children }: AdminGuardProps) {
         if (adminEmail && adminEmail.split(",").includes(session.user?.email || "")) {
           setIsAdmin(true)
           return
-        }
-
-        // Verificar en Firestore si el usuario es administrador
-        if (session.user?.email) {
-          const userRef = doc(db, "users", session.user.email)
-          const userSnap = await getDoc(userRef)
-
-          if (userSnap.exists() && userSnap.data().role === "admin") {
-            setIsAdmin(true)
-            return
-          }
         }
 
         // Si no es admin, redirigir

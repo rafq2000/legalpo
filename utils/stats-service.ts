@@ -1,3 +1,5 @@
+"use client"
+
 import { db } from "./firebaseClient"
 import {
   collection,
@@ -93,7 +95,7 @@ export async function obtenerEventos(
     return { eventos, ultimoDoc: lastDoc }
   } catch (error) {
     console.error("Error al obtener eventos:", error)
-    throw error
+    return { eventos: [], ultimoDoc: null }
   }
 }
 
@@ -150,7 +152,7 @@ export async function obtenerEventosPorDia(filtros: FiltrosEventos = {}, dias = 
     return Object.values(fechasMap)
   } catch (error) {
     console.error("Error al obtener eventos por día:", error)
-    throw error
+    return []
   }
 }
 
@@ -188,7 +190,7 @@ export async function obtenerEventosPorTipo(filtros: FiltrosEventos = {}): Promi
     }))
   } catch (error) {
     console.error("Error al obtener eventos por tipo:", error)
-    throw error
+    return []
   }
 }
 

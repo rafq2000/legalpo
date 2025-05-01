@@ -1,22 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { useRouter } from "next/navigation"
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts"
+import dynamic from "next/dynamic"
 import { Calendar, Download, Filter, RefreshCw, Search } from "lucide-react"
 import { format, subDays } from "date-fns"
 import { es } from "date-fns/locale"
@@ -44,6 +29,23 @@ import {
   type FiltrosEventos,
 } from "@/utils/stats-service"
 
+// Importar Recharts dinámicamente para evitar errores de SSR
+const DynamicLineChart = dynamic(() => import("recharts").then((mod) => mod.LineChart), { ssr: false })
+const DynamicLine = dynamic(() => import("recharts").then((mod) => mod.Line), { ssr: false })
+const DynamicBarChart = dynamic(() => import("recharts").then((mod) => mod.BarChart), { ssr: false })
+const DynamicBar = dynamic(() => import("recharts").then((mod) => mod.Bar), { ssr: false })
+const DynamicPieChart = dynamic(() => import("recharts").then((mod) => mod.PieChart), { ssr: false })
+const DynamicPie = dynamic(() => import("recharts").then((mod) => mod.Pie), { ssr: false })
+const DynamicCell = dynamic(() => import("recharts").then((mod) => mod.Cell), { ssr: false })
+const DynamicXAxis = dynamic(() => import("recharts").then((mod) => mod.XAxis), { ssr: false })
+const DynamicYAxis = dynamic(() => import("recharts").then((mod) => mod.YAxis), { ssr: false })
+const DynamicCartesianGrid = dynamic(() => import("recharts").then((mod) => mod.CartesianGrid), { ssr: false })
+const DynamicTooltip = dynamic(() => import("recharts").then((mod) => mod.Tooltip), { ssr: false })
+const DynamicLegend = dynamic(() => import("recharts").then((mod) => mod.Legend), { ssr: false })
+const DynamicResponsiveContainer = dynamic(() => import("recharts").then((mod) => mod.ResponsiveContainer), {
+  ssr: false,
+})
+
 // Colores para gráficos
 const COLORS = [
   "#8884d8",
@@ -59,7 +61,6 @@ const COLORS = [
 ]
 
 export default function StatsDashboard() {
-  const router = useRouter()
   const [activeTab, setActiveTab] = useState("overview")
   const [isLoading, setIsLoading] = useState(true)
   const [isExporting, setIsExporting] = useState(false)
@@ -79,11 +80,19 @@ export default function StatsDashboard() {
     from: subDays(new Date(), 30),
     to: new Date(),
   })
+  const [isClient, setIsClient] = useState(false)
+
+  // Verificar si estamos en el cliente
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   // Cargar datos iniciales
   useEffect(() => {
-    cargarDatos()
-  }, [])
+    if (isClient) {
+      cargarDatos()
+    }
+  }, [isClient])
 
   // Actualizar filtros cuando cambia el rango de fechas
   useEffect(() => {
@@ -98,8 +107,10 @@ export default function StatsDashboard() {
 
   // Cargar datos con filtros actualizados
   useEffect(() => {
-    cargarDatos()
-  }, [filtros])
+    if (isClient) {
+      cargarDatos()
+    }
+  }, [filtros, isClient])
 
   // Función para cargar todos los datos
   const cargarDatos = async () => {
@@ -166,7 +177,7 @@ export default function StatsDashboard() {
       endDate: dateRange.to,
     }
 
-    if (tipoSeleccionado) {
+    if (tipoSeleccionado && tipoSeleccionado !== "all") {
       nuevosFiltros.tipo = tipoSeleccionado
     }
 
@@ -201,6 +212,28 @@ export default function StatsDashboard() {
   // Formatear fecha para mostrar
   const formatearFecha = (fecha: Date) => {
     return format(new Date(fecha), "dd MMM yyyy, HH:mm", { locale: es })
+  }
+
+  if (!isClient) {
+    return (
+      <div className="container mx-auto p-4 md:p-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold">Dashboard de Estadísticas</h1>
+            <p className="text-muted-foreground">Cargando...</p>
+          </div>
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-[200px] w-full" />
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <Skeleton className="h-[120px]" />
+            <Skeleton className="h-[120px]" />
+            <Skeleton className="h-[120px]" />
+          </div>
+          <Skeleton className="h-[300px] w-full" />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -365,25 +398,25 @@ export default function StatsDashboard() {
                     <Skeleton className="h-full w-full" />
                   </div>
                 ) : (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={eventosPorDia} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="fecha" tickFormatter={(fecha) => format(new Date(fecha), "dd/MM")} />
-                      <YAxis />
-                      <Tooltip
+                  <DynamicResponsiveContainer width="100%" height="100%">
+                    <DynamicLineChart data={eventosPorDia} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                      <DynamicCartesianGrid strokeDasharray="3 3" />
+                      <DynamicXAxis dataKey="fecha" tickFormatter={(fecha) => format(new Date(fecha), "dd/MM")} />
+                      <DynamicYAxis />
+                      <DynamicTooltip
                         formatter={(value: number) => [value, "Eventos"]}
                         labelFormatter={(fecha) => format(new Date(fecha), "dd MMM yyyy", { locale: es })}
                       />
-                      <Legend />
-                      <Line
+                      <DynamicLegend />
+                      <DynamicLine
                         type="monotone"
                         dataKey="total"
                         name="Total Eventos"
                         stroke="#8884d8"
                         activeDot={{ r: 8 }}
                       />
-                    </LineChart>
-                  </ResponsiveContainer>
+                    </DynamicLineChart>
+                  </DynamicResponsiveContainer>
                 )}
               </CardContent>
             </Card>
@@ -400,9 +433,9 @@ export default function StatsDashboard() {
                     <Skeleton className="h-full w-full" />
                   </div>
                 ) : (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
+                  <DynamicResponsiveContainer width="100%" height="100%">
+                    <DynamicPieChart>
+                      <DynamicPie
                         data={eventosPorTipo}
                         cx="50%"
                         cy="50%"
@@ -414,13 +447,13 @@ export default function StatsDashboard() {
                         nameKey="tipo"
                       >
                         {eventosPorTipo.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          <DynamicCell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
-                      </Pie>
-                      <Tooltip formatter={(value: number, name, props) => [value, props.payload.tipo]} />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
+                      </DynamicPie>
+                      <DynamicTooltip formatter={(value: number, name, props) => [value, props.payload.tipo]} />
+                      <DynamicLegend />
+                    </DynamicPieChart>
+                  </DynamicResponsiveContainer>
                 )}
               </CardContent>
             </Card>
@@ -441,27 +474,38 @@ export default function StatsDashboard() {
                   <Skeleton className="h-full w-full" />
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={eventosPorDia} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="fecha" tickFormatter={(fecha) => format(new Date(fecha), "dd/MM")} />
-                    <YAxis />
-                    <Tooltip
+                <DynamicResponsiveContainer width="100%" height="100%">
+                  <DynamicLineChart data={eventosPorDia} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                    <DynamicCartesianGrid strokeDasharray="3 3" />
+                    <DynamicXAxis dataKey="fecha" tickFormatter={(fecha) => format(new Date(fecha), "dd/MM")} />
+                    <DynamicYAxis />
+                    <DynamicTooltip
                       formatter={(value: number) => [value, "Eventos"]}
                       labelFormatter={(fecha) => format(new Date(fecha), "dd MMM yyyy", { locale: es })}
                     />
-                    <Legend />
-                    <Line type="monotone" dataKey="total" name="Total Eventos" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    <DynamicLegend />
+                    <DynamicLine
+                      type="monotone"
+                      dataKey="total"
+                      name="Total Eventos"
+                      stroke="#8884d8"
+                      activeDot={{ r: 8 }}
+                    />
                     {/* Mostrar líneas para tipos específicos si están filtrados */}
-                    {tipoSeleccionado ? (
-                      <Line type="monotone" dataKey={tipoSeleccionado} name={tipoSeleccionado} stroke="#82ca9d" />
+                    {tipoSeleccionado && tipoSeleccionado !== "all" ? (
+                      <DynamicLine
+                        type="monotone"
+                        dataKey={tipoSeleccionado}
+                        name={tipoSeleccionado}
+                        stroke="#82ca9d"
+                      />
                     ) : (
                       // Mostrar líneas para los tipos más comunes (máximo 3)
                       eventosPorTipo
                         .sort((a, b) => b.total - a.total)
                         .slice(0, 3)
                         .map((item, index) => (
-                          <Line
+                          <DynamicLine
                             key={item.tipo}
                             type="monotone"
                             dataKey={item.tipo}
@@ -470,8 +514,8 @@ export default function StatsDashboard() {
                           />
                         ))
                     )}
-                  </LineChart>
-                </ResponsiveContainer>
+                  </DynamicLineChart>
+                </DynamicResponsiveContainer>
               )}
             </CardContent>
           </Card>
@@ -488,20 +532,24 @@ export default function StatsDashboard() {
                   <Skeleton className="h-full w-full" />
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={eventosPorTipo} margin={{ top: 5, right: 30, left: 20, bottom: 5 }} layout="vertical">
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" />
-                    <YAxis type="category" dataKey="tipo" width={150} />
-                    <Tooltip formatter={(value: number) => [value, "Eventos"]} />
-                    <Legend />
-                    <Bar dataKey="total" name="Total Eventos" fill="#8884d8">
+                <DynamicResponsiveContainer width="100%" height="100%">
+                  <DynamicBarChart
+                    data={eventosPorTipo}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    layout="vertical"
+                  >
+                    <DynamicCartesianGrid strokeDasharray="3 3" />
+                    <DynamicXAxis type="number" />
+                    <DynamicYAxis type="category" dataKey="tipo" width={150} />
+                    <DynamicTooltip formatter={(value: number) => [value, "Eventos"]} />
+                    <DynamicLegend />
+                    <DynamicBar dataKey="total" name="Total Eventos" fill="#8884d8">
                       {eventosPorTipo.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <DynamicCell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
+                    </DynamicBar>
+                  </DynamicBarChart>
+                </DynamicResponsiveContainer>
               )}
             </CardContent>
           </Card>
@@ -518,25 +566,31 @@ export default function StatsDashboard() {
                   <Skeleton className="h-full w-full" />
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
+                <DynamicResponsiveContainer width="100%" height="100%">
+                  <DynamicLineChart
                     data={eventosPorDia.map((dia) => ({
                       fecha: dia.fecha,
                       registros: dia.registro || 0,
                     }))}
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="fecha" tickFormatter={(fecha) => format(new Date(fecha), "dd/MM")} />
-                    <YAxis />
-                    <Tooltip
+                    <DynamicCartesianGrid strokeDasharray="3 3" />
+                    <DynamicXAxis dataKey="fecha" tickFormatter={(fecha) => format(new Date(fecha), "dd/MM")} />
+                    <DynamicYAxis />
+                    <DynamicTooltip
                       formatter={(value: number) => [value, "Registros"]}
                       labelFormatter={(fecha) => format(new Date(fecha), "dd MMM yyyy", { locale: es })}
                     />
-                    <Legend />
-                    <Line type="monotone" dataKey="registros" name="Registros" stroke="#82ca9d" activeDot={{ r: 8 }} />
-                  </LineChart>
-                </ResponsiveContainer>
+                    <DynamicLegend />
+                    <DynamicLine
+                      type="monotone"
+                      dataKey="registros"
+                      name="Registros"
+                      stroke="#82ca9d"
+                      activeDot={{ r: 8 }}
+                    />
+                  </DynamicLineChart>
+                </DynamicResponsiveContainer>
               )}
             </CardContent>
           </Card>
