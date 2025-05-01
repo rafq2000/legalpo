@@ -13,23 +13,46 @@ export async function POST(request: Request) {
     }
 
     // Obtener sesión si está disponible
-    const session = await getServerSession()
-    const userId = session?.user?.email || undefined
+    let userId: string | undefined
+    try {
+      const session = await getServerSession()
+      userId = session?.user?.email || undefined
+    } catch (error) {
+      console.error("Error al obtener la sesión:", error)
+      // Continuar sin userId si hay error
+    }
 
     // Obtener ID de sesión de las cookies
-    const cookieStore = cookies()
-    const sessionId = cookieStore.get("session_id")?.value
+    let sessionId: string | undefined
+    try {
+      const cookieStore = cookies()
+      sessionId = cookieStore.get("session_id")?.value
+    } catch (error) {
+      console.error("Error al obtener cookies:", error)
+      // Continuar sin sessionId si hay error
+    }
 
     // Guardar evento en Firestore
-    const eventoId = await guardarEvento(tipo, datos, userId, sessionId)
+    try {
+      const eventoId = await guardarEvento(tipo, datos, userId, sessionId)
 
-    return NextResponse.json({
-      success: true,
-      message: `Evento "${tipo}" registrado correctamente`,
-      id: eventoId,
-    })
+      return NextResponse.json({
+        success: true,
+        message: `Evento "${tipo}" registrado correctamente`,
+        id: eventoId,
+      })
+    } catch (error: any) {
+      console.error("Error al guardar evento en Firestore:", error)
+      return NextResponse.json(
+        {
+          success: false,
+          error: error.message || "Error al guardar el evento en Firestore",
+        },
+        { status: 500 },
+      )
+    }
   } catch (error: any) {
-    console.error("Error al procesar evento:", error)
+    console.error("Error general al procesar evento:", error)
     return NextResponse.json(
       {
         success: false,

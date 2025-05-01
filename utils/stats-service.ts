@@ -44,14 +44,34 @@ export interface FiltrosEventos {
   email?: string
 }
 
+// Función para validar fechas
+const isValidDate = (date: any): boolean => {
+  if (!date) return false
+  const d = new Date(date)
+  return !isNaN(d.getTime())
+}
+
+// Función para convertir a fecha segura
+const safeDate = (date: any): Date => {
+  if (!date) return new Date()
+  if (date instanceof Date) return isValidDate(date) ? date : new Date()
+  try {
+    const d = new Date(date)
+    return isValidDate(d) ? d : new Date()
+  } catch (e) {
+    return new Date()
+  }
+}
+
 // Función para verificar si Firestore está disponible
 const isFirestoreAvailable = () => {
-  const firestore = db()
-  if (!firestore) {
-    console.error("Firestore no está disponible")
+  try {
+    const firestore = db()
+    return !!firestore
+  } catch (error) {
+    console.error("Firestore no está disponible:", error)
     return false
   }
-  return true
 }
 
 // Función para obtener eventos con paginación
@@ -68,11 +88,11 @@ export async function obtenerEventos(
     const firestore = db()
     let q = query(collection(firestore, "eventos"), orderBy("timestamp", "desc"), limit(limite))
 
-    // Aplicar filtros
-    if (filtros.startDate) {
+    // Aplicar filtros con fechas validadas
+    if (filtros.startDate && isValidDate(filtros.startDate)) {
       q = query(q, where("timestamp", ">=", Timestamp.fromDate(filtros.startDate)))
     }
-    if (filtros.endDate) {
+    if (filtros.endDate && isValidDate(filtros.endDate)) {
       q = query(q, where("timestamp", "<=", Timestamp.fromDate(filtros.endDate)))
     }
     if (filtros.tipo) {
@@ -94,7 +114,21 @@ export async function obtenerEventos(
     querySnapshot.forEach((doc) => {
       lastDoc = doc
       const data = doc.data()
-      const timestamp = data.timestamp?.toDate() || new Date()
+      let timestamp: Date
+
+      // Manejar la fecha de manera segura
+      if (data.timestamp && typeof data.timestamp.toDate === "function") {
+        try {
+          timestamp = data.timestamp.toDate()
+          if (!isValidDate(timestamp)) {
+            timestamp = new Date()
+          }
+        } catch (e) {
+          timestamp = new Date()
+        }
+      } else {
+        timestamp = new Date()
+      }
 
       eventos.push({
         id: doc.id,
@@ -122,8 +156,11 @@ export async function obtenerEventosPorDia(filtros: FiltrosEventos = {}, dias = 
     }
 
     const firestore = db()
-    const endDate = filtros.endDate || new Date()
-    const startDate = filtros.startDate || new Date(endDate.getTime() - dias * 24 * 60 * 60 * 1000)
+    const endDate = filtros.endDate && isValidDate(filtros.endDate) ? filtros.endDate : new Date()
+    const startDate =
+      filtros.startDate && isValidDate(filtros.startDate)
+        ? filtros.startDate
+        : new Date(endDate.getTime() - dias * 24 * 60 * 60 * 1000)
 
     // Crear mapa de fechas para inicializar todos los días
     const fechasMap: Record<string, EventosPorDia> = {}
@@ -153,17 +190,24 @@ export async function obtenerEventosPorDia(filtros: FiltrosEventos = {}, dias = 
     // Agrupar por día
     querySnapshot.forEach((doc) => {
       const data = doc.data()
-      if (data.timestamp) {
-        const fecha = data.timestamp.toDate().toISOString().split("T")[0]
-        if (fechasMap[fecha]) {
-          fechasMap[fecha].total += 1
+      if (data.timestamp && typeof data.timestamp.toDate === "function") {
+        try {
+          const timestamp = data.timestamp.toDate()
+          if (isValidDate(timestamp)) {
+            const fecha = timestamp.toISOString().split("T")[0]
+            if (fechasMap[fecha]) {
+              fechasMap[fecha].total += 1
 
-          // Agrupar también por tipo
-          const tipo = data.tipo || "desconocido"
-          if (!fechasMap[fecha][tipo]) {
-            fechasMap[fecha][tipo] = 0
+              // Agrupar también por tipo
+              const tipo = data.tipo || "desconocido"
+              if (!fechasMap[fecha][tipo]) {
+                fechasMap[fecha][tipo] = 0
+              }
+              fechasMap[fecha][tipo] += 1
+            }
           }
-          fechasMap[fecha][tipo] += 1
+        } catch (e) {
+          console.error("Error al procesar timestamp:", e)
         }
       }
     })
@@ -184,8 +228,11 @@ export async function obtenerEventosPorTipo(filtros: FiltrosEventos = {}): Promi
     }
 
     const firestore = db()
-    const endDate = filtros.endDate || new Date()
-    const startDate = filtros.startDate || new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000)
+    const endDate = filtros.endDate && isValidDate(filtros.endDate) ? filtros.endDate : new Date()
+    const startDate =
+      filtros.startDate && isValidDate(filtros.startDate)
+        ? filtros.startDate
+        : new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000)
 
     const q = query(
       collection(firestore, "eventos"),
@@ -247,7 +294,7 @@ export async function exportarEventosExcel(filtros: FiltrosEventos = {}): Promis
       const datosProcesados: Record<string, any> = {
         id: evento.id,
         tipo: evento.tipo,
-        fecha: evento.timestamp ? new Date(evento.timestamp).toLocaleString() : "",
+        fecha: isValidDate(evento.timestamp) ? new Date(evento.timestamp).toLocaleString() : "Fecha inválida",
         userId: evento.userId || "",
         email: evento.email || "",
       }

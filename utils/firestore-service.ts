@@ -1,24 +1,15 @@
-// utils/firestore-service.ts
 import { db } from "./firebaseClient"
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  type Timestamp,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  limit,
-} from "firebase/firestore"
+import { collection, addDoc, serverTimestamp, Timestamp } from "firebase/firestore"
 
-// Interfaz para los eventos
-export interface EventoFirestore {
-  tipo: string
-  datos?: Record<string, any>
-  userId?: string
-  sessionId?: string
-  timestamp?: Timestamp
+// Función para verificar si Firestore está disponible
+const isFirestoreAvailable = () => {
+  try {
+    const firestore = db()
+    return !!firestore
+  } catch (error) {
+    console.error("Firestore no está disponible:", error)
+    return false
+  }
 }
 
 // Función para guardar un evento en Firestore
@@ -29,35 +20,53 @@ export async function guardarEvento(
   sessionId?: string,
 ): Promise<string> {
   try {
-    const evento: EventoFirestore = {
+    if (!isFirestoreAvailable()) {
+      console.error("Firestore no está disponible para guardar evento")
+      throw new Error("Firestore no está disponible")
+    }
+
+    if (!tipo) {
+      throw new Error("El tipo de evento es requerido")
+    }
+
+    const firestore = db()
+    const eventosRef = collection(firestore, "eventos")
+
+    // Crear documento de evento
+    const eventoDoc = {
       tipo,
       datos,
       userId,
       sessionId,
-      timestamp: serverTimestamp() as Timestamp,
+      timestamp: serverTimestamp(),
+      createdAt: Timestamp.now(),
     }
 
-    const docRef = await addDoc(collection(db, "eventos"), evento)
-    console.log(`Evento "${tipo}" guardado con ID: ${docRef.id}`)
+    // Guardar en Firestore
+    const docRef = await addDoc(eventosRef, eventoDoc)
     return docRef.id
   } catch (error) {
-    console.error("Error al guardar evento:", error)
+    console.error("Error al guardar evento en Firestore:", error)
     throw error
   }
 }
 
-// Función para obtener eventos por tipo
-export async function obtenerEventosPorTipo(tipo: string, limite = 100) {
+// Función para verificar la conexión a Firestore
+export async function verificarConexionFirestore(): Promise<boolean> {
   try {
-    const q = query(collection(db, "eventos"), where("tipo", "==", tipo), orderBy("timestamp", "desc"), limit(limite))
+    if (!isFirestoreAvailable()) {
+      return false
+    }
 
-    const querySnapshot = await getDocs(q)
-    return querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
+    const firestore = db()
+    const testRef = collection(firestore, "test_connection")
+    await addDoc(testRef, {
+      test: true,
+      timestamp: serverTimestamp(),
+    })
+    return true
   } catch (error) {
-    console.error(`Error al obtener eventos de tipo ${tipo}:`, error)
-    throw error
+    console.error("Error al verificar conexión a Firestore:", error)
+    return false
   }
 }

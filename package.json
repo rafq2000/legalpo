@@ -70,10 +70,10 @@
     "mammoth": "latest",
     "@supabase/supabase-js": "latest",
     "@google-analytics/data": "latest",
-    "uuid": "latest",
     "resend": "latest",
     "firebase": "latest",
-    "xlsx": "latest"
+    "xlsx": "latest",
+    "uuid": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

@@ -1,8 +1,8 @@
 // utils/firebaseClient.ts
-import { initializeApp, getApps } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
-import { getAuth } from "firebase/auth"
-import { getAnalytics, isSupported } from "firebase/analytics"
+import { initializeApp, getApps, type FirebaseApp } from "firebase/app"
+import { getFirestore, type Firestore } from "firebase/firestore"
+import { getAuth, type Auth } from "firebase/auth"
+import { getAnalytics, isSupported, type Analytics } from "firebase/analytics"
 
 const firebaseConfig = {
   apiKey: "AIzaSyAtwSjM26-HtEg14gGbW6gKh7zSlWg7idU",
@@ -14,101 +14,98 @@ const firebaseConfig = {
   measurementId: "G-N6KKGKJMB3",
 }
 
-// Inicialización condicional para cliente/servidor
-let app = null
-let db = null
-let auth = null
-let analytics = null
+// Variables para almacenar las instancias
+let firebaseApp: FirebaseApp | null = null
+let firestoreDb: Firestore | null = null
+let firebaseAuth: Auth | null = null
+let firebaseAnalytics: Analytics | null = null
 
-// Solo inicializar Firebase en el cliente
-if (typeof window !== "undefined") {
-  try {
-    app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0]
-    db = getFirestore(app)
-    auth = getAuth(app)
-  } catch (error) {
-    console.error("Error inicializando Firebase:", error)
-  }
-}
-
-// Esta función inicializará Firebase si aún no se ha inicializado
-const getFirebaseApp = () => {
+// Función para inicializar Firebase de manera segura
+export function getFirebaseApp(): FirebaseApp | null {
   if (typeof window === "undefined") {
-    return null // Estamos en el servidor
+    return null // No inicializar en el servidor
   }
 
-  if (!app) {
+  if (!firebaseApp) {
     try {
-      app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0]
+      if (!getApps().length) {
+        firebaseApp = initializeApp(firebaseConfig)
+      } else {
+        firebaseApp = getApps()[0]
+      }
     } catch (error) {
-      console.error("Error inicializando Firebase:", error)
+      console.error("Error al inicializar Firebase:", error)
       return null
     }
   }
-  return app
+
+  return firebaseApp
 }
 
-// Esta función inicializará Firestore si aún no se ha inicializado
-const getFirestoreDb = () => {
+// Función para obtener Firestore
+export function db(): Firestore | null {
   if (typeof window === "undefined") {
-    return null // Estamos en el servidor
+    return null // No inicializar en el servidor
   }
 
-  if (!db) {
-    const firebaseApp = getFirebaseApp()
-    if (firebaseApp) {
-      try {
-        db = getFirestore(firebaseApp)
-      } catch (error) {
-        console.error("Error inicializando Firestore:", error)
-        return null
+  if (!firestoreDb) {
+    try {
+      const app = getFirebaseApp()
+      if (app) {
+        firestoreDb = getFirestore(app)
       }
+    } catch (error) {
+      console.error("Error al inicializar Firestore:", error)
+      return null
     }
   }
-  return db
+
+  return firestoreDb
 }
 
-// Esta función inicializará Auth si aún no se ha inicializado
-const getFirebaseAuth = () => {
+// Función para obtener Auth
+export function auth(): Auth | null {
   if (typeof window === "undefined") {
-    return null // Estamos en el servidor
+    return null // No inicializar en el servidor
   }
 
-  if (!auth) {
-    const firebaseApp = getFirebaseApp()
-    if (firebaseApp) {
-      try {
-        auth = getAuth(firebaseApp)
-      } catch (error) {
-        console.error("Error inicializando Auth:", error)
-        return null
+  if (!firebaseAuth) {
+    try {
+      const app = getFirebaseApp()
+      if (app) {
+        firebaseAuth = getAuth(app)
       }
+    } catch (error) {
+      console.error("Error al inicializar Auth:", error)
+      return null
     }
   }
-  return auth
+
+  return firebaseAuth
 }
 
-// Esta función inicializará Analytics si aún no se ha inicializado
-const initializeAnalytics = async () => {
+// Función para inicializar Analytics
+export async function initializeAnalytics(): Promise<Analytics | null> {
   if (typeof window === "undefined") {
-    return null // Estamos en el servidor
+    return null // No inicializar en el servidor
   }
 
-  if (!analytics) {
-    const firebaseApp = getFirebaseApp()
-    if (firebaseApp) {
-      try {
-        const isAnalyticsSupported = await isSupported()
-        if (isAnalyticsSupported) {
-          analytics = getAnalytics(firebaseApp)
-          console.log("Firebase Analytics inicializado correctamente")
+  if (!firebaseAnalytics) {
+    try {
+      const app = getFirebaseApp()
+      if (app) {
+        const analyticsSupported = await isSupported()
+        if (analyticsSupported) {
+          firebaseAnalytics = getAnalytics(app)
         }
-      } catch (error) {
-        console.error("Firebase Analytics error:", error)
       }
+    } catch (error) {
+      console.error("Error al inicializar Analytics:", error)
+      return null
     }
   }
-  return analytics
+
+  return firebaseAnalytics
 }
 
 // Inicializar Analytics automáticamente en el cliente
@@ -116,4 +113,4 @@ if (typeof window !== "undefined") {
   initializeAnalytics().catch(console.error)
 }
 
-export { getFirebaseApp, getFirestoreDb as db, getFirebaseAuth as auth, analytics, initializeAnalytics }
+export { firebaseAnalytics as analytics }

@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react"
 import dynamic from "next/dynamic"
 import { Calendar, Download, Filter, RefreshCw, Search } from "lucide-react"
-import { format, subDays } from "date-fns"
+import { format, subDays, isValid } from "date-fns"
 import { es } from "date-fns/locale"
 
 import { Button } from "@/components/ui/button"
@@ -60,6 +60,30 @@ const COLORS = [
   "#d0ed57",
 ]
 
+// Función para validar fechas
+const isValidDate = (date: any): boolean => {
+  if (!date) return false
+  if (date instanceof Date) return isValid(date)
+  try {
+    const d = new Date(date)
+    return isValid(d)
+  } catch (e) {
+    return false
+  }
+}
+
+// Función para formatear fechas de manera segura
+const safeFormatDate = (date: any, formatStr: string): string => {
+  if (!date) return "Fecha inválida"
+  try {
+    const d = new Date(date)
+    if (!isValid(d)) return "Fecha inválida"
+    return format(d, formatStr, { locale: es })
+  } catch (e) {
+    return "Fecha inválida"
+  }
+}
+
 export default function StatsDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
   const [isLoading, setIsLoading] = useState(true)
@@ -81,6 +105,7 @@ export default function StatsDashboard() {
     to: new Date(),
   })
   const [isClient, setIsClient] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Verificar si estamos en el cliente
   useEffect(() => {
@@ -96,7 +121,7 @@ export default function StatsDashboard() {
 
   // Actualizar filtros cuando cambia el rango de fechas
   useEffect(() => {
-    if (dateRange.from && dateRange.to) {
+    if (dateRange.from && dateRange.to && isValidDate(dateRange.from) && isValidDate(dateRange.to)) {
       setFiltros((prev) => ({
         ...prev,
         startDate: dateRange.from,
@@ -115,6 +140,7 @@ export default function StatsDashboard() {
   // Función para cargar todos los datos
   const cargarDatos = async () => {
     setIsLoading(true)
+    setError(null)
     try {
       // Cargar eventos recientes
       const { eventos } = await obtenerEventos(filtros, null, 50)
@@ -128,6 +154,7 @@ export default function StatsDashboard() {
       setEventosPorTipo(eventosTipo)
     } catch (error) {
       console.error("Error al cargar datos:", error)
+      setError("Error al cargar los datos. Por favor, intenta de nuevo.")
       toast({
         title: "Error",
         description: "No se pudieron cargar los datos. Intenta de nuevo más tarde.",
@@ -211,7 +238,7 @@ export default function StatsDashboard() {
 
   // Formatear fecha para mostrar
   const formatearFecha = (fecha: Date) => {
-    return format(new Date(fecha), "dd MMM yyyy, HH:mm", { locale: es })
+    return safeFormatDate(fecha, "dd MMM yyyy, HH:mm")
   }
 
   if (!isClient) {
@@ -256,6 +283,15 @@ export default function StatsDashboard() {
           </Button>
         </div>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+          <p className="text-red-700">{error}</p>
+          <Button variant="outline" onClick={cargarDatos} className="mt-2">
+            Reintentar
+          </Button>
+        </div>
+      )}
 
       {/* Filtros */}
       <Card className="mb-6">
@@ -401,11 +437,26 @@ export default function StatsDashboard() {
                   <DynamicResponsiveContainer width="100%" height="100%">
                     <DynamicLineChart data={eventosPorDia} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                       <DynamicCartesianGrid strokeDasharray="3 3" />
-                      <DynamicXAxis dataKey="fecha" tickFormatter={(fecha) => format(new Date(fecha), "dd/MM")} />
+                      <DynamicXAxis
+                        dataKey="fecha"
+                        tickFormatter={(fecha) => {
+                          try {
+                            return format(new Date(fecha), "dd/MM")
+                          } catch (e) {
+                            return "Inválido"
+                          }
+                        }}
+                      />
                       <DynamicYAxis />
                       <DynamicTooltip
                         formatter={(value: number) => [value, "Eventos"]}
-                        labelFormatter={(fecha) => format(new Date(fecha), "dd MMM yyyy", { locale: es })}
+                        labelFormatter={(fecha) => {
+                          try {
+                            return format(new Date(fecha), "dd MMM yyyy", { locale: es })
+                          } catch (e) {
+                            return "Fecha inválida"
+                          }
+                        }}
                       />
                       <DynamicLegend />
                       <DynamicLine
@@ -477,11 +528,26 @@ export default function StatsDashboard() {
                 <DynamicResponsiveContainer width="100%" height="100%">
                   <DynamicLineChart data={eventosPorDia} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <DynamicCartesianGrid strokeDasharray="3 3" />
-                    <DynamicXAxis dataKey="fecha" tickFormatter={(fecha) => format(new Date(fecha), "dd/MM")} />
+                    <DynamicXAxis
+                      dataKey="fecha"
+                      tickFormatter={(fecha) => {
+                        try {
+                          return format(new Date(fecha), "dd/MM")
+                        } catch (e) {
+                          return "Inválido"
+                        }
+                      }}
+                    />
                     <DynamicYAxis />
                     <DynamicTooltip
                       formatter={(value: number) => [value, "Eventos"]}
-                      labelFormatter={(fecha) => format(new Date(fecha), "dd MMM yyyy", { locale: es })}
+                      labelFormatter={(fecha) => {
+                        try {
+                          return format(new Date(fecha), "dd MMM yyyy", { locale: es })
+                        } catch (e) {
+                          return "Fecha inválida"
+                        }
+                      }}
                     />
                     <DynamicLegend />
                     <DynamicLine
@@ -575,11 +641,26 @@ export default function StatsDashboard() {
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                   >
                     <DynamicCartesianGrid strokeDasharray="3 3" />
-                    <DynamicXAxis dataKey="fecha" tickFormatter={(fecha) => format(new Date(fecha), "dd/MM")} />
+                    <DynamicXAxis
+                      dataKey="fecha"
+                      tickFormatter={(fecha) => {
+                        try {
+                          return format(new Date(fecha), "dd/MM")
+                        } catch (e) {
+                          return "Inválido"
+                        }
+                      }}
+                    />
                     <DynamicYAxis />
                     <DynamicTooltip
                       formatter={(value: number) => [value, "Registros"]}
-                      labelFormatter={(fecha) => format(new Date(fecha), "dd MMM yyyy", { locale: es })}
+                      labelFormatter={(fecha) => {
+                        try {
+                          return format(new Date(fecha), "dd MMM yyyy", { locale: es })
+                        } catch (e) {
+                          return "Fecha inválida"
+                        }
+                      }}
                     />
                     <DynamicLegend />
                     <DynamicLine
