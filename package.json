@@ -72,7 +72,8 @@
     "@google-analytics/data": "latest",
     "uuid": "latest",
     "resend": "latest",
-    "firebase": "latest"
+    "firebase": "latest",
+    "xlsx": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

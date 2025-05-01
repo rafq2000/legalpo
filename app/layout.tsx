@@ -12,6 +12,7 @@ import { Providers } from "./providers"
 import Script from "next/script"
 import { ForceLightTheme } from "@/components/force-light-theme"
 import { cn } from "@/lib/utils"
+import FirebaseTracker from "@/components/firebase-tracker"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -43,7 +44,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Suspense fallback={null}>
               <CookieConsentBanner />
             </Suspense>
-            <Suspense fallback={null}></Suspense>
+            <Suspense fallback={null}>
+              <FirebaseTracker />
+            </Suspense>
 
             {/* Google AdSense Script */}
             <Script

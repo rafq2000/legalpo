@@ -29,6 +29,7 @@ const initializeAnalytics = async () => {
       const isAnalyticsSupported = await isSupported()
       if (isAnalyticsSupported) {
         analytics = getAnalytics(app)
+        console.log("Firebase Analytics inicializado correctamente")
         return analytics
       }
     } catch (error) {
@@ -36,6 +37,11 @@ const initializeAnalytics = async () => {
     }
   }
   return null
+}
+
+// Inicializar Analytics automáticamente en el cliente
+if (typeof window !== "undefined") {
+  initializeAnalytics()
 }
 
 export { db, auth, analytics, initializeAnalytics }
