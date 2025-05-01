@@ -2,25 +2,50 @@
 
 import Link from "next/link"
 import { MessageCircle } from "lucide-react"
+import { useEffect, useState } from "react"
 
 export function WhatsAppButton() {
   const phoneNumber = "+56961458118"
   const whatsappUrl = `https://wa.me/${phoneNumber.replace("+", "")}`
+  const [userId, setUserId] = useState<string | null>(null)
+
+  // Obtener el ID de usuario al cargar el componente
+  useEffect(() => {
+    try {
+      const storedUserId = localStorage.getItem("docuscan_user_id")
+      setUserId(storedUserId)
+    } catch (error) {
+      console.error("Error al obtener ID de usuario:", error)
+    }
+  }, [])
 
   // Registrar clic en el botón de WhatsApp
   const handleWhatsAppClick = async () => {
     try {
-      // Intentar obtener un ID de usuario existente
-      const userId = localStorage.getItem("docuscan_user_id")
+      // Registrar el evento de contacto WhatsApp
+      await fetch("/api/track-event", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tipo: "whatsapp_contacto",
+          userId,
+          datos: {
+            origen: window.location.pathname,
+            timestamp: new Date().toISOString(),
+          },
+        }),
+      })
 
-      // Registrar la consulta de WhatsApp
+      // También registrar en la API antigua para compatibilidad
       await fetch("/api/register-whatsapp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          phoneNumber: "whatsapp_user", // En una implementación real, podrías usar el número del usuario
+          phoneNumber: "whatsapp_user",
           userId,
         }),
       })

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import dynamic from "next/dynamic"
-import { Calendar, Download, Filter, RefreshCw, Search } from "lucide-react"
+import { Download, Filter, RefreshCw, Search, Mail, Users, Eye, MousePointer, FileText } from "lucide-react"
 import { format, subDays, isValid } from "date-fns"
 import { es } from "date-fns/locale"
 
@@ -22,11 +22,16 @@ import {
   obtenerEventos,
   obtenerEventosPorDia,
   obtenerEventosPorTipo,
-  exportarEventosExcel,
+  obtenerUsuariosUnicos,
+  obtenerPaginasPopulares,
+  obtenerContactosWhatsApp,
+  exportarCorreosExcel,
   type EventoStats,
   type EventosPorDia,
   type EventosPorTipo,
   type FiltrosEventos,
+  type UsuarioUnico,
+  type PaginaPopular,
 } from "@/utils/stats-service"
 
 // Importar Recharts dinámicamente para evitar errores de SSR
@@ -91,6 +96,9 @@ export default function StatsDashboard() {
   const [eventos, setEventos] = useState<EventoStats[]>([])
   const [eventosPorDia, setEventosPorDia] = useState<EventosPorDia[]>([])
   const [eventosPorTipo, setEventosPorTipo] = useState<EventosPorTipo[]>([])
+  const [usuariosUnicos, setUsuariosUnicos] = useState<UsuarioUnico[]>([])
+  const [paginasPopulares, setPaginasPopulares] = useState<PaginaPopular[]>([])
+  const [contactosWhatsApp, setContactosWhatsApp] = useState(0)
   const [filtros, setFiltros] = useState<FiltrosEventos>({
     startDate: subDays(new Date(), 30),
     endDate: new Date(),
@@ -152,6 +160,16 @@ export default function StatsDashboard() {
 
       const eventosTipo = await obtenerEventosPorTipo(filtros)
       setEventosPorTipo(eventosTipo)
+
+      // Cargar datos adicionales para el panel resumen
+      const usuarios = await obtenerUsuariosUnicos(filtros)
+      setUsuariosUnicos(usuarios)
+
+      const paginas = await obtenerPaginasPopulares(filtros)
+      setPaginasPopulares(paginas)
+
+      const contactosWA = await obtenerContactosWhatsApp(filtros)
+      setContactosWhatsApp(contactosWA)
     } catch (error) {
       console.error("Error al cargar datos:", error)
       setError("Error al cargar los datos. Por favor, intenta de nuevo.")
@@ -165,17 +183,17 @@ export default function StatsDashboard() {
     }
   }
 
-  // Función para exportar a Excel
-  const exportarExcel = async () => {
+  // Función para exportar correos a Excel
+  const exportarCorreos = async () => {
     setIsExporting(true)
     try {
-      const blob = await exportarEventosExcel(filtros)
+      const blob = await exportarCorreosExcel(filtros)
 
       // Crear URL y descargar
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `eventos_${format(new Date(), "yyyy-MM-dd")}.xlsx`
+      a.download = `correos_${format(new Date(), "yyyy-MM-dd")}.xlsx`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -183,7 +201,7 @@ export default function StatsDashboard() {
 
       toast({
         title: "Exportación completada",
-        description: "Los datos se han exportado correctamente.",
+        description: "Los correos se han exportado correctamente.",
       })
     } catch (error) {
       console.error("Error al exportar:", error)
@@ -268,18 +286,13 @@ export default function StatsDashboard() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">Dashboard de Estadísticas</h1>
-          <p className="text-muted-foreground">Análisis de eventos y actividad de usuarios</p>
+          <p className="text-muted-foreground">Análisis de resultados y actividad de usuarios</p>
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 mt-4 md:mt-0">
           <Button variant="outline" onClick={cargarDatos} disabled={isLoading} className="flex items-center">
             <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
             {isLoading ? "Cargando..." : "Actualizar"}
-          </Button>
-
-          <Button onClick={exportarExcel} disabled={isExporting || isLoading} className="flex items-center">
-            <Download className="mr-2 h-4 w-4" />
-            {isExporting ? "Exportando..." : "Exportar Excel"}
           </Button>
         </div>
       </div>
@@ -351,182 +364,119 @@ export default function StatsDashboard() {
         </CardContent>
       </Card>
 
+      {/* Panel Resumen */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 mb-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Visitas</CardTitle>
+            <Eye className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-8 w-24" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{eventosPorDia.reduce((sum, item) => sum + item.total, 0)}</div>
+                <p className="text-xs text-muted-foreground">En el período seleccionado</p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Correos Registrados</CardTitle>
+            <Mail className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-8 w-24" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{usuariosUnicos.length}</div>
+                <p className="text-xs text-muted-foreground">Usuarios con email</p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Usuarios Únicos</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-8 w-24" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{usuariosUnicos.length}</div>
+                <p className="text-xs text-muted-foreground">Visitantes distintos</p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Clics WhatsApp</CardTitle>
+            <MousePointer className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-8 w-24" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{contactosWhatsApp}</div>
+                <p className="text-xs text-muted-foreground">Contactos potenciales</p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Página Popular</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-8 w-24" />
+            ) : (
+              <>
+                <div className="text-lg font-bold truncate">
+                  {paginasPopulares.length > 0 ? paginasPopulares[0].ruta : "N/A"}
+                </div>
+                <p className="text-xs text-muted-foreground">Más visitada</p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid grid-cols-2 md:grid-cols-3 gap-2">
-          <TabsTrigger value="overview">Resumen</TabsTrigger>
-          <TabsTrigger value="charts">Gráficos</TabsTrigger>
+        <TabsList className="grid grid-cols-3 gap-2">
+          <TabsTrigger value="overview">Visitas</TabsTrigger>
+          <TabsTrigger value="emails">Correos</TabsTrigger>
           <TabsTrigger value="events">Eventos</TabsTrigger>
         </TabsList>
 
-        {/* Pestaña de Resumen */}
+        {/* Pestaña de Visitas */}
         <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Eventos</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <Skeleton className="h-8 w-24" />
-                ) : (
-                  <>
-                    <div className="text-2xl font-bold">
-                      {eventosPorTipo.reduce((sum, item) => sum + item.total, 0)}
-                    </div>
-                    <p className="text-xs text-muted-foreground">En el período seleccionado</p>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Eventos por Día</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <Skeleton className="h-8 w-24" />
-                ) : (
-                  <>
-                    <div className="text-2xl font-bold">
-                      {Math.round(
-                        eventosPorTipo.reduce((sum, item) => sum + item.total, 0) / (eventosPorDia.length || 1),
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground">Promedio diario</p>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Tipo Principal</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <Skeleton className="h-8 w-24" />
-                ) : (
-                  <>
-                    <div className="text-2xl font-bold">
-                      {eventosPorTipo.length > 0 ? eventosPorTipo.sort((a, b) => b.total - a.total)[0].tipo : "N/A"}
-                    </div>
-                    <p className="text-xs text-muted-foreground">Evento más frecuente</p>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* Gráfico de eventos por día */}
-            <Card className="col-span-1">
-              <CardHeader>
-                <CardTitle>Eventos por Día</CardTitle>
-                <CardDescription>Total de eventos registrados por día</CardDescription>
-              </CardHeader>
-              <CardContent className="h-80">
-                {isLoading ? (
-                  <div className="h-full w-full flex items-center justify-center">
-                    <Skeleton className="h-full w-full" />
-                  </div>
-                ) : (
-                  <DynamicResponsiveContainer width="100%" height="100%">
-                    <DynamicLineChart data={eventosPorDia} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                      <DynamicCartesianGrid strokeDasharray="3 3" />
-                      <DynamicXAxis
-                        dataKey="fecha"
-                        tickFormatter={(fecha) => {
-                          try {
-                            return format(new Date(fecha), "dd/MM")
-                          } catch (e) {
-                            return "Inválido"
-                          }
-                        }}
-                      />
-                      <DynamicYAxis />
-                      <DynamicTooltip
-                        formatter={(value: number) => [value, "Eventos"]}
-                        labelFormatter={(fecha) => {
-                          try {
-                            return format(new Date(fecha), "dd MMM yyyy", { locale: es })
-                          } catch (e) {
-                            return "Fecha inválida"
-                          }
-                        }}
-                      />
-                      <DynamicLegend />
-                      <DynamicLine
-                        type="monotone"
-                        dataKey="total"
-                        name="Total Eventos"
-                        stroke="#8884d8"
-                        activeDot={{ r: 8 }}
-                      />
-                    </DynamicLineChart>
-                  </DynamicResponsiveContainer>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Gráfico de eventos por tipo */}
-            <Card className="col-span-1">
-              <CardHeader>
-                <CardTitle>Eventos por Tipo</CardTitle>
-                <CardDescription>Distribución de eventos por tipo</CardDescription>
-              </CardHeader>
-              <CardContent className="h-80">
-                {isLoading ? (
-                  <div className="h-full w-full flex items-center justify-center">
-                    <Skeleton className="h-full w-full" />
-                  </div>
-                ) : (
-                  <DynamicResponsiveContainer width="100%" height="100%">
-                    <DynamicPieChart>
-                      <DynamicPie
-                        data={eventosPorTipo}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="total"
-                        nameKey="tipo"
-                      >
-                        {eventosPorTipo.map((entry, index) => (
-                          <DynamicCell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </DynamicPie>
-                      <DynamicTooltip formatter={(value: number, name, props) => [value, props.payload.tipo]} />
-                      <DynamicLegend />
-                    </DynamicPieChart>
-                  </DynamicResponsiveContainer>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Pestaña de Gráficos */}
-        <TabsContent value="charts" className="space-y-4">
-          {/* Gráfico de evolución diaria */}
+          {/* Gráfico de visitas por día */}
           <Card>
             <CardHeader>
-              <CardTitle>Evolución Diaria de Eventos</CardTitle>
-              <CardDescription>Tendencia de eventos en el período seleccionado</CardDescription>
+              <CardTitle>Visitas por Día</CardTitle>
+              <CardDescription>Evolución de visitas en el período seleccionado</CardDescription>
             </CardHeader>
-            <CardContent className="h-96">
+            <CardContent className="h-[400px]">
               {isLoading ? (
                 <div className="h-full w-full flex items-center justify-center">
                   <Skeleton className="h-full w-full" />
                 </div>
               ) : (
                 <DynamicResponsiveContainer width="100%" height="100%">
-                  <DynamicLineChart data={eventosPorDia} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <DynamicLineChart data={eventosPorDia} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                     <DynamicCartesianGrid strokeDasharray="3 3" />
                     <DynamicXAxis
                       dataKey="fecha"
@@ -540,7 +490,7 @@ export default function StatsDashboard() {
                     />
                     <DynamicYAxis />
                     <DynamicTooltip
-                      formatter={(value: number) => [value, "Eventos"]}
+                      formatter={(value: number) => [`${value} visitas`, "Total"]}
                       labelFormatter={(fecha) => {
                         try {
                           return format(new Date(fecha), "dd MMM yyyy", { locale: es })
@@ -553,125 +503,165 @@ export default function StatsDashboard() {
                     <DynamicLine
                       type="monotone"
                       dataKey="total"
-                      name="Total Eventos"
+                      name="Visitas"
                       stroke="#8884d8"
+                      strokeWidth={2}
                       activeDot={{ r: 8 }}
                     />
-                    {/* Mostrar líneas para tipos específicos si están filtrados */}
-                    {tipoSeleccionado && tipoSeleccionado !== "all" ? (
-                      <DynamicLine
-                        type="monotone"
-                        dataKey={tipoSeleccionado}
-                        name={tipoSeleccionado}
-                        stroke="#82ca9d"
+                  </DynamicLineChart>
+                </DynamicResponsiveContainer>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Gráficos de distribución */}
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* Gráfico de eventos por tipo */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Distribución por Tipo de Evento</CardTitle>
+                <CardDescription>Proporción de cada tipo de evento</CardDescription>
+              </CardHeader>
+              <CardContent className="h-[350px]">
+                {isLoading ? (
+                  <div className="h-full w-full flex items-center justify-center">
+                    <Skeleton className="h-full w-full" />
+                  </div>
+                ) : (
+                  <DynamicResponsiveContainer width="100%" height="100%">
+                    <DynamicPieChart>
+                      <DynamicPie
+                        data={eventosPorTipo}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={true}
+                        outerRadius={120}
+                        fill="#8884d8"
+                        dataKey="total"
+                        nameKey="tipo"
+                        label={({ tipo, percent }) => `${tipo}: ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {eventosPorTipo.map((entry, index) => (
+                          <DynamicCell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </DynamicPie>
+                      <DynamicTooltip
+                        formatter={(value: number, name, props) => [`${value} eventos`, props.payload.tipo]}
                       />
-                    ) : (
-                      // Mostrar líneas para los tipos más comunes (máximo 3)
-                      eventosPorTipo
-                        .sort((a, b) => b.total - a.total)
-                        .slice(0, 3)
-                        .map((item, index) => (
-                          <DynamicLine
-                            key={item.tipo}
-                            type="monotone"
-                            dataKey={item.tipo}
-                            name={item.tipo}
-                            stroke={COLORS[(index + 1) % COLORS.length]}
-                          />
+                      <DynamicLegend layout="vertical" align="right" verticalAlign="middle" />
+                    </DynamicPieChart>
+                  </DynamicResponsiveContainer>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Páginas más visitadas */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Páginas Más Visitadas</CardTitle>
+                <CardDescription>Top 10 páginas con más visitas</CardDescription>
+              </CardHeader>
+              <CardContent className="h-[350px]">
+                {isLoading ? (
+                  <div className="h-full w-full flex items-center justify-center">
+                    <Skeleton className="h-full w-full" />
+                  </div>
+                ) : (
+                  <DynamicResponsiveContainer width="100%" height="100%">
+                    <DynamicBarChart
+                      data={paginasPopulares.slice(0, 10)}
+                      layout="vertical"
+                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <DynamicCartesianGrid strokeDasharray="3 3" horizontal={false} />
+                      <DynamicXAxis type="number" />
+                      <DynamicYAxis
+                        dataKey="ruta"
+                        type="category"
+                        width={150}
+                        tick={{ fontSize: 12 }}
+                        tickFormatter={(value) => (value.length > 20 ? `${value.substring(0, 20)}...` : value)}
+                      />
+                      <DynamicTooltip formatter={(value: number) => [`${value} visitas`, "Total"]} />
+                      <DynamicBar dataKey="visitas" name="Visitas" fill="#82ca9d" />
+                    </DynamicBarChart>
+                  </DynamicResponsiveContainer>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Pestaña de Correos */}
+        <TabsContent value="emails">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Correos Registrados</CardTitle>
+                <CardDescription>Usuarios que han proporcionado su correo electrónico</CardDescription>
+              </div>
+              <Button onClick={exportarCorreos} disabled={isExporting || isLoading} className="flex items-center">
+                <Download className="mr-2 h-4 w-4" />
+                {isExporting ? "Exportando..." : "Exportar Excel"}
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <div className="space-y-2">
+                  {Array(5)
+                    .fill(0)
+                    .map((_, i) => (
+                      <Skeleton key={i} className="h-12 w-full" />
+                    ))}
+                </div>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Correo</TableHead>
+                        <TableHead>Primera Visita</TableHead>
+                        <TableHead>Última Acción</TableHead>
+                        <TableHead>Acciones</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {usuariosUnicos.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center py-4">
+                            No se encontraron correos registrados con los filtros seleccionados
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        usuariosUnicos.map((usuario) => (
+                          <TableRow key={usuario.email}>
+                            <TableCell className="font-medium">{usuario.email}</TableCell>
+                            <TableCell>{formatearFecha(usuario.primeraVisita)}</TableCell>
+                            <TableCell>{formatearFecha(usuario.ultimaAccion)}</TableCell>
+                            <TableCell>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  toast({
+                                    title: "Detalles del usuario",
+                                    description: (
+                                      <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 overflow-x-auto">
+                                        <code className="text-white">{JSON.stringify(usuario, null, 2)}</code>
+                                      </pre>
+                                    ),
+                                  })
+                                }}
+                              >
+                                <Search className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
                         ))
-                    )}
-                  </DynamicLineChart>
-                </DynamicResponsiveContainer>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Gráfico de barras por tipo */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Distribución por Tipo de Evento</CardTitle>
-              <CardDescription>Cantidad de eventos por cada tipo</CardDescription>
-            </CardHeader>
-            <CardContent className="h-96">
-              {isLoading ? (
-                <div className="h-full w-full flex items-center justify-center">
-                  <Skeleton className="h-full w-full" />
+                      )}
+                    </TableBody>
+                  </Table>
                 </div>
-              ) : (
-                <DynamicResponsiveContainer width="100%" height="100%">
-                  <DynamicBarChart
-                    data={eventosPorTipo}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                    layout="vertical"
-                  >
-                    <DynamicCartesianGrid strokeDasharray="3 3" />
-                    <DynamicXAxis type="number" />
-                    <DynamicYAxis type="category" dataKey="tipo" width={150} />
-                    <DynamicTooltip formatter={(value: number) => [value, "Eventos"]} />
-                    <DynamicLegend />
-                    <DynamicBar dataKey="total" name="Total Eventos" fill="#8884d8">
-                      {eventosPorTipo.map((entry, index) => (
-                        <DynamicCell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </DynamicBar>
-                  </DynamicBarChart>
-                </DynamicResponsiveContainer>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Gráfico específico para registros */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Evolución de Registros</CardTitle>
-              <CardDescription>Tendencia de eventos de tipo "registro"</CardDescription>
-            </CardHeader>
-            <CardContent className="h-80">
-              {isLoading ? (
-                <div className="h-full w-full flex items-center justify-center">
-                  <Skeleton className="h-full w-full" />
-                </div>
-              ) : (
-                <DynamicResponsiveContainer width="100%" height="100%">
-                  <DynamicLineChart
-                    data={eventosPorDia.map((dia) => ({
-                      fecha: dia.fecha,
-                      registros: dia.registro || 0,
-                    }))}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <DynamicCartesianGrid strokeDasharray="3 3" />
-                    <DynamicXAxis
-                      dataKey="fecha"
-                      tickFormatter={(fecha) => {
-                        try {
-                          return format(new Date(fecha), "dd/MM")
-                        } catch (e) {
-                          return "Inválido"
-                        }
-                      }}
-                    />
-                    <DynamicYAxis />
-                    <DynamicTooltip
-                      formatter={(value: number) => [value, "Registros"]}
-                      labelFormatter={(fecha) => {
-                        try {
-                          return format(new Date(fecha), "dd MMM yyyy", { locale: es })
-                        } catch (e) {
-                          return "Fecha inválida"
-                        }
-                      }}
-                    />
-                    <DynamicLegend />
-                    <DynamicLine
-                      type="monotone"
-                      dataKey="registros"
-                      name="Registros"
-                      stroke="#82ca9d"
-                      activeDot={{ r: 8 }}
-                    />
-                  </DynamicLineChart>
-                </DynamicResponsiveContainer>
               )}
             </CardContent>
           </Card>

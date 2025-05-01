@@ -44,6 +44,19 @@ export interface FiltrosEventos {
   email?: string
 }
 
+export interface UsuarioUnico {
+  id: string
+  email: string
+  primeraVisita: Date
+  ultimaAccion: Date
+  eventos: number
+}
+
+export interface PaginaPopular {
+  ruta: string
+  visitas: number
+}
+
 // Función para validar fechas
 const isValidDate = (date: any): boolean => {
   if (!date) return false
@@ -266,62 +279,177 @@ export async function obtenerEventosPorTipo(filtros: FiltrosEventos = {}): Promi
   }
 }
 
-// Función para exportar eventos a Excel
-export async function exportarEventosExcel(filtros: FiltrosEventos = {}): Promise<Blob> {
+// Función para obtener usuarios únicos
+export async function obtenerUsuariosUnicos(filtros: FiltrosEventos = {}): Promise<UsuarioUnico[]> {
+  try {
+    if (!isFirestoreAvailable()) {
+      return []
+    }
+
+    const firestore = db()
+    const endDate = filtros.endDate && isValidDate(filtros.endDate) ? filtros.endDate : new Date()
+    const startDate =
+      filtros.startDate && isValidDate(filtros.startDate)
+        ? filtros.startDate
+        : new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000)
+
+    const q = query(
+      collection(firestore, "eventos"),
+      where("timestamp", ">=", Timestamp.fromDate(startDate)),
+      where("timestamp", "<=", Timestamp.fromDate(endDate)),
+    )
+
+    const querySnapshot = await getDocs(q)
+
+    // Agrupar por usuario
+    const usuariosMap: Record<string, UsuarioUnico> = {}
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data()
+      const email = data.datos?.email || data.email
+
+      if (email && typeof email === "string") {
+        if (!usuariosMap[email]) {
+          usuariosMap[email] = {
+            id: data.userId || doc.id,
+            email,
+            primeraVisita: safeDate(data.timestamp?.toDate()),
+            ultimaAccion: safeDate(data.timestamp?.toDate()),
+            eventos: 0,
+          }
+        }
+
+        // Actualizar primera y última visita
+        const timestamp = safeDate(data.timestamp?.toDate())
+        if (timestamp < usuariosMap[email].primeraVisita) {
+          usuariosMap[email].primeraVisita = timestamp
+        }
+        if (timestamp > usuariosMap[email].ultimaAccion) {
+          usuariosMap[email].ultimaAccion = timestamp
+        }
+
+        // Incrementar contador de eventos
+        usuariosMap[email].eventos += 1
+      }
+    })
+
+    // Convertir mapa a array y ordenar por última acción
+    return Object.values(usuariosMap).sort((a, b) => b.ultimaAccion.getTime() - a.ultimaAccion.getTime())
+  } catch (error) {
+    console.error("Error al obtener usuarios únicos:", error)
+    return []
+  }
+}
+
+// Función para obtener páginas populares
+export async function obtenerPaginasPopulares(filtros: FiltrosEventos = {}): Promise<PaginaPopular[]> {
+  try {
+    if (!isFirestoreAvailable()) {
+      return []
+    }
+
+    const firestore = db()
+    const endDate = filtros.endDate && isValidDate(filtros.endDate) ? filtros.endDate : new Date()
+    const startDate =
+      filtros.startDate && isValidDate(filtros.startDate)
+        ? filtros.startDate
+        : new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000)
+
+    const q = query(
+      collection(firestore, "eventos"),
+      where("timestamp", ">=", Timestamp.fromDate(startDate)),
+      where("timestamp", "<=", Timestamp.fromDate(endDate)),
+      where("tipo", "==", "page_view"),
+    )
+
+    const querySnapshot = await getDocs(q)
+
+    // Agrupar por ruta
+    const rutasMap: Record<string, number> = {}
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data()
+      const ruta = data.datos?.path || data.path || "/"
+
+      if (!rutasMap[ruta]) {
+        rutasMap[ruta] = 0
+      }
+      rutasMap[ruta] += 1
+    })
+
+    // Convertir mapa a array y ordenar por visitas
+    return Object.entries(rutasMap)
+      .map(([ruta, visitas]) => ({
+        ruta,
+        visitas,
+      }))
+      .sort((a, b) => b.visitas - a.visitas)
+  } catch (error) {
+    console.error("Error al obtener páginas populares:", error)
+    return []
+  }
+}
+
+// Función para obtener contactos de WhatsApp
+export async function obtenerContactosWhatsApp(filtros: FiltrosEventos = {}): Promise<number> {
+  try {
+    if (!isFirestoreAvailable()) {
+      return 0
+    }
+
+    const firestore = db()
+    const endDate = filtros.endDate && isValidDate(filtros.endDate) ? filtros.endDate : new Date()
+    const startDate =
+      filtros.startDate && isValidDate(filtros.startDate)
+        ? filtros.startDate
+        : new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000)
+
+    const q = query(
+      collection(firestore, "eventos"),
+      where("timestamp", ">=", Timestamp.fromDate(startDate)),
+      where("timestamp", "<=", Timestamp.fromDate(endDate)),
+      where("tipo", "==", "whatsapp_contacto"),
+    )
+
+    const querySnapshot = await getDocs(q)
+    return querySnapshot.size
+  } catch (error) {
+    console.error("Error al obtener contactos de WhatsApp:", error)
+    return 0
+  }
+}
+
+// Función para exportar correos a Excel
+export async function exportarCorreosExcel(filtros: FiltrosEventos = {}): Promise<Blob> {
   try {
     if (!isFirestoreAvailable()) {
       throw new Error("Firestore no está disponible")
     }
 
-    const eventos: EventoStats[] = []
-    let ultimoDoc: QueryDocumentSnapshot<DocumentData> | null = null
-    let hayMas = true
-
-    // Obtener todos los eventos en lotes
-    while (hayMas) {
-      const resultado = await obtenerEventos(filtros, ultimoDoc, 1000)
-      eventos.push(...resultado.eventos)
-      ultimoDoc = resultado.ultimoDoc
-
-      if (!ultimoDoc || resultado.eventos.length < 1000) {
-        hayMas = false
-      }
-    }
+    const usuarios = await obtenerUsuariosUnicos(filtros)
 
     // Preparar datos para Excel
-    const datosExcel = eventos.map((evento) => {
-      // Aplanar los datos anidados
-      const datosProcesados: Record<string, any> = {
-        id: evento.id,
-        tipo: evento.tipo,
-        fecha: isValidDate(evento.timestamp) ? new Date(evento.timestamp).toLocaleString() : "Fecha inválida",
-        userId: evento.userId || "",
-        email: evento.email || "",
-      }
-
-      // Añadir campos de datos si existen
-      if (evento.datos) {
-        Object.entries(evento.datos).forEach(([key, value]) => {
-          // Evitar duplicar el email
-          if (key !== "email" || !evento.email) {
-            datosProcesados[`datos_${key}`] = typeof value === "object" ? JSON.stringify(value) : value
-          }
-        })
-      }
-
-      return datosProcesados
-    })
+    const datosExcel = usuarios.map((usuario) => ({
+      email: usuario.email,
+      primeraVisita: isValidDate(usuario.primeraVisita)
+        ? new Date(usuario.primeraVisita).toLocaleString()
+        : "Fecha inválida",
+      ultimaAccion: isValidDate(usuario.ultimaAccion)
+        ? new Date(usuario.ultimaAccion).toLocaleString()
+        : "Fecha inválida",
+      eventos: usuario.eventos,
+    }))
 
     // Crear libro de Excel
     const libro = XLSX.utils.book_new()
     const hoja = XLSX.utils.json_to_sheet(datosExcel)
-    XLSX.utils.book_append_sheet(libro, hoja, "Eventos")
+    XLSX.utils.book_append_sheet(libro, hoja, "Correos")
 
     // Generar archivo
     const excelBuffer = XLSX.write(libro, { bookType: "xlsx", type: "array" })
     return new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
   } catch (error) {
-    console.error("Error al exportar eventos:", error)
+    console.error("Error al exportar correos:", error)
     throw error
   }
 }
