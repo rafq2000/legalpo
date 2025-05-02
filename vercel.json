@@ -6,20 +6,7 @@
       "use": "@vercel/next"
     }
   ],
-  "routes": [
-    {
-      "src": "/404",
-      "dest": "/"
-    },
-    {
-      "src": "/_not-found",
-      "dest": "/"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
+  "routes": [{ "handle": "filesystem" }, { "src": "/(.*)", "status": 404, "dest": "/404.html" }],
   "env": {
     "NEXT_SKIP_404_PRERENDER": "true"
   }

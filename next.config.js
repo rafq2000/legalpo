@@ -24,11 +24,19 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   // Configuración para resolver el problema de useSearchParams
-  output: "server", // Cambiado a "server" para evitar la generación estática
+  output: "server", // Forzar modo servidor
   // Desactivar completamente la prerenderización
   experimental: {
-    // Esto evita que Next.js intente prerender la página 404
+    // Esto evita que Next.js intente prerender páginas
     disableStaticPages: true,
+    // Desactivar la generación de 404
+    skipTrailingSlashRedirect: true,
+    skipMiddlewareUrlNormalize: true,
+  },
+  // Desactivar la generación automática de 404
+  i18n: {
+    locales: ["es"],
+    defaultLocale: "es",
   },
 }
 
