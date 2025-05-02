@@ -1,69 +1,19 @@
 "use client"
 
 import Link from "next/link"
-import { MessageCircle } from "lucide-react"
-import { useEffect, useState } from "react"
 
-export function WhatsAppButton() {
-  const phoneNumber = "+56961458118"
-  const whatsappUrl = `https://wa.me/${phoneNumber.replace("+", "")}`
-  const [userId, setUserId] = useState<string | null>(null)
-
-  // Obtener el ID de usuario al cargar el componente
-  useEffect(() => {
-    try {
-      const storedUserId = localStorage.getItem("docuscan_user_id")
-      setUserId(storedUserId)
-    } catch (error) {
-      console.error("Error al obtener ID de usuario:", error)
-    }
-  }, [])
-
-  // Registrar clic en el botón de WhatsApp
-  const handleWhatsAppClick = async () => {
-    try {
-      // Registrar el evento de contacto WhatsApp
-      await fetch("/api/track-event", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tipo: "whatsapp_contacto",
-          userId,
-          datos: {
-            origen: window.location.pathname,
-            timestamp: new Date().toISOString(),
-          },
-        }),
-      })
-
-      // También registrar en la API antigua para compatibilidad
-      await fetch("/api/register-whatsapp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          phoneNumber: "whatsapp_user",
-          userId,
-        }),
-      })
-    } catch (error) {
-      console.error("Error al registrar clic de WhatsApp:", error)
-    }
-  }
-
+export default function WhatsAppButton() {
   return (
     <Link
-      href={whatsappUrl}
+      href="https://wa.me/56961458118"
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-transform hover:scale-110 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
-      aria-label="Contactar por WhatsApp"
-      onClick={handleWhatsAppClick}
+      className="fixed bottom-4 left-4 z-50 bg-green-500 hover:bg-green-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110"
+      title="Contactar abogado por WhatsApp"
     >
-      <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7" />
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 32 32" width="28" height="28">
+        <path d="M16.004 3.2c-7.048 0-12.8 5.752-12.8 12.8 0 2.24.584 4.384 1.696 6.296l-1.76 6.384 6.56-1.72c1.816.992 3.872 1.52 6.072 1.52 7.048 0 12.8-5.752 12.8-12.8s-5.752-12.8-12.8-12.8zm0 23.2c-1.832 0-3.632-.488-5.216-1.4l-.376-.208-3.741.982.998-3.648-.235-.374c-1.032-1.6-1.584-3.448-1.584-5.416 0-5.848 4.752-10.6 10.6-10.6s10.6 4.752 10.6 10.6-4.752 10.6-10.6 10.6zm5.552-7.984c-.304-.152-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+      </svg>
     </Link>
   )
 }

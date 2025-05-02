@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge"
 import { toast } from "@/components/ui/use-toast"
 
 import {
-  obtenerEventos,
+  obtenerEventosPorPaginas,
   obtenerEventosPorDia,
   obtenerEventosPorTipo,
   obtenerUsuariosUnicos,
@@ -138,9 +138,11 @@ export default function StatsDashboard() {
   })
   const [isClient, setIsClient] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [ultimoDoc, setUltimoDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null)
-  const [hayMasEventos, setHayMasEventos] = useState(false)
-  const [cargandoMas, setCargandoMas] = useState(false)
+
+  // Estados para la paginación
+  const [cursor, setCursor] = useState<QueryDocumentSnapshot<DocumentData> | null>(null)
+  const [hayMas, setHayMas] = useState(true)
+  const [cargando, setCargando] = useState(false)
 
   // Verificar si estamos en el cliente
   useEffect(() => {
@@ -168,6 +170,10 @@ export default function StatsDashboard() {
   // Cargar datos con filtros actualizados
   useEffect(() => {
     if (isClient) {
+      // Resetear eventos y cursor cuando cambian los filtros
+      setEventos([])
+      setCursor(null)
+      setHayMas(true)
       cargarDatos()
     }
   }, [filtros, isClient])
@@ -177,11 +183,18 @@ export default function StatsDashboard() {
     setIsLoading(true)
     setError(null)
     try {
-      // Cargar eventos recientes
-      const { eventos, ultimoDoc, hayMas } = await obtenerEventos(filtros, null, 500)
-      setEventos(eventos)
-      setUltimoDoc(ultimoDoc)
-      setHayMasEventos(hayMas)
+      // Cargar eventos recientes con la nueva función de paginación
+      const { eventos: nuevosEventos, siguienteCursor } = await obtenerEventosPorPaginas({
+        desde: filtros.startDate,
+        hasta: filtros.endDate,
+        tipo: filtros.tipo,
+        email: filtros.email,
+        lastVisible: null, // Empezar desde el principio
+      })
+
+      setEventos(nuevosEventos)
+      setCursor(siguienteCursor)
+      setHayMas(!!siguienteCursor)
 
       // Cargar datos para gráficos
       const eventosDiarios = await obtenerEventosPorDia(filtros)
@@ -214,19 +227,21 @@ export default function StatsDashboard() {
 
   // Función para cargar más eventos
   const cargarMasEventos = async () => {
-    if (!ultimoDoc || !hayMasEventos) return
+    if (cargando || !hayMas || !cursor) return
 
-    setCargandoMas(true)
+    setCargando(true)
     try {
-      const {
-        eventos: nuevosEventos,
-        ultimoDoc: nuevoUltimoDoc,
-        hayMas,
-      } = await obtenerEventos(filtros, ultimoDoc, 500)
+      const { eventos: nuevosEventos, siguienteCursor } = await obtenerEventosPorPaginas({
+        desde: filtros.startDate,
+        hasta: filtros.endDate,
+        tipo: filtros.tipo,
+        email: filtros.email,
+        lastVisible: cursor,
+      })
 
-      setEventos((prevEventos) => [...prevEventos, ...nuevosEventos])
-      setUltimoDoc(nuevoUltimoDoc)
-      setHayMasEventos(hayMas)
+      setEventos((prev) => [...prev, ...nuevosEventos])
+      setCursor(siguienteCursor)
+      setHayMas(!!siguienteCursor)
 
       if (nuevosEventos.length > 0) {
         toast({
@@ -238,6 +253,7 @@ export default function StatsDashboard() {
           title: "No hay más eventos",
           description: "Has llegado al final de la lista de eventos.",
         })
+        setHayMas(false)
       }
     } catch (error) {
       console.error("Error al cargar más eventos:", error)
@@ -247,7 +263,7 @@ export default function StatsDashboard() {
         variant: "destructive",
       })
     } finally {
-      setCargandoMas(false)
+      setCargando(false)
     }
   }
 
@@ -802,10 +818,10 @@ export default function StatsDashboard() {
                       )}
                     </TableBody>
                   </Table>
-                  {hayMasEventos && (
+                  {hayMas && (
                     <div className="flex justify-center p-4">
-                      <Button onClick={cargarMasEventos} disabled={cargandoMas || !hayMasEventos} variant="outline">
-                        {cargandoMas ? (
+                      <Button onClick={cargarMasEventos} disabled={cargando || !hayMas} variant="outline">
+                        {cargando ? (
                           <>
                             <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                             Cargando...

@@ -13,6 +13,7 @@ import Script from "next/script"
 import { ForceLightTheme } from "@/components/force-light-theme"
 import { cn } from "@/lib/utils"
 import FirebaseTracker from "@/components/firebase-tracker"
+import WhatsAppButton from "@/components/whatsapp-button"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -46,6 +47,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Suspense>
             <Suspense fallback={null}>
               <FirebaseTracker />
+            </Suspense>
+            <Suspense fallback={null}>
+              <WhatsAppButton />
             </Suspense>
 
             {/* Google AdSense Script */}

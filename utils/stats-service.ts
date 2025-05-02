@@ -87,13 +87,106 @@ const isFirestoreAvailable = () => {
   }
 }
 
-// Update the obtenerEventos function to use proper pagination with a reasonable batch size
-// Replace the current obtenerEventos function with this implementation:
+// Nueva función para obtener eventos por páginas
+export async function obtenerEventosPorPaginas({
+  desde,
+  hasta,
+  tipo,
+  email,
+  lastVisible = null,
+}: {
+  desde?: Date
+  hasta?: Date
+  tipo?: string
+  email?: string
+  lastVisible?: QueryDocumentSnapshot<DocumentData> | null
+}) {
+  try {
+    if (!isFirestoreAvailable()) {
+      return { eventos: [], siguienteCursor: null }
+    }
 
+    const firestore = db()
+    const LOTE = 500
+    const filtros = []
+
+    if (desde && hasta) {
+      filtros.push(where("timestamp", ">=", Timestamp.fromDate(new Date(desde))))
+      filtros.push(where("timestamp", "<=", Timestamp.fromDate(new Date(hasta))))
+    }
+
+    if (tipo && tipo !== "todos") {
+      filtros.push(where("tipo", "==", tipo))
+    }
+
+    if (email) {
+      filtros.push(where("datos.email", "==", email))
+    }
+
+    const q = query(
+      collection(firestore, "eventos"),
+      orderBy("timestamp", "desc"),
+      ...filtros,
+      ...(lastVisible ? [startAfter(lastVisible)] : []),
+      limit(LOTE),
+    )
+
+    const snapshot = await getDocs(q)
+
+    const eventos = snapshot.docs.map((doc) => {
+      const data = doc.data()
+      let timestamp: Date
+
+      // Manejar la fecha de manera segura
+      if (data.timestamp) {
+        if (typeof data.timestamp === "string") {
+          timestamp = new Date(data.timestamp)
+        } else if (typeof data.timestamp.toDate === "function") {
+          try {
+            timestamp = data.timestamp.toDate()
+          } catch (e) {
+            timestamp = new Date()
+          }
+        } else if (data.timestamp instanceof Date) {
+          timestamp = data.timestamp
+        } else {
+          timestamp = new Date()
+        }
+
+        if (!isValidDate(timestamp)) {
+          timestamp = new Date()
+        }
+      } else {
+        timestamp = new Date()
+      }
+
+      return {
+        id: doc.id,
+        tipo: data.tipo || "desconocido",
+        timestamp,
+        userId: data.userId,
+        email: data.datos?.email || data.email,
+        datos: data.datos,
+        ...data,
+      }
+    })
+
+    const siguienteCursor = snapshot.docs[snapshot.docs.length - 1] || null
+
+    return { eventos, siguienteCursor }
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al obtener eventos por páginas:", error)
+    }
+    return { eventos: [], siguienteCursor: null }
+  }
+}
+
+// Mantener la función original obtenerEventos para compatibilidad
 export async function obtenerEventos(
   filtros: FiltrosEventos = {},
   ultimoDoc: QueryDocumentSnapshot<DocumentData> | null = null,
-  tamanoLote = 500, // Reasonable batch size instead of 1,000,000
+  tamanoLote = 500,
 ): Promise<{ eventos: EventoStats[]; ultimoDoc: QueryDocumentSnapshot<DocumentData> | null; hayMas: boolean }> {
   try {
     if (!isFirestoreAvailable()) {
