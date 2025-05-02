@@ -1,16 +1,14 @@
 "use client"
 
-import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 
-function My404Component() {
-  const searchParams = useSearchParams()
-  const ref = searchParams.get("ref")
-
+function Content() {
+  const params = useSearchParams()
+  // Podemos usar params si es necesario
   return (
     <div className="container mx-auto p-6 text-center">
       <h1 className="text-3xl font-bold mb-4">Página no encontrada</h1>
-      {ref && <p className="text-gray-500">Referencia: {ref}</p>}
       <p className="text-gray-600 mt-4">Lo sentimos, la página que buscas no existe.</p>
       <a
         href="/"
@@ -25,7 +23,7 @@ function My404Component() {
 export default function NotFoundPage() {
   return (
     <Suspense fallback={<div className="text-center p-6">Cargando...</div>}>
-      <My404Component />
+      <Content />
     </Suspense>
   )
 }

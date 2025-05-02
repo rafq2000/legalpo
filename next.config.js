@@ -1,16 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    // Estas son las únicas flags válidas en Next.js 15+
-    serverActions: true,
-    turbo: true,
-  },
   images: {
     domains: ["lh3.googleusercontent.com", "avatars.githubusercontent.com", "firebasestorage.googleapis.com"],
     unoptimized: true,
   },
-  trailingSlash: false, // O true si prefieres URLs con slash final
+  trailingSlash: false, // O true si quieres siempre / al final
   eslint: {
     ignoreDuringBuilds: true,
   },
