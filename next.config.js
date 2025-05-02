@@ -23,8 +23,13 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Deshabilitar completamente la página 404 personalizada
-  pageExtensions: ["tsx", "ts", "jsx", "js"].filter((ext) => !ext.includes("404")),
+  // Deshabilitar completamente la generación estática
+  output: "server",
+  // Deshabilitar la generación estática para la página 404
+  experimental: {
+    // Esto evita que Next.js intente prerender la página 404
+    disableStaticPages: ["/_not-found", "/404"],
+  },
 }
 
 module.exports = nextConfig

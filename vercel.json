@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "next.config.js",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/404",
+      "dest": "/"
+    },
+    {
+      "src": "/_not-found",
+      "dest": "/"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "env": {
+    "NEXT_SKIP_404_PRERENDER": "true"
+  }
+}

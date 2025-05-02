@@ -2,19 +2,24 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 export function middleware(request: NextRequest) {
-  // Simple middleware that just passes through all requests
+  // Interceptar solicitudes a la página 404
+  if (request.nextUrl.pathname === "/404") {
+    return NextResponse.redirect(new URL("/", request.url))
+  }
+
   return NextResponse.next()
 }
 
+// Configurar el middleware para que se ejecute en todas las rutas
 export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
+     * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public folder
      */
-    "/((?!_next/static|_next/image|favicon.ico|not-found.html).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 }
