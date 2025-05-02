@@ -23,9 +23,11 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Configuración actualizada según las especificaciones
-  experimental: {},
+  // Configuración actualizada
   output: "standalone",
+  // Desactivar la prerenderización de la página 404
+  skipMiddlewareUrlNormalize: true,
+  skipTrailingSlashRedirect: true,
 }
 
 module.exports = nextConfig

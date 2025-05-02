@@ -41,7 +41,7 @@ export function getFirestoreInstance(): Firestore {
   return firestoreInstance
 }
 
-// Get Auth instance
+// Get Auth instance - LAZY initialization
 export function getAuthInstance(): Auth {
   if (!authInstance) {
     const app = getFirebaseApp()
@@ -71,5 +71,10 @@ export async function getAnalyticsInstance(): Promise<Analytics | null> {
 
 // Simplified exports for backward compatibility
 export const db = getFirestoreInstance
-export const auth = getAuthInstance()
+export const auth = null // Changed from direct initialization to null
 export const analytics = null // Will be initialized lazily when needed
+
+// Safe auth getter function
+export function getFirebaseAuth(): Auth {
+  return getAuthInstance()
+}

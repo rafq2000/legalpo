@@ -1,18 +1,20 @@
 "use client"
 
-import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
-
+// Este componente no usa useSearchParams() para evitar problemas de compilación
 export default function SearchComponent() {
-  const searchParams = useSearchParams()
-  const [query, setQuery] = useState("")
-
-  useEffect(() => {
-    const currentQuery = searchParams.get("q")
-    if (currentQuery) {
-      setQuery(currentQuery)
-    }
-  }, [searchParams])
-
-  return <div>{query && <p>Búsqueda actual: {query}</p>}</div>
+  return (
+    <div className="mb-6 w-full max-w-md">
+      <form action="/" method="GET" className="flex">
+        <input
+          type="text"
+          name="q"
+          placeholder="Buscar..."
+          className="flex-1 px-4 py-2 border border-gray-300 rounded-l focus:outline-none"
+        />
+        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-r hover:bg-blue-700">
+          Buscar
+        </button>
+      </form>
+    </div>
+  )
 }
