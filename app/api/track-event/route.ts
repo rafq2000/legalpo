@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { collection, addDoc, serverTimestamp } from "firebase/firestore"
-import { db } from "@/utils/firebaseClient"
+import { db } from "@/utils/firebase-service"
 import { adminDb } from "@/utils/firebaseAdmin"
 
 // Especificar runtime nodejs para Firebase
