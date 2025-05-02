@@ -1,5 +1,5 @@
-import { db } from "@/utils/firebaseClient"
 import { collection, query, where, getDocs, orderBy, Timestamp, getCountFromServer } from "firebase/firestore"
+import { db } from "@/utils/firebaseClient" // Importamos directamente el objeto db, no una función
 
 // Interfaces para los datos de estadísticas
 export interface EventStats {
@@ -40,8 +40,8 @@ export async function getEventStats(days = 30): Promise<EventStats> {
     startDate.setDate(startDate.getDate() - days)
     const firestoreStartDate = Timestamp.fromDate(startDate)
 
-    // Referencia a la colección de eventos
-    const eventosRef = collection(db(), "eventos")
+    // Referencia a la colección de eventos - CORREGIDO: db ya es el objeto, no una función
+    const eventosRef = collection(db, "eventos")
 
     // Consulta base para eventos en el rango de fechas
     const baseQuery = query(eventosRef, where("timestamp", ">=", firestoreStartDate), orderBy("timestamp", "desc"))
@@ -141,9 +141,9 @@ export async function getMostVisitedPages(days = 30, pageLimit = 10): Promise<Pa
     startDate.setDate(startDate.getDate() - days)
     const firestoreStartDate = Timestamp.fromDate(startDate)
 
-    // Consulta para eventos de tipo page_view
+    // Consulta para eventos de tipo page_view - CORREGIDO: db ya es el objeto, no una función
     const pageViewsQuery = query(
-      collection(db(), "eventos"),
+      collection(db, "eventos"),
       where("tipo", "==", "page_view"),
       where("timestamp", ">=", firestoreStartDate),
     )
@@ -197,9 +197,9 @@ export async function getDailyUserStats(days = 30): Promise<DailyStats[]> {
       })
     }
 
-    // Consulta para eventos en el rango de fechas
+    // Consulta para eventos en el rango de fechas - CORREGIDO: db ya es el objeto, no una función
     const eventsQuery = query(
-      collection(db(), "eventos"),
+      collection(db, "eventos"),
       where("timestamp", ">=", Timestamp.fromDate(startDate)),
       where("timestamp", "<=", Timestamp.fromDate(endDate)),
     )
@@ -258,9 +258,9 @@ export async function getTrafficSources(days = 30): Promise<{ source: string; co
     startDate.setDate(startDate.getDate() - days)
     const firestoreStartDate = Timestamp.fromDate(startDate)
 
-    // Consulta para eventos de tipo page_view
+    // Consulta para eventos de tipo page_view - CORREGIDO: db ya es el objeto, no una función
     const pageViewsQuery = query(
-      collection(db(), "eventos"),
+      collection(db, "eventos"),
       where("tipo", "==", "page_view"),
       where("timestamp", ">=", firestoreStartDate),
     )

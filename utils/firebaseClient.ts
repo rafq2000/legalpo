@@ -23,7 +23,7 @@ if (!getApps().length) {
 }
 
 // Initialize services
-export const db = getFirestore(app)
+export const db = () => getFirestore(app)
 export const auth = getAuth(app)
 
 // Initialize Analytics conditionally (only in browser)
@@ -44,4 +44,4 @@ export { analytics }
 
 // Helper functions for more controlled initialization
 export const getFirebaseApp = () => app
-export const getFirestoreInstance = () => db
+export const getFirestoreInstance = () => db()
