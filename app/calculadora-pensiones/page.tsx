@@ -243,7 +243,7 @@ export default function CalculadoraPensionesPage() {
   return (
     <div className="container mx-auto py-6">
       {/* Anuncio al inicio de la página */}
-      <AdUnit slot="2345678901" format="horizontal" className="mb-6" />
+      <AdUnit slot="1234567890" format="horizontal" responsive={true} className="mb-6" />
 
       <div className="flex items-center mb-4">
         <Link href="/" className="flex items-center text-blue-600 hover:text-blue-800">
@@ -640,7 +640,7 @@ export default function CalculadoraPensionesPage() {
         </CardContent>
       </Card>
       <div className="mt-8">
-        <AdUnit slot="4567890123" format="rectangle" />
+        <AdUnit slot="1234567890" format="rectangle" responsive={true} />
       </div>
     </div>
   )

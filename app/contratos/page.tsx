@@ -7,7 +7,7 @@ export default function ContratosPage() {
   return (
     <div className="container mx-auto py-6">
       {/* Anuncio al inicio de la página */}
-      <AdUnit slot="7890123456" format="horizontal" className="mb-6" />
+      <AdUnit slot="1234567890" format="horizontal" responsive={true} className="mb-6" />
 
       <div className="flex items-center mb-4">
         <Link href="/" className="flex items-center text-blue-600 hover:text-blue-800">
@@ -81,7 +81,7 @@ export default function ContratosPage() {
 
       {/* Anuncio al final de la página */}
       <div className="mt-8">
-        <AdUnit slot="8901234567" format="rectangle" />
+        <AdUnit slot="1234567890" format="rectangle" responsive={true} />
       </div>
     </div>
   )
