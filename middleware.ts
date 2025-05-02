@@ -2,9 +2,13 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 export function middleware(request: NextRequest) {
-  // Interceptar solicitudes a la página 404
-  if (request.nextUrl.pathname === "/404") {
-    return NextResponse.redirect(new URL("/", request.url))
+  // Si la ruta no existe, redirigir a la página 404 estática
+  const url = request.nextUrl.clone()
+
+  // Verificar si la ruta es 404 o _not-found
+  if (url.pathname === "/404" || url.pathname === "/_not-found") {
+    url.pathname = "/404.html"
+    return NextResponse.rewrite(url)
   }
 
   return NextResponse.next()
@@ -13,13 +17,7 @@ export function middleware(request: NextRequest) {
 // Configurar el middleware para que se ejecute en todas las rutas
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    // Excluir archivos estáticos y API routes
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:jpg|jpeg|gif|png|svg|ico)).*)",
   ],
 }

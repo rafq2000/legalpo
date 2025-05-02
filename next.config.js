@@ -23,11 +23,13 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Configuración actualizada
-  output: "standalone",
-  // Desactivar la prerenderización de la página 404
-  skipMiddlewareUrlNormalize: true,
-  skipTrailingSlashRedirect: true,
+  // Configuración para resolver el problema de useSearchParams
+  output: "server", // Cambiado a "server" para evitar la generación estática
+  // Desactivar completamente la prerenderización
+  experimental: {
+    // Esto evita que Next.js intente prerender la página 404
+    disableStaticPages: true,
+  },
 }
 
 module.exports = nextConfig
