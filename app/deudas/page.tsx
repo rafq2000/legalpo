@@ -83,7 +83,7 @@ export default function DeudasPage() {
             </div>
           </section>
 
-          <PreguntasChat tema="deudas" />
+          <PreguntasChat tema="deuda" />
 
           <section className="mt-12 bg-blue-50 p-6 rounded-lg border border-blue-100">
             <h2 className="text-2xl font-semibold mb-4 text-blue-900">Información Legal sobre Deudas en Chile</h2>

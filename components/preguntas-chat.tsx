@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import { useSession } from "next-auth/react"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -26,6 +26,13 @@ interface PreguntasChatProps {
 export function PreguntasChat({ tema }: PreguntasChatProps) {
   const { data: session } = useSession()
   const pathname = usePathname()
+
+  const temaInicial = useMemo(() => {
+    if (pathname?.includes("deuda")) return "deuda"
+    if (pathname?.includes("laboral")) return "laboral"
+    return "otro"
+  }, [pathname])
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -55,6 +62,14 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
     setIsLoading(true)
 
     try {
+      // Guardar la pregunta en Firestore
+      await guardarPreguntaUsuario({
+        email: session?.user?.email || null,
+        tema: tema || temaInicial,
+        pregunta: input,
+        sessionId: localStorage.getItem("docuscan_session_id") || undefined,
+      })
+
       // Registrar la pregunta en Firestore
       await guardarPreguntaUsuario({
         pregunta: input,

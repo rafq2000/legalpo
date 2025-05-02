@@ -182,6 +182,102 @@ export async function guardarSugerenciaUsuario({
   }
 }
 
+// Add the new guardarPreguntaUsuario function after the existing functions
+
+// Función para guardar una pregunta de usuario
+export async function guardarPreguntaUsuario2({
+  email,
+  tema,
+  pregunta,
+  sessionId,
+}: {
+  email: string | null
+  tema: string
+  pregunta: string
+  sessionId?: string
+}): Promise<string | null> {
+  try {
+    if (!isFirestoreAvailable()) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Firestore no está disponible para guardar pregunta")
+      }
+      throw new Error("Firestore no está disponible")
+    }
+
+    const firestore = db()
+    if (!firestore) {
+      throw new Error("No se pudo obtener la instancia de Firestore")
+    }
+
+    const preguntasRef = collection(firestore, "preguntas")
+
+    // Crear documento de pregunta
+    const preguntaDoc = {
+      email,
+      tema,
+      pregunta,
+      sessionId: sessionId || null,
+      timestamp: serverTimestamp(),
+      createdAt: Timestamp.now(), // Agregar createdAt para tener una referencia local
+    }
+
+    // Guardar en Firestore
+    const docRef = await addDoc(preguntasRef, preguntaDoc)
+
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`Pregunta guardada correctamente con ID: ${docRef.id}`)
+    }
+
+    return docRef.id
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al guardar pregunta en Firestore:", error)
+    }
+    return null
+  }
+}
+
+// Función para obtener preguntas de usuarios
+export async function obtenerPreguntas(limite = 100): Promise<any[]> {
+  try {
+    if (!isFirestoreAvailable()) {
+      return []
+    }
+
+    const firestore = db()
+    if (!firestore) {
+      throw new Error("No se pudo obtener la instancia de Firestore")
+    }
+
+    const preguntasRef = collection(firestore, "preguntas")
+
+    // Consultar preguntas ordenadas por fecha
+    const q = query(preguntasRef, orderBy("timestamp", "desc"), limit(limite))
+
+    const querySnapshot = await getDocs(q)
+    const preguntas: any[] = []
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data()
+      preguntas.push({
+        id: doc.id,
+        email: data.email,
+        tema: data.tema,
+        pregunta: data.pregunta,
+        timestamp: data.timestamp?.toDate() || new Date(),
+        sessionId: data.sessionId,
+      })
+    })
+
+    return preguntas
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al obtener preguntas:", error)
+    }
+    return []
+  }
+}
+
 // Función para obtener preguntas frecuentes
 export async function obtenerPreguntasFrecuentes(limite = 10): Promise<any[]> {
   try {

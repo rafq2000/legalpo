@@ -5,6 +5,7 @@ import dynamic from "next/dynamic"
 import { Download, Filter, RefreshCw, Search, Mail, Users, Eye, MousePointer, FileText } from "lucide-react"
 import { format, subDays, isValid } from "date-fns"
 import { es } from "date-fns/locale"
+import * as XLSX from "xlsx"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -26,6 +27,7 @@ import {
   obtenerPaginasPopulares,
   obtenerContactosWhatsApp,
   exportarCorreosExcel,
+  obtenerDistribucionPreguntasPorTema,
   type EventoStats,
   type EventosPorDia,
   type EventosPorTipo,
@@ -33,6 +35,8 @@ import {
   type UsuarioUnico,
   type PaginaPopular,
 } from "@/utils/stats-service"
+// Add the import for obtenerPreguntas at the top of the file
+import { obtenerPreguntas } from "@/utils/firestore-service"
 import type { QueryDocumentSnapshot, DocumentData } from "firebase/firestore"
 
 // Importar Recharts dinámicamente para evitar errores de SSR
@@ -65,6 +69,15 @@ const COLORS = [
   "#a4de6c",
   "#d0ed57",
 ]
+
+// Colores específicos para temas de preguntas
+const TEMA_COLORS = {
+  laboral: "#34D399", // verde
+  deuda: "#60A5FA", // azul
+  legal: "#FBBF24", // amarillo
+  otro: "#F87171", // rojo
+  sin_tema: "#A78BFA", // morado
+}
 
 // Función para validar fechas
 const isValidDate = (date: any): boolean => {
@@ -113,6 +126,18 @@ const safeTimestamp = (timestamp: any): Date => {
   return new Date()
 }
 
+// Función para traducir nombres de temas
+const traducirTema = (tema: string): string => {
+  const traducciones: Record<string, string> = {
+    laboral: "Laboral",
+    deuda: "Deudas",
+    legal: "Legal",
+    otro: "Otros",
+    sin_tema: "Sin tema",
+  }
+  return traducciones[tema] || tema
+}
+
 export default function StatsDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
   const [isLoading, setIsLoading] = useState(true)
@@ -138,6 +163,10 @@ export default function StatsDashboard() {
   })
   const [isClient, setIsClient] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // Add a new state for questions inside the StatsDashboard component
+  const [preguntas, setPreguntas] = useState<any[]>([])
+  // Add a new state for question distribution by topic
+  const [preguntasPorTema, setPreguntasPorTema] = useState<Record<string, number>>({})
 
   // Estados para la paginación
   const [cursor, setCursor] = useState<QueryDocumentSnapshot<DocumentData> | null>(null)
@@ -212,6 +241,14 @@ export default function StatsDashboard() {
 
       const contactosWA = await obtenerContactosWhatsApp(filtros)
       setContactosWhatsApp(contactosWA)
+
+      // Update the cargarDatos function to also load questions
+      const preguntasUsuarios = await obtenerPreguntas(100)
+      setPreguntas(preguntasUsuarios)
+
+      // Cargar distribución de preguntas por tema
+      const distribucionTemas = await obtenerDistribucionPreguntasPorTema()
+      setPreguntasPorTema(distribucionTemas)
     } catch (error) {
       console.error("Error al cargar datos:", error)
       setError("Error al cargar los datos. Por favor, intenta de nuevo.")
@@ -342,6 +379,15 @@ export default function StatsDashboard() {
   const formatearFecha = (fecha: Date) => {
     return safeFormatDate(fecha, "dd MMM yyyy, HH:mm")
   }
+
+  // Preparar datos para el gráfico de preguntas por tema
+  const datosPreguntasPorTema = useMemo(() => {
+    return Object.entries(preguntasPorTema).map(([tema, cantidad]) => ({
+      name: traducirTema(tema),
+      value: cantidad,
+      tema: tema,
+    }))
+  }, [preguntasPorTema])
 
   if (!isClient) {
     return (
@@ -539,10 +585,12 @@ export default function StatsDashboard() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid grid-cols-3 gap-2">
+        {/* Update the TabsList to include a new "questions" tab */}
+        <TabsList className="grid grid-cols-4 gap-2">
           <TabsTrigger value="overview">Visitas</TabsTrigger>
           <TabsTrigger value="emails">Correos</TabsTrigger>
           <TabsTrigger value="events">Eventos</TabsTrigger>
+          <TabsTrigger value="questions">Preguntas</TabsTrigger>
         </TabsList>
 
         {/* Pestaña de Visitas */}
@@ -832,6 +880,142 @@ export default function StatsDashboard() {
                       </Button>
                     </div>
                   )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        {/* Add a new TabsContent for the questions tab after the "events" TabsContent */}
+        <TabsContent value="questions">
+          {/* Gráfico de distribución de preguntas por tema */}
+          <div className="grid gap-6 mb-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Distribución de Preguntas por Tema</CardTitle>
+                <CardDescription>Proporción de preguntas según su categoría</CardDescription>
+              </CardHeader>
+              <CardContent className="h-[350px]">
+                {isLoading ? (
+                  <div className="h-full w-full flex items-center justify-center">
+                    <Skeleton className="h-full w-full" />
+                  </div>
+                ) : (
+                  <DynamicResponsiveContainer width="100%" height="100%">
+                    <DynamicPieChart>
+                      <DynamicPie
+                        data={datosPreguntasPorTema}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={true}
+                        outerRadius={120}
+                        fill="#8884d8"
+                        dataKey="value"
+                        nameKey="name"
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {datosPreguntasPorTema.map((entry) => (
+                          <DynamicCell
+                            key={`cell-${entry.tema}`}
+                            fill={TEMA_COLORS[entry.tema as keyof typeof TEMA_COLORS] || COLORS[0]}
+                          />
+                        ))}
+                      </DynamicPie>
+                      <DynamicTooltip formatter={(value: number, name, props) => [`${value} preguntas`, name]} />
+                      <DynamicLegend layout="vertical" align="right" verticalAlign="middle" />
+                    </DynamicPieChart>
+                  </DynamicResponsiveContainer>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Preguntas de Usuarios</CardTitle>
+                <CardDescription>Preguntas realizadas por los usuarios en el sitio</CardDescription>
+              </div>
+              <Button
+                onClick={() => {
+                  // Export questions to Excel
+                  const workbook = XLSX.utils.book_new()
+                  const worksheet = XLSX.utils.json_to_sheet(
+                    preguntas.map((p) => ({
+                      email: p.email || "Anónimo",
+                      tema: p.tema,
+                      pregunta: p.pregunta,
+                      fecha: safeFormatDate(safeTimestamp(p.timestamp), "dd/MM/yyyy HH:mm"),
+                    })),
+                  )
+                  XLSX.utils.book_append_sheet(workbook, worksheet, "Preguntas")
+                  XLSX.writeFile(workbook, `preguntas_${format(new Date(), "yyyy-MM-dd")}.xlsx`)
+                }}
+                disabled={isLoading}
+                className="flex items-center"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Exportar Excel
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <div className="space-y-2">
+                  {Array(5)
+                    .fill(0)
+                    .map((_, i) => (
+                      <Skeleton key={i} className="h-12 w-full" />
+                    ))}
+                </div>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Fecha</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Tema</TableHead>
+                        <TableHead>Pregunta</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {preguntas.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center py-4">
+                            No se encontraron preguntas con los filtros seleccionados
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        preguntas.map((pregunta) => (
+                          <TableRow key={pregunta.id}>
+                            <TableCell className="font-medium">
+                              {formatearFecha(safeTimestamp(pregunta.timestamp))}
+                            </TableCell>
+                            <TableCell>{pregunta.email || "Anónimo"}</TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  pregunta.tema === "laboral"
+                                    ? "default"
+                                    : pregunta.tema === "deuda"
+                                      ? "secondary"
+                                      : "outline"
+                                }
+                              >
+                                {pregunta.tema}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="max-w-xs truncate">
+                              <span title={pregunta.pregunta}>
+                                {pregunta.pregunta.length > 50
+                                  ? `${pregunta.pregunta.substring(0, 50)}...`
+                                  : pregunta.pregunta}
+                              </span>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
                 </div>
               )}
             </CardContent>

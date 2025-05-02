@@ -87,6 +87,31 @@ const isFirestoreAvailable = () => {
   }
 }
 
+// Nueva función para obtener la distribución de preguntas por tema
+export async function obtenerDistribucionPreguntasPorTema() {
+  try {
+    if (!isFirestoreAvailable()) {
+      return {}
+    }
+
+    const firestore = db()
+    const snapshot = await getDocs(collection(firestore, "preguntas"))
+    const conteo: Record<string, number> = {}
+
+    snapshot.forEach((doc) => {
+      const tema = doc.data().tema || "sin_tema"
+      conteo[tema] = (conteo[tema] || 0) + 1
+    })
+
+    return conteo
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al obtener distribución de preguntas por tema:", error)
+    }
+    return {}
+  }
+}
+
 // Nueva función para obtener eventos por páginas
 export async function obtenerEventosPorPaginas({
   desde,

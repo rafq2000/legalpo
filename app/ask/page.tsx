@@ -20,6 +20,8 @@ import { AdUnit } from "@/components/ad-unit"
 import { SiteFooter } from "@/components/site-footer"
 // Añadir la importación del ShareButton en la sección de importaciones
 import { ShareButton } from "@/components/share-button"
+// Add the import for guardarPreguntaUsuario at the top of the file
+import { guardarPreguntaUsuario } from "@/utils/firestore-service"
 
 // Define the Message type
 interface Message {
@@ -92,6 +94,14 @@ export default function AskPage() {
     setIsLoading(true)
 
     try {
+      // Guardar la pregunta en Firestore
+      await guardarPreguntaUsuario({
+        email: session?.user?.email || null,
+        tema: "legal",
+        pregunta: input,
+        sessionId: userId,
+      })
+
       console.log("Enviando consulta:", input)
 
       const response = await fetch("/api/chat-legal", {
