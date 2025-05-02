@@ -1,9 +1,7 @@
 "use client"
 
 import { CardFooter } from "@/components/ui/card"
-
 import type React from "react"
-
 import { useState, useEffect, useRef } from "react"
 import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
@@ -17,6 +15,7 @@ import { Send, ArrowLeft } from "lucide-react"
 import { trackEvent } from "@/lib/analytics"
 import { TextToSpeech } from "@/components/text-to-speech"
 import { ShareButton } from "@/components/share-button"
+import { AdUnit } from "@/components/ad-unit"
 import Link from "next/link"
 
 interface Message {
@@ -105,6 +104,9 @@ export default function DudasLaboralesPage() {
 
   return (
     <div className="container mx-auto py-6">
+      {/* Anuncio al inicio de la página */}
+      <AdUnit slot="1234567890" format="horizontal" className="mb-6" />
+
       <div className="flex items-center mb-4">
         <Link href="/" className="flex items-center text-blue-600 hover:text-blue-800">
           <ArrowLeft className="h-4 w-4 mr-1" />
@@ -153,7 +155,9 @@ export default function DudasLaboralesPage() {
                       <Avatar>
                         <AvatarFallback>{message.role === "user" ? "U" : "AI"}</AvatarFallback>
                         {message.role === "assistant" && <AvatarImage src="/logo.png" />}
-                        {message.role === "user" && session?.user?.image && <AvatarImage src={session.user.image} />}
+                        {message.role === "user" && session?.user?.image && (
+                          <AvatarImage src={session.user.image || "/placeholder.svg"} />
+                        )}
                       </Avatar>
                       <div
                         className={`rounded-lg px-4 py-2 max-w-[80%] ${
@@ -306,6 +310,11 @@ export default function DudasLaboralesPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Anuncio al final de la página */}
+      <div className="mt-8">
+        <AdUnit slot="1234567890" format="rectangle" />
+      </div>
     </div>
   )
 }

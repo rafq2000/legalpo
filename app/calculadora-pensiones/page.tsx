@@ -1,11 +1,8 @@
 "use client"
 
 import { Textarea } from "@/components/ui/textarea"
-
 import { Alert, AlertDescription as AlertDescriptionComponent } from "@/components/ui/alert"
-
 import { cn } from "@/lib/utils"
-
 import { useState, useEffect } from "react"
 import { obtenerValorUTM, obtenerIngresoMinimo } from "@/lib/sii-service"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,8 +13,6 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
-
-// Añadir la importación del componente AdUnit al inicio del archivo
 import { AdUnit } from "@/components/ad-unit"
 
 export default function CalculadoraPensionesPage() {
@@ -247,6 +242,9 @@ export default function CalculadoraPensionesPage() {
 
   return (
     <div className="container mx-auto py-6">
+      {/* Anuncio al inicio de la página */}
+      <AdUnit slot="1234567890" format="horizontal" className="mb-6" />
+
       <div className="flex items-center mb-4">
         <Link href="/" className="flex items-center text-blue-600 hover:text-blue-800">
           <ArrowLeft className="h-4 w-4 mr-1" />

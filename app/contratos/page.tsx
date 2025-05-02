@@ -1,10 +1,14 @@
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { AdUnit } from "@/components/ad-unit"
 
 export default function ContratosPage() {
   return (
     <div className="container mx-auto py-6">
+      {/* Anuncio al inicio de la página */}
+      <AdUnit slot="1234567890" format="horizontal" className="mb-6" />
+
       <div className="flex items-center mb-4">
         <Link href="/" className="flex items-center text-blue-600 hover:text-blue-800">
           <ArrowLeft className="h-4 w-4 mr-1" />
@@ -13,7 +17,7 @@ export default function ContratosPage() {
       </div>
 
       <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Generador de Contratos</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Contratos Legales</h1>
         <p className="text-gray-600 mt-2">Crea contratos legales personalizados según la legislación chilena vigente</p>
       </div>
 
@@ -66,13 +70,18 @@ export default function ContratosPage() {
           <p className="font-medium">¿Necesitas un tipo de contrato diferente?</p>
           <p className="mt-1">Puedes crear un contrato personalizado adaptado a tus necesidades específicas.</p>
           <div className="mt-3">
-            <Link href="/contratos/general">
+            <Link href="/contratos/personalizado">
               <Button variant="outline" className="border-amber-200 hover:bg-amber-100 text-amber-800">
                 Crear contrato personalizado
               </Button>
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* Anuncio al final de la página */}
+      <div className="mt-8">
+        <AdUnit slot="1234567890" format="rectangle" />
       </div>
     </div>
   )
