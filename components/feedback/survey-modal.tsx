@@ -14,11 +14,6 @@ interface SurveyModalProps {
   completionAction?: string
 }
 
-export function SurveyModal({ \
-  serviceType,   | "timer" | "exit"
-  completionAction?: string
-}
-
 export function SurveyModal({ serviceType, trigger = "completion", completionAction }: SurveyModalProps) {
   const { data: session } = useSession()
   const [isOpen, setIsOpen] = useState(false)
