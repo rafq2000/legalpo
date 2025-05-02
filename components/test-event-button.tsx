@@ -22,7 +22,7 @@ export function TestEventButton() {
       } else {
         toast({
           title: "Error al registrar evento",
-          description: "No se pudo registrar el evento de prueba",
+          description: "No se pudo registrar el evento de prueba. Verifica la conexión a Firebase.",
           variant: "destructive",
         })
       }

@@ -1,15 +1,15 @@
-import AdminGuard from "@/components/admin-guard"
-import ClientDashboardWrapper from "./client-wrapper"
-
-export const metadata = {
-  title: "Estadísticas - LegalPO",
-  description: "Panel de estadísticas y análisis de eventos",
-}
+import { Suspense } from "react"
+import { FirebaseErrorBoundary } from "@/components/firebase-error-boundary"
+import StatsDashboard from "@/components/stats-dashboard"
 
 export default function EstadisticasPage() {
   return (
-    <AdminGuard>
-      <ClientDashboardWrapper />
-    </AdminGuard>
+    <div className="container mx-auto py-6">
+      <FirebaseErrorBoundary>
+        <Suspense fallback={<div>Cargando estadísticas...</div>}>
+          <StatsDashboard />
+        </Suspense>
+      </FirebaseErrorBoundary>
+    </div>
   )
 }

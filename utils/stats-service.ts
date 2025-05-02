@@ -82,7 +82,7 @@ const isFirestoreAvailable = () => {
     const firestore = db()
     return !!firestore
   } catch (error) {
-    console.error("Firestore no está disponible:", error)
+    console.error("Firestore no esta disponible:", error)
     return false
   }
 }
@@ -95,6 +95,11 @@ export async function obtenerDistribucionPreguntasPorTema() {
     }
 
     const firestore = db()
+    if (!firestore) {
+      console.error("Firestore instance is null")
+      return {}
+    }
+
     const snapshot = await getDocs(collection(firestore, "preguntas"))
     const conteo: Record<string, number> = {}
 
@@ -106,7 +111,7 @@ export async function obtenerDistribucionPreguntasPorTema() {
     return conteo
   } catch (error) {
     if (process.env.NODE_ENV !== "production") {
-      console.error("Error al obtener distribución de preguntas por tema:", error)
+      console.error("Error al obtener distribucion de preguntas por tema:", error)
     }
     return {}
   }
@@ -132,6 +137,11 @@ export async function obtenerEventosPorPaginas({
     }
 
     const firestore = db()
+    if (!firestore) {
+      console.error("Firestore instance is null")
+      return { eventos: [], siguienteCursor: null }
+    }
+
     const LOTE = 500 // Aumentado a 500 para cargar más eventos por lote
     const filtros = []
 
@@ -201,7 +211,7 @@ export async function obtenerEventosPorPaginas({
     return { eventos, siguienteCursor }
   } catch (error) {
     if (process.env.NODE_ENV !== "production") {
-      console.error("Error al obtener eventos por páginas:", error)
+      console.error("Error al obtener eventos por paginas:", error)
     }
     return { eventos: [], siguienteCursor: null }
   }
@@ -219,6 +229,11 @@ export async function obtenerEventos(
     }
 
     const firestore = db()
+    if (!firestore) {
+      console.error("Firestore instance is null")
+      return { eventos: [], ultimoDoc: null, hayMas: false }
+    }
+
     let q = query(collection(firestore, "eventos"), orderBy("timestamp", "desc"), limit(tamanoLote))
 
     // Aplicar filtros con fechas validadas
@@ -307,6 +322,11 @@ export async function obtenerEventosPorDia(filtros: FiltrosEventos = {}, dias = 
     }
 
     const firestore = db()
+    if (!firestore) {
+      console.error("Firestore instance is null")
+      return []
+    }
+
     const endDate = filtros.endDate && isValidDate(filtros.endDate) ? filtros.endDate : new Date()
     const startDate =
       filtros.startDate && isValidDate(filtros.startDate)
@@ -366,7 +386,7 @@ export async function obtenerEventosPorDia(filtros: FiltrosEventos = {}, dias = 
     // Convertir mapa a array
     return Object.values(fechasMap)
   } catch (error) {
-    console.error("Error al obtener eventos por día:", error)
+    console.error("Error al obtener eventos por dia:", error)
     return []
   }
 }
@@ -379,6 +399,11 @@ export async function obtenerEventosPorTipo(filtros: FiltrosEventos = {}): Promi
     }
 
     const firestore = db()
+    if (!firestore) {
+      console.error("Firestore instance is null")
+      return []
+    }
+
     const endDate = filtros.endDate && isValidDate(filtros.endDate) ? filtros.endDate : new Date()
     const startDate =
       filtros.startDate && isValidDate(filtros.startDate)
@@ -425,6 +450,11 @@ export async function obtenerUsuariosUnicos(filtros: FiltrosEventos = {}): Promi
     }
 
     const firestore = db()
+    if (!firestore) {
+      console.error("Firestore instance is null")
+      return []
+    }
+
     const endDate = filtros.endDate && isValidDate(filtros.endDate) ? filtros.endDate : new Date()
     const startDate =
       filtros.startDate && isValidDate(filtros.startDate)
@@ -474,7 +504,7 @@ export async function obtenerUsuariosUnicos(filtros: FiltrosEventos = {}): Promi
     // Convertir mapa a array y ordenar por última acción
     return Object.values(usuariosMap).sort((a, b) => b.ultimaAccion.getTime() - a.ultimaAccion.getTime())
   } catch (error) {
-    console.error("Error al obtener usuarios únicos:", error)
+    console.error("Error al obtener usuarios unicos:", error)
     return []
   }
 }
@@ -487,6 +517,11 @@ export async function obtenerPaginasPopulares(filtros: FiltrosEventos = {}): Pro
     }
 
     const firestore = db()
+    if (!firestore) {
+      console.error("Firestore instance is null")
+      return []
+    }
+
     const endDate = filtros.endDate && isValidDate(filtros.endDate) ? filtros.endDate : new Date()
     const startDate =
       filtros.startDate && isValidDate(filtros.startDate)
@@ -523,7 +558,7 @@ export async function obtenerPaginasPopulares(filtros: FiltrosEventos = {}): Pro
       }))
       .sort((a, b) => b.visitas - a.visitas)
   } catch (error) {
-    console.error("Error al obtener páginas populares:", error)
+    console.error("Error al obtener paginas populares:", error)
     return []
   }
 }
@@ -536,6 +571,11 @@ export async function obtenerContactosWhatsApp(filtros: FiltrosEventos = {}): Pr
     }
 
     const firestore = db()
+    if (!firestore) {
+      console.error("Firestore instance is null")
+      return 0
+    }
+
     const endDate = filtros.endDate && isValidDate(filtros.endDate) ? filtros.endDate : new Date()
     const startDate =
       filtros.startDate && isValidDate(filtros.startDate)
@@ -561,7 +601,7 @@ export async function obtenerContactosWhatsApp(filtros: FiltrosEventos = {}): Pr
 export async function exportarCorreosExcel(filtros: FiltrosEventos = {}): Promise<Blob> {
   try {
     if (!isFirestoreAvailable()) {
-      throw new Error("Firestore no está disponible")
+      throw new Error("Firestore no esta disponible")
     }
 
     const usuarios = await obtenerUsuariosUnicos(filtros)

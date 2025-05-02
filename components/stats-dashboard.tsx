@@ -291,7 +291,7 @@ export default function StatsDashboard() {
         setHayMas(false)
       }
     } catch (error) {
-      console.error("Error al cargar más eventos:", error)
+      console.error("Error al cargar mas eventos:", error)
       toast({
         title: "Error",
         description: "No se pudieron cargar más eventos. Intenta de nuevo más tarde.",
@@ -873,7 +873,7 @@ export default function StatsDashboard() {
                             Cargando...
                           </>
                         ) : (
-                          <>Cargar más eventos</>
+                          <>Cargar mas eventos</>
                         )}
                       </Button>
                     </div>

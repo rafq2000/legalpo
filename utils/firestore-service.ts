@@ -9,7 +9,6 @@ import {
   getDocs,
   orderBy,
   limit,
-  type DocumentData,
 } from "firebase/firestore"
 
 // Función para verificar si Firestore está disponible
@@ -188,33 +187,23 @@ export async function guardarPreguntaUsuario2({
 }
 
 // Función para obtener preguntas de usuarios
-export async function obtenerPreguntas(limite = 100): Promise<any[]> {
+export async function obtenerPreguntas(limite = 100) {
   try {
-    const preguntasRef = collection(db, "preguntas")
-
-    // Consultar preguntas ordenadas por fecha
-    const q = query(preguntasRef, orderBy("timestamp", "desc"), limit(limite))
-
-    const querySnapshot = await getDocs(q)
-    const preguntas: any[] = []
-
-    querySnapshot.forEach((doc) => {
-      const data = doc.data()
-      preguntas.push({
-        id: doc.id,
-        email: data.email,
-        tema: data.tema,
-        pregunta: data.pregunta,
-        timestamp: data.timestamp?.toDate() || new Date(),
-        sessionId: data.sessionId,
-      })
-    })
-
-    return preguntas
-  } catch (error) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("Error al obtener preguntas:", error)
+    const firestore = db()
+    if (!firestore) {
+      console.error("Firestore instance is null")
+      return []
     }
+
+    const q = query(collection(firestore, "preguntas"), orderBy("timestamp", "desc"), limit(limite))
+    const snapshot = await getDocs(q)
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
+  } catch (error) {
+    console.error("Error al obtener preguntas:", error)
     return []
   }
 }
@@ -306,62 +295,48 @@ export async function verificarConexionFirestore(): Promise<boolean> {
 }
 
 // Función para obtener todos los eventos sin límite
-export async function obtenerTodosEventos(): Promise<DocumentData[]> {
+export async function obtenerTodosEventos() {
   try {
-    const eventosRef = collection(db, "eventos")
-
-    // Consultar todos los eventos sin límite práctico
-    const q = query(eventosRef, orderBy("timestamp", "desc"), limit(1000000))
-
-    const querySnapshot = await getDocs(q)
-    const eventos: DocumentData[] = []
-
-    querySnapshot.forEach((doc) => {
-      eventos.push({
-        id: doc.id,
-        ...doc.data(),
-      })
-    })
-
-    if (process.env.NODE_ENV !== "production") {
-      console.log(`Se obtuvieron ${eventos.length} eventos de Firestore`)
+    const firestore = db()
+    if (!firestore) {
+      console.error("Firestore instance is null")
+      return []
     }
 
-    return eventos
+    const q = query(collection(firestore, "eventos"), orderBy("timestamp", "desc"), limit(100))
+    const snapshot = await getDocs(q)
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
   } catch (error) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("Error al obtener todos los eventos:", error)
-    }
+    console.error("Error al obtener todos los eventos:", error)
     return []
   }
 }
 
 // Función para registrar un evento de prueba
-export async function registrarEventoPrueba(): Promise<string | null> {
+export async function registrarEventoPrueba() {
   try {
-    const eventosRef = collection(db, "eventos")
+    const firestore = db()
+    if (!firestore) {
+      console.error("Firestore instance is null")
+      return null
+    }
 
-    const docRef = await addDoc(eventosRef, {
+    const docRef = await addDoc(collection(firestore, "eventos"), {
       tipo: "test_event",
-      timestamp: serverTimestamp(),
-      createdAt: Timestamp.now(),
-      email: "test@legalpo.cl",
-      name: "Prueba",
       datos: {
-        origen: "Botón de prueba",
+        mensaje: "Este es un evento de prueba",
         fecha: new Date().toISOString(),
       },
+      timestamp: serverTimestamp(),
     })
-
-    if (process.env.NODE_ENV !== "production") {
-      console.log(`Evento de prueba registrado con ID: ${docRef.id}`)
-    }
 
     return docRef.id
   } catch (error) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("Error al registrar evento de prueba:", error)
-    }
+    console.error("Error al registrar evento de prueba:", error)
     return null
   }
 }
