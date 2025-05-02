@@ -2,9 +2,7 @@
 
 import { Textarea } from "@/components/ui/textarea"
 
-import { AlertDescription } from "@/components/ui/alert"
-
-import { Alert } from "@/components/ui/alert"
+import { Alert, AlertDescription as AlertDescriptionComponent } from "@/components/ui/alert"
 
 import { cn } from "@/lib/utils"
 
@@ -18,6 +16,9 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
+
+// Añadir la importación del componente AdUnit al inicio del archivo
+import { AdUnit } from "@/components/ad-unit"
 
 export default function CalculadoraPensionesPage() {
   // Estado para el valor del ingreso mínimo mensual (IMM) y UTM
@@ -343,9 +344,9 @@ export default function CalculadoraPensionesPage() {
 
                     {esAbuelo && (
                       <Alert>
-                        <AlertDescription>
+                        <AlertDescriptionComponent>
                           Recuerde: Debe acreditarse insuficiencia del alimentante principal.
-                        </AlertDescription>
+                        </AlertDescriptionComponent>
                       </Alert>
                     )}
 
@@ -443,9 +444,9 @@ export default function CalculadoraPensionesPage() {
                     {hijosConDiscapacidad && (
                       <>
                         <Alert className="bg-blue-50 text-blue-800 border-blue-200">
-                          <AlertDescription>
+                          <AlertDescriptionComponent>
                             La discapacidad permite superar el límite máximo del 50% de los ingresos.
-                          </AlertDescription>
+                          </AlertDescriptionComponent>
                         </Alert>
 
                         <div className="space-y-2">
@@ -553,17 +554,19 @@ export default function CalculadoraPensionesPage() {
                     </Card>
 
                     <Alert className="bg-yellow-50 border-yellow-200">
-                      <AlertDescription className="text-yellow-800">
+                      <AlertDescriptionComponent className="text-yellow-800">
                         <strong>Importante:</strong> Esta calculadora proporciona solo una estimación. El monto final de
                         la pensión alimenticia será determinado por el tribunal según las circunstancias específicas del
                         caso.
-                      </AlertDescription>
+                      </AlertDescriptionComponent>
                     </Alert>
                   </CardContent>
                 </Card>
               )}
             </TabsContent>
           </Tabs>
+
+          <AdUnit slot="1234567890" format="horizontal" className="my-8" />
 
           <div className="mt-6 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -638,6 +641,9 @@ export default function CalculadoraPensionesPage() {
           </div>
         </CardContent>
       </Card>
+      <div className="mt-8">
+        <AdUnit slot="1234567890" format="rectangle" />
+      </div>
     </div>
   )
 }

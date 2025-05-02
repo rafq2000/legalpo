@@ -11,6 +11,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertTriangle, Calendar, DollarSign, Calculator, ChevronRight, HelpCircle, FileText } from "lucide-react"
 import { cn } from "@/lib/utils"
 
+// Añadir la importación del componente AdUnit al inicio del archivo
+import { AdUnit } from "@/components/ad-unit"
+
 // Tipos
 interface FiniquitoFormData {
   causalTermino: string
@@ -420,6 +423,8 @@ export default function CalculadoraFiniquito() {
           Calcula de forma simple y rápida el finiquito que corresponde según la ley laboral chilena.
         </p>
       </div>
+
+      <AdUnit slot="1234567890" format="horizontal" className="my-8" />
 
       <Card className="max-w-4xl mx-auto shadow-lg border-border">
         <CardHeader className="bg-gradient-to-r from-background to-muted border-b border-border">
@@ -1112,6 +1117,10 @@ export default function CalculadoraFiniquito() {
             </p>
           </div>
         </div>
+      </div>
+
+      <div className="mt-8">
+        <AdUnit slot="1234567890" format="rectangle" />
       </div>
     </div>
   )

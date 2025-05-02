@@ -3,6 +3,7 @@ import { PreguntasChat } from "@/components/preguntas-chat"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
+import { AdUnit } from "@/components/ad-unit"
 
 export const metadata: Metadata = {
   title: "Consultas Laborales en Chile - Asesoría Legal | LegalPo",
@@ -47,6 +48,7 @@ export default function LaboralPage() {
         <div className="container mx-auto py-8 px-4">
           <section className="mb-10">
             <h1 className="text-3xl md:text-4xl font-bold mb-6 text-blue-900">Consultas Laborales en Chile</h1>
+            <AdUnit slot="1234567890" format="horizontal" className="my-8" />
             <div className="prose max-w-none">
               <p className="text-lg text-gray-700 mb-4">
                 ¿Tienes dudas sobre tus derechos laborales, despidos, licencias médicas o finiquitos? Nuestro asistente
@@ -127,6 +129,9 @@ export default function LaboralPage() {
               </p>
             </div>
           </section>
+        </div>
+        <div className="mt-8">
+          <AdUnit slot="1234567890" format="rectangle" />
         </div>
       </main>
       <SiteFooter />

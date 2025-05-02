@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { AdUnit } from "@/components/ad-unit"
 
 function GeneradorContratosPageContent() {
   return (
@@ -16,6 +17,8 @@ function GeneradorContratosPageContent() {
         <h1 className="text-3xl font-bold text-gray-900">Generador de Contratos</h1>
         <p className="text-gray-600 mt-2">Crea contratos legales personalizados según la legislación chilena vigente</p>
       </div>
+
+      <AdUnit slot="1234567890" format="horizontal" className="my-8" />
 
       <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -73,6 +76,9 @@ function GeneradorContratosPageContent() {
             </Link>
           </div>
         </div>
+      </div>
+      <div className="mt-8">
+        <AdUnit slot="1234567890" format="rectangle" />
       </div>
     </div>
   )

@@ -14,6 +14,9 @@ import { ArrowLeft } from "lucide-react"
 import ProtectedRoute from "@/components/protected-route"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
+// Añadir la importación del componente AdUnit al inicio del archivo
+import { AdUnit } from "@/components/ad-unit"
+
 // Tipos
 interface HerenciaFormData {
   // Datos del Causante
@@ -233,6 +236,7 @@ export default function CalculadoraHerencia() {
         </div>
 
         <h1 className="text-3xl font-bold mb-6 text-center">Calculadora de Herencia</h1>
+        <AdUnit slot="1234567890" format="horizontal" className="my-8" />
         <p className="text-center mb-8 text-muted-foreground">
           Simula la distribución del patrimonio y calcula los impuestos según la ley chilena.
         </p>
@@ -755,6 +759,9 @@ export default function CalculadoraHerencia() {
             </p>
           </CardFooter>
         </Card>
+        <div className="mt-8">
+          <AdUnit slot="1234567890" format="rectangle" />
+        </div>
       </div>
     </ProtectedRoute>
   )

@@ -1243,11 +1243,15 @@ export default function AnalyzePage() {
             </div>
           )}
         </div>
+        <AdUnit slot="1234567890" format="horizontal" className="my-8" />
       </main>
 
       {/* Anuncio antes del footer */}
       <div className="container py-4">
         <AdUnit slot="7654321098" format="horizontal" className="horizontal" />
+      </div>
+      <div className="mt-8">
+        <AdUnit slot="1234567890" format="rectangle" />
       </div>
 
       <SiteFooter />
