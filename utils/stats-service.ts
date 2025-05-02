@@ -87,19 +87,21 @@ const isFirestoreAvailable = () => {
   }
 }
 
-// Modificar la función obtenerEventos para usar un límite muy alto
+// Update the obtenerEventos function to use proper pagination with a reasonable batch size
+// Replace the current obtenerEventos function with this implementation:
+
 export async function obtenerEventos(
   filtros: FiltrosEventos = {},
   ultimoDoc: QueryDocumentSnapshot<DocumentData> | null = null,
-  limite = 1000000, // Cambiado de 50 a 1000000 (equivalente práctico a 'sin límite')
-): Promise<{ eventos: EventoStats[]; ultimoDoc: QueryDocumentSnapshot<DocumentData> | null }> {
+  tamanoLote = 500, // Reasonable batch size instead of 1,000,000
+): Promise<{ eventos: EventoStats[]; ultimoDoc: QueryDocumentSnapshot<DocumentData> | null; hayMas: boolean }> {
   try {
     if (!isFirestoreAvailable()) {
-      return { eventos: [], ultimoDoc: null }
+      return { eventos: [], ultimoDoc: null, hayMas: false }
     }
 
     const firestore = db()
-    let q = query(collection(firestore, "eventos"), orderBy("timestamp", "desc"), limit(limite))
+    let q = query(collection(firestore, "eventos"), orderBy("timestamp", "desc"), limit(tamanoLote))
 
     // Aplicar filtros con fechas validadas
     if (filtros.startDate && isValidDate(filtros.startDate)) {
@@ -167,12 +169,15 @@ export async function obtenerEventos(
       })
     })
 
-    return { eventos, ultimoDoc: lastDoc }
+    // Determinar si hay más documentos para cargar
+    const hayMas = querySnapshot.size === tamanoLote
+
+    return { eventos, ultimoDoc: lastDoc, hayMas }
   } catch (error) {
     if (process.env.NODE_ENV !== "production") {
       console.error("Error al obtener eventos:", error)
     }
-    return { eventos: [], ultimoDoc: null }
+    return { eventos: [], ultimoDoc: null, hayMas: false }
   }
 }
 

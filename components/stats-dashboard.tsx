@@ -33,6 +33,7 @@ import {
   type UsuarioUnico,
   type PaginaPopular,
 } from "@/utils/stats-service"
+import type { QueryDocumentSnapshot, DocumentData } from "firebase/firestore"
 
 // Importar Recharts dinámicamente para evitar errores de SSR
 const DynamicLineChart = dynamic(() => import("recharts").then((mod) => mod.LineChart), { ssr: false })
@@ -137,6 +138,9 @@ export default function StatsDashboard() {
   })
   const [isClient, setIsClient] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [ultimoDoc, setUltimoDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null)
+  const [hayMasEventos, setHayMasEventos] = useState(false)
+  const [cargandoMas, setCargandoMas] = useState(false)
 
   // Verificar si estamos en el cliente
   useEffect(() => {
@@ -174,8 +178,10 @@ export default function StatsDashboard() {
     setError(null)
     try {
       // Cargar eventos recientes
-      const { eventos } = await obtenerEventos(filtros, null, 50)
+      const { eventos, ultimoDoc, hayMas } = await obtenerEventos(filtros, null, 500)
       setEventos(eventos)
+      setUltimoDoc(ultimoDoc)
+      setHayMasEventos(hayMas)
 
       // Cargar datos para gráficos
       const eventosDiarios = await obtenerEventosPorDia(filtros)
@@ -203,6 +209,45 @@ export default function StatsDashboard() {
       })
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  // Función para cargar más eventos
+  const cargarMasEventos = async () => {
+    if (!ultimoDoc || !hayMasEventos) return
+
+    setCargandoMas(true)
+    try {
+      const {
+        eventos: nuevosEventos,
+        ultimoDoc: nuevoUltimoDoc,
+        hayMas,
+      } = await obtenerEventos(filtros, ultimoDoc, 500)
+
+      setEventos((prevEventos) => [...prevEventos, ...nuevosEventos])
+      setUltimoDoc(nuevoUltimoDoc)
+      setHayMasEventos(hayMas)
+
+      if (nuevosEventos.length > 0) {
+        toast({
+          title: "Eventos cargados",
+          description: `Se han cargado ${nuevosEventos.length} eventos adicionales.`,
+        })
+      } else {
+        toast({
+          title: "No hay más eventos",
+          description: "Has llegado al final de la lista de eventos.",
+        })
+      }
+    } catch (error) {
+      console.error("Error al cargar más eventos:", error)
+      toast({
+        title: "Error",
+        description: "No se pudieron cargar más eventos. Intenta de nuevo más tarde.",
+        variant: "destructive",
+      })
+    } finally {
+      setCargandoMas(false)
     }
   }
 
@@ -757,6 +802,20 @@ export default function StatsDashboard() {
                       )}
                     </TableBody>
                   </Table>
+                  {hayMasEventos && (
+                    <div className="flex justify-center p-4">
+                      <Button onClick={cargarMasEventos} disabled={cargandoMas || !hayMasEventos} variant="outline">
+                        {cargandoMas ? (
+                          <>
+                            <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                            Cargando...
+                          </>
+                        ) : (
+                          <>Cargar más eventos</>
+                        )}
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
             </CardContent>
