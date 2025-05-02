@@ -1,3 +1,5 @@
+pages/404.tsx
 app/not-found.tsx
-pages/404.js
+app/_not-found.tsx
 pages/_error.js
+app/global-error.js

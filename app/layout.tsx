@@ -14,7 +14,7 @@ import { ForceLightTheme } from "@/components/force-light-theme"
 import { cn } from "@/lib/utils"
 import FirebaseTracker from "@/components/firebase-tracker"
 import { WhatsAppButton } from "@/components/whatsapp-button"
-import { EventTracker } from "@/components/event-tracker"
+import EventTracker from "@/components/event-tracker"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -45,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
             <ForceLightTheme />
             {/* Resto de componentes existentes */}
-            {children}
+            <Suspense fallback={null}>{children}</Suspense>
             <Toaster />
             <Analytics />
             <Suspense fallback={null}>
