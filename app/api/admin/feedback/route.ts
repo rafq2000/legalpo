@@ -26,7 +26,9 @@ export async function GET(req: Request) {
       const { data, error } = await supabase.from("user_feedback").select("*").order("timestamp", { ascending: false })
 
       if (error) {
-        console.error("Error obteniendo feedback de Supabase:", error)
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Error obteniendo feedback de Supabase:", error)
+        }
         return NextResponse.json({ error: "Error al obtener datos de feedback" }, { status: 500 })
       }
 
@@ -38,7 +40,9 @@ export async function GET(req: Request) {
 
     return NextResponse.json(feedbackData)
   } catch (error) {
-    console.error("Error procesando solicitud de feedback:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error procesando solicitud de feedback:", error)
+    }
     return NextResponse.json({ error: "Error al procesar la solicitud" }, { status: 500 })
   }
 }

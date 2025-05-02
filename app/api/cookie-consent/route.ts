@@ -8,14 +8,12 @@ export async function POST(req: Request) {
 
     // Aquí iría la lógica para guardar el consentimiento de cookies
     // Por ahora, solo registramos en consola y devolvemos éxito
-    console.log("Consentimiento de cookies recibido:", data)
 
     return NextResponse.json({
       success: true,
       message: "Preferencias de cookies guardadas correctamente",
     })
   } catch (error) {
-    console.error("Error en cookie-consent:", error)
     return NextResponse.json({ error: "Error al guardar las preferencias de cookies" }, { status: 500 })
   }
 }
@@ -35,7 +33,6 @@ export async function GET(req: Request) {
       },
     })
   } catch (error) {
-    console.error("Error en cookie-consent:", error)
     return NextResponse.json({ error: "Error al obtener las preferencias de cookies" }, { status: 500 })
   }
 }

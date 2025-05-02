@@ -11,7 +11,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ response })
   } catch (error) {
-    console.error("Error:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error:", error)
+    }
     return NextResponse.json({ error: "Error al procesar la solicitud" }, { status: 500 })
   }
 }

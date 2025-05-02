@@ -17,7 +17,7 @@ const isFirestoreAvailable = () => {
     const firestore = db()
     return !!firestore
   } catch (error) {
-    console.error("Firestore no está disponible:", error)
+    // console.error("Firestore no está disponible:", error)
     return false
   }
 }
@@ -31,7 +31,7 @@ export async function guardarEvento(
 ): Promise<string> {
   try {
     if (!isFirestoreAvailable()) {
-      console.error("Firestore no está disponible para guardar evento")
+      // console.error("Firestore no está disponible para guardar evento")
       throw new Error("Firestore no está disponible")
     }
 
@@ -56,7 +56,7 @@ export async function guardarEvento(
     const docRef = await addDoc(eventosRef, eventoDoc)
     return docRef.id
   } catch (error) {
-    console.error("Error al guardar evento en Firestore:", error)
+    // console.error("Error al guardar evento en Firestore:", error)
     throw error
   }
 }
@@ -75,7 +75,7 @@ export async function guardarPreguntaUsuario({
 }): Promise<string> {
   try {
     if (!isFirestoreAvailable()) {
-      console.error("Firestore no está disponible para guardar pregunta")
+      // console.error("Firestore no está disponible para guardar pregunta")
       throw new Error("Firestore no está disponible")
     }
 
@@ -96,7 +96,7 @@ export async function guardarPreguntaUsuario({
     const docRef = await addDoc(eventosRef, preguntaDoc)
     return docRef.id
   } catch (error) {
-    console.error("Error al guardar pregunta en Firestore:", error)
+    // console.error("Error al guardar pregunta en Firestore:", error)
     throw error
   }
 }
@@ -113,7 +113,7 @@ export async function guardarSugerenciaUsuario({
 }): Promise<string> {
   try {
     if (!isFirestoreAvailable()) {
-      console.error("Firestore no está disponible para guardar sugerencia")
+      // console.error("Firestore no está disponible para guardar sugerencia")
       throw new Error("Firestore no está disponible")
     }
 
@@ -133,7 +133,7 @@ export async function guardarSugerenciaUsuario({
     const docRef = await addDoc(eventosRef, sugerenciaDoc)
     return docRef.id
   } catch (error) {
-    console.error("Error al guardar sugerencia en Firestore:", error)
+    // console.error("Error al guardar sugerencia en Firestore:", error)
     throw error
   }
 }
@@ -168,7 +168,7 @@ export async function obtenerPreguntasFrecuentes(limite = 10): Promise<any[]> {
 
     return preguntas
   } catch (error) {
-    console.error("Error al obtener preguntas frecuentes:", error)
+    // console.error("Error al obtener preguntas frecuentes:", error)
     return []
   }
 }
@@ -202,7 +202,7 @@ export async function obtenerSugerencias(limite = 50): Promise<any[]> {
 
     return sugerencias
   } catch (error) {
-    console.error("Error al obtener sugerencias:", error)
+    // console.error("Error al obtener sugerencias:", error)
     return []
   }
 }
@@ -222,7 +222,7 @@ export async function verificarConexionFirestore(): Promise<boolean> {
     })
     return true
   } catch (error) {
-    console.error("Error al verificar conexión a Firestore:", error)
+    // console.error("Error al verificar conexión a Firestore:", error)
     return false
   }
 }

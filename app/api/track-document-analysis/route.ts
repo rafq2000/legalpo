@@ -13,14 +13,14 @@ export async function POST(req: Request) {
 
     // Aquí iría la lógica para registrar el análisis de documentos
     // Por ahora, solo registramos en consola y devolvemos éxito
-    console.log("Análisis de documento registrado:", data)
+    // console.log("Análisis de documento registrado:", data)
 
     return NextResponse.json({
       success: true,
       message: "Análisis de documento registrado correctamente",
     })
   } catch (error) {
-    console.error("Error en track-document-analysis:", error)
+    // console.error("Error en track-document-analysis:", error)
     return NextResponse.json({ error: "Error al registrar el análisis de documento" }, { status: 500 })
   }
 }

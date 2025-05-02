@@ -33,7 +33,9 @@ export async function POST(req: Request) {
       const { error } = await supabase.from("user_feedback").insert([enhancedFeedback])
 
       if (error) {
-        console.error("Error guardando feedback en Supabase:", error)
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Error guardando feedback en Supabase:", error)
+        }
         // Continuar de todos modos para no perder el feedback
       }
     }
@@ -48,7 +50,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Error procesando feedback:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error procesando feedback:", error)
+    }
     return NextResponse.json({ error: "Error al procesar el feedback" }, { status: 500 })
   }
 }

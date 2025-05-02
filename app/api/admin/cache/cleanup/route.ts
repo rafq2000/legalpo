@@ -66,7 +66,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ deleted: count || 0 })
   } catch (error) {
-    console.error("Error al limpiar caché:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("❌ Error al limpiar caché:", error)
+    }
     return NextResponse.json({ error: "Error al limpiar caché" }, { status: 500 })
   }
 }

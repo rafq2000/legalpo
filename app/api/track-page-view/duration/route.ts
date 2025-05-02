@@ -17,7 +17,9 @@ export async function POST(request: Request) {
     // Inicializar Supabase
     const supabase = await getSupabaseClient()
     if (!supabase) {
-      console.error("❌ Supabase client not available")
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Supabase client not available")
+      }
       return NextResponse.json({ error: "Supabase init failed" }, { status: 500 })
     }
 
@@ -33,7 +35,9 @@ export async function POST(request: Request) {
       .limit(1)
 
     if (error) {
-      console.error("❌ Error al actualizar duración de página:", error)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Error al actualizar duración de página:", error)
+      }
       return NextResponse.json({ error: "Failed to update page view duration" }, { status: 500 })
     }
 
@@ -41,7 +45,9 @@ export async function POST(request: Request) {
       message: "Page view duration updated successfully",
     })
   } catch (error) {
-    console.error("❌ Error general al actualizar duración de página:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("❌ Error general al actualizar duración de página:", error)
+    }
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

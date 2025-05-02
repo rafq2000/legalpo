@@ -21,7 +21,9 @@ export async function POST(req: Request) {
       userId,
     })
   } catch (error) {
-    console.error("Error al registrar consulta de WhatsApp:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al registrar consulta de WhatsApp:", error)
+    }
     return NextResponse.json({ success: false, error: "Error al procesar la solicitud" }, { status: 500 })
   }
 }

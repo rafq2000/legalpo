@@ -66,7 +66,7 @@ const isValidDate = (date: any): boolean => {
 
 // Función para convertir a fecha segura
 const safeDate = (date: any): Date => {
-  if (!date) return new Date()
+  if (!date) return false
   if (date instanceof Date) return isValidDate(date) ? date : new Date()
   try {
     const d = new Date(date)

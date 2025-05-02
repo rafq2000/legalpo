@@ -37,7 +37,9 @@ export async function GET(req: Request) {
       response: completion.choices[0].message.content,
     })
   } catch (error) {
-    console.error("Error al probar OpenAI:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al probar OpenAI:", error)
+    }
     return NextResponse.json(
       {
         success: false,

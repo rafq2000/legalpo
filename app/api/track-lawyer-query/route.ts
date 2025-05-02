@@ -32,7 +32,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Error en track-lawyer-query:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error en track-lawyer-query:", error)
+    }
     return NextResponse.json({ error: "Error al procesar la solicitud" }, { status: 500 })
   }
 }

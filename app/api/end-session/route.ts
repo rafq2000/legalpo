@@ -13,7 +13,9 @@ export async function POST(request: Request) {
     // Inicializar Supabase
     const supabase = await getSupabaseClient()
     if (!supabase) {
-      console.error("❌ Supabase client not available")
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Supabase client not available")
+      }
       return NextResponse.json({ error: "Supabase init failed" }, { status: 500 })
     }
 
@@ -25,7 +27,9 @@ export async function POST(request: Request) {
       .single()
 
     if (fetchError) {
-      console.error("❌ Error al obtener sesión:", fetchError)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Error al obtener sesión:", fetchError)
+      }
       return NextResponse.json({ error: "Failed to fetch session" }, { status: 500 })
     }
 
@@ -44,7 +48,9 @@ export async function POST(request: Request) {
       .eq("id", sessionId)
 
     if (updateError) {
-      console.error("❌ Error al actualizar sesión:", updateError)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Error al actualizar sesión:", updateError)
+      }
       return NextResponse.json({ error: "Failed to update session" }, { status: 500 })
     }
 
@@ -56,7 +62,9 @@ export async function POST(request: Request) {
       duration: durationSeconds,
     })
   } catch (error) {
-    console.error("❌ Error general al finalizar sesión:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("❌ Error general al finalizar sesión:", error)
+    }
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

@@ -44,7 +44,9 @@ export async function GET(req: Request) {
 
     return NextResponse.json(data)
   } catch (error) {
-    console.error("Error al obtener respuestas en caché:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al obtener respuestas en caché:", error)
+    }
     return NextResponse.json({ error: "Error al obtener respuestas en caché" }, { status: 500 })
   }
 }

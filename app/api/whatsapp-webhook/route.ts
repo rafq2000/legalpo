@@ -24,7 +24,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: false, error: "Formato de mensaje no válido" })
   } catch (error) {
-    console.error("Error en webhook de WhatsApp:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error en webhook de WhatsApp:", error)
+    }
     return NextResponse.json({ success: false, error: "Error al procesar la solicitud" }, { status: 500 })
   }
 }

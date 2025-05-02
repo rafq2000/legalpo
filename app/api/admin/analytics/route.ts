@@ -7,7 +7,9 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY
 
 if (!supabaseUrl || !supabaseKey) {
-  console.error("❌ Missing Supabase environment variables")
+  if (process.env.NODE_ENV !== "production") {
+    console.error("❌ Missing Supabase environment variables")
+  }
 }
 
 const supabase = createClient(supabaseUrl || "", supabaseKey || "")
@@ -18,7 +20,9 @@ const clientEmail = process.env.GOOGLE_CLIENT_EMAIL
 const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n")
 
 if (!propertyId || !clientEmail || !privateKey) {
-  console.error("❌ Missing Google Analytics environment variables")
+  if (process.env.NODE_ENV !== "production") {
+    console.error("❌ Missing Google Analytics environment variables")
+  }
 }
 
 let analyticsDataClient: any = null
@@ -31,7 +35,9 @@ try {
     },
   })
 } catch (error) {
-  console.error("❌ Failed to initialize Google Analytics client:", error)
+  if (process.env.NODE_ENV !== "production") {
+    console.error("❌ Failed to initialize Google Analytics client:", error)
+  }
 }
 
 // Función para obtener fechas de rango (últimos 30 días por defecto)
@@ -117,7 +123,9 @@ async function getGoogleAnalyticsData() {
       totalUsers,
     }
   } catch (error) {
-    console.error("❌ Error fetching Google Analytics data:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("❌ Error fetching Google Analytics data:", error)
+    }
     return null
   }
 }
@@ -131,7 +139,9 @@ async function getSupabaseData(startDate: string, endDate: string) {
       .select("count", { count: "exact", head: true })
 
     if (checkError && checkError.code !== "PGRST116") {
-      console.warn("⚠️ Sessions table might not exist:", checkError.message)
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("⚠️ Sessions table might not exist:", checkError.message)
+      }
       await createAnalyticsTables()
     }
 
@@ -144,7 +154,9 @@ async function getSupabaseData(startDate: string, endDate: string) {
       .order("date", { ascending: true })
 
     if (dailyError && dailyError.code !== "PGRST116") {
-      console.error("❌ Error fetching daily stats:", dailyError.message)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Error fetching daily stats:", dailyError.message)
+      }
     }
 
     // Obtener usuarios activos
@@ -171,7 +183,9 @@ async function getSupabaseData(startDate: string, endDate: string) {
       .limit(10)
 
     if (pagesError && pagesError.code !== "PGRST116") {
-      console.error("❌ Error fetching most visited pages:", pagesError.message)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Error fetching most visited pages:", pagesError.message)
+      }
     }
 
     // Obtener fuentes de tráfico
@@ -182,7 +196,9 @@ async function getSupabaseData(startDate: string, endDate: string) {
       .limit(10)
 
     if (sourcesError && sourcesError.code !== "PGRST116") {
-      console.error("❌ Error fetching traffic sources:", sourcesError.message)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Error fetching traffic sources:", sourcesError.message)
+      }
     }
 
     // Obtener usuarios recientes
@@ -193,7 +209,9 @@ async function getSupabaseData(startDate: string, endDate: string) {
       .limit(10)
 
     if (usersError && usersError.code !== "PGRST116") {
-      console.error("❌ Error fetching user stats:", usersError.message)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Error fetching user stats:", usersError.message)
+      }
     }
 
     // Obtener total de usuarios
@@ -202,7 +220,9 @@ async function getSupabaseData(startDate: string, endDate: string) {
       .select("*", { count: "exact", head: true })
 
     if (countError) {
-      console.error("❌ Error fetching total users:", countError.message)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Error fetching total users:", countError.message)
+      }
     }
 
     // Obtener total de sesiones
@@ -213,7 +233,9 @@ async function getSupabaseData(startDate: string, endDate: string) {
       .lte("created_at", endDate)
 
     if (sessionsError && sessionsError.code !== "PGRST116") {
-      console.error("❌ Error fetching total sessions:", sessionsError.message)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Error fetching total sessions:", sessionsError.message)
+      }
     }
 
     // Obtener duración promedio de sesión
@@ -239,7 +261,9 @@ async function getSupabaseData(startDate: string, endDate: string) {
       (trafficSources && trafficSources.length > 0)
 
     if (!hasData) {
-      console.warn("⚠️ Not enough data in Supabase")
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("⚠️ Not enough data in Supabase")
+      }
       return null
     }
 
@@ -258,7 +282,9 @@ async function getSupabaseData(startDate: string, endDate: string) {
       avgSessionDuration,
     }
   } catch (error) {
-    console.error("❌ Error fetching Supabase data:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("❌ Error fetching Supabase data:", error)
+    }
     return null
   }
 }
@@ -266,7 +292,9 @@ async function getSupabaseData(startDate: string, endDate: string) {
 // Función para crear tablas y vistas de analítica
 async function createAnalyticsTables() {
   try {
-    console.log("🔧 Creating analytics tables and views...")
+    if (process.env.NODE_ENV !== "production") {
+      console.log("🔧 Creating analytics tables and views...")
+    }
 
     // Crear tabla de sesiones
     await supabase.query(`
@@ -437,10 +465,14 @@ async function createAnalyticsTables() {
       ORDER BY last_active DESC;
     `)
 
-    console.log("✅ Analytics tables and views created successfully")
+    if (process.env.NODE_ENV !== "production") {
+      console.log("✅ Analytics tables and views created successfully")
+    }
     return true
   } catch (error) {
-    console.error("❌ Error creating analytics tables:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("❌ Error creating analytics tables:", error)
+    }
     return false
   }
 }
@@ -533,11 +565,15 @@ function generateSampleData(startDate: string, endDate: string) {
 
 export async function GET(request: Request) {
   try {
-    console.log("🔄 Iniciando solicitud de analytics...")
+    if (process.env.NODE_ENV !== "production") {
+      console.log("🔄 Iniciando solicitud de analytics...")
+    }
 
     // Verificar si tenemos las variables de entorno necesarias
     if (!supabaseUrl || !supabaseKey) {
-      console.error("❌ Faltan variables de entorno de Supabase")
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Faltan variables de entorno de Supabase")
+      }
       return NextResponse.json({ error: "Configuración de Supabase incompleta" }, { status: 500 })
     }
 
@@ -550,7 +586,9 @@ export async function GET(request: Request) {
       url.searchParams.get("startDate") || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
     const endDate = url.searchParams.get("endDate") || new Date().toISOString().split("T")[0]
 
-    console.log(`📅 Rango de fechas: ${startDate} a ${endDate}`)
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`📅 Rango de fechas: ${startDate} a ${endDate}`)
+    }
 
     // Intentar obtener datos de Supabase
     try {
@@ -560,7 +598,9 @@ export async function GET(request: Request) {
         .select("count", { count: "exact", head: true })
 
       if (checkError) {
-        console.warn("⚠️ Error al verificar tablas:", checkError.message)
+        if (process.env.NODE_ENV !== "production") {
+          console.warn("⚠️ Error al verificar tablas:", checkError.message)
+        }
       }
 
       // Obtener estadísticas básicas
@@ -590,7 +630,9 @@ export async function GET(request: Request) {
         message: dailyStats ? "Datos reales de Supabase" : "Datos de ejemplo (no se encontraron datos reales)",
       })
     } catch (supabaseError) {
-      console.error("❌ Error al obtener datos de Supabase:", supabaseError)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ Error al obtener datos de Supabase:", supabaseError)
+      }
 
       // Devolver datos de ejemplo en caso de error
       const sampleData = generateSampleData(startDate, endDate)
@@ -603,7 +645,9 @@ export async function GET(request: Request) {
       })
     }
   } catch (error) {
-    console.error("❌ Error general en API de analytics:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("❌ Error general en API de analytics:", error)
+    }
     return NextResponse.json(
       {
         error: "Error al procesar la solicitud de analytics",

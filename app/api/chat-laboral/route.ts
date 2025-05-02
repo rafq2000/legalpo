@@ -211,14 +211,18 @@ export async function POST(req: Request) {
     }
 
     const userMessage = messages[messages.length - 1].content
-    console.log("Procesando consulta laboral:", userMessage)
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Procesando consulta laboral:", userMessage)
+    }
 
     // Preparar el contexto normativo relevante para la consulta
     const contextoNormativo = prepararContextoNormativo(userMessage)
 
     // Check if OpenAI client is available
     if (!openai || !process.env.OPENAI_API_KEY) {
-      console.log("API key de OpenAI no configurada, usando respuesta predefinida")
+      if (process.env.NODE_ENV !== "production") {
+        console.log("API key de OpenAI no configurada, usando respuesta predefinida")
+      }
       return NextResponse.json({
         response: RESPUESTAS.DEFAULT,
         userId: userId || "anonymous-user",
@@ -289,7 +293,9 @@ ${contextoNormativo}`,
         userId: userId || "anonymous-user",
       })
     } catch (openaiError) {
-      console.error("Error de OpenAI:", openaiError)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Error de OpenAI:", openaiError)
+      }
 
       // Si hay error con OpenAI, usar respuesta predefinida como fallback
       return NextResponse.json({
@@ -298,7 +304,9 @@ ${contextoNormativo}`,
       })
     }
   } catch (error) {
-    console.error("Error en el servidor:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error en el servidor:", error)
+    }
     return NextResponse.json(
       {
         response: RESPUESTAS.ERROR,

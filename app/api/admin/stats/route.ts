@@ -12,12 +12,16 @@ export async function GET(request: Request) {
   const page = Number.parseInt(url.searchParams.get("page") || "1")
   const pageSize = Number.parseInt(url.searchParams.get("pageSize") || "10")
 
-  console.log(`📊 API Stats solicitada: tipo=${type}, fechas=${startDate} a ${endDate}, página=${page}`)
+  if (process.env.NODE_ENV !== "production") {
+    console.log(`📊 API Stats solicitada: tipo=${type}, fechas=${startDate} a ${endDate}, página=${page}`)
+  }
 
   // Inicializar Supabase
   const supabase = await getSupabaseClient()
   if (!supabase) {
-    console.error("❌ Supabase client not available")
+    if (process.env.NODE_ENV !== "production") {
+      console.error("❌ Supabase client not available")
+    }
     return NextResponse.json({ error: "Supabase init failed" }, { status: 500 })
   }
 
@@ -100,7 +104,9 @@ export async function GET(request: Request) {
         if (dailyStatsError && dailyStatsError.code !== "PGRST116") throw dailyStatsError
         responseData.dailyStats = dailyStats || []
       } catch (error) {
-        console.error("Error en estadísticas generales:", error)
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Error en estadísticas generales:", error)
+        }
         useFallback = true
       }
     }
@@ -123,7 +129,9 @@ export async function GET(request: Request) {
           percentage: totalViews > 0 ? ((page.views || 0) / totalViews) * 100 : 0,
         }))
       } catch (error) {
-        console.error("Error en páginas visitadas:", error)
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Error en páginas visitadas:", error)
+        }
         useFallback = true
       }
     }
@@ -145,7 +153,9 @@ export async function GET(request: Request) {
         responseData.users = users || []
         responseData.total = count || 0
       } catch (error) {
-        console.error("Error en tabla de usuarios:", error)
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Error en tabla de usuarios:", error)
+        }
         useFallback = true
       }
     }
@@ -158,7 +168,9 @@ export async function GET(request: Request) {
         if (sourcesError && sourcesError.code !== "PGRST116") throw sourcesError
         responseData.trafficSources = sources || []
       } catch (error) {
-        console.error("Error en fuentes de tráfico:", error)
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Error en fuentes de tráfico:", error)
+        }
         useFallback = true
       }
     }
@@ -200,7 +212,9 @@ export async function GET(request: Request) {
         responseData.docRate = visitorCount > 0 ? (documentCount / visitorCount) * 100 : 0
         responseData.queryRate = visitorCount > 0 ? (queryCount / visitorCount) * 100 : 0
       } catch (error) {
-        console.error("Error en métricas de conversión:", error)
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Error en métricas de conversión:", error)
+        }
         useFallback = true
       }
     }
@@ -212,7 +226,9 @@ export async function GET(request: Request) {
       const propertyId = process.env.GA4_PROPERTY_ID
 
       if (gaClientEmail && gaPrivateKey && propertyId) {
-        console.log("Intentando conectar con Google Analytics...")
+        if (process.env.NODE_ENV !== "production") {
+          console.log("Intentando conectar con Google Analytics...")
+        }
 
         const analytics = new BetaAnalyticsDataClient({
           credentials: {
@@ -254,13 +270,17 @@ export async function GET(request: Request) {
         }
       }
     } catch (gaError) {
-      console.error("Error al obtener datos de Google Analytics:", gaError)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Error al obtener datos de Google Analytics:", gaError)
+      }
       // No fallamos si GA falla, seguimos con los datos de Supabase
     }
 
     // Si necesitamos usar datos de ejemplo, los generamos
     if (useFallback) {
-      console.log("⚠️ Usando datos de ejemplo debido a errores")
+      if (process.env.NODE_ENV !== "production") {
+        console.log("⚠️ Usando datos de ejemplo debido a errores")
+      }
       return NextResponse.json(getFallbackData(type), {
         headers: { "X-Data-Source": "fallback" },
       })
@@ -271,7 +291,9 @@ export async function GET(request: Request) {
       headers: { "X-Data-Source": "supabase-real" },
     })
   } catch (error) {
-    console.error("Error general al obtener estadísticas:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error general al obtener estadísticas:", error)
+    }
 
     // Si hay un error general, devolver datos de ejemplo
     return NextResponse.json(getFallbackData(type), {

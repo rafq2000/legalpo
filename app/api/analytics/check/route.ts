@@ -9,7 +9,9 @@ export async function GET() {
 
     return NextResponse.json({ status: "ok" })
   } catch (error) {
-    console.error("Error al verificar la configuración de Analytics:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al verificar la configuración de Analytics:", error)
+    }
     return NextResponse.json({ error: "Error al verificar la configuración de Analytics" }, { status: 500 })
   }
 }

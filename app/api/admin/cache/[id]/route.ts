@@ -49,7 +49,9 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Error al eliminar respuesta:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al eliminar respuesta:", error)
+    }
     return NextResponse.json({ error: "Error al eliminar respuesta" }, { status: 500 })
   }
 }

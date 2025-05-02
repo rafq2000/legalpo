@@ -5,26 +5,34 @@ import { getSupabaseClient } from "@/lib/supabase-client"
 
 export async function POST(request: Request) {
   try {
-    console.log("🔄 Inicializando datos de analítica...")
+    if (process.env.NODE_ENV !== "production") {
+      console.log("🔄 Inicializando datos de analítica...")
+    }
 
     // Verificar autenticación
     const session = await getServerSession(authOptions)
     if (!session?.user?.email) {
-      console.warn("❌ Intento de inicialización no autorizado")
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("❌ Intento de inicialización no autorizado")
+      }
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
     // Verificar si el usuario es administrador
     const isAdmin = session.user.email === process.env.ADMIN_EMAIL
     if (!isAdmin) {
-      console.warn(`❌ Usuario no administrador intentó inicializar analítica: ${session.user.email}`)
+      if (process.env.NODE_ENV !== "production") {
+        console.warn(`❌ Usuario no administrador intentó inicializar analítica: ${session.user.email}`)
+      }
       return NextResponse.json({ error: "Acceso denegado" }, { status: 403 })
     }
 
     // Inicializar cliente de Supabase
     const supabase = await getSupabaseClient()
     if (!supabase) {
-      console.error("❌ No se pudo inicializar el cliente de Supabase")
+      if (process.env.NODE_ENV !== "production") {
+        console.error("❌ No se pudo inicializar el cliente de Supabase")
+      }
       return NextResponse.json({ error: "Error al conectar con Supabase" }, { status: 500 })
     }
 
@@ -32,7 +40,9 @@ export async function POST(request: Request) {
     const { error: tablesError } = await supabase.from("users").select("id").limit(1)
 
     if (tablesError) {
-      console.log("⚠️ Tablas no encontradas, creando tablas de ejemplo...")
+      if (process.env.NODE_ENV !== "production") {
+        console.log("⚠️ Tablas no encontradas, creando tablas de ejemplo...")
+      }
 
       // Crear tablas de ejemplo
       try {
@@ -42,9 +52,13 @@ export async function POST(request: Request) {
         // Insertar datos de ejemplo
         await supabase.rpc("insert_sample_analytics_data")
 
-        console.log("✅ Tablas y datos de ejemplo creados correctamente")
+        if (process.env.NODE_ENV !== "production") {
+          console.log("✅ Tablas y datos de ejemplo creados correctamente")
+        }
       } catch (createError) {
-        console.error("❌ Error al crear tablas de ejemplo:", createError)
+        if (process.env.NODE_ENV !== "production") {
+          console.error("❌ Error al crear tablas de ejemplo:", createError)
+        }
         return NextResponse.json(
           {
             error: "Error al crear tablas de ejemplo",
@@ -59,7 +73,9 @@ export async function POST(request: Request) {
     const { count: userCount } = await supabase.from("users").select("*", { count: "exact", head: true })
     const { count: sessionCount } = await supabase.from("user_sessions").select("*", { count: "exact", head: true })
 
-    console.log(`✅ Analítica inicializada correctamente. Usuarios: ${userCount}, Sesiones: ${sessionCount}`)
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`✅ Analítica inicializada correctamente. Usuarios: ${userCount}, Sesiones: ${sessionCount}`)
+    }
 
     return NextResponse.json({
       success: true,
@@ -70,7 +86,9 @@ export async function POST(request: Request) {
       },
     })
   } catch (error) {
-    console.error("❌ Error al inicializar datos de analítica:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("❌ Error al inicializar datos de analítica:", error)
+    }
     return NextResponse.json(
       {
         error: "Error al inicializar datos de analítica",

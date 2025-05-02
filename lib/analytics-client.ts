@@ -33,7 +33,7 @@ export async function getBasicMetrics(startDate: string, endDate: string) {
 
   try {
     console.log(`🔄 Obteniendo métricas básicas de GA4 para el período ${startDate} - ${endDate}`)
-    
+
     const [sessionsResp, usersResp, durationResp] = await Promise.all([
       analyticsClient.runReport({
         property: `properties/${process.env.GA4_PROPERTY_ID}`,
@@ -48,4 +48,23 @@ export async function getBasicMetrics(startDate: string, endDate: string) {
       analyticsClient.runReport({
         property: `properties/${process.env.GA4_PROPERTY_ID}`,
         dateRanges: [{ startDate, endDate }],
-        metrics: [\
+        metrics: [{ name: "averageSessionDuration" }],
+      }),
+    ])
+
+    const sessions = sessionsResp[0]?.rows?.[0]?.metricValues?.[0]?.value || 0
+    const users = usersResp[0]?.rows?.[0]?.metricValues?.[0]?.value || 0
+    const duration = durationResp[0]?.rows?.[0]?.metricValues?.[0]?.value || 0
+
+    console.log(`✅ Métricas obtenidas: Sesiones=${sessions}, Usuarios=${users}, Duración Promedio=${duration}`)
+
+    return {
+      sessions,
+      users,
+      duration,
+    }
+  } catch (error) {
+    console.error("❌ Error al obtener métricas de Google Analytics:", error)
+    return null
+  }
+}

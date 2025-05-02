@@ -63,7 +63,7 @@ class AnalyticsService {
   async trackPageView(options: TrackPageViewOptions): Promise<void> {
     try {
       // Implementar lógica de registro de vista de página
-      console.log(`[Analytics] Page view: ${options.pagePath}`, options)
+      // console.log(`[Analytics] Page view: ${options.pagePath}`, options)
     } catch (error) {
       console.error("Error tracking page view:", error)
     }
@@ -72,7 +72,7 @@ class AnalyticsService {
   async trackDocumentAnalysis(options: TrackDocumentAnalysisOptions): Promise<boolean> {
     try {
       // Implementar lógica de registro de análisis de documento
-      console.log(`[Analytics] Document analyzed: ${options.documentType}`, options)
+      // console.log(`[Analytics] Document analyzed: ${options.documentType}`, options)
       return true
     } catch (error) {
       console.error("Error tracking document analysis:", error)
@@ -83,7 +83,7 @@ class AnalyticsService {
   async trackLawyerQuery(options: TrackLawyerQueryOptions): Promise<boolean> {
     try {
       // Implementar lógica de registro de consulta a abogado
-      console.log(`[Analytics] Lawyer query: ${options.queryText}`, options)
+      // console.log(`[Analytics] Lawyer query: ${options.queryText}`, options)
       return true
     } catch (error) {
       console.error("Error tracking lawyer query:", error)
