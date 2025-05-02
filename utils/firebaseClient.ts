@@ -4,14 +4,15 @@ import { getFirestore, type Firestore } from "firebase/firestore"
 import { getAuth, type Auth } from "firebase/auth"
 import { getAnalytics, isSupported, type Analytics } from "firebase/analytics"
 
+// Verificar que todas las variables de entorno estén disponibles
 const firebaseConfig = {
-  apiKey: "AIzaSyAtwSjM26-HtEg14gGbW6gKh7zSlWg7idU",
-  authDomain: "legalpo-7c821.firebaseapp.com",
-  projectId: "legalpo-7c821",
-  storageBucket: "legalpo-7c821.appspot.com",
-  messagingSenderId: "746335323144",
-  appId: "1:746335323144:web:c05dc1cbbf2694df4abdbd",
-  measurementId: "G-N6KKGKJMB3",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyAtwSjM26-HtEg14gGbW6gKh7zSlWg7idU",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "legalpo-7c821.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "legalpo-7c821",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "legalpo-7c821.appspot.com",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "746335323144",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:746335323144:web:c05dc1cbbf2694df4abdbd",
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-N6KKGKJMB3",
 }
 
 // Variables para almacenar las instancias
@@ -30,11 +31,16 @@ export function getFirebaseApp(): FirebaseApp | null {
     try {
       if (!getApps().length) {
         firebaseApp = initializeApp(firebaseConfig)
+        if (process.env.NODE_ENV !== "production") {
+          console.log("Firebase inicializado correctamente")
+        }
       } else {
         firebaseApp = getApps()[0]
       }
     } catch (error) {
-      console.error("Error al inicializar Firebase:", error)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Error al inicializar Firebase:", error)
+      }
       return null
     }
   }
@@ -55,7 +61,9 @@ export function db(): Firestore | null {
         firestoreDb = getFirestore(app)
       }
     } catch (error) {
-      console.error("Error al inicializar Firestore:", error)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Error al inicializar Firestore:", error)
+      }
       return null
     }
   }
@@ -76,7 +84,9 @@ export function auth(): Auth | null {
         firebaseAuth = getAuth(app)
       }
     } catch (error) {
-      console.error("Error al inicializar Auth:", error)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Error al inicializar Auth:", error)
+      }
       return null
     }
   }
@@ -100,7 +110,9 @@ export async function initializeAnalytics(): Promise<Analytics | null> {
         }
       }
     } catch (error) {
-      console.error("Error al inicializar Analytics:", error)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Error al inicializar Analytics:", error)
+      }
       return null
     }
   }
@@ -110,7 +122,11 @@ export async function initializeAnalytics(): Promise<Analytics | null> {
 
 // Inicializar Analytics automáticamente en el cliente
 if (typeof window !== "undefined") {
-  initializeAnalytics().catch(console.error)
+  initializeAnalytics().catch((error) => {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al inicializar Analytics:", error)
+    }
+  })
 }
 
 export { firebaseAnalytics as analytics }

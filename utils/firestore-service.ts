@@ -9,6 +9,7 @@ import {
   getDocs,
   orderBy,
   limit,
+  type DocumentData,
 } from "firebase/firestore"
 
 // Función para verificar si Firestore está disponible
@@ -17,12 +18,14 @@ const isFirestoreAvailable = () => {
     const firestore = db()
     return !!firestore
   } catch (error) {
-    // console.error("Firestore no está disponible:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Firestore no está disponible:", error)
+    }
     return false
   }
 }
 
-// Asegurar que se use Timestamp.now() en lugar de new Date().toISOString()
+// Función para guardar un evento en Firestore
 export async function guardarEvento(
   tipo: string,
   datos: Record<string, any> = {},
@@ -42,6 +45,10 @@ export async function guardarEvento(
     }
 
     const firestore = db()
+    if (!firestore) {
+      throw new Error("No se pudo obtener la instancia de Firestore")
+    }
+
     const eventosRef = collection(firestore, "eventos")
 
     // Crear documento de evento
@@ -51,11 +58,16 @@ export async function guardarEvento(
       userId,
       sessionId,
       timestamp: serverTimestamp(), // Usar serverTimestamp para la marca de tiempo del servidor
-      createdAt: Timestamp.now(), // Usar Timestamp.now() en lugar de new Date().toISOString()
+      createdAt: Timestamp.now(), // Usar Timestamp.now() para el tiempo de creación local
     }
 
     // Guardar en Firestore
     const docRef = await addDoc(eventosRef, eventoDoc)
+
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`Evento "${tipo}" guardado correctamente con ID: ${docRef.id}`)
+    }
+
     return docRef.id
   } catch (error) {
     if (process.env.NODE_ENV !== "production") {
@@ -65,7 +77,7 @@ export async function guardarEvento(
   }
 }
 
-// Actualizar también las otras funciones que guardan eventos
+// Función para guardar una pregunta de usuario
 export async function guardarPreguntaUsuario({
   pregunta,
   tema,
@@ -86,6 +98,10 @@ export async function guardarPreguntaUsuario({
     }
 
     const firestore = db()
+    if (!firestore) {
+      throw new Error("No se pudo obtener la instancia de Firestore")
+    }
+
     const eventosRef = collection(firestore, "eventos")
 
     // Crear documento de pregunta
@@ -96,10 +112,16 @@ export async function guardarPreguntaUsuario({
       pagina,
       email,
       timestamp: serverTimestamp(), // Usar serverTimestamp para la marca de tiempo del servidor
+      createdAt: Timestamp.now(), // Agregar createdAt para tener una referencia local
     }
 
     // Guardar en Firestore
     const docRef = await addDoc(eventosRef, preguntaDoc)
+
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`Pregunta guardada correctamente con ID: ${docRef.id}`)
+    }
+
     return docRef.id
   } catch (error) {
     if (process.env.NODE_ENV !== "production") {
@@ -109,6 +131,7 @@ export async function guardarPreguntaUsuario({
   }
 }
 
+// Función para guardar una sugerencia de usuario
 export async function guardarSugerenciaUsuario({
   mensaje,
   pagina,
@@ -127,6 +150,10 @@ export async function guardarSugerenciaUsuario({
     }
 
     const firestore = db()
+    if (!firestore) {
+      throw new Error("No se pudo obtener la instancia de Firestore")
+    }
+
     const eventosRef = collection(firestore, "eventos")
 
     // Crear documento de sugerencia
@@ -136,10 +163,16 @@ export async function guardarSugerenciaUsuario({
       pagina,
       email,
       timestamp: serverTimestamp(), // Usar serverTimestamp para la marca de tiempo del servidor
+      createdAt: Timestamp.now(), // Agregar createdAt para tener una referencia local
     }
 
     // Guardar en Firestore
     const docRef = await addDoc(eventosRef, sugerenciaDoc)
+
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`Sugerencia guardada correctamente con ID: ${docRef.id}`)
+    }
+
     return docRef.id
   } catch (error) {
     if (process.env.NODE_ENV !== "production") {
@@ -157,6 +190,10 @@ export async function obtenerPreguntasFrecuentes(limite = 10): Promise<any[]> {
     }
 
     const firestore = db()
+    if (!firestore) {
+      throw new Error("No se pudo obtener la instancia de Firestore")
+    }
+
     const eventosRef = collection(firestore, "eventos")
 
     // Consultar preguntas de usuario
@@ -179,7 +216,9 @@ export async function obtenerPreguntasFrecuentes(limite = 10): Promise<any[]> {
 
     return preguntas
   } catch (error) {
-    // console.error("Error al obtener preguntas frecuentes:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al obtener preguntas frecuentes:", error)
+    }
     return []
   }
 }
@@ -192,6 +231,10 @@ export async function obtenerSugerencias(limite = 50): Promise<any[]> {
     }
 
     const firestore = db()
+    if (!firestore) {
+      throw new Error("No se pudo obtener la instancia de Firestore")
+    }
+
     const eventosRef = collection(firestore, "eventos")
 
     // Consultar sugerencias de usuario
@@ -213,7 +256,9 @@ export async function obtenerSugerencias(limite = 50): Promise<any[]> {
 
     return sugerencias
   } catch (error) {
-    // console.error("Error al obtener sugerencias:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al obtener sugerencias:", error)
+    }
     return []
   }
 }
@@ -226,14 +271,101 @@ export async function verificarConexionFirestore(): Promise<boolean> {
     }
 
     const firestore = db()
+    if (!firestore) {
+      throw new Error("No se pudo obtener la instancia de Firestore")
+    }
+
     const testRef = collection(firestore, "test_connection")
     await addDoc(testRef, {
       test: true,
       timestamp: serverTimestamp(),
+      createdAt: Timestamp.now(),
     })
+
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Conexión a Firestore verificada correctamente")
+    }
+
     return true
   } catch (error) {
-    // console.error("Error al verificar conexión a Firestore:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al verificar conexión a Firestore:", error)
+    }
     return false
+  }
+}
+
+// Función para obtener todos los eventos sin límite
+export async function obtenerTodosEventos(): Promise<DocumentData[]> {
+  try {
+    if (!isFirestoreAvailable()) {
+      return []
+    }
+
+    const firestore = db()
+    if (!firestore) {
+      throw new Error("No se pudo obtener la instancia de Firestore")
+    }
+
+    const eventosRef = collection(firestore, "eventos")
+
+    // Consultar todos los eventos sin límite práctico
+    const q = query(eventosRef, orderBy("timestamp", "desc"), limit(1000000))
+
+    const querySnapshot = await getDocs(q)
+    const eventos: DocumentData[] = []
+
+    querySnapshot.forEach((doc) => {
+      eventos.push({
+        id: doc.id,
+        ...doc.data(),
+      })
+    })
+
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`Se obtuvieron ${eventos.length} eventos de Firestore`)
+    }
+
+    return eventos
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al obtener todos los eventos:", error)
+    }
+    return []
+  }
+}
+
+// Función para registrar un evento de prueba
+export async function registrarEventoPrueba(): Promise<string | null> {
+  try {
+    const firestore = db()
+    if (!firestore) {
+      throw new Error("No se pudo obtener la instancia de Firestore")
+    }
+
+    const eventosRef = collection(firestore, "eventos")
+
+    const docRef = await addDoc(eventosRef, {
+      tipo: "test_event",
+      timestamp: serverTimestamp(),
+      createdAt: Timestamp.now(),
+      email: "test@legalpo.cl",
+      name: "Prueba",
+      datos: {
+        origen: "Botón de prueba",
+        fecha: new Date().toISOString(),
+      },
+    })
+
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`Evento de prueba registrado con ID: ${docRef.id}`)
+    }
+
+    return docRef.id
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al registrar evento de prueba:", error)
+    }
+    return null
   }
 }
