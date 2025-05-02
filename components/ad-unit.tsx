@@ -46,7 +46,7 @@ export function AdUnit({ slot, format = "auto", className = "", responsive = tru
       <ins
         className="adsbygoogle"
         style={{ display: "block", width: "100%", maxWidth: "728px", height: "auto", minHeight: "250px" }}
-        data-ad-client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || "ca-pub-3753519605655251"}
+        data-ad-client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive={responsive ? "true" : "false"}

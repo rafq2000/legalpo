@@ -1,7 +1,20 @@
-import { initializeApp, getApps, getApp } from "firebase/app"
-import { getFirestore, collection, addDoc, query, where, orderBy, limit, getDocs } from "firebase/firestore"
+"use client"
 
-// Configuración de Firebase
+import { initializeApp, getApps, getApp } from "firebase/app"
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp,
+  Timestamp,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+} from "firebase/firestore"
+import { getAuth } from "firebase/auth"
+import { getAnalytics, isSupported } from "firebase/analytics"
+
+// Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -12,101 +25,139 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 }
 
-// Inicializar Firebase
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
-const db = getFirestore(app)
+// Singleton instances
+let firebaseApp
+let firestoreDb
+let authInstance
+let analyticsInstance
 
-// Función para registrar eventos
-export async function trackEvent(eventName: string, data: any = {}) {
+// Create and initialize Firebase app
+function createFirebaseApp() {
+  if (!firebaseApp) {
+    if (getApps().length === 0) {
+      firebaseApp = initializeApp(firebaseConfig)
+    } else {
+      firebaseApp = getApp()
+    }
+  }
+  return firebaseApp
+}
+
+// Get Firestore instance
+export function db() {
+  if (firestoreDb) {
+    return firestoreDb
+  }
+
   try {
-    if (typeof window === "undefined") {
-      console.warn("trackEvent llamado en el servidor, esto podría no funcionar como se espera")
+    const app = createFirebaseApp()
+
+    if (typeof window !== "undefined") {
+      firestoreDb = initializeFirestore(app, {
+        localCache: persistentLocalCache({
+          tabManager: persistentMultipleTabManager(),
+        }),
+      })
+    } else {
+      firestoreDb = getFirestore(app)
     }
 
-    const eventData = {
-      tipo: eventName,
-      datos: data,
-      timestamp: new Date(),
-      createdAt: new Date().toISOString(), // Para compatibilidad
-    }
-
-    const docRef = await addDoc(collection(db, "eventos"), eventData)
-    return { success: true, id: docRef.id }
-  } catch (error) {
-    console.error("Error al registrar evento:", error)
-    return { success: false, error }
+    return firestoreDb
+  } catch (e) {
+    console.error("Error initializing Firestore:", e)
+    return null
   }
 }
 
-// Función para registrar vistas de página
-export async function trackPageView(path: string, title = "", referrer = "") {
-  try {
-    if (typeof window === "undefined") return { success: false, error: "No se puede ejecutar en el servidor" }
+// Get Auth instance
+export function auth() {
+  if (!authInstance) {
+    const app = createFirebaseApp()
+    authInstance = getAuth(app)
+  }
+  return authInstance
+}
 
-    const pageViewData = {
-      tipo: "page_view",
-      datos: {
-        path,
-        title,
-        referrer,
-        userAgent: navigator.userAgent,
-      },
-      timestamp: new Date(),
-      createdAt: new Date().toISOString(),
+// Get Analytics instance
+export async function analytics() {
+  if (typeof window === "undefined") {
+    return null
+  }
+
+  if (!analyticsInstance) {
+    try {
+      if (await isSupported()) {
+        const app = createFirebaseApp()
+        analyticsInstance = getAnalytics(app)
+      } else {
+        console.log("Analytics not supported in this environment")
+        return null
+      }
+    } catch (error) {
+      console.error("Error initializing analytics:", error)
+      return null
+    }
+  }
+
+  return analyticsInstance
+}
+
+// Track event in Firestore
+export async function trackEvent(eventName, eventData = {}) {
+  if (typeof window === "undefined") {
+    // No ejecutar en el servidor
+    return null
+  }
+
+  try {
+    const firestore = db()
+    if (!firestore) {
+      console.error("Firestore not initialized")
+      return null
     }
 
-    const docRef = await addDoc(collection(db, "eventos"), pageViewData)
-    return { success: true, id: docRef.id }
+    const eventsCollection = collection(firestore, "eventos")
+
+    const eventDoc = {
+      name: eventName,
+      data: eventData,
+      timestamp: serverTimestamp(),
+      clientTimestamp: Timestamp.now(),
+      userAgent: navigator.userAgent,
+      url: window.location.href,
+      referrer: document.referrer || "",
+    }
+
+    const docRef = await addDoc(eventsCollection, eventDoc)
+
+    if (process.env.NODE_ENV === "development") {
+      console.log(`Event tracked: ${eventName}`, eventData, docRef.id)
+    }
+
+    return docRef.id
   } catch (error) {
-    console.error("Error al registrar vista de página:", error)
-    return { success: false, error }
+    console.error("Error tracking event:", error)
+    return null
   }
 }
 
-// Función para obtener estadísticas de eventos
-export async function getEventStats(days = 30) {
+// Track page view in Firestore
+export async function trackPageView(path, referrer = "", title = "") {
+  if (typeof window === "undefined") {
+    // No ejecutar en el servidor
+    return null
+  }
+
   try {
-    const endDate = new Date()
-    const startDate = new Date()
-    startDate.setDate(startDate.getDate() - days)
-
-    const eventsQuery = query(
-      collection(db, "eventos"),
-      where("timestamp", ">=", startDate),
-      where("timestamp", "<=", endDate),
-      orderBy("timestamp", "desc"),
-      limit(1000), // Límite alto para obtener suficientes datos
-    )
-
-    const snapshot = await getDocs(eventsQuery)
-    const events = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-
-    // Procesar eventos para obtener estadísticas
-    const pageViews = events.filter((event) => event.tipo === "page_view").length
-    const uniqueUsers = new Set(events.map((event) => event.datos?.userId || event.datos?.email || "anonymous")).size
-    const eventsByType = events.reduce((acc, event) => {
-      const tipo = event.tipo || "unknown"
-      acc[tipo] = (acc[tipo] || 0) + 1
-      return acc
-    }, {})
-
-    return {
-      totalEvents: events.length,
-      pageViews,
-      uniqueUsers,
-      eventsByType,
-      recentEvents: events.slice(0, 10), // Últimos 10 eventos
-    }
+    return await trackEvent("page_view", {
+      path,
+      referrer,
+      title,
+      url: window.location.href,
+      userAgent: navigator.userAgent,
+    })
   } catch (error) {
-    console.error("Error al obtener estadísticas:", error)
-    return {
-      totalEvents: 0,
-      pageViews: 0,
-      uniqueUsers: 0,
-      eventsByType: {},
-      recentEvents: [],
-    }
+    console.error("Error tracking page view:", error)
+    return null
   }
 }
-
-export { db, app }

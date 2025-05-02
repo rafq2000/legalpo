@@ -5,7 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import { getFirebaseApp } from "@/utils/firebaseClient"
+import { getFirebaseApp, getFirestoreInstance } from "@/utils/firebaseClient"
 
 interface FirebaseErrorBoundaryProps {
   children: React.ReactNode
@@ -19,10 +19,27 @@ export function FirebaseErrorBoundary({ children }: FirebaseErrorBoundaryProps) 
     const checkFirebase = async () => {
       try {
         setIsLoading(true)
-        const app = getFirebaseApp()
 
+        // Verificar que Firebase se inicialice correctamente
+        const app = getFirebaseApp()
         if (!app) {
           setError("No se pudo inicializar Firebase. Verifica la configuración.")
+          return
+        }
+
+        // Solo verificar Firestore en el cliente
+        if (typeof window !== "undefined") {
+          try {
+            // Intentar obtener la instancia de Firestore
+            getFirestoreInstance()
+            setError(null)
+          } catch (firestoreError) {
+            console.error("Error al inicializar Firestore:", firestoreError)
+            setError(
+              "Error al inicializar Firestore: " +
+                (firestoreError instanceof Error ? firestoreError.message : String(firestoreError)),
+            )
+          }
         } else {
           setError(null)
         }

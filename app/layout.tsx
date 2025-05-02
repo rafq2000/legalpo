@@ -14,6 +14,7 @@ import { ForceLightTheme } from "@/components/force-light-theme"
 import { cn } from "@/lib/utils"
 import FirebaseTracker from "@/components/firebase-tracker"
 import { WhatsAppButton } from "@/components/whatsapp-button"
+import { EventTracker } from "@/components/event-tracker"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -29,7 +30,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <meta name="google-adsense-account" content="ca-pub-3753519605655251" />
+        <meta name="google-adsense-account" content={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID} />
+        {/* Google AdSense Script */}
+        <Script
+          id="google-adsense"
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}`}
+          strategy="lazyOnload"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className={cn("min-h-screen bg-background font-sans antialiased")}>
         <Providers>
@@ -51,15 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Suspense fallback={null}>
               <WhatsAppButton />
             </Suspense>
-
-            {/* Google AdSense Script */}
-            <Script
-              id="google-adsense"
-              async
-              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3753519605655251"
-              strategy="lazyOnload"
-              crossOrigin="anonymous"
-            />
+            <Suspense fallback={null}>
+              <EventTracker />
+            </Suspense>
           </ThemeProvider>
         </Providers>
       </body>

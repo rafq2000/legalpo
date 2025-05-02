@@ -105,7 +105,7 @@ export default function DudasLaboralesPage() {
   return (
     <div className="container mx-auto py-6">
       {/* Anuncio al inicio de la página */}
-      <AdUnit slot="1234567890" format="horizontal" className="mb-6" />
+      <AdUnit slot="5678901234" format="horizontal" className="mb-6" />
 
       <div className="flex items-center mb-4">
         <Link href="/" className="flex items-center text-blue-600 hover:text-blue-800">
@@ -313,7 +313,7 @@ export default function DudasLaboralesPage() {
 
       {/* Anuncio al final de la página */}
       <div className="mt-8">
-        <AdUnit slot="1234567890" format="rectangle" />
+        <AdUnit slot="6789012345" format="rectangle" />
       </div>
     </div>
   )

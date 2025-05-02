@@ -1,3 +1,5 @@
+import { trackEvent as firebaseTrackEvent } from "@/utils/firebase-service"
+
 // Definir la estructura de los datos de análisis
 interface Analytics {
   totalUsers: number
@@ -73,10 +75,19 @@ interface AnalyticsEvent {
 // Mantener la función trackEvent original para compatibilidad
 export function trackEvent(action: string, params?: AnalyticsEvent): void {
   try {
+    // Registrar en Google Analytics si está disponible
     if (typeof window !== "undefined" && process.env.NODE_ENV === "production") {
       // @ts-ignore
-      window.gtag("event", action, params)
-    } else {
+      window.gtag && window.gtag("event", action, params)
+    }
+
+    // También registrar en Firebase
+    firebaseTrackEvent(action, params).catch((error) => {
+      console.error("Error al registrar evento en Firebase:", error)
+    })
+
+    // Log en desarrollo
+    if (process.env.NODE_ENV !== "production") {
       console.log(`[Analytics] Track event: ${action}`, params)
     }
   } catch (error) {
