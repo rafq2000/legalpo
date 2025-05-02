@@ -13,7 +13,7 @@ import Script from "next/script"
 import { ForceLightTheme } from "@/components/force-light-theme"
 import { cn } from "@/lib/utils"
 import FirebaseTracker from "@/components/firebase-tracker"
-import WhatsAppButton from "@/components/whatsapp-button"
+import { WhatsAppButton } from "@/components/whatsapp-button"
 
 const inter = Inter({ subsets: ["latin"] })
 
