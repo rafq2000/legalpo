@@ -82,13 +82,8 @@ const TEMA_COLORS = {
 // Función para validar fechas
 const isValidDate = (date: any): boolean => {
   if (!date) return false
-  if (date instanceof Date) return isValid(date)
-  try {
-    const d = new Date(date)
-    return isValid(d)
-  } catch (e) {
-    return false
-  }
+  const d = new Date(date)
+  return !isNaN(d.getTime())
 }
 
 // Función para formatear fechas de manera segura
@@ -172,6 +167,7 @@ export default function StatsDashboard() {
   const [cursor, setCursor] = useState<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [hayMas, setHayMas] = useState(true)
   const [cargando, setCargando] = useState(false)
+  const [totalEventos, setTotalEventos] = useState(0)
 
   // Verificar si estamos en el cliente
   useEffect(() => {
@@ -224,6 +220,7 @@ export default function StatsDashboard() {
       setEventos(nuevosEventos)
       setCursor(siguienteCursor)
       setHayMas(!!siguienteCursor)
+      setTotalEventos(nuevosEventos.length)
 
       // Cargar datos para gráficos
       const eventosDiarios = await obtenerEventosPorDia(filtros)
@@ -276,11 +273,12 @@ export default function StatsDashboard() {
         lastVisible: cursor,
       })
 
-      setEventos((prev) => [...prev, ...nuevosEventos])
-      setCursor(siguienteCursor)
-      setHayMas(!!siguienteCursor)
-
       if (nuevosEventos.length > 0) {
+        setEventos((prev) => [...prev, ...nuevosEventos])
+        setTotalEventos((prev) => prev + nuevosEventos.length)
+        setCursor(siguienteCursor)
+        setHayMas(!!siguienteCursor)
+
         toast({
           title: "Eventos cargados",
           description: `Se han cargado ${nuevosEventos.length} eventos adicionales.`,
@@ -498,7 +496,7 @@ export default function StatsDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 mb-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Visitas</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Eventos</CardTitle>
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -506,8 +504,8 @@ export default function StatsDashboard() {
               <Skeleton className="h-8 w-24" />
             ) : (
               <>
-                <div className="text-2xl font-bold">{eventosPorDia.reduce((sum, item) => sum + item.total, 0)}</div>
-                <p className="text-xs text-muted-foreground">En el período seleccionado</p>
+                <div className="text-2xl font-bold">{totalEventos}</div>
+                <p className="text-xs text-muted-foreground">Eventos cargados</p>
               </>
             )}
           </CardContent>

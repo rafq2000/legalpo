@@ -33,23 +33,11 @@ export async function guardarEvento(
   sessionId?: string,
 ): Promise<string> {
   try {
-    if (!isFirestoreAvailable()) {
-      if (process.env.NODE_ENV !== "production") {
-        console.error("Firestore no está disponible para guardar evento")
-      }
-      throw new Error("Firestore no está disponible")
-    }
-
     if (!tipo) {
       throw new Error("El tipo de evento es requerido")
     }
 
-    const firestore = db()
-    if (!firestore) {
-      throw new Error("No se pudo obtener la instancia de Firestore")
-    }
-
-    const eventosRef = collection(firestore, "eventos")
+    const eventosRef = collection(db, "eventos")
 
     // Crear documento de evento
     const eventoDoc = {
@@ -90,19 +78,7 @@ export async function guardarPreguntaUsuario({
   email: string | null
 }): Promise<string> {
   try {
-    if (!isFirestoreAvailable()) {
-      if (process.env.NODE_ENV !== "production") {
-        console.error("Firestore no está disponible para guardar pregunta")
-      }
-      throw new Error("Firestore no está disponible")
-    }
-
-    const firestore = db()
-    if (!firestore) {
-      throw new Error("No se pudo obtener la instancia de Firestore")
-    }
-
-    const eventosRef = collection(firestore, "eventos")
+    const eventosRef = collection(db, "eventos")
 
     // Crear documento de pregunta
     const preguntaDoc = {
@@ -142,19 +118,7 @@ export async function guardarSugerenciaUsuario({
   email: string | null
 }): Promise<string> {
   try {
-    if (!isFirestoreAvailable()) {
-      if (process.env.NODE_ENV !== "production") {
-        console.error("Firestore no está disponible para guardar sugerencia")
-      }
-      throw new Error("Firestore no está disponible")
-    }
-
-    const firestore = db()
-    if (!firestore) {
-      throw new Error("No se pudo obtener la instancia de Firestore")
-    }
-
-    const eventosRef = collection(firestore, "eventos")
+    const eventosRef = collection(db, "eventos")
 
     // Crear documento de sugerencia
     const sugerenciaDoc = {
@@ -182,8 +146,6 @@ export async function guardarSugerenciaUsuario({
   }
 }
 
-// Add the new guardarPreguntaUsuario function after the existing functions
-
 // Función para guardar una pregunta de usuario
 export async function guardarPreguntaUsuario2({
   email,
@@ -197,19 +159,7 @@ export async function guardarPreguntaUsuario2({
   sessionId?: string
 }): Promise<string | null> {
   try {
-    if (!isFirestoreAvailable()) {
-      if (process.env.NODE_ENV !== "production") {
-        console.error("Firestore no está disponible para guardar pregunta")
-      }
-      throw new Error("Firestore no está disponible")
-    }
-
-    const firestore = db()
-    if (!firestore) {
-      throw new Error("No se pudo obtener la instancia de Firestore")
-    }
-
-    const preguntasRef = collection(firestore, "preguntas")
+    const preguntasRef = collection(db, "preguntas")
 
     // Crear documento de pregunta
     const preguntaDoc = {
@@ -240,16 +190,7 @@ export async function guardarPreguntaUsuario2({
 // Función para obtener preguntas de usuarios
 export async function obtenerPreguntas(limite = 100): Promise<any[]> {
   try {
-    if (!isFirestoreAvailable()) {
-      return []
-    }
-
-    const firestore = db()
-    if (!firestore) {
-      throw new Error("No se pudo obtener la instancia de Firestore")
-    }
-
-    const preguntasRef = collection(firestore, "preguntas")
+    const preguntasRef = collection(db, "preguntas")
 
     // Consultar preguntas ordenadas por fecha
     const q = query(preguntasRef, orderBy("timestamp", "desc"), limit(limite))
@@ -281,16 +222,7 @@ export async function obtenerPreguntas(limite = 100): Promise<any[]> {
 // Función para obtener preguntas frecuentes
 export async function obtenerPreguntasFrecuentes(limite = 10): Promise<any[]> {
   try {
-    if (!isFirestoreAvailable()) {
-      return []
-    }
-
-    const firestore = db()
-    if (!firestore) {
-      throw new Error("No se pudo obtener la instancia de Firestore")
-    }
-
-    const eventosRef = collection(firestore, "eventos")
+    const eventosRef = collection(db, "eventos")
 
     // Consultar preguntas de usuario
     const q = query(eventosRef, where("tipo", "==", "pregunta_usuario"), orderBy("timestamp", "desc"), limit(limite))
@@ -322,16 +254,7 @@ export async function obtenerPreguntasFrecuentes(limite = 10): Promise<any[]> {
 // Función para obtener sugerencias
 export async function obtenerSugerencias(limite = 50): Promise<any[]> {
   try {
-    if (!isFirestoreAvailable()) {
-      return []
-    }
-
-    const firestore = db()
-    if (!firestore) {
-      throw new Error("No se pudo obtener la instancia de Firestore")
-    }
-
-    const eventosRef = collection(firestore, "eventos")
+    const eventosRef = collection(db, "eventos")
 
     // Consultar sugerencias de usuario
     const q = query(eventosRef, where("tipo", "==", "sugerencia_usuario"), orderBy("timestamp", "desc"), limit(limite))
@@ -362,16 +285,7 @@ export async function obtenerSugerencias(limite = 50): Promise<any[]> {
 // Función para verificar la conexión a Firestore
 export async function verificarConexionFirestore(): Promise<boolean> {
   try {
-    if (!isFirestoreAvailable()) {
-      return false
-    }
-
-    const firestore = db()
-    if (!firestore) {
-      throw new Error("No se pudo obtener la instancia de Firestore")
-    }
-
-    const testRef = collection(firestore, "test_connection")
+    const testRef = collection(db, "test_connection")
     await addDoc(testRef, {
       test: true,
       timestamp: serverTimestamp(),
@@ -394,16 +308,7 @@ export async function verificarConexionFirestore(): Promise<boolean> {
 // Función para obtener todos los eventos sin límite
 export async function obtenerTodosEventos(): Promise<DocumentData[]> {
   try {
-    if (!isFirestoreAvailable()) {
-      return []
-    }
-
-    const firestore = db()
-    if (!firestore) {
-      throw new Error("No se pudo obtener la instancia de Firestore")
-    }
-
-    const eventosRef = collection(firestore, "eventos")
+    const eventosRef = collection(db, "eventos")
 
     // Consultar todos los eventos sin límite práctico
     const q = query(eventosRef, orderBy("timestamp", "desc"), limit(1000000))
@@ -434,12 +339,7 @@ export async function obtenerTodosEventos(): Promise<DocumentData[]> {
 // Función para registrar un evento de prueba
 export async function registrarEventoPrueba(): Promise<string | null> {
   try {
-    const firestore = db()
-    if (!firestore) {
-      throw new Error("No se pudo obtener la instancia de Firestore")
-    }
-
-    const eventosRef = collection(firestore, "eventos")
+    const eventosRef = collection(db, "eventos")
 
     const docRef = await addDoc(eventosRef, {
       tipo: "test_event",

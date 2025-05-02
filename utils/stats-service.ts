@@ -66,7 +66,7 @@ const isValidDate = (date: any): boolean => {
 
 // Función para convertir a fecha segura
 const safeDate = (date: any): Date => {
-  if (!date) return false
+  if (!date) return new Date()
   if (date instanceof Date) return isValidDate(date) ? date : new Date()
   try {
     const d = new Date(date)
@@ -112,7 +112,7 @@ export async function obtenerDistribucionPreguntasPorTema() {
   }
 }
 
-// Nueva función para obtener eventos por páginas
+// Función optimizada para obtener eventos por páginas
 export async function obtenerEventosPorPaginas({
   desde,
   hasta,
@@ -132,7 +132,7 @@ export async function obtenerEventosPorPaginas({
     }
 
     const firestore = db()
-    const LOTE = 500
+    const LOTE = 500 // Aumentado a 500 para cargar más eventos por lote
     const filtros = []
 
     if (desde && hasta) {
@@ -140,7 +140,7 @@ export async function obtenerEventosPorPaginas({
       filtros.push(where("timestamp", "<=", Timestamp.fromDate(new Date(hasta))))
     }
 
-    if (tipo && tipo !== "todos") {
+    if (tipo && tipo !== "todos" && tipo !== "all") {
       filtros.push(where("tipo", "==", tipo))
     }
 
@@ -196,7 +196,7 @@ export async function obtenerEventosPorPaginas({
       }
     })
 
-    const siguienteCursor = snapshot.docs[snapshot.docs.length - 1] || null
+    const siguienteCursor = snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1] : null
 
     return { eventos, siguienteCursor }
   } catch (error) {
