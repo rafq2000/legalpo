@@ -18,7 +18,9 @@ export async function POST(request: Request) {
       const session = await getServerSession()
       userId = session?.user?.email || undefined
     } catch (error) {
-      console.error("Error al obtener la sesión:", error)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Error al obtener la sesión:", error)
+      }
       // Continuar sin userId si hay error
     }
 
@@ -28,7 +30,9 @@ export async function POST(request: Request) {
       const cookieStore = cookies()
       sessionId = cookieStore.get("session_id")?.value
     } catch (error) {
-      console.error("Error al obtener cookies:", error)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Error al obtener cookies:", error)
+      }
       // Continuar sin sessionId si hay error
     }
 
@@ -42,7 +46,9 @@ export async function POST(request: Request) {
         id: eventoId,
       })
     } catch (error: any) {
-      console.error("Error al guardar evento en Firestore:", error)
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Error al guardar evento en Firestore:", error)
+      }
       return NextResponse.json(
         {
           success: false,
@@ -52,7 +58,9 @@ export async function POST(request: Request) {
       )
     }
   } catch (error: any) {
-    console.error("Error general al procesar evento:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error general al procesar evento:", error)
+    }
     return NextResponse.json(
       {
         success: false,

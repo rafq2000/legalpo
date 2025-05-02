@@ -22,7 +22,7 @@ const isFirestoreAvailable = () => {
   }
 }
 
-// Función para guardar un evento en Firestore
+// Asegurar que se use Timestamp.now() en lugar de new Date().toISOString()
 export async function guardarEvento(
   tipo: string,
   datos: Record<string, any> = {},
@@ -31,7 +31,9 @@ export async function guardarEvento(
 ): Promise<string> {
   try {
     if (!isFirestoreAvailable()) {
-      // console.error("Firestore no está disponible para guardar evento")
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Firestore no está disponible para guardar evento")
+      }
       throw new Error("Firestore no está disponible")
     }
 
@@ -48,20 +50,22 @@ export async function guardarEvento(
       datos,
       userId,
       sessionId,
-      timestamp: serverTimestamp(),
-      createdAt: Timestamp.now(),
+      timestamp: serverTimestamp(), // Usar serverTimestamp para la marca de tiempo del servidor
+      createdAt: Timestamp.now(), // Usar Timestamp.now() en lugar de new Date().toISOString()
     }
 
     // Guardar en Firestore
     const docRef = await addDoc(eventosRef, eventoDoc)
     return docRef.id
   } catch (error) {
-    // console.error("Error al guardar evento en Firestore:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al guardar evento en Firestore:", error)
+    }
     throw error
   }
 }
 
-// Función para guardar una pregunta de usuario
+// Actualizar también las otras funciones que guardan eventos
 export async function guardarPreguntaUsuario({
   pregunta,
   tema,
@@ -75,7 +79,9 @@ export async function guardarPreguntaUsuario({
 }): Promise<string> {
   try {
     if (!isFirestoreAvailable()) {
-      // console.error("Firestore no está disponible para guardar pregunta")
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Firestore no está disponible para guardar pregunta")
+      }
       throw new Error("Firestore no está disponible")
     }
 
@@ -89,19 +95,20 @@ export async function guardarPreguntaUsuario({
       tema,
       pagina,
       email,
-      timestamp: serverTimestamp(),
+      timestamp: serverTimestamp(), // Usar serverTimestamp para la marca de tiempo del servidor
     }
 
     // Guardar en Firestore
     const docRef = await addDoc(eventosRef, preguntaDoc)
     return docRef.id
   } catch (error) {
-    // console.error("Error al guardar pregunta en Firestore:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al guardar pregunta en Firestore:", error)
+    }
     throw error
   }
 }
 
-// Función para guardar una sugerencia de usuario
 export async function guardarSugerenciaUsuario({
   mensaje,
   pagina,
@@ -113,7 +120,9 @@ export async function guardarSugerenciaUsuario({
 }): Promise<string> {
   try {
     if (!isFirestoreAvailable()) {
-      // console.error("Firestore no está disponible para guardar sugerencia")
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Firestore no está disponible para guardar sugerencia")
+      }
       throw new Error("Firestore no está disponible")
     }
 
@@ -126,14 +135,16 @@ export async function guardarSugerenciaUsuario({
       mensaje,
       pagina,
       email,
-      timestamp: serverTimestamp(),
+      timestamp: serverTimestamp(), // Usar serverTimestamp para la marca de tiempo del servidor
     }
 
     // Guardar en Firestore
     const docRef = await addDoc(eventosRef, sugerenciaDoc)
     return docRef.id
   } catch (error) {
-    // console.error("Error al guardar sugerencia en Firestore:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al guardar sugerencia en Firestore:", error)
+    }
     throw error
   }
 }

@@ -87,11 +87,11 @@ const isFirestoreAvailable = () => {
   }
 }
 
-// Función para obtener eventos con paginación
+// Modificar la función obtenerEventos para usar un límite muy alto
 export async function obtenerEventos(
   filtros: FiltrosEventos = {},
   ultimoDoc: QueryDocumentSnapshot<DocumentData> | null = null,
-  limite = 50,
+  limite = 1000000, // Cambiado de 50 a 1000000 (equivalente práctico a 'sin límite')
 ): Promise<{ eventos: EventoStats[]; ultimoDoc: QueryDocumentSnapshot<DocumentData> | null }> {
   try {
     if (!isFirestoreAvailable()) {
@@ -129,14 +129,27 @@ export async function obtenerEventos(
       const data = doc.data()
       let timestamp: Date
 
-      // Manejar la fecha de manera segura
-      if (data.timestamp && typeof data.timestamp.toDate === "function") {
-        try {
-          timestamp = data.timestamp.toDate()
-          if (!isValidDate(timestamp)) {
+      // Manejar la fecha de manera segura - Mejorado para manejar diferentes formatos
+      if (data.timestamp) {
+        if (typeof data.timestamp === "string") {
+          // Si es string, convertir a Date
+          timestamp = new Date(data.timestamp)
+        } else if (typeof data.timestamp.toDate === "function") {
+          // Si es Timestamp de Firestore
+          try {
+            timestamp = data.timestamp.toDate()
+          } catch (e) {
             timestamp = new Date()
           }
-        } catch (e) {
+        } else if (data.timestamp instanceof Date) {
+          // Si ya es Date
+          timestamp = data.timestamp
+        } else {
+          timestamp = new Date()
+        }
+
+        // Verificar que la fecha sea válida
+        if (!isValidDate(timestamp)) {
           timestamp = new Date()
         }
       } else {
@@ -156,7 +169,9 @@ export async function obtenerEventos(
 
     return { eventos, ultimoDoc: lastDoc }
   } catch (error) {
-    console.error("Error al obtener eventos:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al obtener eventos:", error)
+    }
     return { eventos: [], ultimoDoc: null }
   }
 }

@@ -89,6 +89,29 @@ const safeFormatDate = (date: any, formatStr: string): string => {
   }
 }
 
+// Agregar esta función de utilidad al principio del archivo (después de los imports)
+const safeTimestamp = (timestamp: any): Date => {
+  if (!timestamp) return new Date()
+
+  if (typeof timestamp === "string") {
+    return new Date(timestamp)
+  }
+
+  if (timestamp instanceof Date) {
+    return timestamp
+  }
+
+  if (timestamp && typeof timestamp.toDate === "function") {
+    try {
+      return timestamp.toDate()
+    } catch (e) {
+      return new Date()
+    }
+  }
+
+  return new Date()
+}
+
 export default function StatsDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
   const [isLoading, setIsLoading] = useState(true)
@@ -636,8 +659,8 @@ export default function StatsDashboard() {
                         usuariosUnicos.map((usuario) => (
                           <TableRow key={usuario.email}>
                             <TableCell className="font-medium">{usuario.email}</TableCell>
-                            <TableCell>{formatearFecha(usuario.primeraVisita)}</TableCell>
-                            <TableCell>{formatearFecha(usuario.ultimaAccion)}</TableCell>
+                            <TableCell>{formatearFecha(safeTimestamp(usuario.primeraVisita))}</TableCell>
+                            <TableCell>{formatearFecha(safeTimestamp(usuario.ultimaAccion))}</TableCell>
                             <TableCell>
                               <Button
                                 variant="ghost"
@@ -704,7 +727,9 @@ export default function StatsDashboard() {
                       ) : (
                         eventos.map((evento) => (
                           <TableRow key={evento.id}>
-                            <TableCell className="font-medium">{formatearFecha(evento.timestamp)}</TableCell>
+                            <TableCell className="font-medium">
+                              {formatearFecha(safeTimestamp(evento.timestamp))}
+                            </TableCell>
                             <TableCell>
                               <Badge variant="outline">{evento.tipo}</Badge>
                             </TableCell>
