@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server"
-import { collection, addDoc, serverTimestamp } from "firebase/firestore"
-import { db } from "@/utils/firebaseClient"
+import { adminDb } from "@/utils/firebaseAdmin"
+import { FieldValue } from "firebase-admin/firestore"
 
-// Specify nodejs runtime for Firebase compatibility
+// Especificar runtime nodejs para Firebase Admin
 export const runtime = "nodejs"
 
 export async function POST(request: Request) {
@@ -23,12 +23,30 @@ export async function POST(request: Request) {
       )
     }
 
-    // Add a document to Firestore with serverTimestamp
-    const docRef = await addDoc(collection(db, "eventos"), {
+    // Verificar que adminDb esté disponible
+    if (!adminDb) {
+      console.error("Firebase Admin SDK no está inicializado correctamente")
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Firebase Admin SDK no está disponible",
+          details:
+            "Verifica las variables de entorno FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL y FIREBASE_PRIVATE_KEY",
+        },
+        { status: 500 },
+      )
+    }
+
+    // Crear el documento de evento
+    const evento = {
       tipo,
       datos: datos || {},
-      timestamp: serverTimestamp(), // Use serverTimestamp instead of client-side timestamp
-    })
+      timestamp: FieldValue.serverTimestamp(), // Usar serverTimestamp de Admin SDK
+      createdAt: new Date().toISOString(), // Fecha ISO para compatibilidad
+    }
+
+    // Agregar documento a Firestore usando Admin SDK
+    const docRef = await adminDb.collection("eventos").add(evento)
 
     console.log(`✅ Event registered successfully: ${tipo}, ID: ${docRef.id}`)
 
