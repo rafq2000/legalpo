@@ -1,7 +1,7 @@
-import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app"
-import { getFirestore, type Firestore } from "firebase/firestore"
-import { getAuth, type Auth } from "firebase/auth"
-import { getAnalytics, isSupported, type Analytics } from "firebase/analytics"
+import { initializeApp, getApps, getApp } from "firebase/app"
+import { getFirestore } from "firebase/firestore"
+import { getAuth } from "firebase/auth"
+import { getAnalytics, isSupported } from "firebase/analytics"
 
 // Firebase configuration
 const firebaseConfig = {
@@ -14,67 +14,34 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 }
 
-// Singleton pattern for Firebase app
-let firebaseApp: FirebaseApp | undefined
-let firestoreInstance: Firestore | undefined
-let authInstance: Auth | undefined
-let analyticsInstance: Analytics | undefined
-
-// Initialize Firebase app
-export function getFirebaseApp(): FirebaseApp {
-  if (!firebaseApp) {
-    if (!getApps().length) {
-      firebaseApp = initializeApp(firebaseConfig)
-    } else {
-      firebaseApp = getApp()
-    }
-  }
-  return firebaseApp
+// Initialize Firebase
+let app
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig)
+} else {
+  app = getApp()
 }
 
-// Get Firestore instance
-export function getFirestoreInstance(): Firestore {
-  if (!firestoreInstance) {
-    const app = getFirebaseApp()
-    firestoreInstance = getFirestore(app)
-  }
-  return firestoreInstance
-}
+// Initialize services
+export const db = () => getFirestore(app)
+export const auth = getAuth(app)
 
-// Get Auth instance - LAZY initialization
-export function getAuthInstance(): Auth {
-  if (!authInstance) {
-    const app = getFirebaseApp()
-    authInstance = getAuth(app)
-  }
-  return authInstance
-}
-
-// Get Analytics instance (browser only)
-export async function getAnalyticsInstance(): Promise<Analytics | null> {
-  if (typeof window === "undefined") return null
-
-  if (!analyticsInstance) {
-    try {
-      const isAnalyticsSupported = await isSupported()
-      if (isAnalyticsSupported) {
-        const app = getFirebaseApp()
-        analyticsInstance = getAnalytics(app)
+// Initialize Analytics conditionally (only in browser)
+let analytics = null
+if (typeof window !== "undefined") {
+  isSupported()
+    .then((supported) => {
+      if (supported) {
+        analytics = getAnalytics(app)
       }
-    } catch (error) {
+    })
+    .catch((error) => {
       console.error("Error initializing analytics:", error)
-      return null
-    }
-  }
-  return analyticsInstance || null
+    })
 }
 
-// Simplified exports for backward compatibility
-export const db = getFirestoreInstance
-export const auth = null // Changed from direct initialization to null
-export const analytics = null // Will be initialized lazily when needed
+export { analytics }
 
-// Safe auth getter function
-export function getFirebaseAuth(): Auth {
-  return getAuthInstance()
-}
+// Helper functions for more controlled initialization
+export const getFirebaseApp = () => app
+export const getFirestoreInstance = () => db()

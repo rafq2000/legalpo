@@ -14,7 +14,6 @@ import { ForceLightTheme } from "@/components/force-light-theme"
 import { cn } from "@/lib/utils"
 import FirebaseTracker from "@/components/firebase-tracker"
 import { WhatsAppButton } from "@/components/whatsapp-button"
-import EventTracker from "@/components/event-tracker"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -30,22 +29,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <meta name="google-adsense-account" content={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID} />
-        {/* Google AdSense Script */}
-        <Script
-          id="google-adsense"
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}`}
-          strategy="lazyOnload"
-          crossOrigin="anonymous"
-        />
+        <meta name="google-adsense-account" content="ca-pub-3753519605655251" />
       </head>
       <body className={cn("min-h-screen bg-background font-sans antialiased")}>
         <Providers>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
             <ForceLightTheme />
             {/* Resto de componentes existentes */}
-            <Suspense fallback={null}>{children}</Suspense>
+            {children}
             <Toaster />
             <Analytics />
             <Suspense fallback={null}>
@@ -60,9 +51,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Suspense fallback={null}>
               <WhatsAppButton />
             </Suspense>
-            <Suspense fallback={null}>
-              <EventTracker />
-            </Suspense>
+
+            {/* Google AdSense Script */}
+            <Script
+              id="google-adsense"
+              async
+              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3753519605655251"
+              strategy="lazyOnload"
+              crossOrigin="anonymous"
+            />
           </ThemeProvider>
         </Providers>
       </body>

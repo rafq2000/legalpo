@@ -2,15 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["lh3.googleusercontent.com", "avatars.githubusercontent.com", "firebasestorage.googleapis.com"],
+    domains: ["lh3.googleusercontent.com", "avatars.githubusercontent.com"],
     unoptimized: true,
-  },
-  trailingSlash: false, // O true si quieres siempre / al final
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -23,6 +16,12 @@ const nextConfig = {
       }
     }
     return config
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
   },
 }
 

@@ -1,100 +1,98 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { CheckCircle, XCircle, Loader2 } from "lucide-react"
-import { trackEvent } from "@/utils/firebase-service"
-import { getFirebaseApp, getFirestoreInstance } from "@/utils/firebaseClient"
+import { getFirestoreInstance } from "@/utils/firebaseClient"
+import { collection, addDoc, Timestamp, getDocs, query, limit } from "firebase/firestore"
 
 export default function FirebaseTest() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [result, setResult] = useState<{
-    success: boolean
-    message: string
-    details?: string
-    error?: string
-  } | null>(null)
+  const [status, setStatus] = useState<string>("Idle")
+  const [error, setError] = useState<string | null>(null)
+  const [result, setResult] = useState<any>(null)
 
-  const testFirebase = async () => {
-    setIsLoading(true)
+  const testConnection = async () => {
+    setStatus("Testing...")
+    setError(null)
     setResult(null)
 
     try {
-      // Paso 1: Verificar inicialización de Firebase
-      const app = getFirebaseApp()
-      if (!app) {
-        throw new Error("No se pudo inicializar Firebase")
-      }
-
-      // Paso 2: Verificar inicialización de Firestore
       const db = getFirestoreInstance()
+
       if (!db) {
-        throw new Error("No se pudo inicializar Firestore")
+        throw new Error("Failed to initialize Firestore")
       }
 
-      // Paso 3: Intentar registrar un evento de prueba
-      const testEvent = await trackEvent("test_event", {
+      // Try to write a test document
+      const testDoc = {
         test: true,
-        timestamp: new Date().toISOString(),
-      })
-
-      if (!testEvent.success) {
-        throw new Error(`Error al registrar evento: ${testEvent.error}`)
+        message: "Test connection",
+        timestamp: Timestamp.now(),
       }
 
+      const docRef = await addDoc(collection(db, "test_connection"), testDoc)
+
+      // Try to read from Firestore
+      const querySnapshot = await getDocs(query(collection(db, "test_connection"), limit(5)))
+
+      const documents = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+
       setResult({
-        success: true,
-        message: "Firebase funciona correctamente",
-        details: `Evento registrado con ID: ${testEvent.id}`,
+        writeSuccess: true,
+        writeId: docRef.id,
+        readSuccess: true,
+        documents,
       })
-    } catch (error) {
-      console.error("Error en la prueba de Firebase:", error)
-      setResult({
-        success: false,
-        message: "Error al probar Firebase",
-        error: error instanceof Error ? error.message : String(error),
-      })
-    } finally {
-      setIsLoading(false)
+
+      setStatus("Success")
+    } catch (err: any) {
+      console.error("Firebase test failed:", err)
+      setError(err.message || "Unknown error")
+      setStatus("Failed")
     }
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>Prueba de Firebase</CardTitle>
-        <CardDescription>Verifica si Firebase está configurado correctamente</CardDescription>
-      </CardHeader>
-      <CardContent>
-        {result && (
-          <Alert className={result.success ? "bg-green-50" : "bg-red-50"}>
-            <div className="flex items-center gap-2">
-              {result.success ? (
-                <CheckCircle className="h-5 w-5 text-green-600" />
-              ) : (
-                <XCircle className="h-5 w-5 text-red-600" />
-              )}
-              <AlertTitle>{result.message}</AlertTitle>
-            </div>
-            {result.details && <AlertDescription className="mt-2">{result.details}</AlertDescription>}
-            {result.error && <AlertDescription className="mt-2 text-red-600">Error: {result.error}</AlertDescription>}
-          </Alert>
+    <div className="p-4 border rounded-lg">
+      <h2 className="text-xl font-bold mb-4">Firebase Connection Test</h2>
+
+      <button onClick={testConnection} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        Test Firebase Connection
+      </button>
+
+      <div className="mt-4">
+        <p>
+          Status:{" "}
+          <span
+            className={`font-bold ${status === "Success" ? "text-green-600" : status === "Failed" ? "text-red-600" : ""}`}
+          >
+            {status}
+          </span>
+        </p>
+
+        {error && (
+          <div className="mt-2 p-3 bg-red-100 border border-red-300 rounded text-red-800">
+            <p className="font-bold">Error:</p>
+            <p className="font-mono text-sm">{error}</p>
+          </div>
         )}
-      </CardContent>
-      <CardFooter>
-        <Button onClick={testFirebase} disabled={isLoading} className="w-full">
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Probando...
-            </>
-          ) : (
-            "Probar Firebase"
-          )}
-        </Button>
-      </CardFooter>
-    </Card>
+
+        {result && (
+          <div className="mt-2 p-3 bg-green-100 border border-green-300 rounded">
+            <p className="font-bold text-green-800">Connection successful!</p>
+            <p>Write ID: {result.writeId}</p>
+            <p>Read {result.documents.length} documents</p>
+
+            <details className="mt-2">
+              <summary className="cursor-pointer">View document data</summary>
+              <pre className="mt-2 p-2 bg-gray-100 rounded overflow-auto text-xs">
+                {JSON.stringify(result.documents, null, 2)}
+              </pre>
+            </details>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
