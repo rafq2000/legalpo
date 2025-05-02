@@ -8,12 +8,13 @@ export const runtime = "nodejs"
 export async function POST(request: Request) {
   try {
     // Debug logging
-    console.log("Firebase event API called")
+    console.log("🔥 Firebase event API called")
 
     const body = await request.json()
     const { tipo, datos } = body
 
     if (!tipo) {
+      console.error("❌ Error: Event type is required")
       return NextResponse.json(
         {
           success: false,
@@ -25,13 +26,23 @@ export async function POST(request: Request) {
 
     // Verificar que adminDb esté disponible
     if (!adminDb) {
-      console.error("Firebase Admin SDK no está inicializado correctamente")
+      console.error("❌ Error: Firebase Admin SDK no está inicializado correctamente")
+
+      // Verificar variables de entorno críticas
+      const envVars = {
+        FIREBASE_PROJECT_ID: !!process.env.FIREBASE_PROJECT_ID,
+        FIREBASE_CLIENT_EMAIL: !!process.env.FIREBASE_CLIENT_EMAIL,
+        FIREBASE_PRIVATE_KEY: !!process.env.FIREBASE_PRIVATE_KEY,
+      }
+
+      console.error("Variables de entorno disponibles:", envVars)
+
       return NextResponse.json(
         {
           success: false,
           error: "Firebase Admin SDK no está disponible",
-          details:
-            "Verifica las variables de entorno FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL y FIREBASE_PRIVATE_KEY",
+          details: "Verifica las variables de entorno en el servidor",
+          envCheck: envVars,
         },
         { status: 500 },
       )
@@ -45,6 +56,8 @@ export async function POST(request: Request) {
       createdAt: new Date().toISOString(), // Fecha ISO para compatibilidad
     }
 
+    console.log("📝 Guardando evento:", { tipo, timestamp: new Date().toISOString() })
+
     // Agregar documento a Firestore usando Admin SDK
     const docRef = await adminDb.collection("eventos").add(evento)
 
@@ -56,7 +69,7 @@ export async function POST(request: Request) {
       id: docRef.id,
     })
   } catch (error: any) {
-    console.error("Error saving event:", error)
+    console.error("❌ Error saving event:", error)
     // Detailed error logging for debugging
     console.error("Error details:", {
       message: error.message,
@@ -68,6 +81,7 @@ export async function POST(request: Request) {
       {
         success: false,
         error: error.message || "Unknown error",
+        stack: process.env.NODE_ENV !== "production" ? error.stack : undefined,
       },
       { status: 500 },
     )
