@@ -1,51 +1,55 @@
 import { NextResponse } from "next/server"
-import { collection, addDoc, Timestamp } from "firebase/firestore"
-import { getFirestoreInstance } from "@/utils/firebaseClient"
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"
+import { db } from "@/utils/firebaseClient"
 
-// Set the runtime to nodejs instead of edge
-export const runtime = "nodejs" // This is important for Firebase to work properly
+// Specify nodejs runtime for Firebase compatibility
+export const runtime = "nodejs"
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const body = await req.json()
+    // Debug logging
+    console.log("Firebase event API called")
+
+    const body = await request.json()
     const { tipo, datos } = body
 
-    // Get Firestore instance
-    const db = getFirestoreInstance()
-
-    // Debug logging
-    console.log("Firestore instance type:", typeof db)
-    console.log("Firebase config available:", !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
-
-    if (!db) {
-      console.error("Failed to initialize Firestore")
-      return NextResponse.json({ status: "error", message: "Failed to initialize Firestore" }, { status: 500 })
+    if (!tipo) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Event type is required",
+        },
+        { status: 400 },
+      )
     }
 
-    // Create the event object
-    const evento = {
+    // Add a document to Firestore with serverTimestamp
+    const docRef = await addDoc(collection(db, "eventos"), {
       tipo,
       datos: datos || {},
-      timestamp: Timestamp.now(),
-    }
+      timestamp: serverTimestamp(), // Use serverTimestamp instead of client-side timestamp
+    })
 
-    // Add document to Firestore
-    const docRef = await addDoc(collection(db, "eventos"), evento)
-
-    console.log(`Event registered successfully: ${tipo}, ID: ${docRef.id}`)
+    console.log(`✅ Event registered successfully: ${tipo}, ID: ${docRef.id}`)
 
     return NextResponse.json({
-      status: "ok",
+      success: true,
       message: "Event registered successfully",
       id: docRef.id,
     })
   } catch (error: any) {
-    console.error("Error registering event in Firestore:", error)
+    console.error("Error saving event:", error)
+    // Detailed error logging for debugging
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      code: error.code,
+    })
+
     return NextResponse.json(
       {
-        status: "error",
-        message: error.message || "Unknown error",
-        stack: process.env.NODE_ENV !== "production" ? error.stack : undefined,
+        success: false,
+        error: error.message || "Unknown error",
       },
       { status: 500 },
     )

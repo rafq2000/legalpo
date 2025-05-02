@@ -1,10 +1,10 @@
-import FirebaseTest from "@/components/firebase-test"
+import TestFirebaseConnection from "@/components/test-firebase-connection"
 
 export default function TestFirebasePage() {
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Firebase Connection Test Page</h1>
-      <FirebaseTest />
+    <div className="container py-8">
+      <h1 className="text-2xl font-bold mb-6">Firebase Connection Testing</h1>
+      <TestFirebaseConnection />
     </div>
   )
 }

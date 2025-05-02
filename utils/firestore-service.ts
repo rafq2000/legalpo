@@ -189,13 +189,7 @@ export async function guardarPreguntaUsuario2({
 // Función para obtener preguntas de usuarios
 export async function obtenerPreguntas(limite = 100) {
   try {
-    const firestore = db()
-    if (!firestore) {
-      console.error("Firestore instance is null")
-      return []
-    }
-
-    const q = query(collection(firestore, "preguntas"), orderBy("timestamp", "desc"), limit(limite))
+    const q = query(collection(db, "preguntas"), orderBy("timestamp", "desc"), limit(limite))
     const snapshot = await getDocs(q)
 
     return snapshot.docs.map((doc) => ({
@@ -339,4 +333,46 @@ export async function registrarEventoPrueba() {
     console.error("Error al registrar evento de prueba:", error)
     return null
   }
+}
+
+// Función para registrar un evento directamente
+export async function registrarEvento(tipo: string, datos: any = {}) {
+  try {
+    const docRef = await addDoc(collection(db, "eventos"), {
+      tipo,
+      datos,
+      timestamp: serverTimestamp(),
+    })
+
+    return { success: true, id: docRef.id }
+  } catch (error) {
+    console.error("Error al registrar evento:", error)
+    return { success: false, error }
+  }
+}
+
+// Función para convertir diferentes formatos de timestamp a Date
+export function convertirTimestamp(timestamp: any): Date {
+  if (!timestamp) return new Date()
+
+  // Si es un Timestamp de Firestore
+  if (timestamp && typeof timestamp.toDate === "function") {
+    try {
+      return timestamp.toDate()
+    } catch (e) {
+      return new Date()
+    }
+  }
+
+  // Si es una cadena ISO
+  if (typeof timestamp === "string") {
+    return new Date(timestamp)
+  }
+
+  // Si ya es un Date
+  if (timestamp instanceof Date) {
+    return timestamp
+  }
+
+  return new Date()
 }
