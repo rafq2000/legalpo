@@ -6,12 +6,8 @@ import type { Metadata } from "next"
 import { FileText, Calculator, MessageSquare, CheckCircle } from "lucide-react"
 import { SiteFooter } from "@/components/site-footer"
 import SuggestionList from "@/components/suggestion-list"
-
-// Añadir las importaciones necesarias
-import { PopularQuestions } from "@/components/popular-questions"
-
-// Añadir la importación
 import { FeaturedQuestion } from "@/components/featured-question"
+import { PopularQuestions } from "@/components/popular-questions"
 
 export const metadata: Metadata = {
   title: "LegalPO - Herramientas legales con IA para documentos y consultas jurídicas en Chile",
