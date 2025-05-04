@@ -22,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/terminos",
     "/terminos-legales",
     "/ayuda-analizador",
-    // Nuevas páginas de contenido legal
+    // Páginas de contenido legal
     "/accidentes-transito",
     "/pension-alimentos",
     "/herencias",

@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   title: "LegalPO - Herramientas legales con inteligencia artificial",
   description: "Herramientas legales con inteligencia artificial para simplificar tus consultas jurídicas en Chile.",
   robots: "index, follow",
+  alternates: {
+    canonical: "https://legalpo.cl",
+  },
     generator: 'v0.dev'
 }
 
