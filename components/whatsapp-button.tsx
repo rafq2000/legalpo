@@ -6,7 +6,10 @@ import { useEffect, useState } from "react"
 
 export function WhatsAppButton() {
   const phoneNumber = "+56961458118"
-  const whatsappUrl = `https://wa.me/${phoneNumber.replace("+", "")}`
+  const message = encodeURIComponent(
+    "Hola, vengo desde LegalPO y necesito ayuda con una consulta legal urgente. ¿Me pueden orientar?",
+  )
+  const whatsappUrl = `https://wa.me/${phoneNumber.replace("+", "")}?text=${message}`
   const [userId, setUserId] = useState<string | null>(null)
 
   // Obtener el ID de usuario al cargar el componente

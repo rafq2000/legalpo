@@ -7,6 +7,12 @@ import { FileText, Calculator, MessageSquare, CheckCircle } from "lucide-react"
 import { SiteFooter } from "@/components/site-footer"
 import SuggestionList from "@/components/suggestion-list"
 
+// Añadir las importaciones necesarias
+import { PopularQuestions } from "@/components/popular-questions"
+
+// Añadir la importación
+import { FeaturedQuestion } from "@/components/featured-question"
+
 export const metadata: Metadata = {
   title: "LegalPO - Herramientas legales con IA para documentos y consultas jurídicas en Chile",
   description:
@@ -134,6 +140,15 @@ export default function Home() {
               <h3 className="text-xl font-semibold text-blue-900 mb-2">Ayuda inmediata</h3>
               <p className="text-gray-600">Respuestas al instante, sin esperas ni trámites complicados.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sección de consulta destacada */}
+      <section className="py-8 bg-gray-50">
+        <div className="container px-4 mx-auto">
+          <div className="max-w-3xl mx-auto">
+            <FeaturedQuestion />
           </div>
         </div>
       </section>
@@ -383,6 +398,14 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Sección de consultas populares */}
+      <section className="py-8">
+        <div className="container px-4 mx-auto">
+          <h2 className="text-2xl font-bold text-blue-900 mb-4">Consultas Populares</h2>
+          <PopularQuestions />
         </div>
       </section>
 
