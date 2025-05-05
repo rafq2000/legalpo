@@ -14,9 +14,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { AdUnit } from "@/components/ad-unit"
-import { useAction } from "@/hooks/use-action"
-import { UpgradeModal } from "@/components/upgrade-modal"
-import { ActionsCounter } from "@/components/actions-counter"
 
 export default function CalculadoraPensionesPage() {
   // Estado para el valor del ingreso mínimo mensual (IMM) y UTM
@@ -60,9 +57,6 @@ export default function CalculadoraPensionesPage() {
   const [detalleCalculo, setDetalleCalculo] = useState<string[]>([])
   const [activeTab, setActiveTab] = useState("datos") // Para manejar pestañas
 
-  // Hook para controlar acciones
-  const { triggerAction } = useAction()
-
   // Cargar valores actualizados al iniciar
   useEffect(() => {
     const cargarValores = async () => {
@@ -93,21 +87,6 @@ export default function CalculadoraPensionesPage() {
   }
 
   // Función para calcular la pensión alimenticia
-  const handleCalcularPension = () => {
-    // Validación de entrada de datos
-    if (ingresoAlimentante <= 0) {
-      alert("El ingreso del alimentante debe ser mayor a cero")
-      return
-    }
-
-    triggerAction("calcular_pension", calcularPension, {
-      ingresoAlimentante,
-      ingresoCuidador,
-      numHijos,
-    })
-  }
-
-  // Función real de cálculo
   const calcularPension = () => {
     const detalles: string[] = []
 
@@ -263,9 +242,6 @@ export default function CalculadoraPensionesPage() {
 
   return (
     <div className="container mx-auto py-6">
-      {/* Modal de upgrade */}
-      <UpgradeModal />
-
       {/* Anuncio al inicio de la página */}
       <AdUnit slot="1234567890" format="horizontal" className="mb-6" />
 
@@ -282,9 +258,6 @@ export default function CalculadoraPensionesPage() {
           <CardDescription className="text-center">
             Basada en la Ley 14.908 actualizada y el Código Civil
           </CardDescription>
-          <div className="flex justify-center mt-2">
-            <ActionsCounter />
-          </div>
         </CardHeader>
         <CardContent className="p-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -628,7 +601,7 @@ export default function CalculadoraPensionesPage() {
             </div>
 
             <Button
-              onClick={handleCalcularPension}
+              onClick={calcularPension}
               className="w-full bg-blue-600 text-primary-foreground py-3 rounded-lg hover:bg-blue-700 font-semibold transition"
             >
               Calcular Pensión

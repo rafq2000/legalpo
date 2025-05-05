@@ -23,10 +23,6 @@ import { ShareButton } from "@/components/share-button"
 // Add the import for guardarPreguntaUsuario at the top of the file
 import { guardarPreguntaUsuario } from "@/utils/firestore-service"
 
-// Importar el hook useActionGate y el componente ActionGateModal al inicio del archivo:
-import { useActionGate } from "@/contexts/action-gate-context"
-import { ActionGateModal } from "@/components/action-gate-modal"
-
 // Define the Message type
 interface Message {
   role: string
@@ -50,9 +46,6 @@ export default function AskPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-
-  // Añadir el uso del hook dentro del componente:
-  const { actionsRemainingBeforeRegister, incrementActionUse, setShowRegisterModal } = useActionGate()
 
   useEffect(() => {
     // Verificar si el usuario está autenticado
@@ -91,21 +84,8 @@ export default function AskPage() {
     )
   }
 
-  // Modificar la función handleSubmit para verificar las acciones disponibles:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    // Si el usuario no está autenticado y no tiene acciones disponibles
-    if (status !== "authenticated" && actionsRemainingBeforeRegister <= 0) {
-      setShowRegisterModal(true)
-      return
-    }
-
-    // Si el usuario no está autenticado, incrementar el contador de acciones
-    if (status !== "authenticated") {
-      incrementActionUse()
-    }
-
     if (!input.trim()) return
 
     const userMessage: Message = { role: "user", content: input }
@@ -393,7 +373,6 @@ export default function AskPage() {
       </main>
 
       <SiteFooter />
-      <ActionGateModal />
     </div>
   )
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
-import { db } from "@/lib/firebase/client" // Asegúrate que la ruta sea correcta
+import { db } from "@/utils/firebaseClient"
 import { collection, addDoc, serverTimestamp } from "firebase/firestore"
 import { getAnalytics, logEvent } from "firebase/analytics"
 import { useSession } from "next-auth/react"

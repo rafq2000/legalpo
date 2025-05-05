@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ChevronLeft, ChevronRight, Printer, Download } from "lucide-react"
@@ -17,9 +17,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { TextToSpeech } from "@/components/text-to-speech"
-import { useActionGate } from "@/contexts/action-gate-context"
-import { ActionGateModal } from "@/components/action-gate-modal"
-import { useSession } from "next-auth/react"
 
 // Función para convertir números a palabras en español
 function numeroALetras(numero: number): string {
@@ -101,19 +98,6 @@ export default function ContratoArriendoPage() {
   })
 
   const [showPreview, setShowPreview] = useState(false)
-  const [actionChecked, setActionChecked] = useState(false)
-
-  const { data: session } = useSession()
-  const { incrementAction } = useActionGate()
-
-  // Verificar si el usuario está autenticado o si aún tiene acciones disponibles
-  useEffect(() => {
-    // Solo verificamos una vez al cargar la página
-    if (!actionChecked && !session) {
-      setActionChecked(true)
-      // No incrementamos la acción aquí, solo al generar el contrato
-    }
-  }, [session, actionChecked])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -129,14 +113,6 @@ export default function ContratoArriendoPage() {
       setStep(step + 1)
       window.scrollTo(0, 0)
     } else {
-      // Si el usuario no está autenticado, verificamos si puede realizar esta acción
-      if (!session) {
-        const canProceed = incrementAction()
-        if (!canProceed) {
-          return // El modal se mostrará automáticamente
-        }
-      }
-
       setShowPreview(true)
     }
   }
@@ -913,7 +889,6 @@ export default function ContratoArriendoPage() {
       </main>
 
       <SiteFooter />
-      <ActionGateModal />
     </div>
   )
 }

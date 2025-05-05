@@ -1,3 +1,4 @@
+import { db } from "./firebaseClient"
 import {
   collection,
   addDoc,
@@ -9,12 +10,12 @@ import {
   orderBy,
   limit,
 } from "firebase/firestore"
-import { db } from "@/lib/firebase/client" // Asegúrate que la ruta sea correcta
 
 // Función para verificar si Firestore está disponible
 const isFirestoreAvailable = () => {
   try {
-    return !!db
+    const firestore = db()
+    return !!firestore
   } catch (error) {
     if (process.env.NODE_ENV !== "production") {
       console.error("Firestore no está disponible:", error)
@@ -290,12 +291,13 @@ export async function verificarConexionFirestore(): Promise<boolean> {
 // Función para obtener todos los eventos sin límite
 export async function obtenerTodosEventos() {
   try {
-    if (!db) {
+    const firestore = db()
+    if (!firestore) {
       console.error("Firestore instance is null")
       return []
     }
 
-    const q = query(collection(db, "eventos"), orderBy("timestamp", "desc"), limit(100))
+    const q = query(collection(firestore, "eventos"), orderBy("timestamp", "desc"), limit(100))
     const snapshot = await getDocs(q)
 
     return snapshot.docs.map((doc) => ({
@@ -311,12 +313,13 @@ export async function obtenerTodosEventos() {
 // Función para registrar un evento de prueba
 export async function registrarEventoPrueba() {
   try {
-    if (!db) {
+    const firestore = db()
+    if (!firestore) {
       console.error("Firestore instance is null")
       return null
     }
 
-    const docRef = await addDoc(collection(db, "eventos"), {
+    const docRef = await addDoc(collection(firestore, "eventos"), {
       tipo: "test_event",
       datos: {
         mensaje: "Este es un evento de prueba",

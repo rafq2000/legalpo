@@ -14,11 +14,6 @@ import { cn } from "@/lib/utils"
 // Añadir la importación del componente AdUnit al inicio del archivo
 import { AdUnit } from "@/components/ad-unit"
 
-// Importar el hook useActionGate y el componente ActionGateModal al inicio del archivo:
-import { useActionGate } from "@/contexts/action-gate-context"
-import { ActionGateModal } from "@/components/action-gate-modal"
-import { useSession } from "next-auth/react"
-
 // Tipos
 interface FiniquitoFormData {
   causalTermino: string
@@ -79,10 +74,6 @@ export default function CalculadoraFiniquito() {
   const [showHelp, setShowHelp] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Añadir el uso del hook dentro del componente:
-  const { actionsRemainingBeforeRegister, incrementActionUse, setShowRegisterModal } = useActionGate()
-  const { data: session } = useSession()
-
   // Opciones de causales
   const causalesOptions = [
     { value: "art159-2", label: "Art. 159 número 2: Renuncia" },
@@ -108,20 +99,9 @@ export default function CalculadoraFiniquito() {
     setExpandedDetails((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
   }
 
-  // Modificar la función calcularFiniquito para verificar las acciones disponibles:
+  // Función para calcular el finiquito
   const calcularFiniquito = () => {
     setError(null) // Limpiar errores previos
-
-    // Si el usuario no está autenticado y no tiene acciones disponibles
-    if (!session && actionsRemainingBeforeRegister <= 0) {
-      setShowRegisterModal(true)
-      return
-    }
-
-    // Si el usuario no está autenticado, incrementar el contador de acciones
-    if (!session) {
-      incrementActionUse()
-    }
 
     if (!validarFormulario()) {
       return
@@ -1142,7 +1122,6 @@ export default function CalculadoraFiniquito() {
       <div className="mt-8">
         <AdUnit slot="1234567890" format="rectangle" />
       </div>
-      <ActionGateModal />
     </div>
   )
 }

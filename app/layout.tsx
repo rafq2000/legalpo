@@ -14,8 +14,6 @@ import { ForceLightTheme } from "@/components/force-light-theme"
 import { cn } from "@/lib/utils"
 import FirebaseTracker from "@/components/firebase-tracker"
 import { WhatsAppButton } from "@/components/whatsapp-button"
-import { ActionGateProvider } from "@/contexts/action-gate-context"
-import { ActionGateModal } from "@/components/action-gate-modal"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -38,38 +36,34 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={cn("min-h-screen bg-background font-sans antialiased")}>
         <Providers>
-          <ActionGateProvider>
-            <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-              <ForceLightTheme />
-              {children}
-              <Toaster />
-              <Analytics />
-              <Suspense fallback={null}>
-                <AnalyticsTracker />
-              </Suspense>
-              <Suspense fallback={null}>
-                <CookieConsentBanner />
-              </Suspense>
-              <Suspense fallback={null}>
-                <FirebaseTracker />
-              </Suspense>
-              <Suspense fallback={null}>
-                <WhatsAppButton />
-              </Suspense>
-              <Suspense fallback={null}>
-                <ActionGateModal />
-              </Suspense>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+            <ForceLightTheme />
+            {/* Resto de componentes existentes */}
+            {children}
+            <Toaster />
+            <Analytics />
+            <Suspense fallback={null}>
+              <AnalyticsTracker />
+            </Suspense>
+            <Suspense fallback={null}>
+              <CookieConsentBanner />
+            </Suspense>
+            <Suspense fallback={null}>
+              <FirebaseTracker />
+            </Suspense>
+            <Suspense fallback={null}>
+              <WhatsAppButton />
+            </Suspense>
 
-              {/* Google AdSense Script */}
-              <Script
-                id="google-adsense"
-                async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3753519605655251"
-                strategy="lazyOnload"
-                crossOrigin="anonymous"
-              />
-            </ThemeProvider>
-          </ActionGateProvider>
+            {/* Google AdSense Script */}
+            <Script
+              id="google-adsense"
+              async
+              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3753519605655251"
+              strategy="lazyOnload"
+              crossOrigin="anonymous"
+            />
+          </ThemeProvider>
         </Providers>
       </body>
     </html>

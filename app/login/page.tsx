@@ -13,14 +13,12 @@ import { Shield, Mail, Lock, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
-import { useActionGate } from "@/contexts/action-gate-context"
 
 export default function LoginPage() {
   const router = useRouter()
   const { data: session, status } = useSession()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams?.get("callbackUrl") || "/"
-  const { resetActions } = useActionGate()
 
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState("")
@@ -69,7 +67,6 @@ export default function LoginPage() {
         setError("Credenciales incorrectas. Por favor, intenta de nuevo.")
       } else {
         // Redirigir al usuario después de iniciar sesión exitosamente
-        resetActions()
         router.push(callbackUrl)
       }
     } catch (error) {
@@ -77,12 +74,6 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  // Resetear el contador cuando el usuario inicia sesión exitosamente
-  const handleSuccessfulLogin = () => {
-    resetActions()
-    // Resto de la lógica de login...
   }
 
   return (

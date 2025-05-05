@@ -11,12 +11,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { useActionGate } from "@/contexts/action-gate-context"
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { resetActions } = useActionGate()
 
   const [isLoading, setIsLoading] = useState(false)
   const [name, setName] = useState("")
@@ -26,13 +23,6 @@ export default function RegisterPage() {
   const [error, setError] = useState("")
   const [waitingList, setWaitingList] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
-  const [acceptTerms, setAcceptTerms] = useState(false)
-
-  // Resetear el contador cuando el usuario se registra exitosamente
-  const handleSuccessfulRegistration = () => {
-    resetActions()
-    // Resto de la lógica de registro...
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,11 +34,6 @@ export default function RegisterPage() {
 
     if (password !== confirmPassword) {
       setError("Las contraseñas no coinciden")
-      return
-    }
-
-    if (!acceptTerms) {
-      setError("Debes aceptar los términos y política de privacidad")
       return
     }
 
@@ -86,9 +71,6 @@ export default function RegisterPage() {
 
         // Guardar en localStorage para mantener la sesión
         localStorage.setItem("user", JSON.stringify(mockUser))
-
-        // Resetear el contador de acciones
-        resetActions()
 
         // Redirigir al usuario
         router.push("/")
@@ -243,23 +225,6 @@ export default function RegisterPage() {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                   </div>
-                </div>
-                <div className="flex items-center space-x-2 mt-2">
-                  <Checkbox
-                    id="terms"
-                    checked={acceptTerms}
-                    onCheckedChange={(checked) => setAcceptTerms(checked === true)}
-                  />
-                  <label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer">
-                    Acepto la{" "}
-                    <Link href="/privacidad" className="underline">
-                      política de privacidad
-                    </Link>{" "}
-                    y{" "}
-                    <Link href="/terminos" className="underline">
-                      términos de uso
-                    </Link>
-                  </label>
                 </div>
                 <Button disabled={isLoading} type="submit" className="bg-primary text-primary-foreground">
                   {isLoading ? "Creando cuenta..." : "Crear cuenta"}
