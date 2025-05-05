@@ -14,6 +14,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { AdUnit } from "@/components/ad-unit"
+import { useAction } from "@/hooks/use-action"
+import { UpgradeModal } from "@/components/upgrade-modal"
 
 export default function CalculadoraPensionesPage() {
   // Estado para el valor del ingreso mínimo mensual (IMM) y UTM
@@ -57,6 +59,9 @@ export default function CalculadoraPensionesPage() {
   const [detalleCalculo, setDetalleCalculo] = useState<string[]>([])
   const [activeTab, setActiveTab] = useState("datos") // Para manejar pestañas
 
+  // Hook para controlar acciones
+  const { triggerAction } = useAction()
+
   // Cargar valores actualizados al iniciar
   useEffect(() => {
     const cargarValores = async () => {
@@ -87,6 +92,15 @@ export default function CalculadoraPensionesPage() {
   }
 
   // Función para calcular la pensión alimenticia
+  const handleCalcularPension = () => {
+    triggerAction("calcular_pension", calcularPension, {
+      ingresoAlimentante,
+      ingresoCuidador,
+      numHijos,
+    })
+  }
+
+  // Función real de cálculo
   const calcularPension = () => {
     const detalles: string[] = []
 
@@ -242,6 +256,9 @@ export default function CalculadoraPensionesPage() {
 
   return (
     <div className="container mx-auto py-6">
+      {/* Modal de upgrade */}
+      <UpgradeModal />
+
       {/* Anuncio al inicio de la página */}
       <AdUnit slot="1234567890" format="horizontal" className="mb-6" />
 
@@ -601,7 +618,7 @@ export default function CalculadoraPensionesPage() {
             </div>
 
             <Button
-              onClick={calcularPension}
+              onClick={handleCalcularPension}
               className="w-full bg-blue-600 text-primary-foreground py-3 rounded-lg hover:bg-blue-700 font-semibold transition"
             >
               Calcular Pensión
