@@ -16,6 +16,7 @@ import Link from "next/link"
 import { AdUnit } from "@/components/ad-unit"
 import { useAction } from "@/hooks/use-action"
 import { UpgradeModal } from "@/components/upgrade-modal"
+import { ActionsCounter } from "@/components/actions-counter"
 
 export default function CalculadoraPensionesPage() {
   // Estado para el valor del ingreso mínimo mensual (IMM) y UTM
@@ -93,6 +94,12 @@ export default function CalculadoraPensionesPage() {
 
   // Función para calcular la pensión alimenticia
   const handleCalcularPension = () => {
+    // Validación de entrada de datos
+    if (ingresoAlimentante <= 0) {
+      alert("El ingreso del alimentante debe ser mayor a cero")
+      return
+    }
+
     triggerAction("calcular_pension", calcularPension, {
       ingresoAlimentante,
       ingresoCuidador,
@@ -275,6 +282,9 @@ export default function CalculadoraPensionesPage() {
           <CardDescription className="text-center">
             Basada en la Ley 14.908 actualizada y el Código Civil
           </CardDescription>
+          <div className="flex justify-center mt-2">
+            <ActionsCounter />
+          </div>
         </CardHeader>
         <CardContent className="p-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

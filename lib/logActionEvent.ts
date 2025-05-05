@@ -1,28 +1,17 @@
-import { getFirestore, collection, addDoc } from "firebase/firestore"
-import { app } from "./firebase"
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"
+import { db } from "./firebase/client"
 
-const db = getFirestore(app)
-
-export interface ActionLog {
-  identifier: string
-  action: string
-  route?: string
-  createdAt: string
-  isAuthenticated: boolean
-  metadata?: Record<string, any>
-}
-
-export async function logActionEvent(data: Omit<ActionLog, "createdAt">) {
+export const logActionEvent = async (data: any) => {
   try {
-    const actionsRef = collection(db, "actionLogs") // Ahora usamos db correctamente
-    await addDoc(actionsRef, {
+    // Usar correctamente db como primer argumento de collection()
+    const docRef = await addDoc(collection(db, "actionLogs"), {
       ...data,
-      createdAt: new Date().toISOString(),
+      timestamp: serverTimestamp(),
     })
-    console.log("Acción registrada correctamente")
-    return true
+    console.log("Acción registrada correctamente con ID:", docRef.id)
+    return docRef.id
   } catch (error) {
     console.error("Error al registrar evento en Firestore:", error)
-    return false
+    return null
   }
 }

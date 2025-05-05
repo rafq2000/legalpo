@@ -1,104 +1,100 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { logActionEvent } from "@/lib/logActionEvent"
-import { getAnonymousIdentifier } from "@/lib/getAnonymousIdentifier"
-import { collection, query, where, getDocs, getFirestore } from "firebase/firestore"
-import { app } from "@/lib/firebase"
+import { trackAction, getLocalActions } from "@/utils/action-tracker"
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore"
+import { db } from "@/lib/firebase/client"
 
-const MAX_DAILY_ACTIONS = 3
-const db = getFirestore(app)
+// Número máximo de acciones gratuitas
+const MAX_FREE_ACTIONS = 2
 
-export function useActionGate() {
+export const useActionGate = () => {
   const { data: session } = useSession()
   const [actionsUsed, setActionsUsed] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
-  const pathname = usePathname()
+  const [showModal, setShowModal] = useState(false)
 
-  // Obtener el identificador del usuario (email si está autenticado, o un ID anónimo)
-  const getUserIdentifier = async (): Promise<string> => {
-    if (session?.user?.email) {
-      return session.user.email
+  // Obtener un identificador anónimo para usuarios no registrados
+  const getAnonymousId = () => {
+    if (typeof window === "undefined") return null
+
+    let anonId = localStorage.getItem("legalpo_anon_id")
+
+    if (!anonId) {
+      anonId = `anon-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`
+      localStorage.setItem("legalpo_anon_id", anonId)
     }
-    return await getAnonymousIdentifier()
+
+    return anonId
   }
 
-  // Obtener las acciones del usuario para hoy
-  const getUserActionsToday = async (): Promise<number> => {
+  // Obtener acciones del usuario de hoy
+  const getUserActionsToday = async () => {
     try {
-      const identifier = await getUserIdentifier()
+      const identifier = session?.user?.email || getAnonymousId()
+      if (!identifier) return 0
 
-      // Obtener el inicio del día actual
+      // Obtener fecha de inicio del día
       const startOfDay = new Date()
       startOfDay.setHours(0, 0, 0, 0)
 
-      // Consultar acciones del usuario para hoy
-      const q = query(
-        collection(db, "actionLogs"),
-        where("identifier", "==", identifier),
-        where("createdAt", ">=", startOfDay.toISOString()),
-      )
+      // Intentar obtener acciones de Firestore
+      try {
+        const q = query(
+          collection(db, "userActions"),
+          where("identifier", "==", identifier),
+          where("timestamp", ">=", startOfDay.toISOString()),
+          orderBy("timestamp", "desc"),
+        )
 
-      const snapshot = await getDocs(q)
-      return snapshot.size
+        const snapshot = await getDocs(q)
+        return snapshot.size
+      } catch (error) {
+        console.error("Error al obtener acciones de Firestore:", error)
+
+        // Fallback: usar localStorage
+        const localActions = getLocalActions()
+        return localActions.filter((action) => {
+          const actionDate = new Date(action.timestamp)
+          return action.identifier === identifier && actionDate >= startOfDay
+        }).length
+      }
     } catch (error) {
       console.error("Error al obtener acciones del usuario:", error)
       return 0
     }
   }
 
-  // Cargar acciones del día al iniciar o cambiar de usuario
-  useEffect(() => {
-    async function loadTodayActions() {
-      setLoading(true)
-      try {
-        const count = await getUserActionsToday()
-        setActionsUsed(count)
-      } catch (error) {
-        console.error("Error al cargar acciones del día:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
+  // Verificar si el usuario puede realizar una acción
+  const canUseAction = async () => {
+    // Usuario autenticado siempre puede hacer acciones
+    if (session) return true
 
-    loadTodayActions()
-  }, [session])
-
-  // Verificar si el usuario puede usar una acción
-  const canUseAction = async (): Promise<boolean> => {
-    // Si el usuario está autenticado, siempre puede usar acciones
-    if (session?.user) {
-      return true
-    }
-
-    // Si no está autenticado, verificar el límite diario
     try {
+      // Obtener número de acciones usadas hoy
       const count = await getUserActionsToday()
       setActionsUsed(count)
-      return count < MAX_DAILY_ACTIONS
+
+      // Permitir hasta MAX_FREE_ACTIONS acciones gratuitas
+      return count < MAX_FREE_ACTIONS
     } catch (error) {
-      console.error("Error al verificar acciones disponibles:", error)
-      return false
+      console.error("Error al verificar acciones:", error)
+      return true // En caso de error, permitir la acción
     }
   }
 
   // Registrar una acción
-  const logAction = async (actionType: string, metadata?: Record<string, any>): Promise<void> => {
+  const logAction = async () => {
     try {
-      const identifier = await getUserIdentifier()
+      const identifier = session?.user?.email || getAnonymousId()
 
-      await logActionEvent({
+      await trackAction("free_action", {
         identifier,
-        action: actionType,
-        route: pathname,
-        isAuthenticated: !!session?.user,
-        metadata,
+        isAuthenticated: !!session,
+        timestamp: new Date().toISOString(),
       })
 
-      // Actualizar el contador local
       setActionsUsed((prev) => prev + 1)
     } catch (error) {
       console.error("Error al registrar acción:", error)
@@ -106,37 +102,69 @@ export function useActionGate() {
   }
 
   // Ejecutar una acción verificando primero si está permitida
-  const triggerAction = async (
-    actionType: string,
-    callback: () => void,
-    metadata?: Record<string, any>,
-  ): Promise<void> => {
-    const allowed = await canUseAction()
+  const triggerAction = async (action: () => void | Promise<any>) => {
+    if (loading) return false
 
-    if (allowed) {
-      // Si está permitido, ejecutar la acción y registrarla
-      await logAction(actionType, metadata)
-      callback()
-    } else {
-      // Si no está permitido, mostrar el modal de upgrade
-      setShowUpgradeModal(true)
+    try {
+      const canUse = await canUseAction()
+
+      if (canUse) {
+        // Registrar la acción primero
+        await logAction()
+
+        // Verificar si esta fue la última acción gratuita
+        const updatedCount = session ? 0 : actionsUsed + 1
+        setActionsUsed(updatedCount)
+
+        // Ejecutar la acción solicitada
+        const result = await action()
+
+        // Si no hay usuario y se alcanzó el límite, mostrar modal DESPUÉS
+        // de completar la acción (esto permite que vean la respuesta primero)
+        if (!session && updatedCount >= MAX_FREE_ACTIONS) {
+          setTimeout(() => {
+            setShowModal(true)
+          }, 1500) // Pequeño retraso para que vean el resultado primero
+        }
+
+        return result
+      } else {
+        // Mostrar modal de registro si ya excedió el límite
+        setShowModal(true)
+        return false
+      }
+    } catch (error) {
+      console.error("Error al ejecutar acción:", error)
+      return false
     }
   }
 
-  // Resetear el contador de acciones (útil después de un registro exitoso)
-  const resetActions = () => {
-    setActionsUsed(0)
-  }
+  // Verificar acciones al cargar
+  useEffect(() => {
+    const checkActions = async () => {
+      setLoading(true)
+      try {
+        if (!session) {
+          const count = await getUserActionsToday()
+          setActionsUsed(count)
+        }
+      } catch (error) {
+        console.error("Error al verificar acciones:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    checkActions()
+  }, [session])
 
   return {
-    canUseAction,
-    logAction,
     triggerAction,
+    canUseAction,
     actionsUsed,
-    actionsRemaining: session?.user ? Number.POSITIVE_INFINITY : Math.max(0, MAX_DAILY_ACTIONS - actionsUsed),
+    actionsRemaining: session ? Number.POSITIVE_INFINITY : Math.max(0, MAX_FREE_ACTIONS - actionsUsed),
     loading,
-    showUpgradeModal,
-    setShowUpgradeModal,
-    resetActions,
+    showModal,
+    setShowModal,
   }
 }

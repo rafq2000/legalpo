@@ -1,24 +1,25 @@
 "use client"
 
 import { useState } from "react"
-import { useActionGate } from "@/hooks/use-action-gate"
+import { useActionGate } from "./use-action-gate"
 
 export function useAction() {
-  const { triggerAction, actionsRemaining } = useActionGate()
-  const [isExecuting, setIsExecuting] = useState(false)
+  const { triggerAction, actionsRemaining, loading } = useActionGate()
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const executeAction = async (actionType: string, callback: () => void, metadata?: Record<string, any>) => {
-    setIsExecuting(true)
+    setIsProcessing(true)
     try {
       await triggerAction(actionType, callback, metadata)
     } finally {
-      setIsExecuting(false)
+      setIsProcessing(false)
     }
   }
 
   return {
     triggerAction: executeAction,
     actionsRemaining,
-    isExecuting,
+    loading: loading || isProcessing,
+    hasAvailableActions: actionsRemaining > 0 || actionsRemaining === Number.POSITIVE_INFINITY,
   }
 }

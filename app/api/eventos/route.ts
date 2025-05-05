@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server"
-import { guardarEvento } from "@/utils/firestore-service"
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"
+import { db } from "@/lib/firebase/client" // Asegúrate que la ruta sea correcta
 import { getServerSession } from "next-auth/next"
 import { cookies } from "next/headers"
+
+export const runtime = "nodejs" // Añadimos esto para evitar problemas con crypto en Edge Runtime
 
 export async function POST(request: Request) {
   try {
@@ -38,12 +41,21 @@ export async function POST(request: Request) {
 
     // Guardar evento en Firestore
     try {
-      const eventoId = await guardarEvento(tipo, datos, userId, sessionId)
+      const eventoDoc = {
+        tipo,
+        datos,
+        userId,
+        sessionId,
+        timestamp: serverTimestamp(),
+        createdAt: new Date().toISOString(),
+      }
+
+      const docRef = await addDoc(collection(db, "eventos"), eventoDoc)
 
       return NextResponse.json({
         success: true,
         message: `Evento "${tipo}" registrado correctamente`,
-        id: eventoId,
+        id: docRef.id,
       })
     } catch (error: any) {
       if (process.env.NODE_ENV !== "production") {
