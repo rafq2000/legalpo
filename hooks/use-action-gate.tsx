@@ -2,34 +2,61 @@
 
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { logActionEvent } from "@/lib/logActionEvent"
-import { getUserActionsToday } from "@/lib/getUserActionsToday"
 import { useSession } from "next-auth/react"
+import { logActionEvent } from "@/lib/logActionEvent"
+import { getAnonymousIdentifier } from "@/lib/getAnonymousIdentifier"
+import { collection, query, where, getDocs, getFirestore } from "firebase/firestore"
+import { app } from "@/lib/firebase"
 
 const MAX_DAILY_ACTIONS = 3
+const db = getFirestore(app)
 
 export function useActionGate() {
   const { data: session } = useSession()
-  const [actionsToday, setActionsToday] = useState<number>(0)
+  const [actionsUsed, setActionsUsed] = useState(0)
   const [loading, setLoading] = useState(true)
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const pathname = usePathname()
 
-  const uid = session?.user?.email || null
+  // Obtener el identificador del usuario (email si está autenticado, o un ID anónimo)
+  const getUserIdentifier = async (): Promise<string> => {
+    if (session?.user?.email) {
+      return session.user.email
+    }
+    return await getAnonymousIdentifier()
+  }
+
+  // Obtener las acciones del usuario para hoy
+  const getUserActionsToday = async (): Promise<number> => {
+    try {
+      const identifier = await getUserIdentifier()
+
+      // Obtener el inicio del día actual
+      const startOfDay = new Date()
+      startOfDay.setHours(0, 0, 0, 0)
+
+      // Consultar acciones del usuario para hoy
+      const q = query(
+        collection(db, "actionLogs"),
+        where("identifier", "==", identifier),
+        where("createdAt", ">=", startOfDay.toISOString()),
+      )
+
+      const snapshot = await getDocs(q)
+      return snapshot.size
+    } catch (error) {
+      console.error("Error al obtener acciones del usuario:", error)
+      return 0
+    }
+  }
 
   // Cargar acciones del día al iniciar o cambiar de usuario
   useEffect(() => {
     async function loadTodayActions() {
-      if (!uid) {
-        setActionsToday(0)
-        setLoading(false)
-        return
-      }
-
       setLoading(true)
       try {
-        const actions = await getUserActionsToday(uid)
-        setActionsToday(actions.length)
+        const count = await getUserActionsToday()
+        setActionsUsed(count)
       } catch (error) {
         console.error("Error al cargar acciones del día:", error)
       } finally {
@@ -38,53 +65,78 @@ export function useActionGate() {
     }
 
     loadTodayActions()
-  }, [uid])
+  }, [session])
 
+  // Verificar si el usuario puede usar una acción
   const canUseAction = async (): Promise<boolean> => {
-    if (!uid) return false
-
-    // Si ya tenemos el conteo cargado, usamos ese valor
-    if (!loading) {
-      return actionsToday < MAX_DAILY_ACTIONS
+    // Si el usuario está autenticado, siempre puede usar acciones
+    if (session?.user) {
+      return true
     }
 
-    // Si no, consultamos directamente
+    // Si no está autenticado, verificar el límite diario
     try {
-      const actions = await getUserActionsToday(uid)
-      const canUse = actions.length < MAX_DAILY_ACTIONS
-      setActionsToday(actions.length)
-      return canUse
+      const count = await getUserActionsToday()
+      setActionsUsed(count)
+      return count < MAX_DAILY_ACTIONS
     } catch (error) {
       console.error("Error al verificar acciones disponibles:", error)
       return false
     }
   }
 
+  // Registrar una acción
   const logAction = async (actionType: string, metadata?: Record<string, any>): Promise<void> => {
-    if (!uid) return
-
     try {
+      const identifier = await getUserIdentifier()
+
       await logActionEvent({
-        uid,
+        identifier,
         action: actionType,
         route: pathname,
+        isAuthenticated: !!session?.user,
         metadata,
       })
 
       // Actualizar el contador local
-      setActionsToday((prev) => prev + 1)
+      setActionsUsed((prev) => prev + 1)
     } catch (error) {
       console.error("Error al registrar acción:", error)
     }
   }
 
+  // Ejecutar una acción verificando primero si está permitida
+  const triggerAction = async (
+    actionType: string,
+    callback: () => void,
+    metadata?: Record<string, any>,
+  ): Promise<void> => {
+    const allowed = await canUseAction()
+
+    if (allowed) {
+      // Si está permitido, ejecutar la acción y registrarla
+      await logAction(actionType, metadata)
+      callback()
+    } else {
+      // Si no está permitido, mostrar el modal de upgrade
+      setShowUpgradeModal(true)
+    }
+  }
+
+  // Resetear el contador de acciones (útil después de un registro exitoso)
+  const resetActions = () => {
+    setActionsUsed(0)
+  }
+
   return {
     canUseAction,
     logAction,
-    actionsToday,
-    actionsRemaining: Math.max(0, MAX_DAILY_ACTIONS - actionsToday),
+    triggerAction,
+    actionsUsed,
+    actionsRemaining: session?.user ? Number.POSITIVE_INFINITY : Math.max(0, MAX_DAILY_ACTIONS - actionsUsed),
     loading,
     showUpgradeModal,
     setShowUpgradeModal,
+    resetActions,
   }
 }
