@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/site-footer"
 import SuggestionList from "@/components/suggestion-list"
 import { FeaturedQuestion } from "@/components/featured-question"
 import { PopularQuestions } from "@/components/popular-questions"
+import { AdUnit } from "@/components/ad-unit"
 
 export const metadata: Metadata = {
   title: "LegalPO - Herramientas legales con IA para documentos y consultas jurídicas en Chile",
@@ -95,17 +96,7 @@ export default function Home() {
 
       <section className="py-4 bg-white border-b border-gray-200">
         <div className="container px-4 mx-auto">
-          <div className="flex items-center justify-between bg-gray-100 rounded-lg p-4">
-            <div className="flex-1">
-              <p className="text-sm text-gray-500 font-medium">Publicidad</p>
-              <div className="h-16 flex items-center">
-                <p className="text-gray-700">Espacio publicitario - Banner horizontal principal</p>
-              </div>
-            </div>
-            <Button variant="outline" size="sm" className="text-xs">
-              Anunciar aquí
-            </Button>
-          </div>
+          <AdUnit slot="1234567890" format="horizontal" responsive={true} position="header" />
         </div>
       </section>
 
@@ -185,15 +176,7 @@ export default function Home() {
 
               <div className="lg:w-1/3">
                 <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-full">
-                  <div className="p-4 bg-gray-100 border-b border-gray-200">
-                    <p className="text-sm text-gray-500 font-medium">Publicidad</p>
-                  </div>
-                  <div className="p-6 flex flex-col justify-center items-center h-[calc(100%-56px)]">
-                    <p className="text-gray-700 text-center mb-4">Espacio publicitario - Banner lateral</p>
-                    <Button variant="outline" size="sm" className="text-xs">
-                      Anunciar aquí
-                    </Button>
-                  </div>
+                  <AdUnit slot="2345678901" format="rectangle" responsive={false} position="sidebar" />
                 </div>
               </div>
             </div>

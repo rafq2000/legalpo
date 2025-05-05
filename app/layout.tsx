@@ -55,13 +55,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <WhatsAppButton />
             </Suspense>
 
-            {/* Google AdSense Script - Properly implemented */}
+            {/* Google AdSense Script - Implementación corregida */}
             <Script
               id="google-adsense"
+              strategy="afterInteractive"
+              onError={(e) => {
+                console.error("Error al cargar el script de AdSense:", e)
+              }}
+            >
+              {`
+                window.onload = function() {
+                  (adsbygoogle = window.adsbygoogle || []).push({});
+                }
+              `}
+            </Script>
+            <Script
               async
               src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3753519605655251"
-              strategy="beforeInteractive"
               crossOrigin="anonymous"
+              strategy="afterInteractive"
             />
           </ThemeProvider>
         </Providers>

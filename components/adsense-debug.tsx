@@ -1,83 +1,101 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { CheckCircle, XCircle, AlertCircle } from "lucide-react"
 
 export function AdsenseDebug() {
   const [status, setStatus] = useState<"loading" | "success" | "error" | "blocked">("loading")
-  const [message, setMessage] = useState("Verificando la integración de AdSense...")
+  const [message, setMessage] = useState<string>("Verificando AdSense...")
 
   useEffect(() => {
-    // Check if AdSense script is loaded
     const checkAdSense = () => {
-      try {
-        if (window.adsbygoogle) {
-          setStatus("success")
-          setMessage("El script de AdSense se ha cargado correctamente.")
-        } else {
-          // Check if AdBlock might be the issue
-          fetch("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", {
-            method: "HEAD",
-            mode: "no-cors",
-          })
-            .then(() => {
-              setStatus("error")
-              setMessage("El script de AdSense está disponible pero no se ha inicializado correctamente.")
-            })
-            .catch(() => {
+      // Verificar si estamos en el cliente
+      if (typeof window === "undefined") {
+        return
+      }
+
+      // Verificar si el script de AdSense está bloqueado por un bloqueador de anuncios
+      const adBlockDetected = () => {
+        try {
+          const testAd = document.createElement("div")
+          testAd.innerHTML = "&nbsp;"
+          testAd.className = "adsbox"
+          document.body.appendChild(testAd)
+
+          setTimeout(() => {
+            if (testAd.offsetHeight === 0) {
               setStatus("blocked")
-              setMessage(
-                "El script de AdSense parece estar bloqueado. Esto podría ser debido a un bloqueador de anuncios.",
-              )
-            })
+              setMessage("Se ha detectado un bloqueador de anuncios. Desactívalo para ver los anuncios.")
+            } else {
+              // Verificar si adsbygoogle está definido
+              if (window.adsbygoogle) {
+                setStatus("success")
+                setMessage("AdSense está cargado correctamente.")
+              } else {
+                setStatus("error")
+                setMessage("AdSense no se ha cargado correctamente. Verifica la configuración.")
+              }
+            }
+            document.body.removeChild(testAd)
+          }, 100)
+        } catch (e) {
+          console.error("Error al detectar bloqueador de anuncios:", e)
+          setStatus("error")
+          setMessage("Error al verificar AdSense: " + (e instanceof Error ? e.message : String(e)))
         }
-      } catch (error) {
-        setStatus("error")
-        setMessage(`Error al verificar AdSense: ${error instanceof Error ? error.message : String(error)}`)
+      }
+
+      // Esperar a que la página se cargue completamente
+      if (document.readyState === "complete") {
+        adBlockDetected()
+      } else {
+        window.addEventListener("load", adBlockDetected)
+        return () => window.removeEventListener("load", adBlockDetected)
       }
     }
 
-    // Wait a bit to check if AdSense loads
-    const timer = setTimeout(checkAdSense, 2000)
-    return () => clearTimeout(timer)
+    checkAdSense()
   }, [])
 
-  const reloadPage = () => {
-    window.location.reload()
+  if (status === "loading") {
+    return (
+      <Alert className="mb-4 bg-blue-50 border-blue-200">
+        <AlertTitle className="text-blue-800">Verificando AdSense</AlertTitle>
+        <AlertDescription className="text-blue-700">
+          Comprobando si AdSense está cargado correctamente...
+        </AlertDescription>
+      </Alert>
+    )
+  }
+
+  if (status === "success") {
+    return (
+      <Alert className="mb-4 bg-green-50 border-green-200">
+        <AlertTitle className="text-green-800">AdSense está funcionando</AlertTitle>
+        <AlertDescription className="text-green-700">{message}</AlertDescription>
+      </Alert>
+    )
+  }
+
+  if (status === "blocked") {
+    return (
+      <Alert className="mb-4 bg-yellow-50 border-yellow-200">
+        <AlertTitle className="text-yellow-800">Bloqueador de anuncios detectado</AlertTitle>
+        <AlertDescription className="text-yellow-700">{message}</AlertDescription>
+      </Alert>
+    )
   }
 
   return (
-    <Card className="max-w-md mx-auto my-8">
-      <CardHeader>
-        <CardTitle>Diagnóstico de AdSense</CardTitle>
-        <CardDescription>Verificación del estado de integración de Google AdSense</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Alert variant={status === "success" ? "default" : status === "loading" ? "default" : "destructive"}>
-          {status === "success" && <CheckCircle className="h-4 w-4" />}
-          {status === "error" && <XCircle className="h-4 w-4" />}
-          {status === "blocked" && <AlertCircle className="h-4 w-4" />}
-          {status === "loading" && (
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-          )}
-          <AlertTitle>
-            {status === "success" && "AdSense está funcionando"}
-            {status === "error" && "Error en AdSense"}
-            {status === "blocked" && "AdSense bloqueado"}
-            {status === "loading" && "Verificando AdSense"}
-          </AlertTitle>
-          <AlertDescription>{message}</AlertDescription>
-        </Alert>
-
-        <div className="mt-4">
-          <Button onClick={reloadPage} className="w-full">
-            Recargar página
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+    <Alert variant="destructive" className="mb-4">
+      <AlertTitle>Error de AdSense</AlertTitle>
+      <AlertDescription>
+        <p>{message}</p>
+        <Button variant="outline" className="mt-2" onClick={() => window.location.reload()}>
+          Reintentar
+        </Button>
+      </AlertDescription>
+    </Alert>
   )
 }
