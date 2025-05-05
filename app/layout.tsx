@@ -9,11 +9,11 @@ import AnalyticsTracker from "@/components/analytics-tracker"
 import CookieConsentBanner from "@/components/cookie-consent-banner"
 import { Suspense } from "react"
 import { Providers } from "./providers"
-import Script from "next/script"
 import { ForceLightTheme } from "@/components/force-light-theme"
 import { cn } from "@/lib/utils"
 import FirebaseTracker from "@/components/firebase-tracker"
 import { WhatsAppButton } from "@/components/whatsapp-button"
+import { AdsenseScript } from "@/components/adsense-script"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -54,27 +54,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Suspense fallback={null}>
               <WhatsAppButton />
             </Suspense>
-
-            {/* Google AdSense Script - Implementación corregida */}
-            <Script
-              id="google-adsense"
-              strategy="afterInteractive"
-              onError={(e) => {
-                console.error("Error al cargar el script de AdSense:", e)
-              }}
-            >
-              {`
-                window.onload = function() {
-                  (adsbygoogle = window.adsbygoogle || []).push({});
-                }
-              `}
-            </Script>
-            <Script
-              async
-              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3753519605655251"
-              crossOrigin="anonymous"
-              strategy="afterInteractive"
-            />
+            <Suspense fallback={null}>
+              <AdsenseScript />
+            </Suspense>
           </ThemeProvider>
         </Providers>
       </body>
