@@ -1,59 +1,64 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import Script from "next/script"
+import { useEffect, useRef } from "react"
 
 interface AdUnitProps {
   slot: string
-  format?: "auto" | "horizontal" | "vertical" | "rectangle"
+  format: "horizontal" | "rectangle" | "vertical"
+  position: "header" | "footer" | "sidebar" | "content"
   className?: string
-  responsive?: boolean
 }
 
-export function AdUnit({ slot, format = "auto", className = "", responsive = true }: AdUnitProps) {
+export function AdUnit({ slot, format, position, className = "" }: AdUnitProps) {
   const adRef = useRef<HTMLDivElement>(null)
-  const [adLoaded, setAdLoaded] = useState(false)
 
   useEffect(() => {
-    // Solo ejecutar en el cliente y en producción
-    if (typeof window !== "undefined" && process.env.NODE_ENV === "production") {
-      try {
-        // Inicializar el anuncio cuando el componente se monta
-        const adsbygoogle = window.adsbygoogle || []
-        adsbygoogle.push({})
-        setAdLoaded(true)
-      } catch (error) {
-        console.error("Error al cargar el anuncio:", error)
-      }
-    }
-  }, [])
+    try {
+      if (typeof window !== "undefined" && adRef.current && adRef.current.innerHTML === "") {
+        // Create the ad element
+        const adElement = document.createElement("ins")
+        adElement.className = "adsbygoogle"
+        adElement.style.display = "block"
+        adElement.style.width = "100%"
+        adElement.style.height = format === "rectangle" ? "280px" : "auto"
+        adElement.setAttribute("data-ad-client", "ca-pub-3753519605655251")
+        adElement.setAttribute("data-ad-slot", slot)
 
-  // En desarrollo, mostrar un placeholder
-  if (process.env.NODE_ENV !== "production") {
-    return (
-      <div
-        className={`flex justify-center items-center my-4 border border-gray-200 bg-gray-50 rounded ${className}`}
-        style={{ height: "250px", width: "100%", maxWidth: "728px", margin: "0 auto" }}
-      >
-        <p className="text-gray-400 text-sm">Espacio para anuncio (slot: {slot})</p>
-      </div>
-    )
-  }
+        // Set format-specific attributes
+        if (format === "horizontal") {
+          adElement.setAttribute("data-ad-format", "auto")
+          adElement.setAttribute("data-full-width-responsive", "true")
+        }
+
+        // Clear and append the element
+        if (adRef.current.firstChild) {
+          adRef.current.innerHTML = ""
+        }
+        adRef.current.appendChild(adElement)
+
+        // Push the ad
+        try {
+          ;(window.adsbygoogle = window.adsbygoogle || []).push({})
+        } catch (error) {
+          console.error("Error loading ad:", error)
+        }
+      }
+    } catch (error) {
+      console.error("Error initializing ad:", error)
+    }
+  }, [slot, format])
 
   return (
-    <div className={`flex justify-center my-4 ${className}`} ref={adRef}>
-      <div className="text-xs text-gray-400 text-center mb-1">Publicidad</div>
-      <ins
-        className="adsbygoogle"
-        style={{ display: "block", width: "100%", maxWidth: "728px", height: "auto", minHeight: "250px" }}
-        data-ad-client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || "ca-pub-3753519605655251"}
-        data-ad-slot={slot}
-        data-ad-format={format}
-        data-full-width-responsive={responsive ? "true" : "false"}
+    <div className={`ad-container ${position}-ad my-4 ${className}`}>
+      <div className="text-xs text-gray-500 mb-1">Publicidad</div>
+      <div
+        ref={adRef}
+        className="w-full overflow-hidden"
+        style={{
+          minHeight: format === "rectangle" ? "250px" : "100px",
+          background: "rgba(0,0,0,0.02)",
+        }}
       />
-      <Script id={`adsense-init-${slot}`} strategy="afterInteractive">
-        {`(adsbygoogle = window.adsbygoogle || []).push({});`}
-      </Script>
     </div>
   )
 }
