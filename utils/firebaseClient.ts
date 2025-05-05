@@ -1,3 +1,5 @@
+"use client"
+
 import { initializeApp, getApps, getApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
 import { getAuth } from "firebase/auth"
@@ -16,32 +18,46 @@ const firebaseConfig = {
 
 // Initialize Firebase
 let app
-if (!getApps().length) {
-  app = initializeApp(firebaseConfig)
-} else {
-  app = getApp()
-}
-
-// Initialize services
-export const db = () => getFirestore(app)
-export const auth = getAuth(app)
-
-// Initialize Analytics conditionally (only in browser)
+let db
+let auth
 let analytics = null
+
+// Initialize Firebase only on the client-side
 if (typeof window !== "undefined") {
-  isSupported()
-    .then((supported) => {
-      if (supported) {
-        analytics = getAnalytics(app)
-      }
-    })
-    .catch((error) => {
-      console.error("Error initializing analytics:", error)
-    })
+  try {
+    app = getApps().length ? getApp() : initializeApp(firebaseConfig)
+    db = getFirestore(app)
+    auth = getAuth(app)
+
+    // Initialize Analytics conditionally
+    isSupported()
+      .then((supported) => {
+        if (supported) {
+          analytics = getAnalytics(app)
+        } else {
+          console.warn("Firebase Analytics is not supported in this environment")
+        }
+      })
+      .catch((error) => {
+        console.error("Error checking Analytics support:", error)
+      })
+  } catch (error) {
+    console.error("Error initializing Firebase:", error)
+  }
 }
 
-export { analytics }
+// Export the instances directly
+export { app, db, auth, analytics }
 
-// Helper functions for more controlled initialization
-export const getFirebaseApp = () => app
-export const getFirestoreInstance = () => db()
+// Helper function for more controlled initialization (for backward compatibility)
+export const getFirestoreInstance = () => {
+  if (!db && typeof window !== "undefined") {
+    try {
+      const firebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig)
+      db = getFirestore(firebaseApp)
+    } catch (error) {
+      console.error("Error initializing Firestore:", error)
+    }
+  }
+  return db
+}

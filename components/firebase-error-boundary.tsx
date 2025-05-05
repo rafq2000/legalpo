@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
+import { app } from "@/utils/firebaseClient"
 
 interface FirebaseErrorBoundaryProps {
   children: React.ReactNode
@@ -39,20 +40,13 @@ export function FirebaseErrorBoundary({ children }: FirebaseErrorBoundaryProps) 
           return
         }
 
-        // Intentar cargar Firebase dinámicamente
-        try {
-          const { getApp } = await import("firebase/app")
-          try {
-            getApp()
-            setError(null)
-          } catch (appError) {
-            console.error("Error al obtener la app de Firebase:", appError)
-            setError("No se pudo inicializar Firebase. Verifica la configuración.")
-          }
-        } catch (importError) {
-          console.error("Error al importar Firebase:", importError)
-          setError("Error al cargar Firebase. Verifica la conexión a internet.")
+        // Verificar si Firebase está inicializado
+        if (!app) {
+          setError("Firebase no está inicializado correctamente")
+          return
         }
+
+        setError(null)
       } catch (err) {
         console.error("Error general al verificar Firebase:", err)
         setError("Error al verificar Firebase: " + (err instanceof Error ? err.message : String(err)))

@@ -16,6 +16,11 @@ export default function FirebaseTracker() {
   const trackFirestoreEvent = useCallback(
     async (eventName: string, eventData: Record<string, any> = {}) => {
       try {
+        if (!db) {
+          console.error("Firestore no está inicializado")
+          return null
+        }
+
         const eventRef = await addDoc(collection(db, "eventos"), {
           tipo: eventName,
           datos: eventData,

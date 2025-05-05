@@ -388,6 +388,27 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Sección de promoción "¿Quieres una página como esta?" */}
+      <section className="py-12 bg-gradient-to-r from-blue-900 to-blue-800 text-white">
+        <div className="container px-4 mx-auto">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-6">¿Quieres una página como esta?</h2>
+            <p className="text-xl text-blue-100 mb-8">
+              Podemos crear una plataforma similar adaptada a tus necesidades específicas.
+            </p>
+            <Button asChild size="lg" className="bg-green-600 hover:bg-green-700 text-white font-medium text-lg px-8">
+              <a
+                href={`https://wa.me/56964754219?text=${encodeURIComponent("Hola, quiero una página web como LegalPO.")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Contactar ahora
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Footer con mensaje final de empatía */}
       <section className="py-8 bg-white">
         <div className="container px-4 mx-auto">
