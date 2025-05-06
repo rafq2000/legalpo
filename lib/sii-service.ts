@@ -9,11 +9,11 @@ export async function obtenerValorUTM(): Promise<number> {
   try {
     // En un entorno real, aquí se haría una petición al SII
     // Por ahora, retornamos el valor actual conocido
-    // Marzo 2025: $65,287
-    return 65287
+    // Mayo 2025: $66,104
+    return 66104
   } catch (error) {
     console.error("Error al obtener valor UTM:", error)
-    return 65287 // Valor por defecto en caso de error
+    return 66104 // Valor por defecto en caso de error
   }
 }
 
@@ -21,6 +21,6 @@ export async function obtenerValorUTM(): Promise<number> {
  * Obtiene el valor actual del Ingreso Mínimo Mensual
  */
 export function obtenerIngresoMinimo(): number {
-  // Valor actualizado 2025
-  return 510636
+  // Valor actualizado Mayo 2025
+  return 529000
 }

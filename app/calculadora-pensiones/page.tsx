@@ -17,8 +17,8 @@ import { AdUnit } from "@/components/ad-unit"
 
 export default function CalculadoraPensionesPage() {
   // Estado para el valor del ingreso mínimo mensual (IMM) y UTM
-  const [ingresoMinimo, setIngresoMinimo] = useState(510636) // Valor actualizado 2025
-  const [valorUTM, setValorUTM] = useState(65287) // Valor UTM Marzo 2025 (SII)
+  const [ingresoMinimo, setIngresoMinimo] = useState(529000) // Valor actualizado Mayo 2025
+  const [valorUTM, setValorUTM] = useState(66104) // Valor UTM Mayo 2025 (SII)
   const [cargando, setCargando] = useState(false)
 
   // Estados para los inputs del formulario
@@ -585,7 +585,7 @@ export default function CalculadoraPensionesPage() {
               </div>
               <div className="flex items-center justify-between">
                 <Label htmlFor="valorUTM" className="font-semibold">
-                  Valor UTM (Marzo 2025):
+                  Valor UTM (Mayo 2025):
                 </Label>
                 <div className="flex items-center">
                   <span className="mr-2">$</span>
