@@ -24,8 +24,6 @@ export function SiteHeader() {
   // Este useEffect asegura que el componente solo se renderice en el cliente
   useEffect(() => {
     setMounted(true)
-    console.log("Session status:", status)
-    console.log("Session data:", sessionData)
   }, [session, status])
 
   // Función para obtener las iniciales del nombre del usuario
@@ -55,7 +53,7 @@ export function SiteHeader() {
 
         {mounted && status === "authenticated" && sessionData?.user ? (
           <div className="flex items-center gap-4">
-            <span className="text-white font-medium">Bienvenido, {displayName}</span>
+            <span className="text-white font-medium hidden sm:inline">Bienvenido, {displayName}</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">

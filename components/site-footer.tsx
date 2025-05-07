@@ -93,12 +93,17 @@ export function SiteFooter() {
             <p className="text-blue-200">
               <strong>WhatsApp:</strong> +56 9 6145 8118
             </p>
-            <p className="text-blue-200 mt-4">
-              <strong>Datos personales:</strong>{" "}
-              <Link href="/privacidad" className="underline hover:text-white">
-                Derechos ARCO
+            <div className="mt-4 space-y-2">
+              <Link href="/terminos" className="text-blue-200 hover:text-white transition-colors block">
+                Términos y condiciones
               </Link>
-            </p>
+              <Link href="/privacidad" className="text-blue-200 hover:text-white transition-colors block">
+                Política de privacidad
+              </Link>
+              <Link href="/acerca" className="text-blue-200 hover:text-white transition-colors block">
+                Acerca de nosotros
+              </Link>
+            </div>
           </div>
         </div>
 

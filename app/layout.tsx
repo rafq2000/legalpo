@@ -15,6 +15,7 @@ import FirebaseTracker from "@/components/firebase-tracker"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { AdsenseScript } from "@/components/adsense-script"
 import { LawyerContactButton } from "@/components/lawyer-contact-button"
+import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -35,11 +36,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="google-adsense-account" content="ca-pub-3753519605655251" />
       </head>
-      <body className={cn("min-h-screen bg-background font-sans antialiased")}>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", inter.className)}>
         <Providers>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
             <ForceLightTheme />
-            {/* Resto de componentes existentes */}
             {children}
             <Toaster />
             <Analytics />
@@ -61,6 +61,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Suspense fallback={null}>
               <AdsenseScript />
             </Suspense>
+            {/* Structured data for better SEO */}
+            <Script
+              id="structured-data"
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "LegalService",
+                  name: "LegalPO",
+                  description:
+                    "Herramientas legales con inteligencia artificial para simplificar tus consultas jurídicas en Chile.",
+                  url: "https://legalpo.cl",
+                  areaServed: "Chile",
+                  serviceType: "Asesoría legal",
+                }),
+              }}
+            />
           </ThemeProvider>
         </Providers>
       </body>

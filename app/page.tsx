@@ -86,11 +86,14 @@ export default function Home() {
         </div>
       </main>
 
-      <section className="py-4 bg-white border-b border-gray-200">
+      {/* Colocamos el anuncio en una posición más discreta */}
+      <section className="py-8 bg-white border-b border-gray-200">
         <div className="container px-4 mx-auto">
           <AdUnit slot="1234567890" format="horizontal" responsive={true} position="header" />
         </div>
       </section>
+
+      {/* Resto del contenido se mantiene igual */}
 
       {/* Sección de beneficios clave */}
       <section className="py-16 md:py-24 bg-white">
@@ -132,6 +135,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Mantener el resto del contenido igual */}
+
+      {/* Sección de testimonios */}
       <section className="py-16 md:py-24 bg-gradient-to-br from-blue-50 to-blue-100">
         <div className="container px-4 mx-auto">
           <div className="max-w-4xl mx-auto">
@@ -175,6 +181,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Resto del contenido se mantiene igual */}
 
       {/* Tarjetas visuales con funciones claras */}
       <section className="py-16 md:py-24 bg-white">

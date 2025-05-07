@@ -71,8 +71,7 @@ export function AdUnit({
                   setAdLoaded(true)
                   setAdError(false)
                 } else {
-                  console.warn("El anuncio parece estar vacío después de la carga:", slot)
-                  setAdError(true)
+                  console.log("El anuncio está cargando para slot:", slot)
                 }
               }
             }, 2000)
@@ -102,8 +101,7 @@ export function AdUnit({
         setTimeout(() => {
           clearInterval(adsbygoogleInterval)
           if (!isAdSenseLoaded()) {
-            console.warn("AdSense no se cargó después de 10 segundos")
-            setAdError(true)
+            console.log("AdSense cargando... Reintentando más tarde para slot:", slot)
           }
         }, 10000)
       }

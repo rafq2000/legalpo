@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { BetaAnalyticsDataClient } from "@google-analytics/data"
 import { createClient } from "@supabase/supabase-js"
 
+// Create a properly configured analytics client
 const analyticsDataClient = new BetaAnalyticsDataClient({
   credentials: {
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
@@ -18,11 +19,22 @@ export async function GET(request: Request) {
     console.log("🔍 Iniciando solicitud de analytics...")
     console.log(`📊 Usando property ID: ${propertyId}`)
 
+    // Ensure we have a valid property ID
+    if (!propertyId) {
+      return NextResponse.json(
+        {
+          error: "GA4_PROPERTY_ID no está configurado",
+          success: false,
+        },
+        { status: 500 },
+      )
+    }
+
     const [response] = await analyticsDataClient.runReport({
       property: `properties/${propertyId}`,
       dateRanges: [
         {
-          startDate: "2022-01-01", // Datos desde hace 3 años
+          startDate: "30daysAgo", // Datos de los últimos 30 días
           endDate: "today",
         },
       ],
