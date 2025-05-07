@@ -1,27 +1,12 @@
 import { NextResponse } from "next/server"
-import { leyesChile } from "@/lib/leyes-chile"
-import { ResponseCacheService } from "@/lib/response-cache-service"
 import { OpenAI } from "openai"
 
-// Servicio de caché para respuestas
-const cacheService = new ResponseCacheService()
-
 export const runtime = "nodejs"
-
-// Allow responses up to 30 seconds
 export const maxDuration = 30
 
 export async function POST(req: Request) {
   try {
     const { messages, userId = "anonymous" } = await req.json()
-
-    // Verificar si hay una respuesta en caché
-    const cacheKey = `deudas:${JSON.stringify(messages)}`
-    const cachedResponse = await cacheService.getResponse(cacheKey)
-
-    if (cachedResponse) {
-      return NextResponse.json({ response: cachedResponse })
-    }
 
     // Inicializar OpenAI
     const openai = new OpenAI({
@@ -35,8 +20,8 @@ export async function POST(req: Request) {
       
       Utiliza la siguiente información como referencia:
       
-      - Ley 20.720 de Reorganización y Liquidación (${leyesChile["Ley-20720_09-ENE-2014"].titulo})
-      - Código Civil (${leyesChile["DFL-1_30-MAY-2000"].titulo}), artículo ${leyesChile["DFL-1_30-MAY-2000"].articulos["2515"]} sobre prescripción
+      - Ley 20.720 de Reorganización y Liquidación
+      - Código Civil, artículo 2515 sobre prescripción
       - Ley 21.484 sobre Protección de Deudores
       - Ley 19.496 sobre Protección de los Derechos de los Consumidores
       - Ley 18.010 sobre Operaciones de Crédito de Dinero
@@ -48,7 +33,8 @@ export async function POST(req: Request) {
       4. No inventes información legal.
       5. Mantén tus respuestas concisas y directas.
       6. Cuando sea apropiado, menciona los plazos legales relevantes.
-      7. Responde en español.`,
+      7. Responde en español.
+      8. Responde directamente a la pregunta del usuario sin pedir más información a menos que sea absolutamente necesario.`,
     }
 
     // Combinar el mensaje del sistema con los mensajes del usuario
@@ -69,9 +55,6 @@ export async function POST(req: Request) {
     })
 
     const response = completion.choices[0].message.content || "Lo siento, no pude generar una respuesta."
-
-    // Guardar la respuesta en caché
-    await cacheService.cacheResponse(cacheKey, response, userId, "deudas")
 
     return NextResponse.json({ response })
   } catch (error) {

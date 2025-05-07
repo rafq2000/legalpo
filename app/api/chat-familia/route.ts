@@ -1,41 +1,31 @@
 import { NextResponse } from "next/server"
-import { normativaFamiliar } from "@/lib/normativa-familiar"
-import { ResponseCacheService } from "@/lib/response-cache-service"
 import { OpenAI } from "openai"
 
-// Servicio de caché para respuestas
-const cacheService = new ResponseCacheService()
-
 export const runtime = "nodejs"
-
-// Allow responses up to 30 seconds
 export const maxDuration = 30
 
 export async function POST(req: Request) {
   try {
     const { messages, userId = "anonymous" } = await req.json()
 
-    // Verificar si hay una respuesta en caché
-    const cacheKey = `familia:${JSON.stringify(messages)}`
-    const cachedResponse = await cacheService.getResponse(cacheKey)
-
-    if (cachedResponse) {
-      return NextResponse.json({ response: cachedResponse })
-    }
-
     // Inicializar OpenAI
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     })
 
-    // Preparar el sistema de mensajes con el contexto de la normativa familiar
+    // Preparar el sistema de mensajes con el contexto de leyes sobre familia
     const systemMessage = {
       role: "system",
       content: `Eres un asistente legal especializado en derecho de familia en Chile. Proporciona respuestas precisas y útiles basadas en la legislación chilena vigente.
       
       Utiliza la siguiente información como referencia:
       
-      ${normativaFamiliar}
+      - Ley de Matrimonio Civil (Ley 19.947)
+      - Ley de Filiación (Ley 19.585)
+      - Ley de Pensiones Alimenticias (Ley 14.908)
+      - Ley de Violencia Intrafamiliar (Ley 20.066)
+      - Ley de Tribunales de Familia (Ley 19.968)
+      - Convención sobre los Derechos del Niño
       
       Instrucciones:
       1. Responde de manera clara y en lenguaje sencillo, evitando jerga legal innecesaria.
@@ -65,9 +55,6 @@ export async function POST(req: Request) {
     })
 
     const response = completion.choices[0].message.content || "Lo siento, no pude generar una respuesta."
-
-    // Guardar la respuesta en caché
-    await cacheService.cacheResponse(cacheKey, response, userId, "familia")
 
     return NextResponse.json({ response })
   } catch (error) {

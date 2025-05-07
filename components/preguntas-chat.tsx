@@ -65,6 +65,7 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
     try {
       // Determinar el endpoint de la API según el tema
       let apiEndpoint = "/api/chat-laboral"
+
       if (tema === "deudas") {
         apiEndpoint = "/api/chat-deudas"
       } else if (tema === "familia") {
@@ -83,7 +84,7 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
       })
 
       if (!response.ok) {
-        throw new Error("Error al enviar mensaje")
+        throw new Error(`Error al enviar mensaje: ${response.status}`)
       }
 
       const data = await response.json()
