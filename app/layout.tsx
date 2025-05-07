@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils"
 import FirebaseTracker from "@/components/firebase-tracker"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { AdsenseScript } from "@/components/adsense-script"
+import { LawyerContactButton } from "@/components/lawyer-contact-button"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -53,6 +54,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Suspense>
             <Suspense fallback={null}>
               <WhatsAppButton />
+            </Suspense>
+            <Suspense fallback={null}>
+              <LawyerContactButton />
             </Suspense>
             <Suspense fallback={null}>
               <AdsenseScript />
