@@ -32,14 +32,20 @@ export class ResponseCacheService {
         return null
       }
 
+      const normalizedQuery = this.normalizeQuery(query)
+      console.log("Buscando en caché:", normalizedQuery.substring(0, 50))
+
       const { data, error } = await supabase
         .from("response_cache")
         .select("response")
-        .eq("normalized_query", this.normalizeQuery(query))
+        .eq("normalized_query", normalizedQuery)
         .single()
 
       if (error) {
-        console.warn("Error al obtener respuesta de la caché:", error.message)
+        if (error.code !== "PGRST116") {
+          // No error when no rows found
+          console.warn("Error al obtener respuesta de la caché:", error.message)
+        }
         return null
       }
 
@@ -58,15 +64,44 @@ export class ResponseCacheService {
         return
       }
 
-      const { error } = await supabase.from("response_cache").insert({
-        query: query,
-        normalized_query: this.normalizeQuery(query),
-        response: response,
-        provider: provider,
-      })
+      const normalizedQuery = this.normalizeQuery(query)
+      console.log("Guardando en caché:", normalizedQuery.substring(0, 50))
 
-      if (error) {
-        console.error("Error al guardar respuesta en la caché:", error)
+      // Primero verificamos si ya existe
+      const { data: existingData } = await supabase
+        .from("response_cache")
+        .select("id")
+        .eq("normalized_query", normalizedQuery)
+        .maybeSingle()
+
+      if (existingData) {
+        // Actualizar entrada existente
+        const { error: updateError } = await supabase
+          .from("response_cache")
+          .update({
+            response: response,
+            updated_at: new Date().toISOString(),
+            access_count: supabase.rpc("increment_counter", { row_id: existingData.id }),
+          })
+          .eq("id", existingData.id)
+
+        if (updateError) {
+          console.error("Error al actualizar respuesta en la caché:", updateError)
+        }
+      } else {
+        // Insertar nueva entrada
+        const { error: insertError } = await supabase.from("response_cache").insert({
+          query: query,
+          normalized_query: normalizedQuery,
+          response: response,
+          provider: provider,
+          user_id: userId,
+          access_count: 1,
+        })
+
+        if (insertError) {
+          console.error("Error al guardar respuesta en la caché:", insertError)
+        }
       }
     } catch (error) {
       console.error("Error al guardar respuesta en la caché:", error)

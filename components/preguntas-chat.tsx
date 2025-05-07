@@ -72,9 +72,11 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
         apiEndpoint = "/api/chat-familia"
       }
 
-      // Asegurémonos de que el console.log esté presente para depuración
-      // Añadir después de determinar el endpoint:
-      console.log(`Enviando mensaje a endpoint: ${apiEndpoint}`, { messages, userMessage })
+      console.log(`Enviando mensaje a endpoint: ${apiEndpoint}`, {
+        tema,
+        messageCount: messages.length,
+        userMessage: userMessage.content.substring(0, 50) + (userMessage.content.length > 50 ? "..." : ""),
+      })
 
       const response = await fetch(apiEndpoint, {
         method: "POST",
@@ -88,15 +90,22 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
       })
 
       if (!response.ok) {
+        const errorText = await response.text().catch(() => "No error text available")
+        console.error(`Error en respuesta HTTP: ${response.status}`, errorText)
         throw new Error(`Error al enviar mensaje: ${response.status}`)
       }
 
       const data = await response.json()
 
+      if (!data || !data.response) {
+        console.error("Respuesta inválida:", data)
+        throw new Error("Respuesta inválida del servidor")
+      }
+
       // Añadir respuesta del asistente
       setMessages((prev) => [...prev, { role: "assistant", content: data.response }])
     } catch (error) {
-      console.error("Error:", error)
+      console.error(`Error en chat de ${tema}:`, error)
       setMessages((prev) => [
         ...prev,
         {

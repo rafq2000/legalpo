@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   try {
     const { messages, userId = "anonymous" } = await req.json()
 
-    // Inicializar OpenAI con la clave API
+    // Inicializar OpenAI
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     })
@@ -45,6 +45,8 @@ export async function POST(req: Request) {
       })),
     ]
 
+    console.log("Enviando consulta a OpenAI para deudas")
+
     // Llamar a la API de OpenAI
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
@@ -53,10 +55,8 @@ export async function POST(req: Request) {
       max_tokens: 1000,
     })
 
-    // Extraer la respuesta
     const response = completion.choices[0].message.content || "Lo siento, no pude generar una respuesta."
 
-    // Devolver la respuesta
     return NextResponse.json({ response })
   } catch (error) {
     console.error("Error en chat-deudas:", error)
