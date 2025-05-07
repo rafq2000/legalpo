@@ -157,8 +157,8 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
         <p className="text-gray-600">{getTemaDescription()}</p>
       </div>
 
-      <div className="bg-white border-x border-b border-blue-100 rounded-b-lg p-4">
-        <div className="space-y-4 mb-4">
+      <div className="bg-white border-x border-b border-blue-100 rounded-b-lg">
+        <div className="space-y-4 p-4 min-h-[500px] max-h-[600px] overflow-y-auto">
           {messages.map((message, index) => (
             <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
               <div className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
@@ -187,29 +187,33 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="flex items-center gap-2">
-          <Input
-            type="text"
-            placeholder={getPlaceholder()}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={isLoading}
-            className="flex-1"
-          />
-          <Button type="submit" onClick={sendMessage} disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">
-            <Send className="h-4 w-4" />
-            <span className="sr-only">Enviar mensaje</span>
-          </Button>
-        </div>
+        <div className="border-t border-blue-100 p-4">
+          <div className="flex items-center gap-2">
+            <Input
+              type="text"
+              placeholder={getPlaceholder()}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={isLoading}
+              className="flex-1"
+            />
+            <Button type="submit" onClick={sendMessage} disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">
+              <Send className="h-4 w-4" />
+              <span className="sr-only">Enviar mensaje</span>
+            </Button>
+          </div>
 
-        <div className="mt-4 text-xs text-gray-500">
-          <p>
-            <strong>Nota:</strong> Este asistente proporciona información general basada en la legislación chilena. Para
-            asesoría legal específica, consulta con un abogado.
-          </p>
+          <div className="mt-4 text-xs text-gray-500">
+            <p>
+              <strong>Nota:</strong> Este asistente proporciona información general basada en la legislación chilena.
+              Para asesoría legal específica, consulta con un abogado.
+            </p>
+          </div>
         </div>
       </div>
     </div>
   )
 }
+
+export default PreguntasChat
