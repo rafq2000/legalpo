@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { OpenAI } from "openai"
+import { normativaDeudas } from "@/lib/normativa-deudas"
 
 export const runtime = "nodejs"
 export const maxDuration = 30
@@ -19,12 +20,7 @@ export async function POST(req: Request) {
       content: `Eres un asistente legal especializado en deudas y cobranzas en Chile. Proporciona respuestas precisas y útiles basadas en la legislación chilena vigente.
       
       Utiliza la siguiente información como referencia:
-      
-      - Ley 20.720 de Reorganización y Liquidación
-      - Código Civil, artículo 2515 sobre prescripción
-      - Ley 21.484 sobre Protección de Deudores
-      - Ley 19.496 sobre Protección de los Derechos de los Consumidores
-      - Ley 18.010 sobre Operaciones de Crédito de Dinero
+      ${normativaDeudas}
       
       Instrucciones:
       1. Responde de manera clara y en lenguaje sencillo, evitando jerga legal innecesaria.
