@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { PreguntasChat } from "@/components/preguntas-chat"
+import { DeudasChat } from "@/components/deudas-chat"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
@@ -25,7 +25,7 @@ export default function DeudasPage() {
           </p>
 
           <div className="mb-8">
-            <PreguntasChat tema="deudas" />
+            <DeudasChat />
           </div>
 
           <div className="bg-blue-50 p-6 rounded-lg">
