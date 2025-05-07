@@ -2,61 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+body {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: white;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
-
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -67,254 +91,4 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-
-  /* Mejoras para la tipografía */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-medium tracking-tight;
-  }
-
-  h1 {
-    @apply text-3xl sm:text-4xl;
-  }
-
-  h2 {
-    @apply text-2xl sm:text-3xl;
-  }
-
-  h3 {
-    @apply text-xl sm:text-2xl;
-  }
-
-  /* Mejoras para los contenedores */
-  .container {
-    @apply px-4 mx-auto max-w-7xl;
-  }
-
-  /* Mejoras para las secciones */
-  section {
-    @apply py-12 sm:py-16;
-  }
-}
-
-/* Mejoras para móviles */
-@media (max-width: 640px) {
-  h1 {
-    font-size: 1.75rem !important;
-    line-height: 2rem !important;
-  }
-
-  h2 {
-    font-size: 1.5rem !important;
-    line-height: 1.75rem !important;
-  }
-
-  .container {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
-
-  section {
-    padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
-  }
-}
-
-/* Mejoras para la accesibilidad */
-:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-/* Mejoras para el rendimiento */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Estilos estandarizados para LegalPO */
-.legalpo-header {
-  @apply bg-legalpo-primary text-white;
-}
-
-.legalpo-container {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
-}
-
-.legalpo-card {
-  @apply bg-white rounded-lg shadow-md border border-gray-200;
-}
-
-.legalpo-card-header {
-  @apply bg-gradient-to-r from-legalpo-light to-blue-100 border-b border-gray-200 p-4 rounded-t-lg;
-}
-
-.legalpo-card-content {
-  @apply p-6;
-}
-
-.legalpo-card-footer {
-  @apply bg-gradient-to-r from-legalpo-light to-blue-100 border-t border-gray-200 p-4 rounded-b-lg;
-}
-
-.legalpo-button-primary {
-  @apply bg-legalpo-primary hover:bg-legalpo-secondary text-white rounded-md px-4 py-2 transition-colors;
-}
-
-.legalpo-button-secondary {
-  @apply bg-white hover:bg-gray-100 text-legalpo-primary border border-legalpo-primary rounded-md px-4 py-2 transition-colors;
-}
-
-.legalpo-button-outline {
-  @apply bg-transparent hover:bg-legalpo-light text-legalpo-primary border border-legalpo-primary rounded-md px-4 py-2 transition-colors;
-}
-
-.legalpo-input {
-  @apply border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-legalpo-accent focus:border-legalpo-accent;
-}
-
-.legalpo-select {
-  @apply border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-legalpo-accent focus:border-legalpo-accent;
-}
-
-.legalpo-tabs {
-  @apply flex border-b border-gray-200;
-}
-
-.legalpo-tab {
-  @apply px-4 py-2 border-b-2 border-transparent hover:border-legalpo-accent hover:text-legalpo-accent;
-}
-
-.legalpo-tab-active {
-  @apply px-4 py-2 border-b-2 border-legalpo-primary text-legalpo-primary;
-}
-
-/* Estilos para páginas con fondo oscuro */
-.legalpo-dark-page {
-  @apply bg-legalpo-dark text-white min-h-screen;
-}
-
-.legalpo-dark-container {
-  @apply bg-gray-800 rounded-lg p-4;
-}
-
-.legalpo-dark-card {
-  @apply bg-gray-700 rounded-lg p-4;
-}
-
-.legalpo-dark-input {
-  @apply bg-gray-700 text-white border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-legalpo-accent focus:border-legalpo-accent;
-}
-
-/* Estilos para calculadoras */
-.legalpo-calculator {
-  @apply max-w-4xl mx-auto;
-}
-
-.legalpo-calculator-header {
-  @apply text-center mb-8;
-}
-
-.legalpo-calculator-title {
-  @apply text-3xl font-bold mb-2 text-legalpo-primary;
-}
-
-.legalpo-calculator-description {
-  @apply text-gray-600;
-}
-
-.legalpo-calculator-card {
-  @apply bg-white rounded-lg shadow-lg border border-gray-200;
-}
-
-.legalpo-calculator-card-header {
-  @apply bg-gradient-to-r from-legalpo-light to-blue-100 border-b border-gray-200 p-4 rounded-t-lg;
-}
-
-.legalpo-calculator-card-content {
-  @apply p-6;
-}
-
-.legalpo-calculator-card-footer {
-  @apply bg-gradient-to-r from-legalpo-light to-blue-100 border-t border-gray-200 p-4 rounded-b-lg text-center;
-}
-
-.legalpo-calculator-tabs {
-  @apply grid grid-cols-3 mb-6 bg-gray-100 rounded-md;
-}
-
-.legalpo-calculator-tab {
-  @apply py-2 text-center text-gray-700 hover:text-legalpo-primary transition-colors;
-}
-
-.legalpo-calculator-tab-active {
-  @apply py-2 text-center bg-legalpo-primary text-white rounded-md;
-}
-
-.legalpo-calculator-section {
-  @apply bg-gray-50 p-4 rounded-lg mb-4;
-}
-
-.legalpo-calculator-section-title {
-  @apply text-legalpo-primary font-medium mb-2 flex items-center;
-}
-
-.legalpo-calculator-label {
-  @apply text-gray-700 mb-1 block;
-}
-
-.legalpo-calculator-input {
-  @apply border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-legalpo-accent focus:border-legalpo-accent;
-}
-
-.legalpo-calculator-select {
-  @apply border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-legalpo-accent focus:border-legalpo-accent;
-}
-
-.legalpo-calculator-button {
-  @apply bg-legalpo-primary hover:bg-legalpo-secondary text-white rounded-md px-4 py-2 transition-colors;
-}
-
-.legalpo-calculator-button-secondary {
-  @apply bg-white hover:bg-gray-100 text-legalpo-primary border border-legalpo-primary rounded-md px-4 py-2 transition-colors;
-}
-
-.legalpo-calculator-result {
-  @apply bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4;
-}
-
-.legalpo-calculator-result-title {
-  @apply font-medium text-legalpo-primary mb-2;
-}
-
-.legalpo-calculator-result-value {
-  @apply text-lg font-bold text-legalpo-primary;
-}
-
-.legalpo-calculator-faq {
-  @apply mt-8 max-w-3xl mx-auto;
-}
-
-.legalpo-calculator-faq-title {
-  @apply text-xl font-semibold text-legalpo-primary mb-4;
-}
-
-.legalpo-calculator-faq-item {
-  @apply bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4;
-}
-
-.legalpo-calculator-faq-question {
-  @apply font-medium text-legalpo-primary mb-2;
-}
-
-.legalpo-calculator-faq-answer {
-  @apply text-gray-700;
 }
