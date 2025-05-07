@@ -19,11 +19,14 @@ interface Message {
 
 export function DeudasChat() {
   const { data: session } = useSession()
+
+  const mensajeInicial =
+    "Hola, soy el asistente legal de LegalPo especializado en deudas. Puedo ayudarte con consultas sobre cobranzas, embargos, prescripción de deudas y repactaciones. ¿En qué puedo ayudarte hoy?"
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content:
-        "Hola, soy el asistente legal de LegalPo especializado en deudas. Puedo ayudarte con consultas sobre cobranzas, embargos, prescripción de deudas y repactaciones. ¿En qué puedo ayudarte hoy?",
+      content: mensajeInicial,
     },
   ])
   const [input, setInput] = useState("")
@@ -46,33 +49,41 @@ export function DeudasChat() {
     setIsLoading(true)
 
     try {
-      console.log("Enviando mensaje a /api/chat-deudas-directo")
+      const apiEndpoint = "/api/chat-deudas"
 
-      const response = await fetch("/api/chat-deudas-directo", {
+      console.log(`Enviando mensaje a endpoint: ${apiEndpoint}`, {
+        messageCount: messages.length,
+        userMessage: userMessage.content.substring(0, 50) + (userMessage.content.length > 50 ? "..." : ""),
+      })
+
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          query: userMessage.content,
+          messages: [...messages, userMessage],
           userId: session?.user?.email || "anonymous",
         }),
       })
 
       if (!response.ok) {
+        const errorText = await response.text().catch(() => "No error text available")
+        console.error(`Error en respuesta HTTP: ${response.status}`, errorText)
         throw new Error(`Error al enviar mensaje: ${response.status}`)
       }
 
       const data = await response.json()
 
       if (!data || !data.response) {
+        console.error("Respuesta inválida:", data)
         throw new Error("Respuesta inválida del servidor")
       }
 
       // Añadir respuesta del asistente
       setMessages((prev) => [...prev, { role: "assistant", content: data.response }])
     } catch (error) {
-      console.error("Error en chat de deudas:", error)
+      console.error(`Error en chat de deudas:`, error)
       setMessages((prev) => [
         ...prev,
         {
