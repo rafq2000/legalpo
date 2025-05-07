@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { Shield } from "lucide-react"
+import { Shield, CheckCircle } from "lucide-react"
 
 interface RegisterModalProps {
   open: boolean
@@ -33,11 +33,23 @@ export function RegisterModal({ open, onClose, onRegister }: RegisterModalProps)
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <p className="text-sm text-gray-500">Con tu cuenta gratuita podrás:</p>
-            <ul className="text-sm text-gray-500 space-y-1 list-disc pl-5">
-              <li>Realizar consultas ilimitadas</li>
-              <li>Guardar tus documentos y resultados</li>
-              <li>Acceder a todas las herramientas</li>
-              <li>Recibir actualizaciones legales</li>
+            <ul className="text-sm text-gray-500 space-y-1 list-none pl-0">
+              <li className="flex items-center">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                <span>Realizar consultas ilimitadas</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                <span>Guardar tus documentos y resultados</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                <span>Acceder a todas las herramientas</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                <span>Recibir actualizaciones legales</span>
+              </li>
             </ul>
           </div>
         </div>

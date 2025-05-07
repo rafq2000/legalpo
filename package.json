@@ -67,12 +67,12 @@
     "framer-motion": "latest",
     "@supabase/supabase-js": "latest",
     "resend": "latest",
-    "firebase": "latest",
     "@google-analytics/data": "latest",
     "uuid": "latest",
     "tesseract.js": "latest",
     "mammoth": "latest",
     "xlsx": "latest",
+    "firebase": "latest",
     "firebase-admin": "latest",
     "openai": "latest"
   },

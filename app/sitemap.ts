@@ -29,12 +29,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/finiquito-chile",
     "/derechos-consumidor",
     "/consulta-deudas",
+    "/deudas",
+    "/consulta-familia",
+    "/laboral",
+    "/registro",
+    "/login",
   ]
 
-  return routes.map((route) => ({
+  // Páginas de herramientas y servicios
+  const toolRoutes = [
+    "/contratos/arriendo",
+    "/contratos/trabajo",
+    "/contratos/general",
+    "/generador-contratos/laboral",
+    "/generador-contratos/servicios",
+    "/generador-contratos/personalizado",
+  ]
+
+  // Combinar todas las rutas
+  const allRoutes = [...routes, ...toolRoutes]
+
+  return allRoutes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === "" ? "daily" : "weekly",
-    priority: route === "" ? 1.0 : 0.8,
+    priority: route === "" ? 1.0 : route.includes("/generador-") || route.includes("/calculadora-") ? 0.9 : 0.8,
   }))
 }
