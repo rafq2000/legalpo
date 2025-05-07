@@ -133,7 +133,11 @@ export function DeudasChat() {
         <div className="flex justify-between items-center">
           <LegalDisclaimer />
 
-          <Button type="submit" disabled={isLoading || !query.trim()}>
+          <Button
+            type="submit"
+            disabled={isLoading || !query.trim()}
+            className="bg-legalpo-primary hover:bg-legalpo-secondary"
+          >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

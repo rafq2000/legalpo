@@ -116,6 +116,7 @@ function CookieConsentBannerInner() {
           ad_storage: "granted",
         })
       } else {
+        // Desactivar Google Analytics
         window.gtag?.("consent", "update", {
           ad_storage: "denied",
         })
@@ -155,7 +156,7 @@ function CookieConsentBannerInner() {
           <CardContent className="grid gap-6">
             <div className="grid gap-3">
               <div className="flex items-start space-x-4">
-                <Shield className="h-5 w-5 text-blue-500 mt-0.5" />
+                <Shield className="h-5 w-5 text-legalpo-primary mt-0.5" />
                 <div>
                   <div className="flex items-center space-x-2">
                     <Checkbox id="necessary" checked disabled />
@@ -170,7 +171,7 @@ function CookieConsentBannerInner() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <Info className="h-5 w-5 text-yellow-500 mt-0.5" />
+                <Info className="h-5 w-5 text-legalpo-warning mt-0.5" />
                 <div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
@@ -189,7 +190,7 @@ function CookieConsentBannerInner() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <BarChart className="h-5 w-5 text-green-500 mt-0.5" />
+                <BarChart className="h-5 w-5 text-legalpo-success mt-0.5" />
                 <div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
@@ -209,7 +210,7 @@ function CookieConsentBannerInner() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <Mail className="h-5 w-5 text-purple-500 mt-0.5" />
+                <Mail className="h-5 w-5 text-legalpo-info mt-0.5" />
                 <div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
@@ -241,10 +242,19 @@ function CookieConsentBannerInner() {
             </Button>
           </div>
           <div className="flex flex-col sm:flex-row gap-2">
-            <Button variant="outline" size="sm" onClick={handleAcceptSelected}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-legalpo-primary border-legalpo-primary hover:bg-legalpo-light"
+              onClick={handleAcceptSelected}
+            >
               Aceptar seleccionadas
             </Button>
-            <Button size="sm" onClick={handleAcceptAll}>
+            <Button
+              size="sm"
+              className="bg-legalpo-primary hover:bg-legalpo-secondary text-white"
+              onClick={handleAcceptAll}
+            >
               Aceptar todas
             </Button>
           </div>

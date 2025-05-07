@@ -14,7 +14,7 @@ export default function DeudasPage() {
     <PageLayout>
       <CanonicalUrl path="/deudas" />
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Consulta sobre Deudas y Cobranzas</h1>
+        <h1 className="text-3xl font-bold mb-6 text-legalpo-primary">Consulta sobre Deudas y Cobranzas</h1>
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <p className="mb-6 text-gray-700">
