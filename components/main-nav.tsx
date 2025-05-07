@@ -18,8 +18,13 @@ export function MainNav({ className, isAdmin, ...props }: React.HTMLAttributes<H
     },
     {
       href: "/ask",
-      label: "Consultas",
+      label: "Consultas Generales",
       active: pathname === "/ask",
+    },
+    {
+      href: "/deudas",
+      label: "Consultas Deudas",
+      active: pathname === "/deudas",
     },
     {
       href: "/generador-contratos",
