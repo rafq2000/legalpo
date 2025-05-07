@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   try {
     const { messages, userId = "anonymous" } = await req.json()
 
-    // Inicializar OpenAI
+    // Inicializar OpenAI con la clave API
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     })
@@ -33,8 +33,7 @@ export async function POST(req: Request) {
       4. No inventes información legal.
       5. Mantén tus respuestas concisas y directas.
       6. Cuando sea apropiado, menciona los plazos legales relevantes.
-      7. Responde en español.
-      8. Responde directamente a la pregunta del usuario sin pedir más información a menos que sea absolutamente necesario.`,
+      7. Responde en español.`,
     }
 
     // Combinar el mensaje del sistema con los mensajes del usuario
@@ -54,8 +53,10 @@ export async function POST(req: Request) {
       max_tokens: 1000,
     })
 
+    // Extraer la respuesta
     const response = completion.choices[0].message.content || "Lo siento, no pude generar una respuesta."
 
+    // Devolver la respuesta
     return NextResponse.json({ response })
   } catch (error) {
     console.error("Error en chat-deudas:", error)

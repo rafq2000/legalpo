@@ -72,6 +72,10 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
         apiEndpoint = "/api/chat-familia"
       }
 
+      // Asegurémonos de que el console.log esté presente para depuración
+      // Añadir después de determinar el endpoint:
+      console.log(`Enviando mensaje a endpoint: ${apiEndpoint}`, { messages, userMessage })
+
       const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
