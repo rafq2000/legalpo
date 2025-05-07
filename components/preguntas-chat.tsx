@@ -1,18 +1,18 @@
 "use client"
 
+import { CardFooter } from "@/components/ui/card"
+
 import type React from "react"
 
-import { useState, useEffect, useRef, useMemo } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useSession } from "next-auth/react"
-import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Send } from "lucide-react"
 import { TextToSpeech } from "@/components/text-to-speech"
 import { ShareButton } from "@/components/share-button"
-import { guardarPreguntaUsuario } from "@/utils/firestore-service"
 
 interface Message {
   role: "user" | "assistant"
@@ -23,16 +23,8 @@ interface PreguntasChatProps {
   tema: "deudas" | "laboral"
 }
 
-export function PreguntasChat({ tema }: PreguntasChatProps) {
+export default function PreguntasChat({ tema }: PreguntasChatProps) {
   const { data: session } = useSession()
-  const pathname = usePathname()
-
-  const temaInicial = useMemo(() => {
-    if (pathname?.includes("deuda")) return "deuda"
-    if (pathname?.includes("laboral")) return "laboral"
-    return "otro"
-  }, [pathname])
-
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -46,60 +38,29 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Scroll al final de los mensajes cuando se añade uno nuevo
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
-  // Función para enviar mensaje
   const sendMessage = async () => {
     if (input.trim() === "") return
 
-    // Añadir mensaje del usuario
     const userMessage = { role: "user" as const, content: input }
     setMessages((prev) => [...prev, userMessage])
     setInput("")
     setIsLoading(true)
 
     try {
-      // Guardar la pregunta en Firestore
-      await guardarPreguntaUsuario({
-        email: session?.user?.email || null,
-        tema: tema || temaInicial,
-        pregunta: input,
-        sessionId: localStorage.getItem("docuscan_session_id") || undefined,
-      })
-
-      // Registrar la pregunta en Firestore
-      await guardarPreguntaUsuario({
-        pregunta: input,
-        tema,
-        pagina: pathname,
-        email: session?.user?.email || null,
-      })
-
-      // Enviar mensaje a la API correspondiente según el tema
-      const apiEndpoint = tema === "deudas" ? "/api/chat-deudas" : "/api/chat-laboral"
-
-      const response = await fetch(apiEndpoint, {
+      const response = await fetch(tema === "deudas" ? "/api/chat" : "/api/chat-laboral", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          messages: [...messages, userMessage],
-          userId: session?.user?.email || "anonymous",
-          tema,
-        }),
+        body: JSON.stringify({ messages: messages.concat(userMessage), userId: session?.user?.email || "anonymous" }),
       })
-
-      if (!response.ok) {
-        throw new Error("Error al enviar mensaje")
-      }
 
       const data = await response.json()
 
-      // Añadir respuesta del asistente
       setMessages((prev) => [...prev, { role: "assistant", content: data.response }])
     } catch (error) {
       console.error("Error:", error)
@@ -116,12 +77,16 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
     }
   }
 
-  // Manejar envío con Enter
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
       sendMessage()
     }
+  }
+
+  // Obtener el texto de todos los mensajes para la lectura
+  const getAllMessagesText = () => {
+    return messages.map((msg) => `${msg.role === "user" ? "Tú:" : "Asistente:"} ${msg.content}`).join(". ")
   }
 
   return (
@@ -136,17 +101,22 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
                 : "Haz preguntas sobre contratos, despidos, finiquitos y derechos laborales"}
             </CardDescription>
           </div>
-          {messages.length > 1 && (
-            <ShareButton
-              title={`Consulta ${tema === "deudas" ? "sobre deudas" : "laboral"} en LegalPo`}
-              text={messages.map((msg) => `${msg.role === "user" ? "Yo: " : "Asistente: "}${msg.content}`).join("\n\n")}
-              size="sm"
-            />
-          )}
+          <div className="flex items-center gap-2">
+            <TextToSpeech text={getAllMessagesText()} label="Leer conversación" />
+            {messages.length > 1 && (
+              <ShareButton
+                title={`Consulta ${tema === "deudas" ? "sobre deudas" : "laboral"} en LegalPo`}
+                text={messages
+                  .map((msg) => `${msg.role === "user" ? "Yo: " : "Asistente: "}${msg.content}`)
+                  .join("\n\n")}
+                size="sm"
+              />
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="space-y-4 h-[400px] overflow-y-auto p-4">
+        <div className="space-y-4 h-[400px] overflow-y-auto p-4 rounded-lg border-0">
           {messages.map((message, index) => (
             <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
               <div className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
@@ -179,7 +149,9 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
         <div className="flex w-full items-center space-x-2">
           <Input
             type="text"
-            placeholder={`Escribe tu consulta sobre ${tema === "deudas" ? "deudas, cobranzas o embargos" : "temas laborales, contratos o despidos"}...`}
+            placeholder={`Escribe tu consulta sobre ${
+              tema === "deudas" ? "deudas, cobranzas o embargos" : "temas laborales, contratos o despidos"
+            }...`}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
