@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowLeft, Book, FileText, Shield, Scale, Info } from "lucide-react"
+import { ArrowLeft, Book, FileText, Shield, Scale, Info, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { PageAds } from "@/components/page-ads"
@@ -284,7 +284,7 @@ export default function InformacionLegalPage() {
                   </Button>
                   <Button asChild variant="outline" className="flex-1">
                     <Link href="https://wa.me/56961458118">
-                      <WhatsAppButton />
+                      <Phone className="h-4 w-4 mr-2" />
                       Contactar abogado
                     </Link>
                   </Button>
