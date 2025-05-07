@@ -2,14 +2,13 @@
 
 import type React from "react"
 import { useSession } from "next-auth/react"
-import { useRouter, usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Loader2 } from "lucide-react"
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const router = useRouter()
-  const pathname = usePathname()
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -19,13 +18,13 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     }
 
     if (status === "unauthenticated") {
-      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`)
+      router.push("/login")
     } else {
       setIsLoading(false)
     }
-  }, [status, router, pathname])
+  }, [status, router])
 
-  // Mientras carga o verifica la sesión, mostramos un spinner
+  // Mientras carga o no está autenticado, mostramos un spinner
   if (isLoading || status === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center">

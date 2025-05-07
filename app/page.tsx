@@ -246,12 +246,15 @@ export default function Home() {
                 <p className="text-gray-600 mb-5">
                   Dudas sobre trabajo o deudas. Te respondemos de forma clara y directa, sin tecnicismos.
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   <Button asChild variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
                     <Link href="/dudas-laborales">Laborales</Link>
                   </Button>
                   <Button asChild variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
                     <Link href="/consulta-familia">Familia</Link>
+                  </Button>
+                  <Button asChild variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+                    <Link href="/deudas">Deudas</Link>
                   </Button>
                 </div>
               </div>
@@ -276,6 +279,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* El resto del código permanece igual */}
 
       {/* Sección de registro */}
       <section className="py-16 md:py-24 bg-gradient-to-br from-blue-800 to-blue-900 text-white">

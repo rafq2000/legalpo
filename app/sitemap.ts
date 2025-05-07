@@ -28,6 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/herencias",
     "/finiquito-chile",
     "/derechos-consumidor",
+    "/consulta-deudas",
   ]
 
   return routes.map((route) => ({

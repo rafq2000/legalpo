@@ -7,15 +7,46 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
-export function PopularQuestions() {
+export function PopularQuestions({
+  category,
+  questions,
+}: {
+  category?: string
+  questions?: string[]
+} = {}) {
   const [activeTab, setActiveTab] = useState("laboral")
 
-  const questions = {
+  // Si se proporcionan category y questions específicos, mostrar solo esos
+  if (category && questions && questions.length > 0) {
+    return (
+      <Card className="shadow-sm">
+        <CardContent className="pt-6">
+          <h3 className="text-lg font-semibold mb-4">Preguntas frecuentes sobre {category}</h3>
+          <ul className="space-y-3">
+            {questions.map((question, index) => (
+              <li key={index} className="border-b border-gray-100 pb-3 last:border-0 last:pb-0">
+                <Link
+                  href={`/ask?q=${encodeURIComponent(question)}`}
+                  className="flex items-center justify-between text-gray-800 hover:text-blue-700 transition-colors"
+                >
+                  <span>{question}</span>
+                  <ArrowRight className="h-4 w-4 text-gray-400" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  // Si no se proporcionan, mostrar las pestañas predeterminadas
+  const defaultQuestions = {
     laboral: [
       "¿Cuántos días de vacaciones me corresponden por ley?",
       "¿Qué debo hacer si no me pagan las horas extras?",
       "¿Pueden despedirme estando con licencia médica?",
-      "¿Cuánto es el plazo para reclamar por un despido injustificado?",
+      "¿Cuánto es el plazo para reclamar por un despino injustificado?",
     ],
     pensiones: [
       "¿Cómo se calcula la pensión de alimentos en Chile?",
@@ -46,7 +77,7 @@ export function PopularQuestions() {
           <TabsTrigger value="arriendos">Arriendos</TabsTrigger>
           <TabsTrigger value="deudas">Deudas</TabsTrigger>
         </TabsList>
-        {Object.entries(questions).map(([category, questionList]) => (
+        {Object.entries(defaultQuestions).map(([category, questionList]) => (
           <TabsContent key={category} value={category}>
             <CardContent className="pt-6">
               <ul className="space-y-3">
