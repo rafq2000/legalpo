@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { OpenAI } from "openai"
+import { openAIErrorHandler } from "@/lib/openai-error-handler"
 
 export const runtime = "nodejs"
 export const maxDuration = 30
@@ -45,6 +46,12 @@ export async function POST(req: Request) {
       })),
     ]
 
+    console.log("Enviando consulta a OpenAI:", {
+      model: "gpt-4",
+      messageCount: apiMessages.length,
+      firstUserMessage: apiMessages.find((m: any) => m.role === "user")?.content.substring(0, 50) + "...",
+    })
+
     // Llamar a la API de OpenAI
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
@@ -53,17 +60,19 @@ export async function POST(req: Request) {
       max_tokens: 1000,
     })
 
+    console.log("Respuesta recibida de OpenAI")
+
     const response = completion.choices[0].message.content || "Lo siento, no pude generar una respuesta."
 
     return NextResponse.json({ response })
   } catch (error) {
     console.error("Error en chat-deudas:", error)
-    return NextResponse.json(
-      {
-        response:
-          "Lo siento, ha ocurrido un error al procesar tu consulta. Por favor, intenta nuevamente en unos momentos.",
-      },
-      { status: 500 },
-    )
+
+    // Usar el manejador de errores de OpenAI si está disponible
+    const errorMessage = openAIErrorHandler
+      ? openAIErrorHandler(error)
+      : "Lo siento, ha ocurrido un error al procesar tu consulta. Por favor, intenta nuevamente en unos momentos."
+
+    return NextResponse.json({ response: errorMessage }, { status: 500 })
   }
 }
