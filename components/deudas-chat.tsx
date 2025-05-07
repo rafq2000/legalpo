@@ -56,13 +56,20 @@ export function DeudasChat() {
         userMessage: userMessage.content.substring(0, 50) + (userMessage.content.length > 50 ? "..." : ""),
       })
 
+      // Preparar los mensajes para enviar al API
+      const messagesToSend = [...messages, userMessage].filter(
+        (msg) =>
+          // Filtrar solo los mensajes relevantes para la conversación
+          msg.role === "user" || msg.role === "assistant",
+      )
+
       const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          messages: [...messages, userMessage],
+          messages: messagesToSend,
           userId: session?.user?.email || "anonymous",
         }),
       })

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import { OpenAI } from "openai"
-import { openAIErrorHandler } from "@/lib/openai-error-handler"
 
 export const runtime = "nodejs"
 export const maxDuration = 30
@@ -9,18 +8,34 @@ export async function POST(req: Request) {
   try {
     const { messages, userId = "anonymous" } = await req.json()
 
-    // Inicializar OpenAI
+    console.log("Recibida solicitud en chat-deudas:", {
+      userId,
+      messageCount: messages.length,
+      lastMessage: messages[messages.length - 1]?.content?.substring(0, 50) + "...",
+    })
+
+    // Verificar que la API key esté configurada
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("ERROR: OPENAI_API_KEY no está configurada")
+      return NextResponse.json(
+        {
+          response: "Error de configuración del servidor. Por favor, contacta al administrador.",
+        },
+        { status: 500 },
+      )
+    }
+
+    // Inicializar OpenAI con la API key
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     })
 
-    // Preparar el sistema de mensajes con el contexto de leyes sobre deudas
+    // Mensaje del sistema para el contexto
     const systemMessage = {
       role: "system",
       content: `Eres un asistente legal especializado en deudas y cobranzas en Chile. Proporciona respuestas precisas y útiles basadas en la legislación chilena vigente.
       
       Utiliza la siguiente información como referencia:
-      
       - Ley 20.720 de Reorganización y Liquidación
       - Código Civil, artículo 2515 sobre prescripción
       - Ley 19.496 sobre Protección de los Derechos de los Consumidores
@@ -37,7 +52,7 @@ export async function POST(req: Request) {
       7. Responde en español.`,
     }
 
-    // Combinar el mensaje del sistema con los mensajes del usuario
+    // Preparar los mensajes para la API
     const apiMessages = [
       systemMessage,
       ...messages.map((message: any) => ({
@@ -46,10 +61,11 @@ export async function POST(req: Request) {
       })),
     ]
 
-    console.log("Enviando consulta a OpenAI:", {
+    console.log("Enviando solicitud a OpenAI:", {
       model: "gpt-4",
       messageCount: apiMessages.length,
-      firstUserMessage: apiMessages.find((m: any) => m.role === "user")?.content.substring(0, 50) + "...",
+      systemMessageLength: systemMessage.content.length,
+      firstUserMessage: apiMessages.find((m: any) => m.role === "user")?.content?.substring(0, 50) + "...",
     })
 
     // Llamar a la API de OpenAI
@@ -60,19 +76,54 @@ export async function POST(req: Request) {
       max_tokens: 1000,
     })
 
-    console.log("Respuesta recibida de OpenAI")
+    console.log("Respuesta recibida de OpenAI:", {
+      status: "success",
+      responseLength: completion.choices[0].message.content?.length || 0,
+    })
 
+    // Extraer la respuesta
     const response = completion.choices[0].message.content || "Lo siento, no pude generar una respuesta."
 
+    // Devolver la respuesta
     return NextResponse.json({ response })
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error en chat-deudas:", error)
 
-    // Usar el manejador de errores de OpenAI si está disponible
-    const errorMessage = openAIErrorHandler
-      ? openAIErrorHandler(error)
-      : "Lo siento, ha ocurrido un error al procesar tu consulta. Por favor, intenta nuevamente en unos momentos."
+    // Manejar errores específicos de OpenAI
+    if (error.name === "APIError") {
+      console.error("OpenAI API Error:", {
+        status: error.status,
+        message: error.message,
+        code: error.code,
+        type: error.type,
+      })
 
-    return NextResponse.json({ response: errorMessage }, { status: 500 })
+      if (error.code === "rate_limit_exceeded") {
+        return NextResponse.json(
+          {
+            response: "Estamos experimentando alta demanda. Por favor, intenta nuevamente en unos minutos.",
+          },
+          { status: 429 },
+        )
+      }
+
+      if (error.code === "context_length_exceeded") {
+        return NextResponse.json(
+          {
+            response: "Tu consulta es demasiado extensa. Por favor, intenta con una consulta más corta.",
+          },
+          { status: 413 },
+        )
+      }
+    }
+
+    // Error genérico
+    return NextResponse.json(
+      {
+        response:
+          "Lo siento, ha ocurrido un error al procesar tu consulta. Por favor, intenta nuevamente en unos momentos.",
+      },
+      { status: 500 },
+    )
   }
 }

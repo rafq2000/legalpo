@@ -69,12 +69,12 @@
     "@supabase/supabase-js": "latest",
     "resend": "latest",
     "firebase": "latest",
-    "openai": "latest",
     "uuid": "latest",
     "tesseract.js": "latest",
     "mammoth": "latest",
     "xlsx": "latest",
-    "firebase-admin": "latest"
+    "firebase-admin": "latest",
+    "openai": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
