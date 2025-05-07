@@ -19,7 +19,7 @@ interface Message {
 }
 
 interface PreguntasChatProps {
-  tema: "laboral" | "familia" | "deudas"
+  tema: "deudas" | "laboral" | "familia"
 }
 
 export function PreguntasChat({ tema }: PreguntasChatProps) {
