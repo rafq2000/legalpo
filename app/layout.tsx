@@ -1,20 +1,65 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import type React from "react"
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import "./globals.css"
+import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
+import { Analytics } from "@/components/analytics"
+import AnalyticsTracker from "@/components/analytics-tracker"
+import CookieConsentBanner from "@/components/cookie-consent-banner"
+import { Suspense } from "react"
+import { Providers } from "./providers"
+import { ForceLightTheme } from "@/components/force-light-theme"
+import { cn } from "@/lib/utils"
+import FirebaseTracker from "@/components/firebase-tracker"
+import { WhatsAppButton } from "@/components/whatsapp-button"
+import { AdsenseScript } from "@/components/adsense-script"
+
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: "LegalPO - Herramientas legales con inteligencia artificial",
+  description: "Herramientas legales con inteligencia artificial para simplificar tus consultas jurídicas en Chile.",
+  robots: "index, follow",
+  alternates: {
+    canonical: "https://legalpo.cl",
+  },
+    generator: 'v0.dev'
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <meta name="google-adsense-account" content="ca-pub-3753519605655251" />
+      </head>
+      <body className={cn("min-h-screen bg-background font-sans antialiased")}>
+        <Providers>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+            <ForceLightTheme />
+            {/* Resto de componentes existentes */}
+            {children}
+            <Toaster />
+            <Analytics />
+            <Suspense fallback={null}>
+              <AnalyticsTracker />
+            </Suspense>
+            <Suspense fallback={null}>
+              <CookieConsentBanner />
+            </Suspense>
+            <Suspense fallback={null}>
+              <FirebaseTracker />
+            </Suspense>
+            <Suspense fallback={null}>
+              <WhatsAppButton />
+            </Suspense>
+            <Suspense fallback={null}>
+              <AdsenseScript />
+            </Suspense>
+          </ThemeProvider>
+        </Providers>
+      </body>
     </html>
   )
 }

@@ -1,0 +1,93 @@
+/* Estilos para contenedores de anuncios */
+.ad-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto;
+  overflow: hidden;
+  max-width: 100%;
+  background-color: transparent;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  padding: 0;
+  border: none;
+  min-height: 90px; /* Altura mínima para evitar saltos de contenido */
+  position: relative;
+}
+
+.ad-container:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.ad-container.horizontal {
+  height: 90px;
+  max-width: 728px;
+  width: 100%;
+}
+
+.ad-container.rectangle {
+  height: 250px;
+  max-width: 300px;
+  width: 100%;
+}
+
+.ad-container.vertical {
+  height: 600px;
+  max-width: 160px;
+  width: 100%;
+}
+
+.ad-container.in-content {
+  margin: 1.5rem auto;
+  background-color: transparent;
+}
+
+.ad-container.sidebar {
+  margin: 1rem 0;
+}
+
+/* Placeholder para desarrollo o cuando hay errores */
+.ad-placeholder {
+  display: none;
+}
+
+/* Etiqueta de anuncio para cumplir con las políticas de AdSense */
+.ad-container::before {
+  content: none;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .ad-container.horizontal {
+    height: auto;
+    min-height: 50px;
+  }
+
+  .ad-container.sidebar {
+    display: none; /* Ocultar anuncios de sidebar en móviles */
+  }
+
+  /* Reducir márgenes en móviles */
+  .ad-container {
+    margin: 0.75rem auto;
+  }
+
+  .ad-container.in-content {
+    margin: 1rem auto;
+  }
+}
+
+/* Animación sutil para mejorar la visibilidad */
+@keyframes adFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.ad-container {
+  animation: none;
+}

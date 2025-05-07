@@ -20,7 +20,7 @@ body {
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
+    --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
@@ -55,7 +55,7 @@ body {
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
+    --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 0 0% 9%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
@@ -91,4 +91,33 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Estilos específicos para el tema de LegalPO */
+.legal-header {
+  @apply bg-blue-900 text-white;
+}
+
+.legal-chat-bg {
+  @apply bg-gray-900;
+}
+
+.legal-chat-message {
+  @apply bg-gray-800 text-white;
+}
+
+.legal-button-blue {
+  @apply bg-blue-600 hover:bg-blue-700 text-white;
+}
+
+.legal-button-green {
+  @apply bg-green-600 hover:bg-green-700 text-white;
+}
+
+.legal-button-purple {
+  @apply bg-purple-600 hover:bg-purple-700 text-white;
+}
+
+.legal-button-orange {
+  @apply bg-orange-600 hover:bg-orange-700 text-white;
 }
