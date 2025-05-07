@@ -3,7 +3,6 @@ import { PreguntasChat } from "@/components/preguntas-chat"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
-// Añadir la importación del componente AdUnit al inicio del archivo
 import { AdUnit } from "@/components/ad-unit"
 
 export const metadata: Metadata = {
@@ -48,8 +47,6 @@ export default function DeudasPage() {
         <div className="container mx-auto py-8 px-4">
           <section className="mb-10">
             <h1 className="text-3xl md:text-4xl font-bold mb-6 text-blue-900">Consultas sobre Deudas en Chile</h1>
-            {/* Buscar un buen lugar para insertar el anuncio, por ejemplo después del título principal */}
-            {/* o antes del footer, y añadir: */}
             <AdUnit slot="1234567890" format="horizontal" className="my-8" />
             <div className="prose max-w-none">
               <p className="text-lg text-gray-700 mb-4">
@@ -88,7 +85,7 @@ export default function DeudasPage() {
             </div>
           </section>
 
-          <PreguntasChat tema="deuda" />
+          <PreguntasChat tema="deudas" />
 
           <section className="mt-12 bg-blue-50 p-6 rounded-lg border border-blue-100">
             <h2 className="text-2xl font-semibold mb-4 text-blue-900">Información Legal sobre Deudas en Chile</h2>
@@ -128,7 +125,6 @@ export default function DeudasPage() {
         </div>
       </main>
       <SiteFooter />
-      {/* También podemos añadir otro anuncio al final de la página, justo antes del cierre del componente principal: */}
       <div className="mt-8">
         <AdUnit slot="1234567890" format="rectangle" />
       </div>

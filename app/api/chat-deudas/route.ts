@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { normativaFamiliar } from "@/lib/normativa-familiar"
+import { leyesChile } from "@/lib/leyes-chile"
 import { ResponseCacheService } from "@/lib/response-cache-service"
 import { OpenAI } from "openai"
 
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     const { messages, userId = "anonymous" } = await req.json()
 
     // Verificar si hay una respuesta en caché
-    const cacheKey = `familia:${JSON.stringify(messages)}`
+    const cacheKey = `deudas:${JSON.stringify(messages)}`
     const cachedResponse = await cacheService.getResponse(cacheKey)
 
     if (cachedResponse) {
@@ -28,14 +28,18 @@ export async function POST(req: Request) {
       apiKey: process.env.OPENAI_API_KEY,
     })
 
-    // Preparar el sistema de mensajes con el contexto de la normativa familiar
+    // Preparar el sistema de mensajes con el contexto de leyes sobre deudas
     const systemMessage = {
       role: "system",
-      content: `Eres un asistente legal especializado en derecho de familia en Chile. Proporciona respuestas precisas y útiles basadas en la legislación chilena vigente.
+      content: `Eres un asistente legal especializado en deudas y cobranzas en Chile. Proporciona respuestas precisas y útiles basadas en la legislación chilena vigente.
       
       Utiliza la siguiente información como referencia:
       
-      ${normativaFamiliar}
+      - Ley 20.720 de Reorganización y Liquidación (${leyesChile["Ley-20720_09-ENE-2014"].titulo})
+      - Código Civil (${leyesChile["DFL-1_30-MAY-2000"].titulo}), artículo ${leyesChile["DFL-1_30-MAY-2000"].articulos["2515"]} sobre prescripción
+      - Ley 21.484 sobre Protección de Deudores
+      - Ley 19.496 sobre Protección de los Derechos de los Consumidores
+      - Ley 18.010 sobre Operaciones de Crédito de Dinero
       
       Instrucciones:
       1. Responde de manera clara y en lenguaje sencillo, evitando jerga legal innecesaria.
@@ -67,11 +71,11 @@ export async function POST(req: Request) {
     const response = completion.choices[0].message.content || "Lo siento, no pude generar una respuesta."
 
     // Guardar la respuesta en caché
-    await cacheService.cacheResponse(cacheKey, response, userId, "familia")
+    await cacheService.cacheResponse(cacheKey, response, userId, "deudas")
 
     return NextResponse.json({ response })
   } catch (error) {
-    console.error("Error en chat-familia:", error)
+    console.error("Error en chat-deudas:", error)
     return NextResponse.json(
       {
         response:

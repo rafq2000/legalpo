@@ -12,7 +12,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Send } from "lucide-react"
 import { TextToSpeech } from "@/components/text-to-speech"
 import { ShareButton } from "@/components/share-button"
-import { guardarPreguntaUsuario } from "@/utils/firestore-service"
 
 interface Message {
   role: "user" | "assistant"
@@ -26,13 +25,6 @@ interface PreguntasChatProps {
 export function PreguntasChat({ tema }: PreguntasChatProps) {
   const { data: session } = useSession()
   const pathname = usePathname()
-
-  const temaInicial = useMemo(() => {
-    if (pathname?.includes("deuda")) return "deuda"
-    if (pathname?.includes("laboral")) return "laboral"
-    if (pathname?.includes("familia")) return "familia"
-    return "otro"
-  }, [pathname])
 
   const mensajeInicial = useMemo(() => {
     if (tema === "deudas") {
@@ -71,22 +63,6 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
     setIsLoading(true)
 
     try {
-      // Guardar la pregunta en Firestore
-      await guardarPreguntaUsuario({
-        email: session?.user?.email || null,
-        tema: tema || temaInicial,
-        pregunta: input,
-        sessionId: localStorage.getItem("docuscan_session_id") || undefined,
-      })
-
-      // Registrar la pregunta en Firestore
-      await guardarPreguntaUsuario({
-        pregunta: input,
-        tema,
-        pagina: pathname,
-        email: session?.user?.email || null,
-      })
-
       // Determinar el endpoint de la API según el tema
       let apiEndpoint = "/api/chat-laboral"
       if (tema === "deudas") {
@@ -103,7 +79,6 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
         body: JSON.stringify({
           messages: [...messages, userMessage],
           userId: session?.user?.email || "anonymous",
-          tema,
         }),
       })
 
