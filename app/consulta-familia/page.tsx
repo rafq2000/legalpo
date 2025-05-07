@@ -1,174 +1,229 @@
 import type { Metadata } from "next"
-import { AdUnit } from "@/components/ad-unit"
-import PreguntasChat from "@/components/preguntas-chat"
+import { PreguntasChat } from "@/components/preguntas-chat"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
-import { CanonicalUrl } from "@/components/canonical-url"
+import { AdUnit } from "@/components/ad-unit"
 
 export const metadata: Metadata = {
-  title: "Consultas sobre Derecho de Familia en Chile | LegalPO",
+  title: "Consultas de Derecho de Familia en Chile - Asesoría Legal | LegalPo",
   description:
-    "Resuelve tus dudas sobre matrimonio, divorcio, pensión alimenticia, custodia de hijos y otros temas de derecho familiar en Chile con respuestas claras y precisas.",
+    "Resuelve tus dudas sobre matrimonio, divorcio, pensión alimenticia, custodia de hijos y derechos familiares en Chile. Obtén respuestas claras basadas en la legislación chilena vigente.",
   keywords:
-    "derecho familia chile, consulta legal familia, divorcio chile, pensión alimenticia, custodia hijos, matrimonio civil, unión civil",
+    "derecho familia Chile, divorcio, pensión alimenticia, custodia hijos, matrimonio, unión civil, adopción, violencia intrafamiliar",
+  openGraph: {
+    title: "Consultas de Derecho de Familia en Chile - Asesoría Legal | LegalPo",
+    description:
+      "Resuelve tus dudas sobre matrimonio, divorcio, pensión alimenticia, custodia de hijos y derechos familiares en Chile. Obtén respuestas claras basadas en la legislación chilena vigente.",
+    url: "https://legalpo.cl/consulta-familia",
+    siteName: "LegalPo",
+    locale: "es_CL",
+    type: "website",
+    images: [
+      {
+        url: "https://legalpo.cl/og-familia.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Consultas de Derecho de Familia en Chile",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Consultas de Derecho de Familia en Chile - Asesoría Legal | LegalPo",
+    description:
+      "Resuelve tus dudas sobre matrimonio, divorcio, pensión alimenticia, custodia de hijos y derechos familiares en Chile.",
+    images: ["https://legalpo.cl/og-familia.jpg"],
+  },
+  alternates: {
+    canonical: "https://legalpo.cl/consulta-familia",
+  },
 }
 
-export default function ConsultaFamiliaPage() {
+export default function FamiliaPage() {
   return (
     <div className="flex flex-col min-h-screen">
-      <CanonicalUrl path="/consulta-familia" />
       <SiteHeader />
-
       <main className="flex-1">
-        <section className="bg-gradient-to-b from-blue-800 to-blue-700 text-white py-12 md:py-16">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">Consultas sobre Derecho de Familia</h1>
-              <p className="text-xl text-blue-100">
-                Resuelve tus dudas sobre matrimonio, divorcio, pensión alimenticia, custodia de hijos y otros temas de
-                derecho familiar en Chile.
+        <div className="container mx-auto py-8 px-4">
+          <section className="mb-10">
+            <h1 className="text-3xl md:text-4xl font-bold mb-6 text-blue-900">
+              Consultas de Derecho de Familia en Chile
+            </h1>
+            <AdUnit slot="1234567890" format="horizontal" className="my-8" />
+            <div className="prose max-w-none">
+              <p className="text-lg text-gray-700 mb-4">
+                ¿Tienes dudas sobre divorcio, pensión alimenticia, custodia de hijos o violencia intrafamiliar? Nuestro
+                asistente legal especializado te ayuda a entender la normativa familiar chilena.
               </p>
+              <p className="text-gray-700 mb-6">Puedes consultar sobre:</p>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-6">
+                <li className="flex items-start">
+                  <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1">✓</span>
+                  <span>Matrimonio civil y divorcio</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1">✓</span>
+                  <span>Acuerdo de Unión Civil</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1">✓</span>
+                  <span>Pensión de alimentos y deudas alimenticias</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1">✓</span>
+                  <span>Cuidado personal y relación directa y regular</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1">✓</span>
+                  <span>Violencia intrafamiliar</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1">✓</span>
+                  <span>Adopción y filiación</span>
+                </li>
+              </ul>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="py-4 bg-white border-b border-gray-200">
-          <div className="container px-4 mx-auto">
-            <AdUnit slot="1234567890" format="horizontal" responsive={true} position="header" />
-          </div>
-        </section>
+          <PreguntasChat tema="familia" />
 
-        <section className="py-8 md:py-12 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="bg-blue-50 p-6 rounded-xl mb-8">
-                <h2 className="text-2xl font-semibold text-blue-900 mb-4">¿Qué temas puedes consultar?</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                    <p className="font-medium text-blue-800">Matrimonio y divorcio</p>
-                  </div>
-                  <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                    <p className="font-medium text-blue-800">Pensión de alimentos</p>
-                  </div>
-                  <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                    <p className="font-medium text-blue-800">Custodia y régimen de visitas</p>
-                  </div>
-                  <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                    <p className="font-medium text-blue-800">Acuerdo de Unión Civil</p>
-                  </div>
-                  <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                    <p className="font-medium text-blue-800">Filiación y adopción</p>
-                  </div>
-                  <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                    <p className="font-medium text-blue-800">Violencia intrafamiliar</p>
-                  </div>
-                  <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                    <p className="font-medium text-blue-800">Derechos de niños y adolescentes</p>
-                  </div>
-                  <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                    <p className="font-medium text-blue-800">Cambio de nombre y género</p>
-                  </div>
+          <section className="mt-12 bg-blue-50 p-6 rounded-lg border border-blue-100">
+            <h2 className="text-2xl font-semibold mb-4 text-blue-900">Leyes y Normas de Derecho de Familia en Chile</h2>
+            <div className="prose max-w-none">
+              <p>
+                El Derecho de Familia en Chile está regulado por diversas leyes y normas que establecen los derechos y
+                obligaciones en las relaciones familiares. A continuación, presentamos las principales leyes que rigen
+                esta materia:
+              </p>
+
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-xl font-medium mb-2 text-blue-800">Leyes Fundamentales</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Constitución Política de la República de Chile (1980)</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Código Civil de Chile (Ley 13.495 de 14-XII-1855)</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Código de Procedimiento Civil de Chile (Ley 1.552 de 28-VIII-1902)</span>
+                    </li>
+                  </ul>
                 </div>
-              </div>
 
-              <PreguntasChat tema="familia" />
+                <div>
+                  <h3 className="text-xl font-medium mb-2 text-blue-800">Matrimonio y Uniones</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 19.947 (17-V-2004) – Matrimonio Civil y Divorcio Vincular</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 20.830 (15-IV-2015) – Acuerdo de Unión Civil</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 21.400 (10-XII-2021) – Matrimonio Igualitario</span>
+                    </li>
+                  </ul>
+                </div>
 
-              <div className="mt-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                <h2 className="text-2xl font-semibold text-blue-900 mb-4">
-                  Leyes y normas de Derecho de Familia en Chile
-                </h2>
-                <p className="text-gray-700 mb-6">
-                  Nuestro sistema responde consultas basándose en las siguientes leyes y normativas chilenas:
-                </p>
+                <div>
+                  <h3 className="text-xl font-medium mb-2 text-blue-800">Filiación y Adopción</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 19.585 (26-X-1998) – Igualdad de la Filiación</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 19.620 (5-VIII-1999) – Adopción de Menores</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Decreto Supremo 944/2000 – Reglamento de la Ley de Adopción</span>
+                    </li>
+                  </ul>
+                </div>
 
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-medium text-blue-800 mb-2">Normativa General</h3>
-                    <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                      <li>Constitución Política de la República de Chile (1980)</li>
-                      <li>Código Civil de Chile (Ley 13.495 de 14-XII-1855)</li>
-                      <li>Código de Procedimiento Civil de Chile (Ley 1.552 de 28-VIII-1902)</li>
-                    </ul>
-                  </div>
+                <div>
+                  <h3 className="text-xl font-medium mb-2 text-blue-800">Tribunales y Procedimientos</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 19.968 (30-VIII-2004) – Creación de los Tribunales de Familia</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 20.066 (7-X-2005) – Violencia Intrafamiliar</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>
+                        Ley N.º 21.212 (2-III-2020) – Ley "Gabriela" (amplía femicidio y violencia intrafamiliar)
+                      </span>
+                    </li>
+                  </ul>
+                </div>
 
-                  <div>
-                    <h3 className="text-lg font-medium text-blue-800 mb-2">Matrimonio y Uniones</h3>
-                    <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                      <li>Ley N.º 19.947 (17-V-2004) – Matrimonio Civil y Divorcio Vincular</li>
-                      <li>Ley N.º 20.830 (15-IV-2015) – Acuerdo de Unión Civil</li>
-                      <li>Ley N.º 21.400 (10-XII-2021) – Matrimonio Igualitario</li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-medium text-blue-800 mb-2">Filiación y Adopción</h3>
-                    <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                      <li>Ley N.º 19.585 (26-X-1998) – Igualdad de la Filiación</li>
-                      <li>Ley N.º 19.620 (5-VIII-1999) – Adopción de Menores</li>
-                      <li>Decreto Supremo 944/2000 – Reglamento de la Ley de Adopción</li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-medium text-blue-800 mb-2">Tribunales y Procedimientos</h3>
-                    <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                      <li>Ley N.º 19.968 (30-VIII-2004) – Creación de los Tribunales de Familia</li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-medium text-blue-800 mb-2">Violencia Intrafamiliar</h3>
-                    <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                      <li>Ley N.º 20.066 (7-X-2005) – Violencia Intrafamiliar</li>
-                      <li>Ley N.º 21.212 (2-III-2020) – Ley "Gabriela" (amplía femicidio y violencia intrafamiliar)</li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-medium text-blue-800 mb-2">Derechos de Niños y Adolescentes</h3>
-                    <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                      <li>
+                <div>
+                  <h3 className="text-xl font-medium mb-2 text-blue-800">Protección de Niños y Adolescentes</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>
                         Ley N.º 20.430 (15-III-2022) – Protección Integral de los Derechos de la Niñez y Adolescencia
-                      </li>
-                      <li>Ley N.º 20.084 (7-XII-2005) – Responsabilidad Penal Adolescente</li>
-                      <li>Ley N.º 20.680 (21-VI-2013) – "Ley Amor de Papá" (cuidado personal compartido)</li>
-                    </ul>
-                  </div>
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 20.084 (7-XII-2005) – Responsabilidad Penal Adolescente</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 20.680 (21-VI-2013) – "Ley Amor de Papá" (cuidado personal compartido)</span>
+                    </li>
+                  </ul>
+                </div>
 
-                  <div>
-                    <h3 className="text-lg font-medium text-blue-800 mb-2">Pensiones Alimenticias</h3>
-                    <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                      <li>Ley N.º 14.908 (5-X-1961) – Abandono de Familia y Pago de Pensiones Alimenticias</li>
-                      <li>Ley N.º 21.389 (18-XI-2021) – Registro Nacional de Deudores de Pensiones de Alimentos</li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-medium text-blue-800 mb-2">Identidad de Género</h3>
-                    <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                      <li>Ley N.º 21.120 (10-XII-2018) – Identidad de Género y Cambio Registral de Nombre/Sexo</li>
-                      <li>
+                <div>
+                  <h3 className="text-xl font-medium mb-2 text-blue-800">Pensiones Alimenticias e Identidad</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 14.908 (5-X-1961) – Abandono de Familia y Pago de Pensiones Alimenticias</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 21.389 (18-XI-2021) – Registro Nacional de Deudores de Pensiones de Alimentos</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>Ley N.º 21.120 (10-XII-2018) – Identidad de Género y Cambio Registral de Nombre/Sexo</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="bg-blue-100 text-blue-800 rounded-full p-1 mr-2 mt-1 text-xs">•</span>
+                      <span>
                         Ley N.º 21.331 (11-V-2021) – Ley de Salud Mental (protege derechos de personas con trastornos,
                         incluyendo identidad de género)
-                      </li>
-                    </ul>
-                  </div>
+                      </span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        <section className="py-8 bg-gray-50">
-          <div className="container px-4 mx-auto">
-            <div className="max-w-4xl mx-auto">
-              <AdUnit slot="2345678901" format="horizontal" responsive={true} position="footer" />
-            </div>
-          </div>
-        </section>
+          </section>
+        </div>
+        <div className="mt-8">
+          <AdUnit slot="1234567890" format="rectangle" />
+        </div>
       </main>
-
       <SiteFooter />
       <WhatsAppButton />
     </div>

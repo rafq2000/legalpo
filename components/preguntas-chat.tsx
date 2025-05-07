@@ -1,18 +1,18 @@
 "use client"
 
-import { CardFooter } from "@/components/ui/card"
-
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import { useSession } from "next-auth/react"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Send } from "lucide-react"
 import { TextToSpeech } from "@/components/text-to-speech"
 import { ShareButton } from "@/components/share-button"
+import { guardarPreguntaUsuario } from "@/utils/firestore-service"
 
 interface Message {
   role: "user" | "assistant"
@@ -20,47 +20,100 @@ interface Message {
 }
 
 interface PreguntasChatProps {
-  tema: "deudas" | "laboral"
+  tema: "deudas" | "laboral" | "familia"
 }
 
-export default function PreguntasChat({ tema }: PreguntasChatProps) {
+export function PreguntasChat({ tema }: PreguntasChatProps) {
   const { data: session } = useSession()
+  const pathname = usePathname()
+
+  const temaInicial = useMemo(() => {
+    if (pathname?.includes("deuda")) return "deuda"
+    if (pathname?.includes("laboral")) return "laboral"
+    if (pathname?.includes("familia")) return "familia"
+    return "otro"
+  }, [pathname])
+
+  const mensajeInicial = useMemo(() => {
+    if (tema === "deudas") {
+      return "Hola, soy el asistente legal de LegalPo especializado en deudas. Puedo ayudarte con consultas sobre cobranzas, embargos, prescripción de deudas y repactaciones. ¿En qué puedo ayudarte hoy?"
+    } else if (tema === "laboral") {
+      return "Hola, soy el asistente legal de LegalPo especializado en normativa laboral chilena. Puedo ayudarte con consultas sobre contratos de trabajo, despidos, finiquitos, licencias médicas y otros temas relacionados con el Código del Trabajo. ¿En qué puedo ayudarte hoy?"
+    } else if (tema === "familia") {
+      return "Hola, soy el asistente legal de LegalPo especializado en derecho de familia. Puedo ayudarte con consultas sobre matrimonio, divorcio, pensión alimenticia, custodia de hijos y otros temas relacionados con el derecho familiar en Chile. ¿En qué puedo ayudarte hoy?"
+    }
+    return "Hola, soy el asistente legal de LegalPo. ¿En qué puedo ayudarte hoy?"
+  }, [tema])
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content:
-        tema === "deudas"
-          ? "Hola, soy el asistente legal de LegalPo especializado en deudas. Puedo ayudarte con consultas sobre cobranzas, embargos, prescripción de deudas y repactaciones. ¿En qué puedo ayudarte hoy?"
-          : "Hola, soy el asistente legal de LegalPo especializado en normativa laboral chilena. Puedo ayudarte con consultas sobre contratos de trabajo, despidos, finiquitos, licencias médicas y otros temas relacionados con el Código del Trabajo. ¿En qué puedo ayudarte hoy?",
+      content: mensajeInicial,
     },
   ])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
+  // Scroll al final de los mensajes cuando se añade uno nuevo
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
+  // Función para enviar mensaje
   const sendMessage = async () => {
     if (input.trim() === "") return
 
+    // Añadir mensaje del usuario
     const userMessage = { role: "user" as const, content: input }
     setMessages((prev) => [...prev, userMessage])
     setInput("")
     setIsLoading(true)
 
     try {
-      const response = await fetch(tema === "deudas" ? "/api/chat" : "/api/chat-laboral", {
+      // Guardar la pregunta en Firestore
+      await guardarPreguntaUsuario({
+        email: session?.user?.email || null,
+        tema: tema || temaInicial,
+        pregunta: input,
+        sessionId: localStorage.getItem("docuscan_session_id") || undefined,
+      })
+
+      // Registrar la pregunta en Firestore
+      await guardarPreguntaUsuario({
+        pregunta: input,
+        tema,
+        pagina: pathname,
+        email: session?.user?.email || null,
+      })
+
+      // Determinar el endpoint de la API según el tema
+      let apiEndpoint = "/api/chat-laboral"
+      if (tema === "deudas") {
+        apiEndpoint = "/api/chat-deudas"
+      } else if (tema === "familia") {
+        apiEndpoint = "/api/chat-familia"
+      }
+
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ messages: messages.concat(userMessage), userId: session?.user?.email || "anonymous" }),
+        body: JSON.stringify({
+          messages: [...messages, userMessage],
+          userId: session?.user?.email || "anonymous",
+          tema,
+        }),
       })
+
+      if (!response.ok) {
+        throw new Error("Error al enviar mensaje")
+      }
 
       const data = await response.json()
 
+      // Añadir respuesta del asistente
       setMessages((prev) => [...prev, { role: "assistant", content: data.response }])
     } catch (error) {
       console.error("Error:", error)
@@ -77,6 +130,7 @@ export default function PreguntasChat({ tema }: PreguntasChatProps) {
     }
   }
 
+  // Manejar envío con Enter
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -84,9 +138,25 @@ export default function PreguntasChat({ tema }: PreguntasChatProps) {
     }
   }
 
-  // Obtener el texto de todos los mensajes para la lectura
-  const getAllMessagesText = () => {
-    return messages.map((msg) => `${msg.role === "user" ? "Tú:" : "Asistente:"} ${msg.content}`).join(". ")
+  const getTemaTitle = () => {
+    if (tema === "deudas") return "Consultas sobre Deudas"
+    if (tema === "laboral") return "Consultas Laborales"
+    if (tema === "familia") return "Consultas de Derecho de Familia"
+    return "Consultas Legales"
+  }
+
+  const getTemaDescription = () => {
+    if (tema === "deudas") return "Haz preguntas sobre deudas, cobranzas, embargos y repactaciones"
+    if (tema === "laboral") return "Haz preguntas sobre contratos, despidos, finiquitos y derechos laborales"
+    if (tema === "familia") return "Haz preguntas sobre matrimonio, divorcio, pensión alimenticia y custodia de hijos"
+    return "Haz preguntas sobre temas legales"
+  }
+
+  const getPlaceholder = () => {
+    if (tema === "deudas") return "Escribe tu consulta sobre deudas, cobranzas o embargos..."
+    if (tema === "laboral") return "Escribe tu consulta sobre temas laborales, contratos o despidos..."
+    if (tema === "familia") return "Escribe tu consulta sobre matrimonio, divorcio o pensión alimenticia..."
+    return "Escribe tu consulta legal..."
   }
 
   return (
@@ -94,29 +164,22 @@ export default function PreguntasChat({ tema }: PreguntasChatProps) {
       <CardHeader className="bg-blue-50 border-b border-blue-100">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>{tema === "deudas" ? "Consultas sobre Deudas" : "Consultas Laborales"}</CardTitle>
-            <CardDescription>
-              {tema === "deudas"
-                ? "Haz preguntas sobre deudas, cobranzas, embargos y repactaciones"
-                : "Haz preguntas sobre contratos, despidos, finiquitos y derechos laborales"}
-            </CardDescription>
+            <CardTitle>{getTemaTitle()}</CardTitle>
+            <CardDescription>{getTemaDescription()}</CardDescription>
           </div>
-          <div className="flex items-center gap-2">
-            <TextToSpeech text={getAllMessagesText()} label="Leer conversación" />
-            {messages.length > 1 && (
-              <ShareButton
-                title={`Consulta ${tema === "deudas" ? "sobre deudas" : "laboral"} en LegalPo`}
-                text={messages
-                  .map((msg) => `${msg.role === "user" ? "Yo: " : "Asistente: "}${msg.content}`)
-                  .join("\n\n")}
-                size="sm"
-              />
-            )}
-          </div>
+          {messages.length > 1 && (
+            <ShareButton
+              title={`Consulta ${
+                tema === "deudas" ? "sobre deudas" : tema === "laboral" ? "laboral" : "de derecho de familia"
+              } en LegalPo`}
+              text={messages.map((msg) => `${msg.role === "user" ? "Yo: " : "Asistente: "}${msg.content}`).join("\n\n")}
+              size="sm"
+            />
+          )}
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="space-y-4 h-[400px] overflow-y-auto p-4 rounded-lg border-0">
+        <div className="space-y-4 h-[400px] overflow-y-auto p-4">
           {messages.map((message, index) => (
             <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
               <div className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
@@ -149,9 +212,7 @@ export default function PreguntasChat({ tema }: PreguntasChatProps) {
         <div className="flex w-full items-center space-x-2">
           <Input
             type="text"
-            placeholder={`Escribe tu consulta sobre ${
-              tema === "deudas" ? "deudas, cobranzas o embargos" : "temas laborales, contratos o despidos"
-            }...`}
+            placeholder={getPlaceholder()}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -173,3 +234,5 @@ export default function PreguntasChat({ tema }: PreguntasChatProps) {
     </Card>
   )
 }
+
+export default PreguntasChat

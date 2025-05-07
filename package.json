@@ -74,7 +74,9 @@
     "tesseract.js": "latest",
     "mammoth": "latest",
     "xlsx": "latest",
-    "firebase-admin": "latest"
+    "firebase-admin": "latest",
+    "ai": "latest",
+    "@ai-sdk/openai": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
