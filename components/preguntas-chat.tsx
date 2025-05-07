@@ -7,11 +7,9 @@ import { useSession } from "next-auth/react"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Send } from "lucide-react"
 import { TextToSpeech } from "@/components/text-to-speech"
-import { ShareButton } from "@/components/share-button"
 
 interface Message {
   role: "user" | "assistant"
@@ -128,51 +126,43 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
   }
 
   const getTemaTitle = () => {
-    if (tema === "deudas") return "Consultas sobre Deudas"
-    if (tema === "laboral") return "Consultas Laborales"
-    if (tema === "familia") return "Consultas de Derecho de Familia"
-    return "Consultas Legales"
+    if (tema === "deudas") return "Asistente de Deudas"
+    if (tema === "laboral") return "Asistente Laboral"
+    if (tema === "familia") return "Asistente de Familia"
+    return "Asistente Legal"
   }
 
   const getTemaDescription = () => {
-    if (tema === "deudas") return "Haz preguntas sobre deudas, cobranzas, embargos y repactaciones"
-    if (tema === "laboral") return "Haz preguntas sobre contratos, despidos, finiquitos y derechos laborales"
-    if (tema === "familia") return "Haz preguntas sobre matrimonio, divorcio, pensión alimenticia y custodia de hijos"
+    if (tema === "deudas")
+      return "Haz preguntas sobre deudas, cobranzas, prescripción y DICOM y recibe respuestas basadas en la legislación vigente"
+    if (tema === "laboral")
+      return "Haz preguntas sobre normativa laboral chilena y recibe respuestas basadas en la legislación vigente"
+    if (tema === "familia")
+      return "Haz preguntas sobre derecho de familia y recibe respuestas basadas en la legislación vigente"
     return "Haz preguntas sobre temas legales"
   }
 
   const getPlaceholder = () => {
-    if (tema === "deudas") return "Escribe tu consulta sobre deudas, cobranzas o embargos..."
-    if (tema === "laboral") return "Escribe tu consulta sobre temas laborales, contratos o despidos..."
+    if (tema === "deudas") return "Escribe tu consulta sobre deudas, cobranzas o DICOM..."
+    if (tema === "laboral")
+      return "Escribe tu consulta sobre normativa laboral, derechos del trabajador o acoso laboral..."
     if (tema === "familia") return "Escribe tu consulta sobre matrimonio, divorcio o pensión alimenticia..."
     return "Escribe tu consulta legal..."
   }
 
   return (
-    <Card className="border-blue-100 shadow-md">
-      <CardHeader className="bg-blue-50 border-b border-blue-100">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>{getTemaTitle()}</CardTitle>
-            <CardDescription>{getTemaDescription()}</CardDescription>
-          </div>
-          {messages.length > 1 && (
-            <ShareButton
-              title={`Consulta ${
-                tema === "deudas" ? "sobre deudas" : tema === "laboral" ? "laboral" : "de derecho de familia"
-              } en LegalPo`}
-              text={messages.map((msg) => `${msg.role === "user" ? "Yo: " : "Asistente: "}${msg.content}`).join("\n\n")}
-              size="sm"
-            />
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="p-0">
-        <div className="space-y-4 h-[400px] overflow-y-auto p-4">
+    <div className="mb-8">
+      <div className="bg-blue-50 p-4 rounded-t-lg border border-blue-100">
+        <h2 className="text-2xl font-bold text-blue-900">{getTemaTitle()}</h2>
+        <p className="text-gray-600">{getTemaDescription()}</p>
+      </div>
+
+      <div className="bg-white border-x border-b border-blue-100 rounded-b-lg p-4">
+        <div className="space-y-4 mb-4">
           {messages.map((message, index) => (
             <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
               <div className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
-                <Avatar>
+                <Avatar className={message.role === "assistant" ? "bg-blue-100" : "bg-gray-100"}>
                   <AvatarFallback>{message.role === "user" ? "U" : "AI"}</AvatarFallback>
                   {message.role === "assistant" && <AvatarImage src="/logo.png" />}
                   {message.role === "user" && session?.user?.image && (
@@ -181,7 +171,7 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
                 </Avatar>
                 <div
                   className={`rounded-lg px-4 py-2 max-w-[80%] ${
-                    message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+                    message.role === "user" ? "bg-blue-600 text-white" : "bg-blue-50"
                   }`}
                 >
                   <div className="whitespace-pre-wrap">{message.content}</div>
@@ -196,9 +186,8 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
           ))}
           <div ref={messagesEndRef} />
         </div>
-      </CardContent>
-      <CardFooter className="border-t border-gray-100 p-4">
-        <div className="flex w-full items-center space-x-2">
+
+        <div className="flex items-center gap-2">
           <Input
             type="text"
             placeholder={getPlaceholder()}
@@ -208,20 +197,19 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
             disabled={isLoading}
             className="flex-1"
           />
-          <Button type="submit" size="icon" onClick={sendMessage} disabled={isLoading}>
+          <Button type="submit" onClick={sendMessage} disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">
             <Send className="h-4 w-4" />
             <span className="sr-only">Enviar mensaje</span>
           </Button>
         </div>
-        <div className="mt-2 text-xs text-muted-foreground">
+
+        <div className="mt-4 text-xs text-gray-500">
           <p>
-            Este asistente proporciona información general basada en la legislación chilena. Para asesoría legal
-            específica, consulta con un abogado.
+            <strong>Nota:</strong> Este asistente proporciona información general basada en la legislación chilena. Para
+            asesoría legal específica, consulta con un abogado.
           </p>
         </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   )
 }
-
-export default PreguntasChat
