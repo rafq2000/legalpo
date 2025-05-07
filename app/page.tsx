@@ -79,14 +79,6 @@ export default function Home() {
                 variant="outline"
                 className="bg-transparent border-white text-white hover:bg-blue-700 text-lg"
               >
-                <Link href="/ask">Hacer una consulta</Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="bg-transparent border-white text-white hover:bg-blue-700 text-lg"
-              >
                 <Link href="/calculadora-herencia">Calculadora Herencia</Link>
               </Button>
             </div>
@@ -246,12 +238,9 @@ export default function Home() {
                 <p className="text-gray-600 mb-5">
                   Dudas sobre trabajo o deudas. Te respondemos de forma clara y directa, sin tecnicismos.
                 </p>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   <Button asChild variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
                     <Link href="/dudas-laborales">Laborales</Link>
-                  </Button>
-                  <Button asChild variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
-                    <Link href="/ask">Deudas</Link>
                   </Button>
                   <Button asChild variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
                     <Link href="/consulta-familia">Familia</Link>
