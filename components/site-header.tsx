@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Shield } from "lucide-react"
 import { useSession, signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
+import { usePathname } from "next/navigation"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +21,7 @@ export function SiteHeader() {
   const status = session?.status || "unauthenticated"
   const sessionData = session?.data
   const [mounted, setMounted] = useState(false)
+  const pathname = usePathname()
 
   // Este useEffect asegura que el componente solo se renderice en el cliente
   useEffect(() => {
@@ -46,11 +48,57 @@ export function SiteHeader() {
   return (
     <header className="bg-blue-900 text-white py-4 sticky top-0 z-50 w-full border-b border-blue-800">
       <div className="container flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <Shield className="h-6 w-6" />
-          <Link href="/" className="font-bold text-xl">
-            LegalPO
-          </Link>
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <Shield className="h-6 w-6" />
+            <Link href="/" className="font-bold text-xl">
+              LegalPO
+            </Link>
+          </div>
+
+          {/* Navegación directamente en el header */}
+          <nav className="hidden md:flex items-center space-x-6">
+            <Link
+              href="/"
+              className={`text-sm font-medium transition-colors hover:text-white ${
+                pathname === "/" ? "text-white" : "text-blue-100"
+              }`}
+            >
+              Inicio
+            </Link>
+            <Link
+              href="/ask"
+              className={`text-sm font-medium transition-colors hover:text-white ${
+                pathname === "/ask" ? "text-white" : "text-blue-100"
+              }`}
+            >
+              Consultas Generales
+            </Link>
+            <Link
+              href="/deudas"
+              className={`text-sm font-medium transition-colors hover:text-white ${
+                pathname === "/deudas" ? "text-white" : "text-blue-100"
+              }`}
+            >
+              Consultas Deudas
+            </Link>
+            <Link
+              href="/generador-contratos"
+              className={`text-sm font-medium transition-colors hover:text-white ${
+                pathname.startsWith("/generador-contratos") ? "text-white" : "text-blue-100"
+              }`}
+            >
+              Contratos
+            </Link>
+            <Link
+              href="/como-funciona"
+              className={`text-sm font-medium transition-colors hover:text-white ${
+                pathname === "/como-funciona" ? "text-white" : "text-blue-100"
+              }`}
+            >
+              Cómo funciona
+            </Link>
+          </nav>
         </div>
 
         {mounted && status === "authenticated" && sessionData?.user ? (

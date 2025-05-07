@@ -2,6 +2,14 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 export function middleware(request: NextRequest) {
+  // Log the request path for debugging
+  console.log(`Middleware processing request for: ${request.nextUrl.pathname}`)
+
+  // Check if we're trying to access the deudas page
+  if (request.nextUrl.pathname === "/deudas") {
+    console.log("Accessing deudas page")
+  }
+
   // Simple middleware that just passes through all requests
   return NextResponse.next()
 }

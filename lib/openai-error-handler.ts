@@ -1,4 +1,4 @@
-export function openAIErrorHandler(error: any) {
+export function handleOpenAIError(error: any) {
   console.error("Error de OpenAI:", error)
 
   // Determinar el tipo de error de OpenAI
@@ -8,22 +8,30 @@ export function openAIErrorHandler(error: any) {
   // Manejar diferentes tipos de errores de OpenAI
   switch (error.code) {
     case "rate_limit_exceeded":
-      return "Límite de solicitudes excedido. Intente más tarde."
+      return { response: "Límite de solicitudes excedido. Intente más tarde.", status: statusCode }
 
     case "invalid_api_key":
       console.error("API key de OpenAI inválida")
-      return "Servicio no disponible temporalmente"
+      return { response: "Servicio no disponible temporalmente", status: statusCode }
 
     case "context_length_exceeded":
-      return "Tu consulta es demasiado extensa. Por favor, intenta con una consulta más corta o divídela en varias partes."
+      return {
+        response:
+          "Tu consulta es demasiado extensa. Por favor, intenta con una consulta más corta o divídela en varias partes.",
+        status: statusCode,
+      }
 
     default:
       // Para otros errores, usar mensaje genérico en producción
       if (process.env.NODE_ENV === "production") {
-        return "Lo siento, ha ocurrido un error al procesar tu consulta. Por favor, intenta nuevamente en unos momentos."
+        return {
+          response:
+            "Lo siento, ha ocurrido un error al procesar tu consulta. Por favor, intenta nuevamente en unos momentos.",
+          status: statusCode,
+        }
       } else {
         // En desarrollo, mostrar detalles del error
-        return `Error del servidor: ${error.message}`
+        return { response: `Error del servidor: ${error.message}`, status: statusCode }
       }
   }
 }

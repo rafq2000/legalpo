@@ -74,7 +74,8 @@
     "mammoth": "latest",
     "xlsx": "latest",
     "firebase-admin": "latest",
-    "openai": "latest"
+    "openai": "latest",
+    "ai": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
