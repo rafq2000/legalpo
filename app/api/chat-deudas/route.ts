@@ -8,24 +8,33 @@ export async function POST(req: Request) {
   try {
     const { messages, userId = "anonymous" } = await req.json()
 
-    // Inicializar OpenAI
+    console.log("Recibida solicitud en chat-deudas:", {
+      userId,
+      messageCount: messages.length,
+      lastMessage: messages[messages.length - 1]?.content?.substring(0, 50) + "...",
+    })
+
+    // Verificar que la API key esté configurada
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("ERROR: OPENAI_API_KEY no está configurada")
+      return NextResponse.json(
+        {
+          response: "Error de configuración del servidor. Por favor, contacta al administrador.",
+        },
+        { status: 500 },
+      )
+    }
+
+    // Inicializar OpenAI con la API key
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     })
 
-    // Preparar el sistema de mensajes con el contexto de leyes sobre deudas
+    // Mensaje del sistema para el contexto
     const systemMessage = {
       role: "system",
-      content: `Eres un asistente legal especializado en deudas y cobranzas en Chile. Proporciona respuestas precisas y útiles basedas en la legislación chilena vigente.
-      
-      Utiliza la siguiente información como referencia:
-      
-      - Ley 20.720 de Reorganización y Liquidación
-      - Código Civil, artículo 2515 sobre prescripción
-      - Ley 19.496 sobre Protección de los Derechos de los Consumidores
-      - Ley 18.010 sobre Operaciones de Crédito de Dinero
-      - Ley 21.320 sobre Procedimiento de Cobranza
-      
+      content: `Eres un asistente legal especializado en deudas y cobranzas en Chile. Proporciona respuestas precisas y útiles basadas en la legislación chilena vigente.
+
       Instrucciones:
       1. Responde de manera clara y en lenguaje sencillo, evitando jerga legal innecesaria.
       2. Cita las leyes específicas cuando sea relevante.
@@ -33,10 +42,11 @@ export async function POST(req: Request) {
       4. No inventes información legal.
       5. Mantén tus respuestas concisas y directas.
       6. Cuando sea apropiado, menciona los plazos legales relevantes.
-      7. Responde en español.`,
+      7. Responde en español.
+      8. Siempre pregunta al usuario qué tipo de deuda tiene (ej: tarjetas de crédito, préstamos, etc.) y si ha recibido notificaciones judiciales. Esto te ayudará a dar una respuesta más precisa.`,
     }
 
-    // Combinar el mensaje del sistema con los mensajes del usuario
+    // Preparar los mensajes para la API
     const apiMessages = [
       systemMessage,
       ...messages.map((message: any) => ({
@@ -44,6 +54,13 @@ export async function POST(req: Request) {
         content: message.content,
       })),
     ]
+
+    console.log("Enviando solicitud a OpenAI:", {
+      model: "gpt-4",
+      messageCount: apiMessages.length,
+      systemMessageLength: systemMessage.content.length,
+      firstUserMessage: apiMessages.find((m: any) => m.role === "user")?.content?.substring(0, 50) + "...",
+    })
 
     // Llamar a la API de OpenAI
     const completion = await openai.chat.completions.create({
@@ -53,21 +70,48 @@ export async function POST(req: Request) {
       max_tokens: 1000,
     })
 
-    const response = completion.choices[0].message.content
+    console.log("Respuesta recibida de OpenAI:", {
+      status: "success",
+      responseLength: completion.choices[0].message.content?.length || 0,
+    })
 
-    if (!response) {
-      console.error("Respuesta vacía de OpenAI")
-      return NextResponse.json(
-        {
-          response: "Lo siento, no pude generar una respuesta. Por favor, intenta nuevamente en unos momentos.",
-        },
-        { status: 500 },
-      )
+    // Extraer la respuesta
+    const response = completion.choices[0].message.content || "Lo siento, no pude generar una respuesta."
+
+    // Devolver la respuesta
+    return NextResponse.json({ response })
+  } catch (error: any) {
+    console.error("Error en chat-deudas:", error)
+
+    // Manejar errores específicos de OpenAI
+    if (error.name === "APIError") {
+      console.error("OpenAI API Error:", {
+        status: error.status,
+        message: error.message,
+        code: error.code,
+        type: error.type,
+      })
+
+      if (error.code === "rate_limit_exceeded") {
+        return NextResponse.json(
+          {
+            response: "Estamos experimentando alta demanda. Por favor, intenta nuevamente en unos minutos.",
+          },
+          { status: 429 },
+        )
+      }
+
+      if (error.code === "context_length_exceeded") {
+        return NextResponse.json(
+          {
+            response: "Tu consulta es demasiado extensa. Por favor, intenta con una consulta más corta.",
+          },
+          { status: 413 },
+        )
+      }
     }
 
-    return NextResponse.json({ response })
-  } catch (error) {
-    console.error("Error en chat-deudas:", error)
+    // Error genérico
     return NextResponse.json(
       {
         response:
