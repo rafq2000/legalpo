@@ -1,6 +1,7 @@
 "use client"
 
 import { Label } from "@/components/ui/label"
+import { LoginCanonical } from "@/components/login-canonical"
 
 import type React from "react"
 import { useState, useEffect } from "react"
@@ -78,6 +79,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
+      <LoginCanonical />
       <SiteHeader />
       <main className="flex-1 container py-10">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">

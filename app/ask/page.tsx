@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { ArrowLeft, Send, Shield, Loader2 } from "lucide-react"
+import { QueryCanonical } from "@/components/query-canonical"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -154,6 +155,7 @@ export default function AskPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <QueryCanonical />
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center">
           <div className="mr-4 flex">
