@@ -1,8 +1,31 @@
 import NextAuth from "next-auth"
-import { authOptions } from "@/lib/auth"
+import type { AuthOptions } from "next-auth"
+import GoogleProvider from "next-auth/providers/google"
 
-// Crea el handler con las opciones importadas
+export const authOptions: AuthOptions = {
+  session: {
+    strategy: "jwt",
+  },
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    }),
+  ],
+  callbacks: {
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.sub as string
+        session.user.name = session.user.name || (token.name as string)
+        session.user.email = session.user.email || (token.email as string)
+        session.user.image = session.user.image || (token.picture as string)
+      }
+      return session
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+}
+
 const handler = NextAuth(authOptions)
 
-// Exporta SOLO GET y POST
 export { handler as GET, handler as POST }
