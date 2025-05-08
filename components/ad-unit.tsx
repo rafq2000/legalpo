@@ -32,25 +32,21 @@ export function AdUnit({
         return {
           className: "my-4 mx-auto max-w-[300px]",
           minHeight: format === "rectangle" ? "250px" : "100px",
-          label: "Publicidad",
         }
       case "header":
         return {
           className: "my-4 mx-auto max-w-[728px]",
           minHeight: "90px",
-          label: "Publicidad",
         }
       case "footer":
         return {
           className: "my-4 mx-auto max-w-[728px]",
           minHeight: "90px",
-          label: "Publicidad",
         }
       default:
         return {
           className: "my-4 mx-auto max-w-[728px]",
           minHeight: format === "rectangle" ? "250px" : "90px",
-          label: "Publicidad",
         }
     }
   }
@@ -138,7 +134,6 @@ export function AdUnit({
       data-ad-position={position}
       data-ad-format={format}
     >
-      <div className="text-xs text-gray-500 mb-1">{positionStyles.label}</div>
       <div
         className="ad-container"
         style={{

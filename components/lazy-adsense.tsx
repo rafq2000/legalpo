@@ -71,7 +71,6 @@ export function LazyAdsense({ slot, format = "auto", className = "" }: LazyAdsen
     <div ref={adRef} className={`flex justify-center my-4 ${className}`}>
       {isVisible && (
         <div className="w-full max-w-[728px]">
-          <div className="text-xs text-gray-500 mb-1">Publicidad</div>
           <div className="ad-container" style={{ minHeight: "90px", background: "rgba(0,0,0,0.02)" }}></div>
         </div>
       )}
