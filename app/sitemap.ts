@@ -3,6 +3,21 @@ import type { MetadataRoute } from "next"
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://legalpo.cl"
 
+  // Rutas que no deben incluirse en el sitemap
+  const excludedRoutes = [
+    "/login",
+    "/register",
+    "/registro",
+    "/auth",
+    "/admin",
+    "/api",
+    "/test-adsense",
+    "/test-ads",
+    "/test-firebase",
+    "/check-firebase-env",
+    "/test-eventos",
+  ]
+
   // Rutas principales del sitio
   const routes = [
     "",
@@ -33,6 +48,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/laboral",
   ]
 
+  // Filtrar las rutas para excluir las que no deben estar en el sitemap
+  const filteredRoutes = routes.filter((route) => !excludedRoutes.some((excluded) => route.startsWith(excluded)))
+
   // Páginas de herramientas y servicios
   const toolRoutes = [
     "/contratos/arriendo",
@@ -58,8 +76,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/informacion-legal",
   ]
 
-  // Combinar todas las rutas
-  const allRoutes = [...routes, ...toolRoutes, ...legalInfoRoutes]
+  // Usar filteredRoutes en lugar de routes en la combinación final
+  const allRoutes = [...filteredRoutes, ...toolRoutes, ...legalInfoRoutes]
 
   return allRoutes.map((route) => ({
     url: `${baseUrl}${route}`,

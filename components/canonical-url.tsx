@@ -1,7 +1,7 @@
 "use client"
 
-import Head from "next/head"
 import { usePathname } from "next/navigation"
+import Head from "next/head"
 
 interface CanonicalProps {
   path?: string

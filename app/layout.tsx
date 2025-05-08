@@ -16,6 +16,7 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { LawyerContactButton } from "@/components/lawyer-contact-button"
 import { AdsenseAutoAds } from "@/components/adsense-auto-ads"
 import Script from "next/script"
+import { LegacyRedirects } from "@/components/legacy-redirects"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -76,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
             <ForceLightTheme />
+            <LegacyRedirects />
             {children}
             <Toaster />
             <Analytics />

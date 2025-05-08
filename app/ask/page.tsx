@@ -23,8 +23,7 @@ import { ShareButton } from "@/components/share-button"
 // Add the import for guardarPreguntaUsuario at the top of the file
 import { guardarPreguntaUsuario } from "@/utils/firestore-service"
 // Add this import at the top
-import Head from "next/head"
-import { CanonicalUrl } from "@/components/canonical-url"
+import { MetaTags } from "@/components/meta-tags"
 
 // Define the Message type
 interface Message {
@@ -159,13 +158,10 @@ export default function AskPage() {
   // For pages that are crawled but not indexed
   return (
     <>
-      <Head>
-        <meta
-          name="description"
-          content="Consulta sobre deudas y obtén respuestas legales personalizadas. Información sobre cobranzas, prescripción de deudas y derechos del deudor en Chile."
-        />
-        <CanonicalUrl />
-      </Head>
+      <MetaTags 
+        title="Consulta sobre deudas | LegalPO" 
+        description="Consulta sobre deudas y obtén respuestas legales personalizadas. Información sobre cobranzas, prescripción de deudas y derechos del deudor en Chile."
+      />
       <div className="flex min-h-screen flex-col">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container flex h-16 items-center">
@@ -260,7 +256,7 @@ export default function AskPage() {
                               <span>Procesando tu consulta...</span>
                             </div>
                           </div>
-                        )}
+                        ))}\
                         <div ref={messagesEndRef} />
                       </div>
 

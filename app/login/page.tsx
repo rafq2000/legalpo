@@ -13,7 +13,7 @@ import { Shield, Mail, Lock, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
-import Head from "next/head"
+import { MetaTags } from "@/components/meta-tags"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -79,9 +79,11 @@ export default function LoginPage() {
 
   return (
     <>
-      <Head>
-        <meta name="robots" content="noindex, nofollow" />
-      </Head>
+      <MetaTags
+        title="Iniciar sesión | LegalPO"
+        description="Inicia sesión en LegalPO para acceder a todas las herramientas legales con IA."
+        noindex={true}
+      />
       <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
         <SiteHeader />
         <main className="flex-1 container py-10">
