@@ -65,6 +65,7 @@ export function AdsenseAutoAds() {
             ;(window.adsbygoogle = window.adsbygoogle || []).push({
               google_ad_client: "ca-pub-3753519605655251",
               enable_page_level_ads: true,
+              overlays: { enabled: true },
             })
             console.log("Anuncios automáticos inicializados")
           }

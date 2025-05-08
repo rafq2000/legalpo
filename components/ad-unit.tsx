@@ -2,135 +2,156 @@
 
 import { useEffect, useRef, useState } from "react"
 
+type AdFormat = "auto" | "horizontal" | "vertical" | "rectangle"
+type AdPosition = "content" | "sidebar" | "header" | "footer"
+
 interface AdUnitProps {
   slot: string
-  format?: "auto" | "horizontal" | "vertical" | "rectangle"
+  format?: AdFormat
+  position?: AdPosition
   className?: string
   responsive?: boolean
-  position?: string
 }
 
 export function AdUnit({
   slot,
   format = "auto",
+  position = "content",
   className = "",
   responsive = true,
-  position = "content",
 }: AdUnitProps) {
   const adRef = useRef<HTMLDivElement>(null)
-  const [adLoaded, setAdLoaded] = useState(false)
-  const [adError, setAdError] = useState(false)
-  const [adInitialized, setAdInitialized] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [adError, setAdError] = useState<string | null>(null)
+
+  // Determinar el estilo y clase basado en la posición
+  const getPositionStyles = () => {
+    switch (position) {
+      case "sidebar":
+        return {
+          className: "my-4 mx-auto max-w-[300px]",
+          minHeight: format === "rectangle" ? "250px" : "100px",
+          label: "Publicidad",
+        }
+      case "header":
+        return {
+          className: "my-4 mx-auto max-w-[728px]",
+          minHeight: "90px",
+          label: "Publicidad",
+        }
+      case "footer":
+        return {
+          className: "my-4 mx-auto max-w-[728px]",
+          minHeight: "90px",
+          label: "Publicidad",
+        }
+      default:
+        return {
+          className: "my-4 mx-auto max-w-[728px]",
+          minHeight: format === "rectangle" ? "250px" : "90px",
+          label: "Publicidad",
+        }
+    }
+  }
+
+  const positionStyles = getPositionStyles()
 
   useEffect(() => {
-    // Solo ejecutar en el cliente y en producción
-    if (typeof window !== "undefined") {
-      // Verificar si el script de AdSense ya está cargado
-      const isAdSenseLoaded = () => {
-        return typeof window.adsbygoogle !== "undefined"
-      }
+    if (!adRef.current) return
 
-      // Función para inicializar el anuncio
-      const initAd = () => {
-        if (!adRef.current || adInitialized) return
-
-        try {
-          // Limpiar cualquier contenido previo
-          if (adRef.current.firstChild) {
-            adRef.current.innerHTML = ""
-          }
-
-          // Crear el elemento ins para el anuncio
-          const adElement = document.createElement("ins")
-          adElement.className = "adsbygoogle"
-          adElement.style.display = "block"
-          adElement.style.width = "100%"
-          adElement.style.height = format === "rectangle" ? "250px" : "auto"
-          adElement.setAttribute("data-ad-client", "ca-pub-3753519605655251")
-          adElement.setAttribute("data-ad-slot", slot)
-          adElement.setAttribute("data-ad-format", format)
-
-          if (responsive) {
-            adElement.setAttribute("data-full-width-responsive", "true")
-          }
-
-          // Añadir el elemento al DOM
-          adRef.current.appendChild(adElement)
-
-          // Intentar cargar el anuncio
-          try {
-            ;(window.adsbygoogle = window.adsbygoogle || []).push({})
-            console.log("AdSense push ejecutado para slot:", slot)
-            setAdInitialized(true)
-
-            // Verificar si el anuncio se cargó después de un tiempo
-            setTimeout(() => {
-              if (adRef.current) {
-                const adIns = adRef.current.querySelector(".adsbygoogle")
-                if (adIns && adIns.innerHTML.trim() !== "") {
-                  setAdLoaded(true)
-                  setAdError(false)
-                } else {
-                  console.log("El anuncio está cargando para slot:", slot)
-                }
-              }
-            }, 2000)
-          } catch (error) {
-            console.error("Error al cargar el anuncio:", error)
-            setAdError(true)
-          }
-        } catch (error) {
-          console.error("Error al inicializar el anuncio:", error)
-          setAdError(true)
+    // Usar IntersectionObserver para cargar el anuncio solo cuando sea visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isLoaded) {
+          setIsVisible(true)
+          observer.disconnect()
         }
-      }
+      },
+      { threshold: 0.1 },
+    )
 
-      // Si AdSense ya está cargado, inicializar el anuncio
-      if (isAdSenseLoaded()) {
-        initAd()
-      } else {
-        // Si AdSense no está cargado, esperar a que se cargue
-        const adsbygoogleInterval = setInterval(() => {
-          if (isAdSenseLoaded()) {
-            clearInterval(adsbygoogleInterval)
-            initAd()
-          }
-        }, 300)
-
-        // Limpiar intervalo después de 10 segundos para evitar bucle infinito
-        setTimeout(() => {
-          clearInterval(adsbygoogleInterval)
-          if (!isAdSenseLoaded()) {
-            console.log("AdSense cargando... Reintentando más tarde para slot:", slot)
-          }
-        }, 10000)
-      }
-    }
+    observer.observe(adRef.current)
 
     return () => {
-      // Limpiar al desmontar
-      if (adRef.current) {
-        adRef.current.innerHTML = ""
+      observer.disconnect()
+    }
+  }, [isLoaded])
+
+  useEffect(() => {
+    if (isVisible && adRef.current) {
+      try {
+        // Verificar si estamos en producción
+        if (process.env.NODE_ENV !== "production") {
+          console.log("AdSense no se carga en desarrollo")
+          return
+        }
+
+        // Verificar si adsbygoogle está definido
+        if (!window.adsbygoogle) {
+          setAdError("AdSense no está inicializado correctamente")
+          return
+        }
+
+        // Crear el elemento de anuncio
+        const adElement = document.createElement("ins")
+        adElement.className = "adsbygoogle"
+        adElement.style.display = "block"
+        adElement.style.width = "100%"
+        adElement.style.height = format === "rectangle" ? "250px" : "auto"
+        adElement.setAttribute("data-ad-client", "ca-pub-3753519605655251")
+        adElement.setAttribute("data-ad-slot", slot)
+        adElement.setAttribute("data-ad-format", format)
+
+        if (responsive) {
+          adElement.setAttribute("data-full-width-responsive", "true")
+        }
+
+        // Limpiar y añadir el elemento
+        if (adRef.current) {
+          const adContainer = adRef.current.querySelector(".ad-container")
+          if (adContainer) {
+            adContainer.innerHTML = ""
+            adContainer.appendChild(adElement)
+
+            // Cargar el anuncio
+            try {
+              ;(window.adsbygoogle = window.adsbygoogle || []).push({})
+              setIsLoaded(true)
+            } catch (error) {
+              console.error("Error al cargar el anuncio:", error)
+              setAdError("Error al cargar el anuncio")
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error al inicializar el anuncio:", error)
+        setAdError("Error al inicializar el anuncio")
       }
     }
-  }, [slot, format, responsive, adInitialized])
+  }, [isVisible, slot, format, responsive])
 
   return (
-    <div className={`ad-container ${position}-ad my-4 ${className}`}>
-      <div className="text-xs text-gray-500 mb-1">Publicidad</div>
+    <div
+      ref={adRef}
+      className={`ad-unit ${positionStyles.className} ${className}`}
+      data-ad-position={position}
+      data-ad-format={format}
+    >
+      <div className="text-xs text-gray-500 mb-1">{positionStyles.label}</div>
       <div
-        ref={adRef}
-        className="w-full overflow-hidden rounded-md"
+        className="ad-container"
         style={{
-          minHeight: format === "rectangle" ? "250px" : "90px",
-          background: adError ? "rgba(0,0,0,0.02)" : "transparent",
-          border: adError ? "1px dashed #ddd" : "none",
+          minHeight: positionStyles.minHeight,
+          background: "rgba(0,0,0,0.02)",
+          width: "100%",
+          overflow: "hidden",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        {adError && <div className="text-sm text-gray-400">Espacio publicitario</div>}
+        {adError && <div className="text-xs text-gray-400">{adError}</div>}
       </div>
     </div>
   )
