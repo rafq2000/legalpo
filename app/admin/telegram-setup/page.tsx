@@ -1,22 +1,28 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { CheckCircle, AlertCircle, Copy } from "lucide-react"
+import { CheckCircle, XCircle, Loader2, AlertTriangle, Copy } from "lucide-react"
 
 export default function TelegramSetupPage() {
   const [botToken, setBotToken] = useState("")
   const [chatId, setChatId] = useState("")
-  const [testMessage, setTestMessage] = useState("Mensaje de prueba desde LegalPO")
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
-  const [result, setResult] = useState<string>("")
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState<{
+    success: boolean
+    message?: string
+    error?: string
+    details?: any
+  } | null>(null)
 
-  const handleTest = async () => {
-    setStatus("loading")
+  const testTelegram = async () => {
+    setLoading(true)
+    setResult(null)
+
     try {
       const response = await fetch("/api/test-telegram", {
         method: "POST",
@@ -26,124 +32,100 @@ export default function TelegramSetupPage() {
         body: JSON.stringify({
           botToken,
           chatId,
-          message: testMessage,
         }),
       })
 
       const data = await response.json()
-
-      if (data.success) {
-        setStatus("success")
-        setResult("Notificación enviada correctamente. Verifica tu chat de Telegram.")
-      } else {
-        setStatus("error")
-        setResult(`Error: ${data.error || "Desconocido"}`)
-      }
+      setResult(data)
     } catch (error) {
-      setStatus("error")
-      setResult(`Error: ${error instanceof Error ? error.message : "Desconocido"}`)
+      setResult({
+        success: false,
+        error: "Error al realizar la solicitud",
+        details: error instanceof Error ? error.message : "Error desconocido",
+      })
+    } finally {
+      setLoading(false)
     }
   }
 
-  const copyInstructions = () => {
-    navigator.clipboard.writeText(
-      "1. Busca @BotFather en Telegram\n" +
-        "2. Envía /newbot y sigue las instrucciones\n" +
-        "3. Copia el token que te proporciona\n" +
-        "4. Busca @userinfobot y envíale un mensaje\n" +
-        "5. Copia tu ID de chat\n" +
-        "6. Agrega estas variables de entorno en Vercel:\n" +
-        "   TELEGRAM_BOT_TOKEN=tu_token\n" +
-        "   TELEGRAM_CHAT_ID=tu_chat_id",
-    )
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <Card>
+    <div className="container mx-auto py-10">
+      <Card className="max-w-md mx-auto">
         <CardHeader>
-          <CardTitle>Configuración de Notificaciones de Telegram</CardTitle>
-          <CardDescription>Configura un bot de Telegram para recibir notificaciones de sugerencias</CardDescription>
+          <CardTitle>Configuración de Telegram</CardTitle>
+          <CardDescription>Configura las notificaciones de Telegram para recibir sugerencias</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-medium">Instrucciones</h3>
-              <Button variant="outline" size="sm" onClick={copyInstructions}>
-                <Copy className="h-4 w-4 mr-2" />
-                Copiar
-              </Button>
-            </div>
-            <ol className="list-decimal pl-5 space-y-2">
-              <li>
-                Busca <code>@BotFather</code> en Telegram
-              </li>
-              <li>
-                Envía <code>/newbot</code> y sigue las instrucciones
-              </li>
-              <li>Copia el token que te proporciona</li>
-              <li>
-                Busca <code>@userinfobot</code> y envíale un mensaje
-              </li>
-              <li>Copia tu ID de chat</li>
-              <li>
-                Agrega estas variables de entorno en Vercel:
-                <pre className="bg-gray-100 p-2 rounded mt-2 overflow-x-auto">
-                  TELEGRAM_BOT_TOKEN=tu_token
-                  <br />
-                  TELEGRAM_CHAT_ID=tu_chat_id
-                </pre>
-              </li>
-            </ol>
+        <CardContent className="space-y-4">
+          <Alert>
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Importante</AlertTitle>
+            <AlertDescription>
+              Después de probar, debes agregar estas variables de entorno en Vercel:
+              <div className="mt-2 space-y-2">
+                <div className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                  <code>TELEGRAM_BOT_TOKEN</code>
+                  <Button variant="ghost" size="sm" onClick={() => copyToClipboard("TELEGRAM_BOT_TOKEN")}>
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                  <code>TELEGRAM_CHAT_ID</code>
+                  <Button variant="ghost" size="sm" onClick={() => copyToClipboard("TELEGRAM_CHAT_ID")}>
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </AlertDescription>
+          </Alert>
+
+          <div className="space-y-2">
+            <Label htmlFor="botToken">Token del Bot</Label>
+            <Input
+              id="botToken"
+              value={botToken}
+              onChange={(e) => setBotToken(e.target.value)}
+              placeholder="1234567890:ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            />
+            <p className="text-sm text-gray-500">Crea un bot con @BotFather en Telegram y copia el token</p>
           </div>
 
-          <div className="space-y-4 pt-4 border-t">
-            <h3 className="text-lg font-medium">Probar configuración</h3>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="botToken">Token del Bot</Label>
-                <Input
-                  id="botToken"
-                  value={botToken}
-                  onChange={(e) => setBotToken(e.target.value)}
-                  placeholder="1234567890:ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="chatId">ID de Chat</Label>
-                <Input id="chatId" value={chatId} onChange={(e) => setChatId(e.target.value)} placeholder="123456789" />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="testMessage">Mensaje de prueba</Label>
-                <Input
-                  id="testMessage"
-                  value={testMessage}
-                  onChange={(e) => setTestMessage(e.target.value)}
-                  placeholder="Mensaje de prueba"
-                />
-              </div>
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="chatId">ID del Chat</Label>
+            <Input id="chatId" value={chatId} onChange={(e) => setChatId(e.target.value)} placeholder="123456789" />
+            <p className="text-sm text-gray-500">Habla con @userinfobot en Telegram para obtener tu ID</p>
           </div>
 
-          {status === "success" && (
-            <Alert className="bg-green-50 border-green-200">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <AlertTitle className="text-green-800">Éxito</AlertTitle>
-              <AlertDescription className="text-green-700">{result}</AlertDescription>
-            </Alert>
-          )}
-
-          {status === "error" && (
-            <Alert className="bg-red-50 border-red-200">
-              <AlertCircle className="h-4 w-4 text-red-600" />
-              <AlertTitle className="text-red-800">Error</AlertTitle>
-              <AlertDescription className="text-red-700">{result}</AlertDescription>
+          {result && (
+            <Alert className={result.success ? "bg-green-50" : "bg-red-50"}>
+              {result.success ? (
+                <CheckCircle className="h-4 w-4 text-green-600" />
+              ) : (
+                <XCircle className="h-4 w-4 text-red-600" />
+              )}
+              <AlertTitle>{result.success ? "Prueba exitosa" : "Error en la prueba"}</AlertTitle>
+              <AlertDescription>{result.message || result.error || ""}</AlertDescription>
+              {result.details && (
+                <div className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto max-h-32">
+                  <pre>{JSON.stringify(result.details, null, 2)}</pre>
+                </div>
+              )}
             </Alert>
           )}
         </CardContent>
         <CardFooter>
-          <Button onClick={handleTest} disabled={!botToken || !chatId || status === "loading"} className="w-full">
-            {status === "loading" ? "Enviando..." : "Probar notificación"}
+          <Button onClick={testTelegram} disabled={loading || !botToken || !chatId} className="w-full">
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Probando...
+              </>
+            ) : (
+              "Probar Configuración"
+            )}
           </Button>
         </CardFooter>
       </Card>

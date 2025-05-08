@@ -1,50 +1,63 @@
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
 export async function POST(req: Request) {
   try {
-    // Verificar si el usuario es administrador
-    const session = await getServerSession(authOptions)
-    const isAdmin = session?.user?.email === process.env.ADMIN_EMAIL
+    const { botToken, chatId } = await req.json()
 
-    if (!isAdmin) {
-      return NextResponse.json({ success: false, error: "No autorizado" }, { status: 403 })
+    if (!botToken || !chatId) {
+      return NextResponse.json({ success: false, error: "Faltan token del bot o ID del chat" }, { status: 400 })
     }
 
-    const { botToken, chatId, message } = await req.json()
+    // Enviar mensaje de prueba directamente a la API de Telegram
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: "🔔 Prueba de configuración\n\nSi estás viendo este mensaje, la configuración de Telegram para LegalPO está funcionando correctamente.",
+          parse_mode: "HTML",
+        }),
+      })
 
-    if (!botToken || !chatId || !message) {
-      return NextResponse.json({ success: false, error: "Faltan parámetros requeridos" }, { status: 400 })
-    }
+      if (!response.ok) {
+        const errorData = await response.json()
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Error al enviar mensaje de prueba",
+            details: errorData,
+          },
+          { status: 500 },
+        )
+      }
 
-    // Enviar mensaje a Telegram
-    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message,
-        parse_mode: "HTML",
-      }),
-    })
-
-    const data = await response.json()
-
-    if (!response.ok) {
+      const data = await response.json()
+      return NextResponse.json({
+        success: true,
+        message: "Mensaje de prueba enviado correctamente. Verifica tu chat de Telegram.",
+        data,
+      })
+    } catch (error) {
       return NextResponse.json(
-        { success: false, error: data.description || "Error al enviar mensaje" },
+        {
+          success: false,
+          error: "Error al enviar mensaje de prueba",
+          details: error instanceof Error ? error.message : "Error desconocido",
+        },
         { status: 500 },
       )
     }
-
-    return NextResponse.json({ success: true, data })
   } catch (error) {
-    console.error("Error al enviar mensaje a Telegram:", error)
+    console.error("Error en prueba de Telegram:", error)
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : "Error desconocido" },
+      {
+        success: false,
+        error: "Error al procesar la solicitud",
+        details: error instanceof Error ? error.message : "Error desconocido",
+      },
       { status: 500 },
     )
   }

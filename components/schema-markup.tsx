@@ -1,4 +1,6 @@
-import Script from "next/script"
+"use client"
+
+import { useEffect, useState } from "react"
 
 interface SchemaMarkupProps {
   type: "LegalService" | "WebPage" | "FAQPage" | "Article" | "Organization"
@@ -6,17 +8,19 @@ interface SchemaMarkupProps {
 }
 
 export function SchemaMarkup({ type, data }: SchemaMarkupProps) {
-  const schemaData = {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
+
+  const schema = {
     "@context": "https://schema.org",
     "@type": type,
     ...data,
   }
 
-  return (
-    <Script
-      id={`schema-${type}-${Math.random().toString(36).substring(7)}`}
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
-    />
-  )
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 }

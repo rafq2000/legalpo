@@ -27,22 +27,33 @@ export async function POST(req: Request) {
 
     // Guardar en Supabase
     let feedbackId = null
-    if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      const { createClient } = await import("@supabase/supabase-js")
+    let supabaseError = null
 
-      const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY || "")
+    try {
+      if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+        const { createClient } = await import("@supabase/supabase-js")
 
-      const { data, error } = await supabase.from("user_feedback").insert([enhancedFeedback]).select()
+        const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY || "")
 
-      if (error) {
-        console.error("Error guardando feedback en Supabase:", error)
-      } else if (data && data.length > 0) {
-        feedbackId = data[0].id
+        const { data, error } = await supabase.from("user_feedback").insert([enhancedFeedback]).select()
+
+        if (error) {
+          console.error("Error guardando feedback en Supabase:", error)
+          supabaseError = error.message
+        } else if (data && data.length > 0) {
+          feedbackId = data[0].id
+        }
       }
+    } catch (err) {
+      console.error("Excepción al guardar en Supabase:", err)
+      supabaseError = err instanceof Error ? err.message : "Error desconocido"
     }
 
     // Enviar notificación por Telegram
-    const telegramMessage = `
+    let telegramResult = { success: false, error: "No se intentó enviar" }
+
+    try {
+      const telegramMessage = `
 <b>🔔 Nueva sugerencia recibida</b>
 
 <b>Servicio:</b> ${enhancedFeedback.serviceUsed || "General"}
@@ -52,25 +63,44 @@ export async function POST(req: Request) {
 <b>Usuario:</b> ${enhancedFeedback.userId || "Anónimo"}
 <b>Página:</b> ${enhancedFeedback.path || "No especificada"}
 <b>Fecha:</b> ${new Date().toLocaleString()}
-    `
+      `
 
-    const telegramResult = await sendTelegramNotification(telegramMessage)
+      telegramResult = await sendTelegramNotification(telegramMessage)
+    } catch (err) {
+      console.error("Excepción al enviar notificación Telegram:", err)
+      telegramResult = {
+        success: false,
+        error: err instanceof Error ? err.message : "Error desconocido",
+      }
+    }
 
     // Registrar evento de analítica
-    trackEvent("feedback_received", {
-      feedbackType: enhancedFeedback.type,
-      serviceUsed: enhancedFeedback.serviceUsed,
-      rating: enhancedFeedback.quickRating || enhancedFeedback.detailedRating,
-      userType: token ? "registered" : "anonymous",
-    })
+    try {
+      trackEvent("feedback_received", {
+        feedbackType: enhancedFeedback.type,
+        serviceUsed: enhancedFeedback.serviceUsed,
+        rating: enhancedFeedback.quickRating || enhancedFeedback.detailedRating,
+        userType: token ? "registered" : "anonymous",
+      })
+    } catch (err) {
+      console.error("Error al registrar evento de analítica:", err)
+    }
 
     return NextResponse.json({
       success: true,
       feedbackId,
       telegramSent: telegramResult.success,
+      supabaseError,
+      telegramError: telegramResult.success ? null : telegramResult.error,
     })
   } catch (error) {
     console.error("Error procesando feedback:", error)
-    return NextResponse.json({ error: "Error al procesar el feedback" }, { status: 500 })
+    return NextResponse.json(
+      {
+        error: "Error al procesar el feedback",
+        details: error instanceof Error ? error.message : "Error desconocido",
+      },
+      { status: 500 },
+    )
   }
 }

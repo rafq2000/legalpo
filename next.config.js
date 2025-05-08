@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configuración existente...
+  reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -10,11 +10,18 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Habilitar AMP
-  experimental: {
-    amp: {
-      skipValidation: true,
-    },
+  webpack: (config, { isServer }) => {
+    // Evitar que webpack intente resolver estos módulos
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      dns: false,
+      tls: false,
+      child_process: false,
+    }
+
+    return config
   },
 }
 
