@@ -126,21 +126,21 @@ export async function guardarSugerenciaUsuario({
       mensaje,
       pagina,
       email,
-      timestamp: serverTimestamp(), // Usar serverTimestamp para la marca de tiempo del servidor
-      createdAt: Timestamp.now(), // Agregar createdAt para tener una referencia local
+      timestamp: serverTimestamp(),
+      createdAt: Timestamp.now(),
     }
 
     // Guardar en Firestore
     const docRef = await addDoc(eventosRef, sugerenciaDoc)
 
-    if (process.env.NODE_ENV !== "production") {
-      console.log(`Sugerencia guardada correctamente con ID: ${docRef.id}`)
-    }
+    console.log(`Sugerencia guardada correctamente con ID: ${docRef.id}`)
 
-    // Enviar notificación por email
+    // Enviar notificación por email con manejo de errores mejorado
     try {
-      await sendEmail({
-        subject: "Nueva sugerencia de usuario en LegalPO",
+      console.log("Intentando enviar email de notificación de sugerencia...")
+
+      const emailResult = await sendEmail({
+        subject: `[SUGERENCIA] Nueva sugerencia de usuario en LegalPO - ${new Date().toLocaleDateString()}`,
         html: `
           <h2>Nueva sugerencia recibida</h2>
           <p><strong>Mensaje:</strong> ${mensaje}</p>
@@ -150,16 +150,50 @@ export async function guardarSugerenciaUsuario({
           <p><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
         `,
       })
+
+      if (emailResult.success) {
+        console.log(`Email de notificación enviado correctamente con ID: ${emailResult.id}`)
+
+        // Registrar el éxito del envío en Firestore
+        await addDoc(collection(db, "email_logs"), {
+          tipo: "sugerencia_notificacion",
+          sugerenciaId: docRef.id,
+          emailId: emailResult.id,
+          success: true,
+          timestamp: serverTimestamp(),
+        })
+      } else {
+        console.error("Error al enviar email de notificación:", emailResult.error)
+
+        // Registrar el error en Firestore para seguimiento
+        await addDoc(collection(db, "email_logs"), {
+          tipo: "sugerencia_notificacion",
+          sugerenciaId: docRef.id,
+          error: JSON.stringify(emailResult.error),
+          success: false,
+          timestamp: serverTimestamp(),
+        })
+      }
     } catch (emailError) {
-      console.error("Error al enviar notificación por email:", emailError)
-      // No interrumpimos el flujo si falla el envío de email
+      console.error("Excepción al enviar notificación por email:", emailError)
+
+      // Registrar el error en Firestore
+      try {
+        await addDoc(collection(db, "email_logs"), {
+          tipo: "sugerencia_notificacion",
+          sugerenciaId: docRef.id,
+          error: JSON.stringify(emailError),
+          success: false,
+          timestamp: serverTimestamp(),
+        })
+      } catch (logError) {
+        console.error("Error al registrar fallo de email:", logError)
+      }
     }
 
     return docRef.id
   } catch (error) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("Error al guardar sugerencia en Firestore:", error)
-    }
+    console.error("Error al guardar sugerencia en Firestore:", error)
     throw error
   }
 }
