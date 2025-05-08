@@ -10,6 +10,7 @@ import {
   orderBy,
   limit,
 } from "firebase/firestore"
+import { sendEmail } from "../lib/email-service"
 
 // Función para verificar si Firestore está disponible
 const isFirestoreAvailable = () => {
@@ -134,6 +135,24 @@ export async function guardarSugerenciaUsuario({
 
     if (process.env.NODE_ENV !== "production") {
       console.log(`Sugerencia guardada correctamente con ID: ${docRef.id}`)
+    }
+
+    // Enviar notificación por email
+    try {
+      await sendEmail({
+        subject: "Nueva sugerencia de usuario en LegalPO",
+        html: `
+          <h2>Nueva sugerencia recibida</h2>
+          <p><strong>Mensaje:</strong> ${mensaje}</p>
+          <p><strong>Página:</strong> ${pagina}</p>
+          <p><strong>Email del usuario:</strong> ${email || "No proporcionado"}</p>
+          <p><strong>ID de la sugerencia:</strong> ${docRef.id}</p>
+          <p><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
+        `,
+      })
+    } catch (emailError) {
+      console.error("Error al enviar notificación por email:", emailError)
+      // No interrumpimos el flujo si falla el envío de email
     }
 
     return docRef.id

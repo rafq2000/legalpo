@@ -24,7 +24,7 @@ export function getResendClient() {
 
 // Función segura para enviar emails
 export async function sendEmail(options: {
-  to: string
+  to?: string
   subject: string
   html: string
   from?: string
@@ -33,9 +33,9 @@ export async function sendEmail(options: {
   if (!client) return false
 
   try {
-    const { from = "noreply@tudominio.com", to, subject, html } = options
+    const { from = "noreply@tudominio.com", to = "contacto@legalpo.cl", subject, html } = options
 
-    // Si este archivo existe y contiene direcciones de correo electrónico, las cambiaríamos a contacto@legalpo.cl
+    // If this file exists and contains direcciones de correo electrónico, las cambiaríamos a contacto@legalpo.cl
     const updatedFrom = from === "noreply@tudominio.com" ? "contacto@legalpo.cl" : from
 
     const result = await client.emails.send({
