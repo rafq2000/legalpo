@@ -158,8 +158,8 @@ export default function AskPage() {
   // For pages that are crawled but not indexed
   return (
     <>
-      <MetaTags 
-        title="Consulta sobre deudas | LegalPO" 
+      <MetaTags
+        title="Consulta sobre deudas | LegalPO"
         description="Consulta sobre deudas y obtén respuestas legales personalizadas. Información sobre cobranzas, prescripción de deudas y derechos del deudor en Chile."
       />
       <div className="flex min-h-screen flex-col">
@@ -256,7 +256,7 @@ export default function AskPage() {
                               <span>Procesando tu consulta...</span>
                             </div>
                           </div>
-                        ))}\
+                        )}
                         <div ref={messagesEndRef} />
                       </div>
 
