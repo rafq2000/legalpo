@@ -16,19 +16,15 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { LawyerContactButton } from "@/components/lawyer-contact-button"
 import { AdsenseAutoAds } from "@/components/adsense-auto-ads"
 import Script from "next/script"
-import { CanonicalUrl } from "@/components/canonical-url"
-import { AdSenseScript } from "@/components/adsense-script"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: {
-    default: "LegalPO - Asistencia Legal Inteligente",
-    template: "%s | LegalPO",
-  },
+  title: "LegalPO - Herramientas legales con IA para documentos y consultas jurídicas en Chile",
   description:
-    "Asistencia legal inteligente para todos. Analiza documentos, genera contratos y resuelve dudas legales.",
-  keywords: ["asistencia legal", "contratos", "documentos legales", "asesoría jurídica", "inteligencia artificial"],
+    "Analiza documentos legales, calcula finiquitos, pensiones alimenticias y obtén respuestas a tus consultas sobre deudas y derecho laboral en Chile con inteligencia artificial.",
+  keywords:
+    "documentos legales, análisis legal, finiquito, pensión alimenticia, deudas, derecho laboral, Chile, asesoría legal, inteligencia artificial",
   authors: [{ name: "LegalPO" }],
   creator: "LegalPO",
   publisher: "LegalPO",
@@ -41,18 +37,29 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-    generator: 'v0.dev'
+  openGraph: {
+    title: "LegalPO - Análisis de documentos legales y consultas jurídicas en Chile",
+    description:
+      "Analiza documentos legales, calcula finiquitos, pensiones alimenticias y obtén respuestas a tus consultas sobre deudas y derecho laboral en Chile.",
+    url: "https://legalpo.cl",
+    siteName: "LegalPO",
+    locale: "es_CL",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LegalPO - Análisis de documentos legales y consultas jurídicas en Chile",
+    description:
+      "Analiza documentos legales, calcula finiquitos, pensiones alimenticias y obtén respuestas a tus consultas sobre deudas y derecho laboral en Chile.",
+  },
+  generator: "Next.js",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-        <AdSenseScript />
-        <CanonicalUrl />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="google-adsense-account" content="ca-pub-3753519605655251" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -70,7 +77,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Suspense fallback={null}>
               <AnalyticsTracker />
             </Suspense>
-            <CookieConsentBanner />
+            <Suspense fallback={null}>
+              <CookieConsentBanner />
+            </Suspense>
             <Suspense fallback={null}>
               <FirebaseTracker />
             </Suspense>

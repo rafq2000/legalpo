@@ -32,16 +32,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/deudas",
     "/consulta-familia",
     "/laboral",
-    "/informacion-legal",
-    "/derechos-deudor",
-    "/cobranzas-falsas",
-    "/estafas-internet",
-    "/suplantacion-identidad",
-    "/clonacion-tarjeta",
-    "/victima-delito",
-    "/cobros-excesivos",
-    "/arriendo-falso",
-    "/hackeo-whatsapp",
+    "/registro",
+    "/login",
   ]
 
   // Páginas de herramientas y servicios
