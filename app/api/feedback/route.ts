@@ -5,22 +5,22 @@ import { sendEmail } from "@/lib/email-service"
 
 export async function POST(req: Request) {
   try {
+    const data = await req.json()
+    const { type, quickRating, detailedRating, comment, serviceUsed, userId, userType, path } = data
+
+    // Validar datos mínimos
+    if (!serviceUsed || !path) {
+      return NextResponse.json({ success: false, error: "Datos incompletos" }, { status: 400 })
+    }
+
     // Verificar sesión usando getToken en lugar de getServerSession con authOptions
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
     const userEmail = token?.email || null
 
-    // Obtener datos del feedback
-    const feedbackData = await req.json()
-
-    // Validar datos mínimos requeridos
-    if (!feedbackData.type) {
-      return NextResponse.json({ error: "Datos de feedback incompletos" }, { status: 400 })
-    }
-
     // Añadir información de la sesión si está disponible
     const enhancedFeedback = {
-      ...feedbackData,
-      userId: userEmail || feedbackData.userId || "anonymous",
+      ...data,
+      userId: userEmail || data.userId || "anonymous",
       timestamp: new Date().toISOString(),
     }
 
@@ -44,33 +44,22 @@ export async function POST(req: Request) {
       }
     }
 
-    // Enviar notificación por email
-    try {
-      console.log("Enviando notificación de feedback por email...")
-
-      const emailResult = await sendEmail({
-        subject: `[FEEDBACK] Nuevo feedback recibido en LegalPO - ${enhancedFeedback.type}`,
-        html: `
-          <h2>Nuevo feedback recibido</h2>
-          <p><strong>Tipo:</strong> ${enhancedFeedback.type}</p>
-          <p><strong>Servicio:</strong> ${enhancedFeedback.serviceUsed || "No especificado"}</p>
-          <p><strong>Valoración:</strong> ${enhancedFeedback.quickRating || enhancedFeedback.detailedRating || "No proporcionada"}</p>
-          <p><strong>Comentario:</strong> ${enhancedFeedback.comment || "No proporcionado"}</p>
-          <p><strong>Usuario:</strong> ${userEmail || "Anónimo"}</p>
-          <p><strong>ID de feedback:</strong> ${feedbackId || "No disponible"}</p>
-          <p><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
-        `,
-      })
-
-      if (emailResult.success) {
-        console.log(`Email de notificación de feedback enviado correctamente con ID: ${emailResult.id}`)
-      } else {
-        console.error("Error al enviar email de notificación de feedback:", emailResult.error)
-      }
-    } catch (emailError) {
-      console.error("Excepción al enviar notificación de feedback por email:", emailError)
-      // No interrumpimos el flujo si falla el envío de email
-    }
+    // Enviar notificación por correo
+    const emailResult = await sendEmail({
+      subject: `Nueva retroalimentación en ${serviceUsed}`,
+      html: `
+        <h1>Nueva retroalimentación recibida</h1>
+        <p><strong>Servicio:</strong> ${serviceUsed}</p>
+        <p><strong>Tipo:</strong> ${type || "No especificado"}</p>
+        <p><strong>Calificación rápida:</strong> ${quickRating || "No proporcionada"}</p>
+        <p><strong>Calificación detallada:</strong> ${detailedRating || "No proporcionada"}</p>
+        <p><strong>Comentario:</strong> ${comment || "No proporcionado"}</p>
+        <p><strong>Usuario:</strong> ${userId || "Anónimo"}</p>
+        <p><strong>Tipo de usuario:</strong> ${userType || "No especificado"}</p>
+        <p><strong>Página:</strong> ${path}</p>
+        <p><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
+      `,
+    })
 
     // Registrar evento de analítica
     trackEvent("feedback_received", {
@@ -80,11 +69,12 @@ export async function POST(req: Request) {
       userType: token ? "registered" : "anonymous",
     })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({
+      success: true,
+      emailSent: emailResult.success,
+    })
   } catch (error) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("Error procesando feedback:", error)
-    }
-    return NextResponse.json({ error: "Error al procesar el feedback" }, { status: 500 })
+    console.error("Error al procesar feedback:", error)
+    return NextResponse.json({ success: false, error: "Error interno del servidor" }, { status: 500 })
   }
 }

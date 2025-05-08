@@ -1,83 +1,36 @@
-import { trackEvent } from "@/lib/analytics"
+import { sendEmail } from "./email-service"
 
-type FeedbackType = "quick" | "detailed" | null
-type QuickRating = "positive" | "negative" | null
-type DetailedRating = 1 | 2 | 3 | 4 | 5 | null
-type ServiceType = "document-analysis" | "contract-generator" | "calculator" | "chat" | "general"
-
-interface FeedbackData {
-  type: FeedbackType
-  quickRating: QuickRating
-  detailedRating: DetailedRating
+// Función para enviar notificación de feedback por correo
+export async function notifyFeedbackByEmail(feedback: {
+  rating: number
   comment: string
-  serviceUsed: ServiceType
-  userId: string | null
-  userType: "anonymous" | "registered"
-  path: string
-}
-
-/**
- * Submits user feedback to the API
- */
-export async function submitFeedback(data: FeedbackData): Promise<void> {
+  userId?: string
+  userEmail?: string
+  page?: string
+}) {
   try {
-    // Track the feedback event in analytics
-    trackEvent("feedback_submitted", {
-      feedbackType: data.type,
-      quickRating: data.quickRating,
-      detailedRating: data.detailedRating,
-      serviceUsed: data.serviceUsed,
-      userType: data.userType,
-      hasComment: data.comment ? true : false,
-      path: data.path,
+    const { rating, comment, userId, userEmail, page } = feedback
+
+    // Crear contenido HTML del correo
+    const html = `
+      <h1>Nueva retroalimentación recibida</h1>
+      <p><strong>Calificación:</strong> ${rating} de 5</p>
+      <p><strong>Comentario:</strong> ${comment || "No proporcionado"}</p>
+      <p><strong>Usuario:</strong> ${userId || "Anónimo"}</p>
+      <p><strong>Email:</strong> ${userEmail || "No proporcionado"}</p>
+      <p><strong>Página:</strong> ${page || "No especificada"}</p>
+      <p><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
+    `
+
+    // Enviar correo
+    const result = await sendEmail({
+      subject: `Nueva retroalimentación: ${rating}/5 - LegalPO`,
+      html,
     })
 
-    // Send feedback to the API
-    const response = await fetch("/api/feedback", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`)
-    }
-
-    return await response.json()
+    return result.success
   } catch (error) {
-    console.error("Error submitting feedback:", error)
-    throw error
+    console.error("Error al enviar notificación de feedback por correo:", error)
+    return false
   }
-}
-
-/**
- * Checks if the user should be shown a feedback prompt
- * based on their usage patterns
- */
-export function shouldShowFeedbackPrompt(userId: string | null): boolean {
-  // If no user ID, show feedback after 2 minutes on site
-  if (!userId) return true
-
-  // Check local storage for last feedback time
-  const lastFeedback = localStorage.getItem(`feedback_last_shown_${userId}`)
-
-  if (!lastFeedback) return true
-
-  // Don't show feedback if it was shown in the last 7 days
-  const lastFeedbackDate = new Date(lastFeedback)
-  const now = new Date()
-  const daysSinceLastFeedback = Math.floor((now.getTime() - lastFeedbackDate.getTime()) / (1000 * 60 * 60 * 24))
-
-  return daysSinceLastFeedback >= 7
-}
-
-/**
- * Records that feedback was shown to a user
- */
-export function recordFeedbackShown(userId: string | null): void {
-  if (!userId) return
-
-  localStorage.setItem(`feedback_last_shown_${userId}`, new Date().toISOString())
 }

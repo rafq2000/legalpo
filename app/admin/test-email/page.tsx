@@ -9,11 +9,10 @@ import { CheckCircle, XCircle, Loader2 } from "lucide-react"
 export default function TestEmailPage() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<{
-    success?: boolean
+    success: boolean
     message?: string
     error?: string
     details?: any
-    id?: string
   } | null>(null)
 
   const sendTestEmail = async () => {
@@ -37,16 +36,15 @@ export default function TestEmailPage() {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <Card className="max-w-2xl mx-auto">
+    <div className="container mx-auto py-10">
+      <Card className="max-w-md mx-auto">
         <CardHeader>
-          <CardTitle>Prueba de Envío de Email</CardTitle>
-          <CardDescription>
-            Esta herramienta permite verificar si el sistema de envío de emails está funcionando correctamente. Se
-            enviará un email de prueba a contacto@legalpo.cl.
-          </CardDescription>
+          <CardTitle>Prueba de Envío de Correo</CardTitle>
+          <CardDescription>Esta herramienta te permite probar la configuración de envío de correos</CardDescription>
         </CardHeader>
         <CardContent>
+          <p className="mb-4">Al hacer clic en el botón, se enviará un correo de prueba a contacto@legalpo.cl</p>
+
           {result && (
             <Alert className={result.success ? "bg-green-50" : "bg-red-50"}>
               {result.success ? (
@@ -54,22 +52,13 @@ export default function TestEmailPage() {
               ) : (
                 <XCircle className="h-4 w-4 text-red-600" />
               )}
-              <AlertTitle>{result.success ? "Email enviado correctamente" : "Error al enviar email"}</AlertTitle>
+              <AlertTitle>{result.success ? "Correo enviado correctamente" : "Error al enviar correo"}</AlertTitle>
               <AlertDescription>
-                {result.success ? (
-                  <div>
-                    <p>El email de prueba se ha enviado correctamente a contacto@legalpo.cl</p>
-                    {result.id && <p className="text-sm text-gray-500">ID: {result.id}</p>}
-                  </div>
-                ) : (
-                  <div>
-                    <p>{result.error}</p>
-                    {result.details && (
-                      <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto">
-                        {JSON.stringify(result.details, null, 2)}
-                      </pre>
-                    )}
-                  </div>
+                {result.message || result.error || ""}
+                {result.details && (
+                  <pre className="mt-2 text-xs overflow-auto p-2 bg-gray-100 rounded">
+                    {JSON.stringify(result.details, null, 2)}
+                  </pre>
                 )}
               </AlertDescription>
             </Alert>
@@ -83,7 +72,7 @@ export default function TestEmailPage() {
                 Enviando...
               </>
             ) : (
-              "Enviar Email de Prueba"
+              "Enviar Correo de Prueba"
             )}
           </Button>
         </CardFooter>
