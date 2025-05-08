@@ -66,6 +66,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#1e40af" />
+        {/* Add these new meta tags for better SEO */}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta httpEquiv="Content-Language" content="es" />
+        <meta name="geo.region" content="CL" />
+        <meta name="geo.placename" content="Chile" />
       </head>
       <body className={cn("min-h-screen bg-background font-sans antialiased", inter.className)}>
         <Providers>

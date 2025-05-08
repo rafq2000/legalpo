@@ -7,7 +7,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
     "",
     "/analyze",
-    "/ask",
     "/dudas-laborales",
     "/calculadora-finiquito",
     "/calculadora-pensiones",
@@ -32,8 +31,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/deudas",
     "/consulta-familia",
     "/laboral",
-    "/registro",
-    "/login",
   ]
 
   // Páginas de herramientas y servicios
@@ -46,8 +43,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/generador-contratos/personalizado",
   ]
 
+  // Páginas de información legal específica
+  const legalInfoRoutes = [
+    "/deudas-prescritas",
+    "/derechos-deudor",
+    "/victima-delito",
+    "/cobros-excesivos",
+    "/clonacion-tarjeta",
+    "/arriendo-falso",
+    "/hackeo-whatsapp",
+    "/cobranza-falsa",
+    "/estafas-internet",
+    "/suplantacion-identidad",
+    "/informacion-legal",
+  ]
+
   // Combinar todas las rutas
-  const allRoutes = [...routes, ...toolRoutes]
+  const allRoutes = [...routes, ...toolRoutes, ...legalInfoRoutes]
 
   return allRoutes.map((route) => ({
     url: `${baseUrl}${route}`,

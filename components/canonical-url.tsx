@@ -1,16 +1,19 @@
 "use client"
 
-import { usePathname } from "next/navigation"
 import Head from "next/head"
+import { usePathname } from "next/navigation"
 
-export function CanonicalUrl() {
+interface CanonicalProps {
+  path?: string
+}
+
+export function CanonicalUrl({ path }: CanonicalProps) {
   const pathname = usePathname()
-  const baseUrl = "https://legalpo.cl"
-  const canonicalUrl = `${baseUrl}${pathname}`
+  const url = `https://legalpo.cl${path || pathname}`
 
   return (
     <Head>
-      <link rel="canonical" href={canonicalUrl} />
+      <link rel="canonical" href={url} />
     </Head>
   )
 }

@@ -3,5 +3,8 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 Disallow: /auth/
+Disallow: /login
+Disallow: /register
+Disallow: /registro
 
 Sitemap: https://legalpo.cl/sitemap.xml
