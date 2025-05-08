@@ -1,11 +1,17 @@
-# robots.txt para legalpo.cl
 User-agent: *
 Allow: /
 
-# Rutas que no queremos indexar
-Disallow: /api/
-Disallow: /login?callbackUrl=
+# Rutas de autenticación
+Disallow: /login
 Disallow: /auth/
+Disallow: /api/auth/
+Disallow: /register
+Disallow: /registro
+
+# Rutas con parámetros de consulta
+Disallow: /*?callbackUrl=*
+
+# Rutas administrativas
 Disallow: /admin/
 
 # Sitemap

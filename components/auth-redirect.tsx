@@ -1,40 +1,35 @@
 "use client"
 
-import type React from "react"
-
 import { useEffect } from "react"
-import { useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Loader2 } from "lucide-react"
+import { Suspense } from "react"
 
-interface AuthRedirectProps {
-  children: React.ReactNode
-  redirectTo?: string
-}
-
-export function AuthRedirect({ children, redirectTo = "/login" }: AuthRedirectProps) {
-  const { data: session, status } = useSession()
+function AuthRedirectInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || "/"
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      // Construir la URL de redirección sin parámetros de consulta
-      const currentPath = window.location.pathname
-      router.push(`${redirectTo}?callbackUrl=${encodeURIComponent(currentPath)}`)
-    }
-  }, [status, router, redirectTo])
+    router.push(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`)
+  }, [router, callbackUrl])
 
-  if (status === "loading" || status === "unauthenticated") {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
-          <p className="text-muted-foreground">Verificando sesión...</p>
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <p className="text-center text-muted-foreground">Redirigiendo...</p>
+    </div>
+  )
+}
+
+export function AuthRedirect() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <p className="text-center text-muted-foreground">Cargando...</p>
         </div>
-      </div>
-    )
-  }
-
-  return <>{children}</>
+      }
+    >
+      <AuthRedirectInner />
+    </Suspense>
+  )
 }

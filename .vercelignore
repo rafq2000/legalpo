@@ -1,3 +1,8 @@
-app/not-found.tsx
-pages/404.js
-pages/_error.js
+.git
+node_modules
+.next
+.vercel
+.env
+.env.*
+*.log
+find-usesearchparams.js
