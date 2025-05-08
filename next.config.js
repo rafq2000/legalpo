@@ -1,27 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  images: {
-    domains: ["lh3.googleusercontent.com", "avatars.githubusercontent.com"],
-    unoptimized: true,
-  },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-        child_process: false,
-      }
-    }
-    return config
-  },
+  // Configuración existente...
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
+  },
+  images: {
+    unoptimized: true,
+  },
+  // Habilitar AMP
+  experimental: {
+    amp: {
+      skipValidation: true,
+    },
   },
 }
 
