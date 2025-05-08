@@ -2,7 +2,6 @@ import type { MetadataRoute } from "next"
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://legalpo.cl"
-  const currentDate = new Date()
 
   // Rutas principales del sitio
   const routes = [
@@ -35,18 +34,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/laboral",
     "/registro",
     "/login",
-    // Páginas adicionales
-    "/deudas-prescritas",
-    "/derechos-deudor",
-    "/informacion-legal",
-    "/victima-delito",
-    "/cobros-excesivos",
-    "/clonacion-tarjeta",
-    "/arriendo-falso",
-    "/hackeo-whatsapp",
-    "/cobranza-falsa",
-    "/estafas-internet",
-    "/suplantacion-identidad",
   ]
 
   // Páginas de herramientas y servicios
@@ -64,7 +51,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return allRoutes.map((route) => ({
     url: `${baseUrl}${route}`,
-    lastModified: currentDate,
+    lastModified: new Date(),
     changeFrequency: route === "" ? "daily" : "weekly",
     priority: route === "" ? 1.0 : route.includes("/generador-") || route.includes("/calculadora-") ? 0.9 : 0.8,
   }))

@@ -1,28 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /api/
 Disallow: /admin/
+Disallow: /api/
 Disallow: /auth/
-Disallow: /login?*
-Disallow: /register?*
-
-# No indexar páginas con parámetros de consulta
-Disallow: /*?*
-
-# Permitir explícitamente páginas importantes
-Allow: /analyze
-Allow: /ask
-Allow: /dudas-laborales
-Allow: /calculadora-finiquito
-Allow: /calculadora-pensiones
-Allow: /calculadora-herencia
-Allow: /contratos
-Allow: /generador-contratos
-Allow: /deudas
-Allow: /consulta-deudas
-Allow: /consulta-familia
-Allow: /laboral
-Allow: /herencias
-Allow: /finiquito-chile
 
 Sitemap: https://legalpo.cl/sitemap.xml
