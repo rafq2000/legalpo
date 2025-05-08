@@ -1,7 +1,8 @@
 "use client"
+import Script from "next/script"
 import { useEffect, useState } from "react"
 
-export function AdsenseScript() {
+export function AdSenseScript() {
   const [isProduction, setIsProduction] = useState(false)
 
   useEffect(() => {
@@ -14,8 +15,13 @@ export function AdsenseScript() {
 
   return (
     <>
-      {/* Este componente ya no se usa, ahora usamos AdsenseAutoAds */}
-      {/* Se mantiene por compatibilidad pero no hace nada */}
+      <Script
+        id="adsense-script"
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3753519605655251"
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+      />
     </>
   )
 }

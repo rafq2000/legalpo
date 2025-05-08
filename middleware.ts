@@ -2,19 +2,34 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 export function middleware(request: NextRequest) {
-  // Simple middleware that just passes through all requests
+  const url = request.nextUrl.clone()
+  const { pathname } = url
+
+  // Redirigir /auth/google a /api/auth/[...nextauth]
+  if (pathname === "/auth/google") {
+    return NextResponse.redirect(new URL("/api/auth/signin/google", request.url))
+  }
+
+  // Verificar si la URL contiene parámetros de consulta en páginas protegidas
+  if (
+    pathname === "/ask" ||
+    pathname === "/analyze" ||
+    pathname === "/calculadora-herencia" ||
+    pathname === "/calculadora-finiquito" ||
+    pathname === "/calculadora-pensiones"
+  ) {
+    // Si hay parámetros de consulta y no está autenticado, redirigir a la página sin parámetros
+    if (url.search && !request.cookies.get("next-auth.session-token")) {
+      return NextResponse.redirect(new URL(pathname, request.url))
+    }
+  }
+
   return NextResponse.next()
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    "/((?!_next/static|_next/image|favicon.ico|not-found.html).*)",
+    // Excluir archivos estáticos y API routes
+    "/((?!_next/static|_next/image|favicon.ico|api|not-found.html).*)",
   ],
 }

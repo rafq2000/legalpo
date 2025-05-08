@@ -1,10 +1,6 @@
 import type React from "react"
-import ProtectedRoute from "@/components/protected-route"
+import { AuthRedirect } from "@/components/auth-redirect"
 
-export default function CalculadoraPensionesLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return <ProtectedRoute>{children}</ProtectedRoute>
+export default function CalculadoraPensionesLayout({ children }: { children: React.ReactNode }) {
+  return <AuthRedirect>{children}</AuthRedirect>
 }

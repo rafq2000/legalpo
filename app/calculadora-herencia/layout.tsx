@@ -1,6 +1,6 @@
 import type React from "react"
 import { AuthRedirect } from "@/components/auth-redirect"
 
-export default function AnalyzeLayout({ children }: { children: React.ReactNode }) {
+export default function CalculadoraHerenciaLayout({ children }: { children: React.ReactNode }) {
   return <AuthRedirect>{children}</AuthRedirect>
 }
