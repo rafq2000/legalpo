@@ -1,23 +1,53 @@
-// Versión simplificada que no usa módulos de Node.js
+import { Resend } from "resend"
 
-/**
- * Servicio de email simplificado que solo registra los intentos de envío
- * pero no intenta enviar realmente correos para evitar dependencias problemáticas
- */
+// Cliente de Resend con inicialización condicional
+let resendClient: Resend | null = null
+
+export function getResendClient() {
+  if (resendClient) return resendClient
+
+  const resendApiKey = process.env.RESEND_API_KEY
+
+  if (!resendApiKey) {
+    console.warn("API key de Resend no disponible")
+    return null
+  }
+
+  try {
+    resendClient = new Resend(resendApiKey)
+    return resendClient
+  } catch (error) {
+    console.error("Error al inicializar cliente de Resend:", error)
+    return null
+  }
+}
+
+// Función segura para enviar emails
 export async function sendEmail(options: {
-  to?: string
+  to: string
   subject: string
   html: string
   from?: string
-  cc?: string[]
-  bcc?: string[]
-}): Promise<{ success: boolean; error?: any; id?: string }> {
-  // Solo registramos el intento de envío
-  console.log(`[EMAIL LOG] Intento de envío a ${options.to || "contacto@legalpo.cl"}: ${options.subject}`)
+}): Promise<boolean> {
+  const client = getResendClient()
+  if (!client) return false
 
-  // Devolvemos éxito simulado
-  return {
-    success: true,
-    id: `log-${Date.now()}`,
+  try {
+    const { from = "noreply@tudominio.com", to, subject, html } = options
+
+    // Si este archivo existe y contiene direcciones de correo electrónico, las cambiaríamos a contacto@legalpo.cl
+    const updatedFrom = from === "noreply@tudominio.com" ? "contacto@legalpo.cl" : from
+
+    const result = await client.emails.send({
+      from: updatedFrom,
+      to,
+      subject,
+      html,
+    })
+
+    return !!result.id
+  } catch (error) {
+    console.error("Error al enviar email:", error)
+    return false
   }
 }

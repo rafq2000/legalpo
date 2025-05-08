@@ -84,7 +84,7 @@ export function AdUnit({
         }
 
         // Verificar si adsbygoogle está definido
-        if (typeof window.adsbygoogle === "undefined") {
+        if (!window.adsbygoogle) {
           setAdError("AdSense no está inicializado correctamente")
           return
         }

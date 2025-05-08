@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/admin/", "/api/"],
+      disallow: ["/api/", "/admin/", "/auth/", "/login", "/register", "/registro", "/*?callbackUrl=*", "/*?callback=*"],
     },
     sitemap: "https://legalpo.cl/sitemap.xml",
   }

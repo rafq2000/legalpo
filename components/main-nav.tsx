@@ -36,6 +36,11 @@ export function MainNav({ className, isAdmin, ...props }: React.HTMLAttributes<H
       label: "Cómo funciona",
       active: pathname === "/como-funciona",
     },
+    {
+      href: "/abogados-por-ciudad",
+      label: "Abogados por Ciudad",
+      active: pathname === "/abogados-por-ciudad",
+    },
   ]
 
   const linkClasses = "text-sm font-medium transition-colors hover:text-primary"

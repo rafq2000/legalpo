@@ -10,7 +10,6 @@ import {
   orderBy,
   limit,
 } from "firebase/firestore"
-import { sendEmail } from "../lib/email-service"
 
 // Función para verificar si Firestore está disponible
 const isFirestoreAvailable = () => {
@@ -126,74 +125,22 @@ export async function guardarSugerenciaUsuario({
       mensaje,
       pagina,
       email,
-      timestamp: serverTimestamp(),
-      createdAt: Timestamp.now(),
+      timestamp: serverTimestamp(), // Usar serverTimestamp para la marca de tiempo del servidor
+      createdAt: Timestamp.now(), // Agregar createdAt para tener una referencia local
     }
 
     // Guardar en Firestore
     const docRef = await addDoc(eventosRef, sugerenciaDoc)
 
-    console.log(`Sugerencia guardada correctamente con ID: ${docRef.id}`)
-
-    // Enviar notificación por email con manejo de errores mejorado
-    try {
-      console.log("Intentando enviar email de notificación de sugerencia...")
-
-      const emailResult = await sendEmail({
-        subject: `[SUGERENCIA] Nueva sugerencia de usuario en LegalPO - ${new Date().toLocaleDateString()}`,
-        html: `
-          <h2>Nueva sugerencia recibida</h2>
-          <p><strong>Mensaje:</strong> ${mensaje}</p>
-          <p><strong>Página:</strong> ${pagina}</p>
-          <p><strong>Email del usuario:</strong> ${email || "No proporcionado"}</p>
-          <p><strong>ID de la sugerencia:</strong> ${docRef.id}</p>
-          <p><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
-        `,
-      })
-
-      if (emailResult.success) {
-        console.log(`Email de notificación enviado correctamente con ID: ${emailResult.id}`)
-
-        // Registrar el éxito del envío en Firestore
-        await addDoc(collection(db, "email_logs"), {
-          tipo: "sugerencia_notificacion",
-          sugerenciaId: docRef.id,
-          emailId: emailResult.id,
-          success: true,
-          timestamp: serverTimestamp(),
-        })
-      } else {
-        console.error("Error al enviar email de notificación:", emailResult.error)
-
-        // Registrar el error en Firestore para seguimiento
-        await addDoc(collection(db, "email_logs"), {
-          tipo: "sugerencia_notificacion",
-          sugerenciaId: docRef.id,
-          error: JSON.stringify(emailResult.error),
-          success: false,
-          timestamp: serverTimestamp(),
-        })
-      }
-    } catch (emailError) {
-      console.error("Excepción al enviar notificación por email:", emailError)
-
-      // Registrar el error en Firestore
-      try {
-        await addDoc(collection(db, "email_logs"), {
-          tipo: "sugerencia_notificacion",
-          sugerenciaId: docRef.id,
-          error: JSON.stringify(emailError),
-          success: false,
-          timestamp: serverTimestamp(),
-        })
-      } catch (logError) {
-        console.error("Error al registrar fallo de email:", logError)
-      }
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`Sugerencia guardada correctamente con ID: ${docRef.id}`)
     }
 
     return docRef.id
   } catch (error) {
-    console.error("Error al guardar sugerencia en Firestore:", error)
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error al guardar sugerencia en Firestore:", error)
+    }
     throw error
   }
 }
