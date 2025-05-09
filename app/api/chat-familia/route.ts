@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { OpenAI } from "openai"
+import { normativaFamiliar } from "@/lib/normativa-familiar"
 
 export const runtime = "nodejs"
 export const maxDuration = 30
@@ -20,12 +21,7 @@ export async function POST(req: Request) {
       
       Utiliza la siguiente información como referencia:
       
-      - Ley de Matrimonio Civil (Ley 19.947)
-      - Ley de Filiación (Ley 19.585)
-      - Ley de Pensiones Alimenticias (Ley 14.908)
-      - Ley de Violencia Intrafamiliar (Ley 20.066)
-      - Ley de Tribunales de Familia (Ley 19.968)
-      - Convención sobre los Derechos del Niño
+      ${normativaFamiliar}
       
       Instrucciones:
       1. Responde de manera clara y en lenguaje sencillo, evitando jerga legal innecesaria.
@@ -34,7 +30,9 @@ export async function POST(req: Request) {
       4. No inventes información legal.
       5. Mantén tus respuestas concisas y directas.
       6. Cuando sea apropiado, menciona los plazos legales relevantes.
-      7. Responde en español.`,
+      7. Responde en español.
+      8. Para consultas sobre pensiones alimenticias y el REDPA, utiliza siempre la versión actualizada de la Ley 14.908 (al 31 de mayo de 2023).
+      9. Cuando te pregunten sobre rebaja de pensión estando inscrito en el REDPA, explica claramente el artículo 1° inciso tercero y las opciones disponibles.`,
     }
 
     // Combinar el mensaje del sistema con los mensajes del usuario
