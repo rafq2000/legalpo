@@ -23,16 +23,43 @@ export async function POST(req: Request) {
       
       ${normativaFamiliar}
       
-      Instrucciones:
+      INSTRUCCIONES CRÍTICAS SOBRE REDPA Y REBAJA DE PENSIÓN:
+      
+      1. Cuando te pregunten sobre rebaja de pensión estando inscrito en el REDPA, SIEMPRE debes responder que según el artículo 1, inciso tercero de la Ley 14.908 actualizada al 31 de mayo de 2023, el tribunal DEBE DECLARAR INADMISIBLE la demanda de rebaja o cese de pensión si la persona está inscrita en el REDPA.
+      
+      2. Debes ser ABSOLUTAMENTE CLARO que la demanda NO PASARÁ LA ADMISIBILIDAD, es decir, será rechazada de plano sin entrar a conocer el fondo del asunto.
+      
+      3. La única excepción es si se presentan "antecedentes calificados", pero debes enfatizar que estos deben ser EXTRAORDINARIOS y DEBIDAMENTE JUSTIFICADOS.
+      
+      4. Debes recomendar SIEMPRE que primero se pague la deuda o se llegue a un acuerdo de pago según el artículo 26 para salir del REDPA antes de intentar demandar la rebaja.
+      
+      Instrucciones generales:
       1. Responde de manera clara y en lenguaje sencillo, evitando jerga legal innecesaria.
       2. Cita las leyes específicas cuando sea relevante.
       3. Si no estás seguro de algo, indícalo claramente y sugiere consultar con un abogado especializado.
       4. No inventes información legal.
       5. Mantén tus respuestas concisas y directas.
       6. Cuando sea apropiado, menciona los plazos legales relevantes.
-      7. Responde en español.
-      8. Para consultas sobre pensiones alimenticias y el REDPA, utiliza siempre la versión actualizada de la Ley 14.908 (al 31 de mayo de 2023).
-      9. Cuando te pregunten sobre rebaja de pensión estando inscrito en el REDPA, explica claramente el artículo 1° inciso tercero y las opciones disponibles.`,
+      7. Responde en español.`,
+    }
+
+    // Verificar si la consulta es sobre rebaja de pensión estando en REDPA
+    const isAboutREDPAAndRebaja = messages.some((msg: any) => {
+      const content = msg.content.toLowerCase()
+      return (
+        content.includes("redpa") &&
+        (content.includes("rebaja") || content.includes("reducir pensión") || content.includes("bajar pensión"))
+      )
+    })
+
+    // Si es sobre REDPA y rebaja, añadir mensaje de sistema adicional
+    if (isAboutREDPAAndRebaja) {
+      systemMessage.content += `
+      
+      ATENCIÓN: La consulta es sobre rebaja de pensión estando en el REDPA. 
+      DEBES responder que según el artículo 1, inciso tercero de la Ley 14.908 actualizada, 
+      el tribunal DEBE DECLARAR INADMISIBLE la demanda. NO hay interpretación alternativa posible.
+      La demanda NO PASARÁ LA ADMISIBILIDAD si la persona está inscrita en el REDPA.`
     }
 
     // Combinar el mensaje del sistema con los mensajes del usuario
@@ -48,11 +75,16 @@ export async function POST(req: Request) {
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: apiMessages,
-      temperature: 0.7,
+      temperature: 0.3, // Temperatura más baja para respuestas más deterministas
       max_tokens: 1000,
     })
 
-    const response = completion.choices[0].message.content || "Lo siento, no pude generar una respuesta."
+    let response = completion.choices[0].message.content || "Lo siento, no pude generar una respuesta."
+
+    // Si es sobre REDPA y rebaja, verificar que la respuesta contenga la información crítica
+    if (isAboutREDPAAndRebaja && !response.toLowerCase().includes("inadmisible")) {
+      response = `IMPORTANTE: Según el artículo 1, inciso tercero de la Ley 14.908 (actualizada al 31 de mayo de 2023), el tribunal DEBE DECLARAR INADMISIBLE la demanda de rebaja o cese de pensión si la persona está inscrita en el REDPA. Esto significa que su demanda será RECHAZADA DE PLANO sin entrar a conocer el fondo del asunto.\n\n${response}`
+    }
 
     return NextResponse.json({ response })
   } catch (error) {

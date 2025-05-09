@@ -1,17 +1,15 @@
 export const normativaFamiliar = `
 # Normativa de Derecho de Familia en Chile
 
-## Leyes Fundamentales
-- Constitución Política de la República de Chile (1980)
-- Código Civil de Chile (Ley 13.495 de 14-XII-1855)
-- Código de Procedimiento Civil de Chile (Ley 1.552 de 28-VIII-1902)
-
 ## Ley 14.908 sobre Abandono de Familia y Pago de Pensiones Alimenticias
 (Texto actualizado al 31 de mayo de 2023)
 
-### Aspectos Generales
-- Art. 1: Establece la competencia de los juicios de alimentos. El tribunal deberá declarar inadmisible la demanda de rebaja o cese de pensión si la persona se encuentra inscrita en el Registro Nacional de Deudores de Pensiones de Alimentos, salvo que se presenten antecedentes calificados.
+### IMPORTANTE: Inadmisibilidad de demandas de rebaja estando en REDPA
+- Art. 1, inciso tercero: "De las demandas de rebaja o cese de la pensión conocerá el tribunal del domicilio del alimentario. EL TRIBUNAL DEBERÁ DECLARAR INADMISIBLE LA DEMANDA DE REBAJA O CESE DE PENSIÓN EN EL CASO QUE LA PERSONA SE ENCONTRARE CON INSCRIPCIÓN VIGENTE EN EL REGISTRO NACIONAL DE DEUDORES DE PENSIONES DE ALIMENTOS, salvo que se presentaren antecedentes calificados para ello, en concordancia con lo dispuesto en el inciso cuarto del artículo 3°."
 
+- INTERPRETACIÓN CORRECTA: Si una persona está inscrita en el REDPA y presenta una demanda de rebaja o cese de pensión alimenticia, el tribunal DEBE RECHAZAR DE PLANO la demanda declarándola INADMISIBLE, sin entrar a conocer el fondo del asunto. La única excepción es si se presentan "antecedentes calificados", los cuales deben ser extraordinarios y debidamente justificados.
+
+### Aspectos Generales
 - Art. 2: Regula el domicilio del demandado y la notificación electrónica.
 
 - Art. 3: Establece la presunción de capacidad económica del alimentante y el monto mínimo de pensión (40% del ingreso mínimo para un menor, 30% por cada uno si son dos o más).
@@ -23,19 +21,6 @@ export const normativaFamiliar = `
 - Art. 6: Obliga a fijar la pensión en UTM y especificar las circunstancias consideradas para determinar la capacidad económica y necesidades.
 
 - Art. 7: Limita el monto de la pensión al 50% de las rentas del alimentante, salvo razones fundadas.
-
-### Modalidades de Pago y Apremios
-- Art. 8: Establece la retención por parte del empleador como modalidad general de pago.
-
-- Art. 9: Permite fijar la pensión como derecho de usufructo, uso o habitación sobre bienes del alimentante.
-
-- Art. 10: Faculta al juez para ordenar caucionar el cumplimiento de la obligación.
-
-- Art. 11: Otorga mérito ejecutivo a las resoluciones que fijan pensiones y establece requisitos para transacciones.
-
-- Art. 12: Regula el requerimiento de pago y la liquidación mensual de oficio.
-
-- Art. 14-16: Establecen los apremios por incumplimiento, incluyendo arresto nocturno, suspensión de licencia de conducir y retención de devolución de impuestos.
 
 ### Registro Nacional de Deudores de Pensiones de Alimentos (REDPA)
 - Art. 20-40: Crean y regulan el Registro Nacional de Deudores de Pensiones de Alimentos.
@@ -72,44 +57,15 @@ export const normativaFamiliar = `
   - Regula el régimen patrimonial y los efectos sucesorios
   - Define procedimientos para su celebración y término
 
-- Ley N.º 21.400 (10-XII-2021) – Matrimonio Igualitario
-  - Modifica el Código Civil para permitir el matrimonio entre personas del mismo sexo
-  - Equipara derechos y obligaciones para todas las parejas, independiente de su orientación sexual
-  - Regula la filiación y adopción para parejas del mismo sexo
-
 ## Filiación y Adopción
 - Ley N.º 19.585 (26-X-1998) – Igualdad de la Filiación
   - Elimina la distinción entre hijos legítimos e ilegítimos
   - Establece la igualdad de derechos para todos los hijos
   - Regula el reconocimiento de paternidad y las acciones de filiación
 
-- Ley N.º 19.620 (5-VIII-1999) – Adopción de Menores
-  - Establece los requisitos y procedimientos para la adopción
-  - Define quiénes pueden ser adoptantes y adoptados
-  - Regula los efectos de la adopción y su carácter irrevocable
-  - Establece el Servicio Nacional de Menores como organismo encargado
-
 ## Tribunales y Procedimientos
 - Ley N.º 19.968 (30-VIII-2004) – Creación de los Tribunales de Familia
   - Establece tribunales especializados en asuntos de familia
   - Define su competencia y procedimientos
   - Regula la mediación familiar obligatoria en ciertos casos
-
-## Violencia Intrafamiliar
-- Ley N.º 20.066 (7-X-2005) – Violencia Intrafamiliar
-  - Define la violencia intrafamiliar y sus tipos
-  - Establece medidas de protección para las víctimas
-  - Regula sanciones para los agresores
-  - Define procedimientos judiciales específicos
-
-## Protección de Niños y Adolescentes
-- Ley N.º 20.430 (15-III-2022) – Protección Integral de los Derechos de la Niñez y Adolescencia
-  - Establece un sistema integral de garantías de derechos
-  - Define principios rectores como el interés superior del niño
-  - Regula la protección administrativa y judicial
-
-- Ley N.º 20.680 (21-VI-2013) – "Ley Amor de Papá"
-  - Modifica normas sobre cuidado personal de los hijos
-  - Establece la corresponsabilidad parental
-  - Regula el régimen de relación directa y regular (visitas)
 `
