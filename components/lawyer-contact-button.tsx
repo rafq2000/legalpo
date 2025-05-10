@@ -2,12 +2,13 @@
 
 import { Scale } from "lucide-react"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 
 export function LawyerContactButton() {
-  const [showTooltip, setShowTooltip] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const router = useRouter()
 
   // Detectar si es dispositivo móvil
   useEffect(() => {
@@ -23,30 +24,9 @@ export function LawyerContactButton() {
     }
   }, [])
 
-  // Número de WhatsApp del abogado
-  const phoneNumber = "+56961458118"
-
-  // Mensaje predeterminado
-  const message = "Hola, necesito asesoría legal. Me gustaría hablar con un abogado."
-
-  // URL de WhatsApp con el número y mensaje
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
-
   const handleClick = () => {
-    window.open(whatsappUrl, "_blank")
+    router.push("/contactar-abogado")
   }
-
-  // Para dispositivos móviles, mostrar tooltip brevemente al cargar
-  useEffect(() => {
-    if (isMobile) {
-      setShowTooltip(true)
-      const timer = setTimeout(() => {
-        setShowTooltip(false)
-      }, 3000)
-
-      return () => clearTimeout(timer)
-    }
-  }, [isMobile])
 
   return (
     <Button
