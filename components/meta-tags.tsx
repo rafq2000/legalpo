@@ -4,35 +4,39 @@ import Head from "next/head"
 import { usePathname } from "next/navigation"
 
 interface MetaTagsProps {
-  title?: string
-  description?: string
-  canonical?: string
-  noindex?: boolean
+  title: string
+  description: string
+  keywords?: string
   ogImage?: string
-  ogType?: string
+  noindex?: boolean
+  canonical?: string
 }
 
 export function MetaTags({
-  title = "LegalPO - Herramientas legales con IA para documentos y consultas jurídicas en Chile",
-  description = "Analiza documentos legales, calcula finiquitos, pensiones alimenticias y obtén respuestas a tus consultas sobre deudas y derecho laboral en Chile con inteligencia artificial.",
-  canonical,
+  title,
+  description,
+  keywords = "documentos legales, análisis legal, finiquito, pensión alimenticia, deudas, derecho laboral, Chile",
+  ogImage = "https://legalpo.cl/og-image.jpg",
   noindex = false,
-  ogImage = "https://legalpo.cl/images/og-image.jpg",
-  ogType = "website",
+  canonical,
 }: MetaTagsProps) {
   const pathname = usePathname()
-  const baseUrl = "https://legalpo.cl"
-  const canonicalUrl = canonical ? `${baseUrl}${canonical}` : `${baseUrl}${pathname}`
+  const canonicalUrl = canonical || `https://legalpo.cl${pathname}`
 
   return (
     <Head>
       <title>{title}</title>
       <meta name="description" content={description} />
-      {noindex && <meta name="robots" content="noindex, nofollow" />}
+      <meta name="keywords" content={keywords} />
+
+      {/* Robots meta */}
+      {noindex ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow" />}
+
+      {/* Canonical URL */}
       <link rel="canonical" href={canonicalUrl} />
 
       {/* Open Graph / Facebook */}
-      <meta property="og:type" content={ogType} />
+      <meta property="og:type" content="website" />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />

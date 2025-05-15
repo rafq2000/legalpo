@@ -7,4 +7,17 @@ Disallow: /login
 Disallow: /register
 Disallow: /registro
 
+# Permitir explícitamente las páginas importantes
+Allow: /calculadora-pensiones
+Allow: /calculadora-finiquito
+Allow: /calculadora-herencia
+Allow: /contratos/arriendo
+Allow: /contratos/trabajo
+Allow: /analyze
+Allow: /dudas-laborales
+Allow: /deudas
+Allow: /consulta-familia
+Allow: /ask
+Allow: /abogados-en-*
+
 Sitemap: https://legalpo.cl/sitemap.xml

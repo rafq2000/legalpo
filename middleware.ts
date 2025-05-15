@@ -1,43 +1,54 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-export function middleware(request: NextRequest) {
-  // Get the pathname of the request
-  const pathname = request.nextUrl.pathname
-  const url = request.nextUrl.clone()
+// Mapeo de URLs antiguas a nuevas
+const redirects: Record<string, string> = {
+  "/finiquito": "/calculadora-finiquito",
+  "/pension": "/calculadora-pensiones",
+  "/herencia": "/calculadora-herencia",
+  "/contrato-arriendo": "/contratos/arriendo",
+  "/contrato-trabajo": "/contratos/trabajo",
+  "/consulta": "/dudas-laborales",
+  "/analizar": "/analyze",
+  // Añade aquí más redirecciones según sea necesario
+}
 
-  // Redirecciones para URLs antiguas o mal formadas
-  if (pathname === "/contratos/personalizado") {
-    url.pathname = "/generador-contratos/personalizado"
+export function middleware(request: NextRequest) {
+  const url = request.nextUrl.clone()
+  const { pathname } = url
+
+  // Manejo de redirecciones
+  if (pathname in redirects) {
+    url.pathname = redirects[pathname]
     return NextResponse.redirect(url)
   }
 
-  // Redirecciones para URLs con parámetros de callback
-  if (pathname.includes("login") && pathname.includes("callbackUrl")) {
-    // Si es una página de login con callback, asegurarse de que tenga noindex
-    const response = NextResponse.next()
-    response.headers.set("X-Robots-Tag", "noindex, nofollow")
-    return response
-  }
-
-  // Check if the path is an auth or login path that should be protected from indexing
+  // Manejo de URLs con parámetros incorrectos o páginas que ya no existen
+  // pero que podrían estar generando soft 404s
   if (
-    pathname.startsWith("/auth/") ||
-    pathname.startsWith("/login") ||
-    pathname.startsWith("/register") ||
-    pathname.startsWith("/registro") ||
-    pathname.includes("callbackUrl=")
+    pathname.includes("/old-") ||
+    pathname.includes("/temp-") ||
+    pathname.includes("/test-") ||
+    pathname.endsWith(".php") ||
+    pathname.endsWith(".html")
   ) {
-    // For these paths, we'll add the noindex header
-    const response = NextResponse.next()
-    response.headers.set("X-Robots-Tag", "noindex, nofollow")
-    return response
+    url.pathname = "/not-found"
+    return NextResponse.rewrite(url)
   }
 
-  // Continue with the request
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ["/auth/:path*", "/login:path*", "/register:path*", "/registro:path*", "/:path*\\?callbackUrl=:path*"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|ads.txt|images/|fonts/).*)",
+  ],
 }
