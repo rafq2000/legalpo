@@ -21,7 +21,16 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: CityPageProps): Promise<Metadata> {
-  const cityName = params.city
+  // Verificar que params.city existe antes de usarlo
+  if (!params || !params.city) {
+    return {
+      title: "Página no encontrada",
+      description: "La página que buscas no existe",
+    }
+  }
+
+  const citySlug = params.city
+  const cityName = citySlug
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ")
@@ -48,13 +57,21 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
 }
 
 export default function CityPage({ params }: CityPageProps) {
-  const cityName = params.city
+  // Verificar que params.city existe antes de usarlo
+  if (!params || !params.city) {
+    notFound()
+    return null // Esto nunca se ejecutará debido a notFound(), pero evita errores de TypeScript
+  }
+
+  const citySlug = params.city
+  const cityName = citySlug
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ")
 
   if (!cities.map((city) => city.toLowerCase()).includes(cityName.toLowerCase())) {
     notFound()
+    return null // Esto nunca se ejecutará debido a notFound(), pero evita errores de TypeScript
   }
 
   const faqItems = [
