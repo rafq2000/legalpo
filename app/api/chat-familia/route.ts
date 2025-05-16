@@ -71,9 +71,9 @@ export async function POST(req: Request) {
       })),
     ]
 
-    // Llamar a la API de OpenAI
+    // Llamar a la API de OpenAI con gpt-4-turbo
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4-turbo",
       messages: apiMessages,
       temperature: 0.3, // Temperatura más baja para respuestas más deterministas
       max_tokens: 1000,

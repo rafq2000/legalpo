@@ -2,62 +2,47 @@ import { NextResponse } from "next/server"
 import { OpenAI } from "openai"
 
 export const runtime = "nodejs"
-export const maxDuration = 30
+export const maxDuration = 15
 
 export async function GET(req: Request) {
   try {
-    // Verificar que la API key esté configurada
-    if (!process.env.OPENAI_API_KEY) {
-      console.error("ERROR: OPENAI_API_KEY no está configurada")
-      return NextResponse.json(
-        {
-          success: false,
-          error: "API key no configurada",
-          message: "La API key de OpenAI no está configurada en las variables de entorno.",
-        },
-        { status: 500 },
-      )
-    }
-
-    // Inicializar OpenAI con la API key
+    // Inicializar OpenAI
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     })
 
-    // Hacer una solicitud simple para verificar que la API funciona
+    // Llamar a la API de OpenAI con gpt-4-turbo
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4-turbo",
       messages: [
-        { role: "system", content: "Eres un asistente útil." },
-        { role: "user", content: "Hola, ¿puedes responder con 'La API de OpenAI está funcionando correctamente'?" },
+        {
+          role: "system",
+          content: "Eres un asistente útil y conciso.",
+        },
+        {
+          role: "user",
+          content: "Hola, ¿puedes confirmar que la conexión a OpenAI funciona correctamente?",
+        },
       ],
       temperature: 0.7,
       max_tokens: 100,
     })
 
-    // Extraer la respuesta
-    const response = completion.choices[0].message.content || "Sin respuesta"
+    const response = completion.choices[0].message.content || "No se pudo obtener respuesta."
 
-    // Devolver la respuesta
     return NextResponse.json({
-      success: true,
-      message: "Prueba de OpenAI completada con éxito",
-      response: response,
-      apiKey: process.env.OPENAI_API_KEY
-        ? "Configurada (primeros 4 caracteres: " + process.env.OPENAI_API_KEY.substring(0, 4) + "...)"
-        : "No configurada",
+      status: "success",
+      message: "Conexión a OpenAI establecida correctamente",
+      response,
+      model: "gpt-4-turbo",
     })
   } catch (error: any) {
-    console.error("Error en test-openai:", error)
-
+    console.error("Error al conectar con OpenAI:", error)
     return NextResponse.json(
       {
-        success: false,
-        error: error.message || "Error desconocido",
-        code: error.code || "unknown",
-        type: error.type || "unknown",
-        status: error.status || 500,
-        stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+        status: "error",
+        message: "Error al conectar con OpenAI",
+        error: error.message,
       },
       { status: 500 },
     )
