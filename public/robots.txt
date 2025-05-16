@@ -3,9 +3,17 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 Disallow: /auth/
-Disallow: /login
+# Permitir explícitamente el acceso a la página de login para el rastreador de AdSense
+Allow: /login
 Disallow: /register
 Disallow: /registro
+
+# Permitir explícitamente el rastreador de AdSense
+User-agent: Mediapartners-Google
+Allow: /
+Allow: /login
+Allow: /register
+Allow: /registro
 
 # Permitir explícitamente las páginas importantes
 Allow: /calculadora-pensiones
