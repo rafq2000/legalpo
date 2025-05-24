@@ -69,20 +69,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Llamado a compartir - Sección amigable */}
-        <section className="py-12 bg-blue-50">
-          <div className="container mx-auto px-4 text-center">
-            <div className="max-w-3xl mx-auto">
-              <h3 className="text-2xl font-bold text-blue-900 mb-4">¿Te ayudamos a resolver tus dudas legales?</h3>
-              <p className="text-lg text-gray-700 mb-6">
-                Si nuestras herramientas te fueron útiles, ayuda a otros compartiendo LegalPO. Juntos podemos hacer que
-                la información legal sea más accesible para todos.
-              </p>
-              <p className="text-gray-600 text-sm italic">"Cuando compartimos conocimiento, todos ganamos" 💙</p>
-            </div>
-          </div>
-        </section>
-
         {/* Servicios Principales - Grid de 3x3 */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
