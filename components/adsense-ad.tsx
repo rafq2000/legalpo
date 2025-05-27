@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 interface AdProps {
   slot: string
@@ -14,12 +13,13 @@ interface AdProps {
 
 export function AdsenseAd({ slot, format = "auto", responsive = true, className = "", style = {} }: AdProps) {
   const adRef = useRef<HTMLDivElement>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     const initAd = () => {
       try {
         // Only execute on the client and if the container exists
-        if (typeof window !== "undefined" && adRef.current && adRef.current.innerHTML === "") {
+        if (typeof window !== "undefined" && adRef.current && !isLoaded) {
           // Create the ins element for the ad
           const adElement = document.createElement("ins")
           adElement.className = "adsbygoogle"
@@ -41,6 +41,7 @@ export function AdsenseAd({ slot, format = "auto", responsive = true, className 
           // Load the ad
           try {
             ;(window.adsbygoogle = window.adsbygoogle || []).push({})
+            setIsLoaded(true)
           } catch (error) {
             console.error("Error loading the ad:", error)
           }
@@ -72,21 +73,44 @@ export function AdsenseAd({ slot, format = "auto", responsive = true, className 
         adRef.current.innerHTML = ""
       }
     }
-  }, [slot, format, responsive])
+  }, [slot, format, responsive, isLoaded])
+
+  // Determinar altura mínima basada en formato
+  const getMinHeight = () => {
+    switch (format) {
+      case "rectangle":
+        return "250px"
+      case "horizontal":
+        return "90px"
+      case "vertical":
+        return "600px"
+      default:
+        return "100px"
+    }
+  }
 
   return (
     <div
       ref={adRef}
-      className={`adsense-container ${className}`}
+      className={`ad-container ${format} ${className}`}
       style={{
         display: "flex",
         justifyContent: "center",
+        alignItems: "center",
         width: "100%",
         overflow: "hidden",
-        minHeight: format === "rectangle" ? "250px" : "100px",
+        minHeight: getMinHeight(),
         background: "rgba(0,0,0,0.02)",
+        border: "1px solid rgba(0,0,0,0.1)",
+        borderRadius: "4px",
         ...style,
       }}
-    />
+    >
+      {!isLoaded && (
+        <div className="skeleton" style={{ width: "100%", height: "100%" }}>
+          <div className="flex items-center justify-center h-full text-gray-400 text-sm">Cargando anuncio...</div>
+        </div>
+      )}
+    </div>
   )
 }

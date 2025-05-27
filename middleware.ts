@@ -10,21 +10,47 @@ const redirects: Record<string, string> = {
   "/contrato-trabajo": "/contratos/trabajo",
   "/consulta": "/dudas-laborales",
   "/analizar": "/analyze",
-  // Añade aquí más redirecciones según sea necesario
+  "/contratos/personalizado": "/generador-contratos/personalizado",
 }
+
+// Redirecciones de dominio y protocolo
+const domainRedirects = ["http://legalpo.cl", "http://www.legalpo.cl", "https://legalpo.cl"]
 
 export function middleware(request: NextRequest) {
   const url = request.nextUrl.clone()
-  const { pathname } = url
+  const { pathname, search } = url
 
-  // Manejo de redirecciones
-  if (pathname in redirects) {
-    url.pathname = redirects[pathname]
-    return NextResponse.redirect(url)
+  // Redirección de dominio a www
+  const host = request.headers.get("host")
+  if (host && !host.startsWith("www.") && host.includes("legalpo.cl")) {
+    url.host = `www.${host}`
+    return NextResponse.redirect(url, 301)
   }
 
-  // Manejo de URLs con parámetros incorrectos o páginas que ya no existen
-  // pero que podrían estar generando soft 404s
+  // Redirección de HTTP a HTTPS
+  if (url.protocol === "http:") {
+    url.protocol = "https:"
+    return NextResponse.redirect(url, 301)
+  }
+
+  // Manejo de redirecciones específicas
+  if (pathname in redirects) {
+    url.pathname = redirects[pathname]
+    return NextResponse.redirect(url, 301)
+  }
+
+  // Bloquear URLs malformadas
+  if (pathname.includes("2fwww") || pathname.includes("//")) {
+    url.pathname = "/"
+    return NextResponse.redirect(url, 301)
+  }
+
+  // Redireccionar site.webmanifest a 404
+  if (pathname === "/site.webmanifest") {
+    return new NextResponse(null, { status: 404 })
+  }
+
+  // Manejo de URLs con parámetros incorrectos
   if (
     pathname.includes("/old-") ||
     pathname.includes("/temp-") ||
@@ -32,8 +58,18 @@ export function middleware(request: NextRequest) {
     pathname.endsWith(".php") ||
     pathname.endsWith(".html")
   ) {
-    url.pathname = "/not-found"
-    return NextResponse.rewrite(url)
+    url.pathname = "/"
+    return NextResponse.redirect(url, 301)
+  }
+
+  // Redireccionar login con callbackUrl a páginas principales
+  if (pathname === "/login" && search.includes("callbackUrl=")) {
+    const callbackUrl = new URLSearchParams(search).get("callbackUrl")
+    if (callbackUrl) {
+      url.pathname = callbackUrl
+      url.search = ""
+      return NextResponse.redirect(url, 302)
+    }
   }
 
   return NextResponse.next()

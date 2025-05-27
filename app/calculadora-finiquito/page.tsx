@@ -420,13 +420,34 @@ export default function CalculadoraFiniquito() {
   const getShareableContent = () => {
     if (!resultado) return ""
 
-    return `Calculé mi finiquito en LegalPO:
+    return `🎯 ¡CALCULÉ MI FINIQUITO EN LEGALPO! 
 
-Causal: ${getCausalText(formData.causalTermino)}
-Tiempo de servicio: ${resultado.tiempoServicio}
-Total a pagar: ${formatMoney(resultado.total)}
+💼 Causal: ${getCausalText(formData.causalTermino)}
+⏰ Tiempo de servicio: ${resultado.tiempoServicio}
+💰 Total a recibir: ${formatMoney(resultado.total)}
 
-¡Calcula tu finiquito gratis en LegalPO!`
+✅ ¡100% GRATIS y basado en la ley chilena!
+🚀 Calcula el tuyo en segundos: LegalPO.cl
+
+#Finiquito #DerechosLaborales #Chile #LegalPO #Trabajadores`
+  }
+
+  const getPromotionalShareContent = () => {
+    if (!resultado) return ""
+
+    return `🔥 ¡INCREÍBLE! Calculé mi finiquito en LegalPO y me corresponden ${formatMoney(resultado.total)}
+
+🎯 La calculadora es:
+✅ 100% GRATUITA
+✅ Basada en la ley chilena
+✅ Súper fácil de usar
+✅ Resultado en segundos
+
+🚀 ¡No dejes que te estafen! Conoce tus derechos laborales.
+
+Calcula el tuyo GRATIS en LegalPO.cl
+
+#Finiquito #DerechosLaborales #Chile #Trabajadores #LegalPO`
   }
 
   return (

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next"
 import { cities } from "@/lib/cities"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://legalpo.cl"
+  const baseUrl = "https://www.legalpo.cl"
 
   // Rutas que no deben incluirse en el sitemap
   const excludedRoutes = [
@@ -17,6 +17,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/test-firebase",
     "/check-firebase-env",
     "/test-eventos",
+    "/site.webmanifest",
+    "/contratos/personalizado", // Redirige a generador-contratos
   ]
 
   // Rutas principales del sitio
@@ -47,10 +49,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/deudas",
     "/consulta-familia",
     "/laboral",
+    "/ask",
   ]
-
-  // Filtrar las rutas para excluir las que no deben estar en el sitemap
-  const filteredRoutes = routes.filter((route) => !excludedRoutes.some((excluded) => route.startsWith(excluded)))
 
   // Páginas de herramientas y servicios
   const toolRoutes = [
@@ -80,13 +80,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Generar rutas para las páginas de ciudades
   const cityRoutes = cities.map((city) => `/abogados-en-${city.toLowerCase().replace(/ /g, "-")}`)
 
-  // Usar filteredRoutes en lugar de routes en la combinación final
-  const allRoutes = [...filteredRoutes, ...toolRoutes, ...legalInfoRoutes, ...cityRoutes]
+  // Página de abogados por ciudad
+  const lawyerRoutes = ["/abogados-por-ciudad"]
+
+  const allRoutes = [...routes, ...toolRoutes, ...legalInfoRoutes, ...cityRoutes, ...lawyerRoutes]
 
   return allRoutes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
-    changeFrequency: route === "" ? "daily" : "weekly",
+    changeFrequency:
+      route === ""
+        ? "daily"
+        : route.includes("/calculadora-") || route.includes("/generador-")
+          ? "weekly"
+          : route.includes("/abogados-en-")
+            ? "monthly"
+            : "weekly",
     priority:
       route === ""
         ? 1.0
@@ -94,6 +103,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
           ? 0.9
           : route.includes("/abogados-en-")
             ? 0.8
-            : 0.7,
+            : route.includes("/accidentes-transito") ||
+                route.includes("/finiquito-chile") ||
+                route.includes("/herencias")
+              ? 0.8
+              : 0.7,
   }))
 }

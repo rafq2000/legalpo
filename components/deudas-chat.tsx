@@ -54,9 +54,18 @@ export function DeudasChat() {
   const getShareableContent = () => {
     if (messages.length === 0) return ""
     const conversation = messages
-      .map((msg) => `${msg.role === "user" ? "Consulta:" : "Respuesta LegalPO:"} ${msg.content}`)
+      .map((msg) => `${msg.role === "user" ? "❓ Consulta:" : "✅ Respuesta LegalPO:"} ${msg.content}`)
       .join("\n\n")
-    return `Consulta sobre deudas resuelta en LegalPO:\n\n${conversation}\n\n¡Resuelve tus dudas legales en LegalPO!`
+
+    return `💳 ¡RESOLVÍ MI PROBLEMA DE DEUDAS EN LEGALPO!
+
+${conversation}
+
+✅ ¡Asesoría 100% GRATUITA!
+⚖️ Basada en la ley chilena
+🚀 Resuelve tus dudas en: LegalPO.cl
+
+#Deudas #DICOM #DerechosDeudor #Chile #LegalPO #AsesoriaGratuita`
   }
 
   return (

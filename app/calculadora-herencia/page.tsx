@@ -196,12 +196,34 @@ export default function CalculadoraHerencia() {
   const getShareableContent = () => {
     if (!resultado) return ""
 
-    return `Calculé mi herencia en LegalPO:
+    return `🏠 ¡CALCULÉ MI HERENCIA EN LEGALPO!
 
-Mi herencia estimada: ${formatCurrency(resultado.herenciaUsuario)}
-Porcentaje: ${resultado.porcentajeHerencia.toFixed(2)}%
+💰 Mi parte estimada: ${formatCurrency(resultado.herenciaUsuario)}
+📊 Porcentaje: ${resultado.porcentajeHerencia.toFixed(2)}% del total
+⚖️ Basado en la ley chilena
 
-¡Calcula tu herencia gratis en LegalPO!`
+✅ ¡100% GRATIS y fácil de usar!
+🚀 Calcula la tuya en: LegalPO.cl
+
+#Herencia #DerechoSuccesorio #Chile #LegalPO #Familia`
+  }
+
+  const getPromotionalShareContent = () => {
+    if (!resultado) return ""
+
+    return `💎 ¡WOW! Mi herencia estimada es de ${formatCurrency(resultado.herenciaUsuario)}
+
+🎯 Usé la calculadora de LegalPO y es:
+✅ Completamente GRATUITA
+✅ Basada en el Código Civil chileno
+✅ Súper precisa y detallada
+✅ Incluye cálculo de impuestos
+
+🚀 ¡No te quedes con la duda! Conoce tus derechos hereditarios.
+
+Calcula GRATIS en LegalPO.cl
+
+#Herencia #DerechoSuccesorio #Chile #Familia #LegalPO`
   }
 
   return (

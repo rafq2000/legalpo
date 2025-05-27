@@ -46,15 +46,15 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen layout-stable">
       <SiteHeader />
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="bg-blue-800 text-white py-16">
+        {/* Hero Section - Optimizado para CLS */}
+        <section className="bg-blue-800 text-white hero-container">
           <div className="container mx-auto px-4 text-center">
             <div className="flex justify-center mb-8">
-              <div className="bg-blue-700/50 p-4 rounded-xl">
+              <div className="bg-blue-700/50 p-4 rounded-xl icon-container w-20 h-20">
                 <Shield className="h-16 w-16 text-blue-200" />
               </div>
             </div>
@@ -69,26 +69,29 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Servicios Principales - Grid de 3x3 */}
+        {/* Servicios Principales - Grid optimizado para CLS */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center text-blue-900 mb-12">Nuestros Servicios</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="services-grid">
               {/* Grupo 1: Consultas */}
-              <div className="bg-blue-50 rounded-xl p-6 shadow-md">
+              <div className="service-card bg-blue-50 rounded-xl p-6 shadow-md">
                 <h3 className="text-2xl font-bold text-blue-800 mb-4 flex items-center">
-                  <MessageSquare className="mr-2 h-6 w-6" /> Consultas Legales
+                  <div className="icon-container mr-2">
+                    <MessageSquare className="h-6 w-6" />
+                  </div>
+                  Consultas Legales
                 </h3>
                 <p className="text-gray-700 mb-6">Resuelve tus dudas legales con nuestros asistentes especializados</p>
-                <div className="space-y-3">
+                <div className="stable-list">
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start text-left border-blue-200 text-blue-700 hover:bg-blue-100"
+                    className="stable-button w-full justify-start text-left border-blue-200 text-blue-700 hover:bg-blue-100"
                   >
-                    <Link href="/dudas-laborales" className="flex items-center">
-                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2">
+                    <Link href="/dudas-laborales" className="stable-list-item">
+                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2 icon-container">
                         <HelpCircle className="h-4 w-4" />
                       </span>
                       Consultas Laborales
@@ -97,10 +100,10 @@ export default function Home() {
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start text-left border-blue-200 text-blue-700 hover:bg-blue-100"
+                    className="stable-button w-full justify-start text-left border-blue-200 text-blue-700 hover:bg-blue-100"
                   >
-                    <Link href="/deudas" className="flex items-center">
-                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2">
+                    <Link href="/deudas" className="stable-list-item">
+                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2 icon-container">
                         <HelpCircle className="h-4 w-4" />
                       </span>
                       Consultas sobre Deudas
@@ -109,10 +112,10 @@ export default function Home() {
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start text-left border-blue-200 text-blue-700 hover:bg-blue-100"
+                    className="stable-button w-full justify-start text-left border-blue-200 text-blue-700 hover:bg-blue-100"
                   >
-                    <Link href="/consulta-familia" className="flex items-center">
-                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2">
+                    <Link href="/consulta-familia" className="stable-list-item">
+                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2 icon-container">
                         <HelpCircle className="h-4 w-4" />
                       </span>
                       Consultas Familiares
@@ -121,10 +124,10 @@ export default function Home() {
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start text-left border-blue-200 text-blue-700 hover:bg-blue-100"
+                    className="stable-button w-full justify-start text-left border-blue-200 text-blue-700 hover:bg-blue-100"
                   >
-                    <Link href="/ask" className="flex items-center">
-                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2">
+                    <Link href="/ask" className="stable-list-item">
+                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2 icon-container">
                         <HelpCircle className="h-4 w-4" />
                       </span>
                       Consultas Generales
@@ -134,21 +137,24 @@ export default function Home() {
               </div>
 
               {/* Grupo 2: Calculadoras */}
-              <div className="bg-green-50 rounded-xl p-6 shadow-md">
+              <div className="service-card bg-green-50 rounded-xl p-6 shadow-md">
                 <h3 className="text-2xl font-bold text-green-800 mb-4 flex items-center">
-                  <Calculator className="mr-2 h-6 w-6" /> Calculadoras Legales
+                  <div className="icon-container mr-2">
+                    <Calculator className="h-6 w-6" />
+                  </div>
+                  Calculadoras Legales
                 </h3>
                 <p className="text-gray-700 mb-6">
                   Calcula montos y plazos legales con nuestras herramientas especializadas
                 </p>
-                <div className="space-y-3">
+                <div className="stable-list">
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start text-left border-green-200 text-green-700 hover:bg-green-100"
+                    className="stable-button w-full justify-start text-left border-green-200 text-green-700 hover:bg-green-100"
                   >
-                    <Link href="/calculadora-finiquito" className="flex items-center">
-                      <span className="bg-green-100 text-green-600 p-1 rounded-full mr-2">
+                    <Link href="/calculadora-finiquito" className="stable-list-item">
+                      <span className="bg-green-100 text-green-600 p-1 rounded-full mr-2 icon-container">
                         <Calculator className="h-4 w-4" />
                       </span>
                       Calculadora de Finiquito
@@ -157,10 +163,10 @@ export default function Home() {
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start text-left border-green-200 text-green-700 hover:bg-green-100"
+                    className="stable-button w-full justify-start text-left border-green-200 text-green-700 hover:bg-green-100"
                   >
-                    <Link href="/calculadora-pensiones" className="flex items-center">
-                      <span className="bg-green-100 text-green-600 p-1 rounded-full mr-2">
+                    <Link href="/calculadora-pensiones" className="stable-list-item">
+                      <span className="bg-green-100 text-green-600 p-1 rounded-full mr-2 icon-container">
                         <Calculator className="h-4 w-4" />
                       </span>
                       Calculadora de Pensión Alimenticia
@@ -169,10 +175,10 @@ export default function Home() {
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start text-left border-green-200 text-green-700 hover:bg-green-100"
+                    className="stable-button w-full justify-start text-left border-green-200 text-green-700 hover:bg-green-100"
                   >
-                    <Link href="/calculadora-herencia" className="flex items-center">
-                      <span className="bg-green-100 text-green-600 p-1 rounded-full mr-2">
+                    <Link href="/calculadora-herencia" className="stable-list-item">
+                      <span className="bg-green-100 text-green-600 p-1 rounded-full mr-2 icon-container">
                         <Calculator className="h-4 w-4" />
                       </span>
                       Calculadora de Herencia
@@ -182,19 +188,22 @@ export default function Home() {
               </div>
 
               {/* Grupo 3: Documentos */}
-              <div className="bg-purple-50 rounded-xl p-6 shadow-md">
+              <div className="service-card bg-purple-50 rounded-xl p-6 shadow-md">
                 <h3 className="text-2xl font-bold text-purple-800 mb-4 flex items-center">
-                  <FileText className="mr-2 h-6 w-6" /> Documentos
+                  <div className="icon-container mr-2">
+                    <FileText className="h-6 w-6" />
+                  </div>
+                  Documentos
                 </h3>
                 <p className="text-gray-700 mb-6">Analiza y genera documentos legales con nuestra tecnología</p>
-                <div className="space-y-3">
+                <div className="stable-list">
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start text-left border-purple-200 text-purple-700 hover:bg-purple-100"
+                    className="stable-button w-full justify-start text-left border-purple-200 text-purple-700 hover:bg-purple-100"
                   >
-                    <Link href="/analyze" className="flex items-center">
-                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2">
+                    <Link href="/analyze" className="stable-list-item">
+                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2 icon-container">
                         <FileText className="h-4 w-4" />
                       </span>
                       Analizar Documento
@@ -203,10 +212,10 @@ export default function Home() {
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start text-left border-purple-200 text-purple-700 hover:bg-purple-100"
+                    className="stable-button w-full justify-start text-left border-purple-200 text-purple-700 hover:bg-purple-100"
                   >
-                    <Link href="/generador-contratos" className="flex items-center">
-                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2">
+                    <Link href="/generador-contratos" className="stable-list-item">
+                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2 icon-container">
                         <FileText className="h-4 w-4" />
                       </span>
                       Generador de Contratos
@@ -215,10 +224,10 @@ export default function Home() {
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start text-left border-purple-200 text-purple-700 hover:bg-purple-100"
+                    className="stable-button w-full justify-start text-left border-purple-200 text-purple-700 hover:bg-purple-100"
                   >
-                    <Link href="/contratos/arriendo" className="flex items-center">
-                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2">
+                    <Link href="/contratos/arriendo" className="stable-list-item">
+                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2 icon-container">
                         <FileText className="h-4 w-4" />
                       </span>
                       Contrato de Arriendo
@@ -227,10 +236,10 @@ export default function Home() {
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start text-left border-purple-200 text-purple-700 hover:bg-purple-100"
+                    className="stable-button w-full justify-start text-left border-purple-200 text-purple-700 hover:bg-purple-100"
                   >
-                    <Link href="/contratos/trabajo" className="flex items-center">
-                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2">
+                    <Link href="/contratos/trabajo" className="stable-list-item">
+                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2 icon-container">
                         <FileText className="h-4 w-4" />
                       </span>
                       Contrato de Trabajo
@@ -242,28 +251,28 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Sección de Información Legal */}
+        {/* Sección de Información Legal - Optimizada para CLS */}
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center text-blue-900 mb-12">Información Legal</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Tarjeta 1 */}
-              <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="bg-white rounded-lg shadow-md overflow-hidden min-h-[200px]">
                 <div className="h-2 bg-blue-600"></div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-blue-900 mb-3">Derecho Laboral</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li className="flex items-center">
-                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2">
+                  <ul className="stable-list text-gray-700">
+                    <li className="stable-list-item">
+                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2 icon-container">
                         <CheckCircle className="h-3 w-3" />
                       </span>
                       <Link href="/finiquito-chile" className="hover:text-blue-600">
                         Finiquito Laboral
                       </Link>
                     </li>
-                    <li className="flex items-center">
-                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2">
+                    <li className="stable-list-item">
+                      <span className="bg-blue-100 text-blue-600 p-1 rounded-full mr-2 icon-container">
                         <CheckCircle className="h-3 w-3" />
                       </span>
                       <Link href="/laboral" className="hover:text-blue-600">
@@ -275,21 +284,21 @@ export default function Home() {
               </div>
 
               {/* Tarjeta 2 */}
-              <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="bg-white rounded-lg shadow-md overflow-hidden min-h-[200px]">
                 <div className="h-2 bg-green-600"></div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-blue-900 mb-3">Derecho Familiar</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li className="flex items-center">
-                      <span className="bg-green-100 text-green-600 p-1 rounded-full mr-2">
+                  <ul className="stable-list text-gray-700">
+                    <li className="stable-list-item">
+                      <span className="bg-green-100 text-green-600 p-1 rounded-full mr-2 icon-container">
                         <CheckCircle className="h-3 w-3" />
                       </span>
                       <Link href="/pension-alimentos" className="hover:text-green-600">
                         Pensión de Alimentos
                       </Link>
                     </li>
-                    <li className="flex items-center">
-                      <span className="bg-green-100 text-green-600 p-1 rounded-full mr-2">
+                    <li className="stable-list-item">
+                      <span className="bg-green-100 text-green-600 p-1 rounded-full mr-2 icon-container">
                         <CheckCircle className="h-3 w-3" />
                       </span>
                       <Link href="/herencias" className="hover:text-green-600">
@@ -301,21 +310,21 @@ export default function Home() {
               </div>
 
               {/* Tarjeta 3 */}
-              <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="bg-white rounded-lg shadow-md overflow-hidden min-h-[200px]">
                 <div className="h-2 bg-purple-600"></div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-blue-900 mb-3">Deudas y Cobranzas</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li className="flex items-center">
-                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2">
+                  <ul className="stable-list text-gray-700">
+                    <li className="stable-list-item">
+                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2 icon-container">
                         <CheckCircle className="h-3 w-3" />
                       </span>
                       <Link href="/deudas" className="hover:text-purple-600">
                         Cobranzas y DICOM
                       </Link>
                     </li>
-                    <li className="flex items-center">
-                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2">
+                    <li className="stable-list-item">
+                      <span className="bg-purple-100 text-purple-600 p-1 rounded-full mr-2 icon-container">
                         <CheckCircle className="h-3 w-3" />
                       </span>
                       <Link href="/consulta-deudas" className="hover:text-purple-600">
@@ -327,21 +336,21 @@ export default function Home() {
               </div>
 
               {/* Tarjeta 4 */}
-              <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="bg-white rounded-lg shadow-md overflow-hidden min-h-[200px]">
                 <div className="h-2 bg-amber-600"></div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-blue-900 mb-3">Otros Temas</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li className="flex items-center">
-                      <span className="bg-amber-100 text-amber-600 p-1 rounded-full mr-2">
+                  <ul className="stable-list text-gray-700">
+                    <li className="stable-list-item">
+                      <span className="bg-amber-100 text-amber-600 p-1 rounded-full mr-2 icon-container">
                         <CheckCircle className="h-3 w-3" />
                       </span>
                       <Link href="/accidentes-transito" className="hover:text-amber-600">
                         Accidentes de Tránsito
                       </Link>
                     </li>
-                    <li className="flex items-center">
-                      <span className="bg-amber-100 text-amber-600 p-1 rounded-full mr-2">
+                    <li className="stable-list-item">
+                      <span className="bg-amber-100 text-amber-600 p-1 rounded-full mr-2 icon-container">
                         <CheckCircle className="h-3 w-3" />
                       </span>
                       <Link href="/derechos-consumidor" className="hover:text-amber-600">
@@ -355,32 +364,40 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Acceso Rápido - Botones grandes */}
+        {/* Acceso Rápido - Botones grandes optimizados */}
         <section className="py-12 bg-blue-800 text-white">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-10">Acceso Rápido</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Button asChild size="lg" className="h-auto py-6 bg-blue-700 hover:bg-blue-600">
+              <Button asChild size="lg" className="stable-button h-auto py-6 bg-blue-700 hover:bg-blue-600">
                 <Link href="/analyze" className="flex flex-col items-center">
-                  <FileText className="h-8 w-8 mb-2" />
+                  <div className="icon-container mb-2">
+                    <FileText className="h-8 w-8" />
+                  </div>
                   <span className="text-lg font-medium">Analizar Documento</span>
                 </Link>
               </Button>
-              <Button asChild size="lg" className="h-auto py-6 bg-green-600 hover:bg-green-500">
+              <Button asChild size="lg" className="stable-button h-auto py-6 bg-green-600 hover:bg-green-500">
                 <Link href="/calculadora-herencia" className="flex flex-col items-center">
-                  <Calculator className="h-8 w-8 mb-2" />
+                  <div className="icon-container mb-2">
+                    <Calculator className="h-8 w-8" />
+                  </div>
                   <span className="text-lg font-medium">Calculadora Herencia</span>
                 </Link>
               </Button>
-              <Button asChild size="lg" className="h-auto py-6 bg-purple-600 hover:bg-purple-500">
+              <Button asChild size="lg" className="stable-button h-auto py-6 bg-purple-600 hover:bg-purple-500">
                 <Link href="/dudas-laborales" className="flex flex-col items-center">
-                  <MessageSquare className="h-8 w-8 mb-2" />
+                  <div className="icon-container mb-2">
+                    <MessageSquare className="h-8 w-8" />
+                  </div>
                   <span className="text-lg font-medium">Consultas Laborales</span>
                 </Link>
               </Button>
-              <Button asChild size="lg" className="h-auto py-6 bg-amber-600 hover:bg-amber-500">
+              <Button asChild size="lg" className="stable-button h-auto py-6 bg-amber-600 hover:bg-amber-500">
                 <Link href="/generador-contratos" className="flex flex-col items-center">
-                  <FileText className="h-8 w-8 mb-2" />
+                  <div className="icon-container mb-2">
+                    <FileText className="h-8 w-8" />
+                  </div>
                   <span className="text-lg font-medium">Generar Contrato</span>
                 </Link>
               </Button>
@@ -392,22 +409,30 @@ export default function Home() {
         <section className="py-16 bg-white">
           <div className="container px-4 mx-auto">
             <h2 className="text-3xl font-bold text-blue-900 mb-8 text-center">Consultas Populares</h2>
-            <PopularQuestions />
+            <div className="layout-stable">
+              <PopularQuestions />
+            </div>
           </div>
         </section>
 
         {/* Sección de registro */}
-        <RegisterHero />
+        <div className="layout-stable">
+          <RegisterHero />
+        </div>
 
-        {/* Sección de publicidad */}
+        {/* Sección de publicidad con espacio reservado */}
         <section className="py-8 bg-gray-50">
           <div className="container px-4 mx-auto">
-            <AdUnit slot="1234567890" format="horizontal" responsive={true} position="footer" />
+            <div className="ad-container horizontal">
+              <AdUnit slot="1234567890" format="horizontal" responsive={true} position="footer" />
+            </div>
           </div>
         </section>
       </main>
 
-      <SiteFooter />
+      <div className="footer-stable">
+        <SiteFooter />
+      </div>
     </div>
   )
 }

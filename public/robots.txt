@@ -1,21 +1,20 @@
 User-agent: *
 Allow: /
+
+# Bloquear páginas de autenticación y admin
 Disallow: /admin/
 Disallow: /api/
 Disallow: /auth/
-# Permitir explícitamente el acceso a la página de login para el rastreador de AdSense
-Allow: /login
-Disallow: /register
-Disallow: /registro
+Disallow: /login*
+Disallow: /register*
+Disallow: /registro*
 
-# Permitir explícitamente el rastreador de AdSense
-User-agent: Mediapartners-Google
-Allow: /
-Allow: /login
-Allow: /register
-Allow: /registro
+# Bloquear archivos técnicos
+Disallow: /site.webmanifest
+Disallow: /*.json$
+Disallow: /*?callbackUrl=*
 
-# Permitir explícitamente las páginas importantes
+# Permitir explícitamente páginas importantes
 Allow: /calculadora-pensiones
 Allow: /calculadora-finiquito
 Allow: /calculadora-herencia
@@ -27,5 +26,17 @@ Allow: /deudas
 Allow: /consulta-familia
 Allow: /ask
 Allow: /abogados-en-*
+Allow: /accidentes-transito
+Allow: /finiquito-chile
+Allow: /herencias
+Allow: /pension-alimentos
+
+# Permitir explícitamente el rastreador de AdSense
+User-agent: Mediapartners-Google
+Allow: /
+
+# Permitir AdsBot
+User-agent: AdsBot-Google
+Allow: /
 
 Sitemap: https://legalpo.cl/sitemap.xml

@@ -155,10 +155,19 @@ export function PreguntasChat({ tema }: PreguntasChatProps) {
 
     const conversation = messages
       .slice(1) // Omitir mensaje inicial
-      .map((msg) => `${msg.role === "user" ? "Consulta:" : "Respuesta LegalPO:"} ${msg.content}`)
+      .map((msg) => `${msg.role === "user" ? "❓ Consulta:" : "✅ Respuesta LegalPO:"} ${msg.content}`)
       .join("\n\n")
 
-    return `${getTemaTitle()} - Consulta resuelta en LegalPO:\n\n${conversation}\n\n¡Resuelve tus dudas legales en LegalPO!`
+    return `🎯 ¡RESOLVÍ MI DUDA LEGAL EN LEGALPO!
+
+${getTemaTitle().toUpperCase()}
+
+${conversation}
+
+✅ ¡100% GRATIS y basado en la ley chilena!
+🚀 Resuelve tus dudas en: LegalPO.cl
+
+#ConsultaLegal #DerechosChile #LegalPO #AsesoriaGratuita`
   }
 
   return (

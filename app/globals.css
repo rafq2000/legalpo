@@ -140,6 +140,186 @@ body {
   }
 }
 
+/* OPTIMIZACIONES PARA CLS (Cumulative Layout Shift) */
+
+/* Prevenir layout shifts en fuentes */
+@font-face {
+  font-family: "Inter";
+  font-display: swap;
+  src: local("Inter");
+}
+
+/* Reservar espacio para elementos que cargan dinámicamente */
+.layout-stable {
+  contain: layout style;
+}
+
+/* Contenedores con dimensiones fijas para prevenir shifts */
+.hero-container {
+  min-height: 400px;
+  @apply flex items-center justify-center;
+}
+
+@media (max-width: 640px) {
+  .hero-container {
+    min-height: 350px;
+  }
+}
+
+/* Grid estable para servicios */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  min-height: 400px;
+}
+
+@media (max-width: 640px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+}
+
+/* Tarjetas de servicio con altura fija */
+.service-card {
+  min-height: 350px;
+  @apply flex flex-col;
+}
+
+@media (max-width: 640px) {
+  .service-card {
+    min-height: 300px;
+  }
+}
+
+/* Botones con dimensiones estables */
+.stable-button {
+  min-height: 44px;
+  min-width: 120px;
+  @apply flex items-center justify-center;
+}
+
+/* Contenedor de anuncios con espacio reservado */
+.ad-container {
+  min-height: 250px;
+  width: 100%;
+  @apply flex items-center justify-center bg-gray-50;
+}
+
+.ad-container.horizontal {
+  min-height: 90px;
+}
+
+.ad-container.rectangle {
+  min-height: 250px;
+}
+
+/* Skeleton loaders para prevenir shifts */
+.skeleton {
+  @apply animate-pulse bg-gray-200 rounded;
+}
+
+.skeleton-text {
+  @apply h-4 bg-gray-200 rounded animate-pulse;
+}
+
+.skeleton-button {
+  @apply h-10 bg-gray-200 rounded animate-pulse;
+}
+
+/* Contenedor de header estable */
+.header-stable {
+  height: 64px;
+  @apply flex items-center;
+}
+
+/* Footer con altura mínima */
+.footer-stable {
+  min-height: 400px;
+}
+
+/* Prevenir shifts en imágenes */
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+/* Contenedor de iconos estable */
+.icon-container {
+  width: 24px;
+  height: 24px;
+  @apply flex items-center justify-center flex-shrink-0;
+}
+
+/* Espaciado estable para listas */
+.stable-list {
+  @apply space-y-3;
+}
+
+.stable-list-item {
+  min-height: 44px;
+  @apply flex items-center;
+}
+
+/* Contenedor de chat estable */
+.chat-container {
+  min-height: 500px;
+  @apply flex flex-col;
+}
+
+/* Contenedor de calculadora estable */
+.calculator-container {
+  min-height: 600px;
+}
+
+/* Prevenir shifts en modales */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+}
+
+/* Botones flotantes con posición estable */
+.floating-button {
+  position: fixed;
+  z-index: 40;
+  width: 60px;
+  height: 60px;
+  @apply rounded-full shadow-lg flex items-center justify-center;
+}
+
+.whatsapp-button {
+  bottom: 20px;
+  right: 20px;
+}
+
+.lawyer-button {
+  bottom: 90px;
+  right: 20px;
+}
+
+/* Optimizaciones específicas para móviles */
+@media (max-width: 640px) {
+  .floating-button {
+    width: 56px;
+    height: 56px;
+  }
+
+  .whatsapp-button {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .lawyer-button {
+    bottom: 80px;
+    right: 16px;
+  }
+}
+
 /* Estilos estandarizados para LegalPO */
 .legalpo-header {
   @apply bg-legalpo-primary text-white;

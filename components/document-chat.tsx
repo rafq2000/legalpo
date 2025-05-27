@@ -131,12 +131,22 @@ export function DocumentChat({ documentText, documentId }: DocumentChatProps) {
 
   // Obtener contenido para compartir
   const getShareableContent = () => {
-    const documentSummary = `Consulta sobre documento en LegalPO:\n\n`
+    const documentSummary = `🔍 ¡ANALICÉ MI DOCUMENTO EN LEGALPO!
+
+📄 Consulta sobre documento legal:`
     const conversation = messages
       .filter((msg) => msg.role === "user" || msg.role === "assistant")
-      .map((msg) => `${msg.role === "user" ? "Pregunta:" : "Respuesta:"} ${msg.content}`)
+      .map((msg) => `${msg.role === "user" ? "❓ Pregunta:" : "✅ Análisis LegalPO:"} ${msg.content}`)
       .join("\n\n")
-    return documentSummary + conversation + "\n\n¡Conoce más herramientas legales en LegalPO!"
+
+    return `${documentSummary}
+
+${conversation}
+
+✅ ¡100% GRATIS y súper útil!
+🚀 Analiza tus documentos en: LegalPO.cl
+
+#DocumentosLegales #AnalisisLegal #Chile #LegalPO #Contratos`
   }
 
   return (
