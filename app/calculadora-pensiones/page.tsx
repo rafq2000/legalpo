@@ -12,19 +12,24 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { ShareButton } from "@/components/share-button"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
-import { InfoIcon, Calculator, Users, DollarSign, FileText, AlertTriangle, CheckCircle } from "lucide-react"
+import {
+  InfoIcon,
+  Calculator,
+  Users,
+  DollarSign,
+  FileText,
+  AlertTriangle,
+  CheckCircle,
+  Heart,
+  Lightbulb,
+  Scale,
+} from "lucide-react"
 
 interface Alimentario {
   edad: number
   tieneDiscapacidad: boolean
   estudiaUniversidad: boolean
-  gastosAlimentacion: number
-  gastosHabitacion: number
-  gastosVestimenta: number
-  gastosSalud: number
-  gastosEducacion: number
-  gastosMovilizacion: number
-  gastosExtras: number
+  gastosTotal: number
   viveConAlimentante: boolean
   observaciones: string
 }
@@ -32,27 +37,21 @@ interface Alimentario {
 interface CuidadorPersonal {
   ingresoLiquido: number
   otrosIngresos: number
-  gastosVivienda: number
   gastosPersonales: number
   trabajaFueraHogar: boolean
   tiempoCompleto: boolean
 }
 
 interface ResultadoCalculo {
-  montoMinimo: number
-  montoMaximo: number
+  rangoMinimo: number
+  rangoMaximo: number
   montoRecomendado: number
   minimoLegal: number
+  maximoLegal: number
   porcentajeIngreso: number
-  desglose: {
-    alimentacion: number
-    habitacion: number
-    vestimenta: number
-    salud: number
-    educacion: number
-    movilizacion: number
-    otros: number
-  }
+  porcentajeProporcional: number
+  montoBasadoEnGastos: number
+  montoBasadoEnProporcionalidad: number
   factoresConsiderados: string[]
   advertencias: string[]
   fundamentoLegal: string[]
@@ -72,13 +71,12 @@ export default function CalculadoraPensionesPage() {
   const [otrasObligaciones, setOtrasObligaciones] = useState<number>(0)
   const [deudas, setDeudas] = useState<number>(0)
   const [regionResidencia, setRegionResidencia] = useState<string>("")
-  const [relacionAlimentante, setRelacionAlimentante] = useState<string>("") // NUEVO
+  const [relacionAlimentante, setRelacionAlimentante] = useState<string>("")
 
   // Estados del Cuidador Personal
   const [cuidador, setCuidador] = useState<CuidadorPersonal>({
     ingresoLiquido: 0,
     otrosIngresos: 0,
-    gastosVivienda: 0,
     gastosPersonales: 0,
     trabajaFueraHogar: false,
     tiempoCompleto: false,
@@ -91,13 +89,7 @@ export default function CalculadoraPensionesPage() {
       edad: 5,
       tieneDiscapacidad: false,
       estudiaUniversidad: false,
-      gastosAlimentacion: 0,
-      gastosHabitacion: 0,
-      gastosVestimenta: 0,
-      gastosSalud: 0,
-      gastosEducacion: 0,
-      gastosMovilizacion: 0,
-      gastosExtras: 0,
+      gastosTotal: 0,
       viveConAlimentante: false,
       observaciones: "",
     },
@@ -106,10 +98,10 @@ export default function CalculadoraPensionesPage() {
   const [observaciones, setObservaciones] = useState<string>("")
   const [resultado, setResultado] = useState<ResultadoCalculo | null>(null)
 
-  // Actualizar las constantes legales según la ley real
-  const INGRESO_MINIMO = 510636 // Ingreso mínimo 2024 para mayores de 18 años
-  const MINIMO_LEGAL_PORCENTAJE = 0.4 // 40% del ingreso mínimo (Art. 3°) - SOLO PARA PADRES
-  const MAXIMO_LEGAL_PORCENTAJE = 0.5 // 50% de ingresos líquidos (Art. 7°)
+  // Constantes legales
+  const INGRESO_MINIMO = 510636
+  const MINIMO_LEGAL_PORCENTAJE = 0.4
+  const MAXIMO_LEGAL_PORCENTAJE = 0.5
 
   const formatMoney = (amount: number): string => {
     return new Intl.NumberFormat("es-CL", {
@@ -129,13 +121,7 @@ export default function CalculadoraPensionesPage() {
           edad: 5,
           tieneDiscapacidad: false,
           estudiaUniversidad: false,
-          gastosAlimentacion: 0,
-          gastosHabitacion: 0,
-          gastosVestimenta: 0,
-          gastosSalud: 0,
-          gastosEducacion: 0,
-          gastosMovilizacion: 0,
-          gastosExtras: 0,
+          gastosTotal: 0,
           viveConAlimentante: false,
           observaciones: "",
         },
@@ -166,6 +152,7 @@ export default function CalculadoraPensionesPage() {
 
     const ingresoTotalAlimentante = ingresoLiquido + otrosIngresos
     const ingresoTotalCuidador = cuidador.ingresoLiquido + cuidador.otrosIngresos
+    const ingresoFamiliarTotal = ingresoTotalAlimentante + ingresoTotalCuidador
 
     // El 50% SIEMPRE debe estar disponible para pensión
     const ingresoDisponibleParaPension = ingresoTotalAlimentante - otrasObligaciones
@@ -179,80 +166,65 @@ export default function CalculadoraPensionesPage() {
     const esPadre = relacionAlimentante === "padre" || relacionAlimentante === "madre"
 
     if (esPadre) {
-      // PADRES: Rige el mínimo legal del Art. 3°
       if (numeroAlimentarios === 1) {
-        minimoLegal = INGRESO_MINIMO * MINIMO_LEGAL_PORCENTAJE // 40% para 1 menor
+        minimoLegal = INGRESO_MINIMO * MINIMO_LEGAL_PORCENTAJE
       } else {
-        minimoLegal = INGRESO_MINIMO * 0.3 * numeroAlimentarios // 30% por cada uno
+        minimoLegal = INGRESO_MINIMO * 0.3 * numeroAlimentarios
       }
       fundamentoLegal.push("Art. 3° Ley 14.908: Presunción legal de medios del padre/madre")
       fundamentoLegal.push(
         `Mínimo legal: ${numeroAlimentarios === 1 ? "40%" : "30% por cada menor"} del ingreso mínimo`,
       )
     } else {
-      // ABUELOS Y OTROS: Obligación subsidiaria, NO rige mínimo legal
       minimoLegal = 0
       fundamentoLegal.push("Obligación alimentaria subsidiaria - No rige mínimo legal del Art. 3°")
-      fundamentoLegal.push("Se calcula según capacidad económica real y necesidades")
       factoresConsiderados.push("Alimentante subsidiario: cálculo basado en proporcionalidad")
     }
 
-    // MÁXIMO LEGAL (aplica para todos)
+    // MÁXIMO LEGAL
     const maximoLegal = ingresoDisponibleParaPension * MAXIMO_LEGAL_PORCENTAJE
     fundamentoLegal.push("Art. 7° Ley 14.908: Máximo 50% siempre disponible para pensión")
 
-    // CÁLCULO PROPORCIONAL PROGRESIVO
-    // A mayor ingreso, mayor porcentaje (principio de proporcionalidad)
-    let porcentajeBaseProporcional = 0
+    // CÁLCULO 1: BASADO EN GASTOS REALES Y PROPORCIONALIDAD
+    const gastosRealesTotal = alimentarios.reduce((sum, a) => sum + a.gastosTotal, 0)
+    let montoBasadoEnGastos = 0
+    let montoBasadoEnProporcionalidad = 0
 
-    if (esPadre) {
-      // Para padres: escala progresiva desde el mínimo legal
-      const multiplosMinimo = ingresoTotalAlimentante / INGRESO_MINIMO
+    if (gastosRealesTotal > 0) {
+      if (ingresoTotalCuidador > 0) {
+        // HAY DOS INGRESOS: Calcular proporcionalidad real
+        const proporcionAlimentante = ingresoTotalAlimentante / ingresoFamiliarTotal
+        montoBasadoEnGastos = gastosRealesTotal * proporcionAlimentante
 
-      if (multiplosMinimo <= 1) {
-        porcentajeBaseProporcional = 0.25 // 25% para ingresos mínimos
-      } else if (multiplosMinimo <= 2) {
-        porcentajeBaseProporcional = 0.25 + (multiplosMinimo - 1) * 0.05 // Hasta 30%
-      } else if (multiplosMinimo <= 3) {
-        porcentajeBaseProporcional = 0.3 + (multiplosMinimo - 2) * 0.05 // Hasta 35%
-      } else if (multiplosMinimo <= 5) {
-        porcentajeBaseProporcional = 0.35 + (multiplosMinimo - 3) * 0.025 // Hasta 40%
+        factoresConsiderados.push(
+          `Proporcionalidad: Alimentante ${(proporcionAlimentante * 100).toFixed(1)}% de ingresos familiares`,
+        )
+        factoresConsiderados.push(
+          `Gastos totales: ${formatMoney(gastosRealesTotal)} × ${(proporcionAlimentante * 100).toFixed(1)}% = ${formatMoney(montoBasadoEnGastos)}`,
+        )
+        fundamentoLegal.push("Art. 6° Ley 14.908: Proporcionalidad según capacidad económica de ambos padres")
       } else {
-        porcentajeBaseProporcional = 0.4 + (multiplosMinimo - 5) * 0.02 // Progresivo hasta 50%
+        // SOLO UN INGRESO: El alimentante debe cubrir todos los gastos
+        montoBasadoEnGastos = gastosRealesTotal
+        factoresConsiderados.push("Cuidador sin ingresos: alimentante debe cubrir gastos completos")
       }
-
-      factoresConsiderados.push(`Ingreso ${multiplosMinimo.toFixed(1)} veces el mínimo - escala progresiva`)
-    } else {
-      // Para abuelos y otros: escala más moderada pero proporcional
-      const multiplosMinimo = ingresoTotalAlimentante / INGRESO_MINIMO
-
-      if (multiplosMinimo <= 1) {
-        porcentajeBaseProporcional = 0.1 // 10% para ingresos mínimos
-      } else if (multiplosMinimo <= 2) {
-        porcentajeBaseProporcional = 0.1 + (multiplosMinimo - 1) * 0.05 // Hasta 15%
-      } else if (multiplosMinimo <= 3) {
-        porcentajeBaseProporcional = 0.15 + (multiplosMinimo - 2) * 0.05 // Hasta 20%
-      } else if (multiplosMinimo <= 5) {
-        porcentajeBaseProporcional = 0.2 + (multiplosMinimo - 3) * 0.025 // Hasta 25%
-      } else {
-        porcentajeBaseProporcional = 0.25 + (multiplosMinimo - 5) * 0.015 // Progresivo hasta 35%
-      }
-
-      factoresConsiderados.push(`Obligación subsidiaria: ${multiplosMinimo.toFixed(1)} veces el mínimo`)
     }
 
-    // Ajustar por número de alimentarios
-    let factorNumeroAlimentarios = 1
-    if (numeroAlimentarios === 2) factorNumeroAlimentarios = 1.4
-    else if (numeroAlimentarios === 3) factorNumeroAlimentarios = 1.7
-    else if (numeroAlimentarios >= 4) factorNumeroAlimentarios = 2.0
+    // CÁLCULO 2: BASADO EN PORCENTAJE DE INGRESOS (método tradicional)
+    let porcentajeBase = 0.25
+    if (numeroAlimentarios === 2) porcentajeBase = 0.35
+    else if (numeroAlimentarios === 3) porcentajeBase = 0.45
+    else if (numeroAlimentarios >= 4) porcentajeBase = 0.5
 
-    porcentajeBaseProporcional *= factorNumeroAlimentarios
+    // Ajustar por tipo de alimentante
+    if (!esPadre) {
+      porcentajeBase *= 0.6 // Abuelos pagan menos porcentaje
+      factoresConsiderados.push("Obligación subsidiaria: porcentaje reducido")
+    }
 
-    // Factores de ajuste según circunstancias específicas
+    // Factores de ajuste
     let factorAjuste = 1
 
-    // Análisis por alimentario
     alimentarios.forEach((alimentario, index) => {
       if (alimentario.edad < 2) {
         factorAjuste += 0.1
@@ -261,7 +233,7 @@ export default function CalculadoraPensionesPage() {
 
       if (alimentario.edad >= 18 && alimentario.edad <= 28 && alimentario.estudiaUniversidad) {
         factorAjuste += 0.08
-        factoresConsiderados.push(`Alimentario ${index + 1}: Estudiante universitario hasta 28 años (+8%)`)
+        factoresConsiderados.push(`Alimentario ${index + 1}: Estudiante universitario (+8%)`)
         fundamentoLegal.push("Art. 3° inc. 2° Ley 14.908: Estudios superiores hasta 28 años")
       }
 
@@ -280,45 +252,6 @@ export default function CalculadoraPensionesPage() {
       }
     })
 
-    // Considerar gastos reales declarados
-    const gastosRealesTotal = alimentarios.reduce(
-      (sum, a) =>
-        sum +
-        a.gastosAlimentacion +
-        a.gastosHabitacion +
-        a.gastosVestimenta +
-        a.gastosSalud +
-        a.gastosEducacion +
-        a.gastosMovilizacion +
-        a.gastosExtras,
-      0,
-    )
-
-    if (gastosRealesTotal > 0) {
-      const porcentajeGastosReales = (gastosRealesTotal / ingresoTotalAlimentante) * 100
-      if (porcentajeGastosReales > porcentajeBaseProporcional * 100) {
-        factorAjuste += 0.1
-        factoresConsiderados.push(
-          `Gastos reales (${porcentajeGastosReales.toFixed(1)}%) superiores al cálculo base (+10%)`,
-        )
-      }
-    }
-
-    // Análisis del cuidador
-    if (ingresoTotalCuidador > 0) {
-      const proporcionIngresos = (ingresoTotalCuidador / ingresoTotalAlimentante) * 100
-      factoresConsiderados.push(`Cuidador aporta ${proporcionIngresos.toFixed(1)}% de los ingresos familiares`)
-
-      if (ingresoTotalCuidador > ingresoTotalAlimentante * 1.2) {
-        factorAjuste -= 0.05
-        factoresConsiderados.push("Cuidador con ingresos superiores al alimentante (-5%)")
-        fundamentoLegal.push("Art. 6° Ley 14.908: Consideración de capacidad económica de ambos padres")
-      }
-    } else {
-      factorAjuste += 0.03
-      factoresConsiderados.push("Cuidador sin ingresos propios (+3%)")
-    }
-
     // Ajustes por región
     if (regionResidencia === "metropolitana") {
       factorAjuste += 0.06
@@ -328,51 +261,59 @@ export default function CalculadoraPensionesPage() {
       factoresConsiderados.push("Región extrema: Mayor costo de vida (+5%)")
     }
 
+    const porcentajeFinal = Math.min(porcentajeBase * factorAjuste, MAXIMO_LEGAL_PORCENTAJE)
+    montoBasadoEnProporcionalidad = ingresoDisponibleParaPension * porcentajeFinal
+
+    // DECISIÓN FINAL: Usar el mayor entre gastos reales proporcionales y cálculo porcentual
+    const montoCalculado = Math.max(montoBasadoEnGastos, montoBasadoEnProporcionalidad)
+
+    // APLICAR LÍMITES LEGALES
+    let montoRecomendado
+    if (esPadre) {
+      montoRecomendado = Math.max(minimoLegal, Math.min(montoCalculado, maximoLegal))
+    } else {
+      montoRecomendado = Math.min(montoCalculado, maximoLegal)
+    }
+
+    // CALCULAR RANGO DE PENSIÓN (más realista)
+    const variabilidad = 0.15 // ±15% de variabilidad
+    let rangoMinimo = montoRecomendado * (1 - variabilidad)
+    let rangoMaximo = montoRecomendado * (1 + variabilidad)
+
+    // Ajustar rango según límites legales
+    if (esPadre) {
+      rangoMinimo = Math.max(rangoMinimo, minimoLegal)
+    }
+    rangoMaximo = Math.min(rangoMaximo, maximoLegal)
+
     // ADVERTENCIAS sobre gastos excesivos
     const gastosTotalesDeclarados = gastosPersonales + deudas
     const porcentajeGastosPersonales = (gastosTotalesDeclarados / ingresoTotalAlimentante) * 100
 
     if (porcentajeGastosPersonales > 50) {
       advertencias.push(
-        `ATENCIÓN: Gastos personales (${porcentajeGastosPersonales.toFixed(1)}%) superan el 50% del ingreso. Esto NO reduce la obligación alimentaria.`,
+        `ATENCIÓN: Gastos personales (${porcentajeGastosPersonales.toFixed(1)}%) superan el 50%. Esto NO reduce la obligación alimentaria.`,
       )
-      factoresConsiderados.push("Gastos excesivos no afectan el cálculo - protección legal de alimentarios")
     }
 
     if (deudas > 0) {
-      advertencias.push(
-        `Las deudas personales (${formatMoney(deudas)}) NO reducen la obligación alimentaria según jurisprudencia.`,
-      )
+      advertencias.push(`Las deudas personales NO reducen la obligación alimentaria según jurisprudencia.`)
     }
 
-    // Cálculo final
-    const porcentajeFinal = Math.min(porcentajeBaseProporcional * factorAjuste, MAXIMO_LEGAL_PORCENTAJE)
-    const montoCalculado = ingresoDisponibleParaPension * porcentajeFinal
-
-    // Considerar gastos reales si son superiores
-    const montoBasadoEnGastos = gastosRealesTotal > 0 ? gastosRealesTotal : 0
-    const montoBase = Math.max(montoCalculado, montoBasadoEnGastos)
-
-    // APLICAR LÍMITES LEGALES
-    let montoRecomendado
-    if (esPadre) {
-      // Para padres: nunca menor al mínimo legal, nunca mayor al máximo
-      montoRecomendado = Math.max(minimoLegal, Math.min(montoBase, maximoLegal))
-    } else {
-      // Para abuelos y otros: solo el máximo legal como límite
-      montoRecomendado = Math.min(montoBase, maximoLegal)
-    }
-
-    // Verificaciones específicas
+    // Verificaciones
     if (esPadre && montoRecomendado === minimoLegal) {
       fundamentoLegal.push("Se aplica mínimo legal por presunción de medios (Art. 3°)")
-      if (ingresoTotalAlimentante > INGRESO_MINIMO * 2) {
-        advertencias.push("Con este nivel de ingresos, el monto podría ser superior al mínimo legal")
-      }
     }
 
     if (montoRecomendado === maximoLegal) {
-      advertencias.push("Se aplica el máximo legal del 50% de los ingresos totales (Art. 7°)")
+      advertencias.push("Se aplica el máximo legal del 50% de los ingresos (Art. 7°)")
+    }
+
+    // Si hay gastos reales y son muy superiores al cálculo, advertir
+    if (gastosRealesTotal > montoRecomendado * 1.5) {
+      advertencias.push(
+        `Los gastos declarados (${formatMoney(gastosRealesTotal)}) son muy superiores al cálculo legal. Considere revisar.`,
+      )
     }
 
     // Evaluación de capacidad
@@ -389,38 +330,16 @@ export default function CalculadoraPensionesPage() {
       advertencias.push("El alimentante debe reorganizar sus gastos para cumplir la obligación legal")
     }
 
-    // Desglose de gastos
-    let desglose
-    if (gastosRealesTotal > 0 && gastosRealesTotal >= (minimoLegal || montoRecomendado * 0.5)) {
-      const factor = montoRecomendado / gastosRealesTotal
-      desglose = {
-        alimentacion: alimentarios.reduce((sum, a) => sum + a.gastosAlimentacion, 0) * factor,
-        habitacion: alimentarios.reduce((sum, a) => sum + a.gastosHabitacion, 0) * factor,
-        vestimenta: alimentarios.reduce((sum, a) => sum + a.gastosVestimenta, 0) * factor,
-        salud: alimentarios.reduce((sum, a) => sum + a.gastosSalud, 0) * factor,
-        educacion: alimentarios.reduce((sum, a) => sum + a.gastosEducacion, 0) * factor,
-        movilizacion: alimentarios.reduce((sum, a) => sum + a.gastosMovilizacion, 0) * factor,
-        otros: alimentarios.reduce((sum, a) => sum + a.gastosExtras, 0) * factor,
-      }
-    } else {
-      desglose = {
-        alimentacion: montoRecomendado * 0.35,
-        habitacion: montoRecomendado * 0.25,
-        vestimenta: montoRecomendado * 0.08,
-        salud: montoRecomendado * 0.12,
-        educacion: montoRecomendado * 0.15,
-        movilizacion: montoRecomendado * 0.03,
-        otros: montoRecomendado * 0.02,
-      }
-    }
-
     setResultado({
-      montoMinimo: esPadre ? minimoLegal : 0,
-      montoMaximo: maximoLegal,
+      rangoMinimo,
+      rangoMaximo,
       montoRecomendado,
       minimoLegal: esPadre ? minimoLegal : 0,
+      maximoLegal,
       porcentajeIngreso: (montoRecomendado / ingresoTotalAlimentante) * 100,
-      desglose,
+      porcentajeProporcional: ingresoTotalCuidador > 0 ? (ingresoTotalAlimentante / ingresoFamiliarTotal) * 100 : 100,
+      montoBasadoEnGastos,
+      montoBasadoEnProporcionalidad,
       factoresConsiderados,
       advertencias,
       fundamentoLegal,
@@ -437,7 +356,7 @@ export default function CalculadoraPensionesPage() {
 
     return `🎯 CALCULÉ PENSIÓN ALIMENTICIA EN LEGALPO
 
-💰 Monto recomendado: ${formatMoney(resultado.montoRecomendado)}
+💰 Rango estimado: ${formatMoney(resultado.rangoMinimo)} - ${formatMoney(resultado.rangoMaximo)}
 📊 Equivale al ${resultado.porcentajeIngreso.toFixed(1)}% del ingreso
 👨‍👩‍👧‍👦 Para ${numeroAlimentarios} alimentario${numeroAlimentarios > 1 ? "s" : ""}
 ⚖️ ${resultado.minimoLegal > 0 ? `Mínimo legal: ${formatMoney(resultado.minimoLegal)}` : "Obligación subsidiaria"}
@@ -476,25 +395,56 @@ export default function CalculadoraPensionesPage() {
           {/* Información legal importante */}
           <Alert className="mb-6">
             <InfoIcon className="h-4 w-4" />
-            <AlertTitle>Información Legal Importante</AlertTitle>
+            <AlertTitle>Principio de Proporcionalidad</AlertTitle>
             <AlertDescription>
               <div className="text-sm space-y-1">
+                <p>
+                  • <strong>Proporcionalidad real:</strong> Cada alimentante paga según su proporción de ingresos
+                  familiares
+                </p>
+                <p>
+                  • <strong>Ejemplo:</strong> Si uno gana $1M y otro $800K, y los gastos son $600K, el primero paga
+                  $333K y el segundo $267K
+                </p>
                 <p>
                   • <strong>Padres:</strong> Mínimo legal 40% del ingreso mínimo ($
                   {formatMoney(INGRESO_MINIMO * MINIMO_LEGAL_PORCENTAJE)})
                 </p>
                 <p>
-                  • <strong>Abuelos y otros:</strong> Obligación subsidiaria, sin mínimo legal
-                </p>
-                <p>
-                  • <strong>Máximo legal:</strong> 50% de los ingresos líquidos del alimentante
-                </p>
-                <p>
-                  • <strong>Proporcionalidad:</strong> A mayor ingreso, mayor porcentaje
+                  • <strong>Abuelos:</strong> Obligación subsidiaria, sin mínimo legal
                 </p>
               </div>
             </AlertDescription>
           </Alert>
+
+          {/* Consejo sobre acuerdos extrajudiciales */}
+          <Alert className="mb-6 border-green-200 bg-green-50">
+            <Heart className="h-4 w-4 text-green-600" />
+            <AlertTitle className="text-green-800">💡 Consejo: Considera un Acuerdo Extrajudicial</AlertTitle>
+            <AlertDescription className="text-green-700">
+              <div className="space-y-2 text-sm">
+                <p className="font-medium">
+                  Los procedimientos judiciales tienen un alto costo emocional, económico y temporal para toda la
+                  familia.
+                </p>
+                <p>
+                  <strong>Beneficios de llegar a acuerdos:</strong>
+                </p>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>Menor desgaste emocional para los niños</li>
+                  <li>Ahorro significativo en costos legales</li>
+                  <li>Resolución más rápida</li>
+                  <li>Mayor flexibilidad en las condiciones</li>
+                  <li>Preservación de la relación familiar</li>
+                </ul>
+                <p className="font-medium text-green-800 border-t pt-2">
+                  💡 <strong>¡Sé creativo!</strong> Los acuerdos pueden incluir soluciones innovadoras que beneficien a
+                  todos.
+                </p>
+              </div>
+            </AlertDescription>
+          </Alert>
+
           {/* Disclaimer Legal Prominente */}
           <Alert className="mb-6 border-amber-200 bg-amber-50">
             <AlertTriangle className="h-4 w-4 text-amber-600" />
@@ -563,29 +513,13 @@ export default function CalculadoraPensionesPage() {
                   <Input
                     type="number"
                     id="ingreso"
-                    placeholder="Ej: 800000"
+                    placeholder="Ej: 1000000"
                     value={ingresoLiquido || ""}
                     onChange={(e) => setIngresoLiquido(Number(e.target.value))}
                   />
                   <p className="text-sm text-muted-foreground mt-1">
                     Después de descuentos legales (AFP, Fonasa, impuestos)
                   </p>
-                </div>
-
-                <div>
-                  <Label htmlFor="tipo-trabajo">Tipo de Trabajo</Label>
-                  <Select value={tipoTrabajo} onValueChange={setTipoTrabajo}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione tipo de trabajo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="dependiente">Trabajador Dependiente</SelectItem>
-                      <SelectItem value="independiente">Trabajador Independiente</SelectItem>
-                      <SelectItem value="empresario">Empresario</SelectItem>
-                      <SelectItem value="profesional">Profesional Liberal</SelectItem>
-                      <SelectItem value="pensionado">Pensionado</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
 
                 <div>
@@ -633,7 +567,9 @@ export default function CalculadoraPensionesPage() {
                     value={deudas || ""}
                     onChange={(e) => setDeudas(Number(e.target.value))}
                   />
-                  <p className="text-sm text-muted-foreground mt-1">Créditos, tarjetas, etc.</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Créditos, tarjetas, etc. (NO reducen la obligación)
+                  </p>
                 </div>
 
                 <div>
@@ -663,7 +599,7 @@ export default function CalculadoraPensionesPage() {
                   <Users className="h-5 w-5" />
                   Cuidador Personal
                 </CardTitle>
-                <CardDescription>Quien tiene el cuidado personal de los alimentarios</CardDescription>
+                <CardDescription>Quien tiene el cuidado personal (para calcular proporcionalidad)</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -671,10 +607,11 @@ export default function CalculadoraPensionesPage() {
                   <Input
                     type="number"
                     id="cuidador-ingreso"
-                    placeholder="Ej: 500000"
+                    placeholder="Ej: 800000"
                     value={cuidador.ingresoLiquido || ""}
                     onChange={(e) => actualizarCuidador("ingresoLiquido", Number(e.target.value))}
                   />
+                  <p className="text-sm text-muted-foreground mt-1">Si tiene ingresos, se calcula proporcionalidad</p>
                 </div>
 
                 <div>
@@ -688,17 +625,6 @@ export default function CalculadoraPensionesPage() {
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="cuidador-vivienda">Gastos de Vivienda (CLP)</Label>
-                  <Input
-                    type="number"
-                    id="cuidador-vivienda"
-                    placeholder="Ej: 200000"
-                    value={cuidador.gastosVivienda || ""}
-                    onChange={(e) => actualizarCuidador("gastosVivienda", Number(e.target.value))}
-                  />
-                </div>
-
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="trabaja-fuera"
@@ -707,17 +633,6 @@ export default function CalculadoraPensionesPage() {
                   />
                   <Label htmlFor="trabaja-fuera">Trabaja fuera del hogar</Label>
                 </div>
-
-                {cuidador.trabajaFueraHogar && (
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="tiempo-completo"
-                      checked={cuidador.tiempoCompleto}
-                      onCheckedChange={(checked) => actualizarCuidador("tiempoCompleto", checked)}
-                    />
-                    <Label htmlFor="tiempo-completo">Trabajo de tiempo completo</Label>
-                  </div>
-                )}
               </CardContent>
             </Card>
           </div>
@@ -795,86 +710,17 @@ export default function CalculadoraPensionesPage() {
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Gastos Mensuales Específicos (CLP)</Label>
-
-                        <div className="grid grid-cols-2 gap-2">
-                          <div>
-                            <Label className="text-xs">Alimentación</Label>
-                            <Input
-                              type="number"
-                              value={alimentario.gastosAlimentacion || ""}
-                              onChange={(e) =>
-                                actualizarAlimentario(index, "gastosAlimentacion", Number(e.target.value))
-                              }
-                              placeholder="0"
-                              className="text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs">Habitación</Label>
-                            <Input
-                              type="number"
-                              value={alimentario.gastosHabitacion || ""}
-                              onChange={(e) => actualizarAlimentario(index, "gastosHabitacion", Number(e.target.value))}
-                              placeholder="0"
-                              className="text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs">Vestimenta</Label>
-                            <Input
-                              type="number"
-                              value={alimentario.gastosVestimenta || ""}
-                              onChange={(e) => actualizarAlimentario(index, "gastosVestimenta", Number(e.target.value))}
-                              placeholder="0"
-                              className="text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs">Salud</Label>
-                            <Input
-                              type="number"
-                              value={alimentario.gastosSalud || ""}
-                              onChange={(e) => actualizarAlimentario(index, "gastosSalud", Number(e.target.value))}
-                              placeholder="0"
-                              className="text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs">Educación</Label>
-                            <Input
-                              type="number"
-                              value={alimentario.gastosEducacion || ""}
-                              onChange={(e) => actualizarAlimentario(index, "gastosEducacion", Number(e.target.value))}
-                              placeholder="0"
-                              className="text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs">Movilización</Label>
-                            <Input
-                              type="number"
-                              value={alimentario.gastosMovilizacion || ""}
-                              onChange={(e) =>
-                                actualizarAlimentario(index, "gastosMovilizacion", Number(e.target.value))
-                              }
-                              placeholder="0"
-                              className="text-sm"
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <Label className="text-xs">Otros gastos</Label>
-                          <Input
-                            type="number"
-                            value={alimentario.gastosExtras || ""}
-                            onChange={(e) => actualizarAlimentario(index, "gastosExtras", Number(e.target.value))}
-                            placeholder="0"
-                            className="text-sm"
-                          />
-                        </div>
+                      <div>
+                        <Label>Gastos Totales Mensuales (CLP)</Label>
+                        <Input
+                          type="number"
+                          value={alimentario.gastosTotal || ""}
+                          onChange={(e) => actualizarAlimentario(index, "gastosTotal", Number(e.target.value))}
+                          placeholder="Ej: 600000"
+                        />
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Incluye alimentación, habitación, vestimenta, salud, educación, etc.
+                        </p>
                       </div>
 
                       <div className="flex items-center space-x-2">
@@ -923,7 +769,7 @@ export default function CalculadoraPensionesPage() {
 
             <Button onClick={calcularPension} className="w-full" size="lg">
               <Calculator className="mr-2 h-5 w-5" />
-              Calcular Pensión Alimenticia
+              Calcular Rango de Pensión
             </Button>
           </div>
 
@@ -935,16 +781,29 @@ export default function CalculadoraPensionesPage() {
                   <CardHeader>
                     <CardTitle className="text-green-800 flex items-center gap-2">
                       <CheckCircle className="h-5 w-5" />
-                      Resultado del Cálculo
+                      Rango Estimado de Pensión
                     </CardTitle>
-                    <CardDescription>Basado en la Ley 14.908 y jurisprudencia chilena</CardDescription>
+                    <CardDescription>Basado en la Ley 14.908 y proporcionalidad real</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="text-center space-y-2">
-                      <div className="text-3xl font-bold text-green-700">{formatMoney(resultado.montoRecomendado)}</div>
+                      <div className="text-2xl font-bold text-green-700">
+                        {formatMoney(resultado.rangoMinimo)} - {formatMoney(resultado.rangoMaximo)}
+                      </div>
                       <Badge variant="secondary" className="text-sm">
+                        Rango estimado (±15% variabilidad)
+                      </Badge>
+                      <div className="text-lg font-semibold text-green-600">
+                        Valor central: {formatMoney(resultado.montoRecomendado)}
+                      </div>
+                      <Badge variant="outline" className="text-sm">
                         {resultado.porcentajeIngreso.toFixed(1)}% del ingreso total
                       </Badge>
+                      {resultado.porcentajeProporcional < 100 && (
+                        <Badge variant="outline" className="text-sm">
+                          {resultado.porcentajeProporcional.toFixed(1)}% de responsabilidad familiar
+                        </Badge>
+                      )}
                     </div>
 
                     <Separator />
@@ -957,12 +816,22 @@ export default function CalculadoraPensionesPage() {
                         </div>
                       )}
                       <div className="flex justify-between">
-                        <span className="text-sm text-muted-foreground">Rango mínimo:</span>
-                        <span className="font-medium">{formatMoney(resultado.montoMinimo)}</span>
+                        <span className="text-sm text-muted-foreground">Máximo legal:</span>
+                        <span className="font-medium">{formatMoney(resultado.maximoLegal)}</span>
                       </div>
+                      {resultado.montoBasadoEnGastos > 0 && (
+                        <div className="flex justify-between">
+                          <span className="text-sm text-muted-foreground">Por gastos reales:</span>
+                          <span className="font-medium text-orange-600">
+                            {formatMoney(resultado.montoBasadoEnGastos)}
+                          </span>
+                        </div>
+                      )}
                       <div className="flex justify-between">
-                        <span className="text-sm text-muted-foreground">Rango máximo:</span>
-                        <span className="font-medium">{formatMoney(resultado.montoMaximo)}</span>
+                        <span className="text-sm text-muted-foreground">Por % ingresos:</span>
+                        <span className="font-medium text-purple-600">
+                          {formatMoney(resultado.montoBasadoEnProporcionalidad)}
+                        </span>
                       </div>
                     </div>
 
@@ -994,19 +863,80 @@ export default function CalculadoraPensionesPage() {
                   </CardContent>
                 </Card>
 
-                {/* Desglose */}
-                <Card>
+                {/* Acuerdos Creativos */}
+                <Card className="border-blue-200 bg-blue-50">
                   <CardHeader>
-                    <CardTitle>Desglose por Necesidades</CardTitle>
-                    <CardDescription>Distribución según Art. 3° Ley 14.908</CardDescription>
+                    <CardTitle className="text-blue-800 flex items-center gap-2">
+                      <Lightbulb className="h-5 w-5" />
+                      Ideas para Acuerdos Creativos
+                    </CardTitle>
+                    <CardDescription>Alternativas flexibles que pueden beneficiar a toda la familia</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    {Object.entries(resultado.desglose).map(([categoria, monto]) => (
-                      <div key={categoria} className="flex justify-between items-center">
-                        <span className="capitalize text-sm">{categoria.replace(/([A-Z])/g, " $1").trim()}:</span>
-                        <span className="font-medium">{formatMoney(monto)}</span>
-                      </div>
-                    ))}
+                  <CardContent className="text-sm text-blue-700 space-y-3">
+                    <div>
+                      <p className="font-medium mb-2">💡 Modalidades de Pago Flexibles:</p>
+                      <ul className="list-disc list-inside space-y-1 ml-2">
+                        <li>
+                          <strong>Pagos escalonados:</strong> Aumentar gradualmente según mejore la situación económica
+                        </li>
+                        <li>
+                          <strong>Pagos estacionales:</strong> Montos variables según temporadas de mayor/menor ingreso
+                        </li>
+                        <li>
+                          <strong>Indexación automática:</strong> Ajustes anuales según IPC o aumento de ingresos
+                        </li>
+                        <li>
+                          <strong>Bonos por logros:</strong> Pagos adicionales por metas académicas o deportivas
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <p className="font-medium mb-2">🏠 Pagos en Especie (deben ser valorados):</p>
+                      <ul className="list-disc list-inside space-y-1 ml-2">
+                        <li>
+                          <strong>Arriendo de vivienda:</strong> Pago directo del arriendo donde vive el menor
+                        </li>
+                        <li>
+                          <strong>Colegio y universidad:</strong> Pago directo de matrículas y mensualidades
+                        </li>
+                        <li>
+                          <strong>Seguros de salud:</strong> Isapre o seguros complementarios
+                        </li>
+                        <li>
+                          <strong>Actividades extracurriculares:</strong> Deportes, música, idiomas
+                        </li>
+                        <li>
+                          <strong>Vacaciones familiares:</strong> Viajes educativos o recreativos
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <p className="font-medium mb-2">📈 Acuerdos Adaptativos:</p>
+                      <ul className="list-disc list-inside space-y-1 ml-2">
+                        <li>
+                          <strong>Cláusulas de revisión:</strong> Evaluación anual de la situación económica
+                        </li>
+                        <li>
+                          <strong>Fondo de emergencias:</strong> Reserva para gastos médicos o educativos
+                          extraordinarios
+                        </li>
+                        <li>
+                          <strong>Participación en ganancias:</strong> Porcentaje de bonos o utilidades empresariales
+                        </li>
+                        <li>
+                          <strong>Inversiones conjuntas:</strong> Fondos para educación superior o vivienda futura
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div className="border-t pt-3 mt-3">
+                      <p className="font-medium text-blue-800">
+                        🤝 <strong>Recuerda:</strong> Un buen acuerdo es aquel donde ambas partes sienten que ganaron
+                        algo valioso para el bienestar de los hijos.
+                      </p>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -1015,7 +945,7 @@ export default function CalculadoraPensionesPage() {
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
-                        <FileText className="h-5 w-5" />
+                        <Scale className="h-5 w-5" />
                         Fundamento Legal
                       </CardTitle>
                     </CardHeader>
@@ -1038,7 +968,7 @@ export default function CalculadoraPensionesPage() {
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <InfoIcon className="h-5 w-5" />
-                        Factores Considerados
+                        Cálculo Detallado
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -1072,35 +1002,27 @@ export default function CalculadoraPensionesPage() {
                   </Alert>
                 )}
 
-                {/* Información Legal */}
-                <Card className="border-blue-200 bg-blue-50">
+                {/* Información sobre Mediación */}
+                <Card className="border-purple-200 bg-purple-50">
                   <CardHeader>
-                    <CardTitle className="text-blue-800">Marco Legal - Ley 14.908 Actualizada</CardTitle>
+                    <CardTitle className="text-purple-800">🕊️ Mediación Familiar</CardTitle>
                   </CardHeader>
-                  <CardContent className="text-sm text-blue-700 space-y-2">
+                  <CardContent className="text-sm text-purple-700 space-y-2">
                     <p>
-                      • <strong>Art. 3°:</strong> Presunción de medios del padre/madre. Mínimo: 40% del ingreso mínimo
-                      para 1 menor, 30% por cada uno si son 2 o más.
+                      • <strong>Costo promedio juicio:</strong> $1.500.000 - $5.000.000 (honorarios + costas)
                     </p>
                     <p>
-                      • <strong>Obligación subsidiaria:</strong> Abuelos y otros parientes - No rige mínimo legal.
+                      • <strong>Tiempo promedio:</strong> 12-24 meses vs. 2-4 meses en mediación
                     </p>
                     <p>
-                      • <strong>Art. 6°:</strong> Debe considerar capacidad económica del alimentante y necesidades del
-                      alimentario, incluyendo trabajo de cuidados.
+                      • <strong>Tasa de cumplimiento:</strong> 85% en acuerdos mediados vs. 60% en sentencias
                     </p>
                     <p>
-                      • <strong>Art. 7°:</strong> Máximo legal: 50% de las rentas del alimentante, salvo razones
-                      fundadas.
-                    </p>
-                    <p>
-                      • <strong>Proporcionalidad:</strong> A mayor capacidad económica, mayor porcentaje de
-                      contribución.
+                      • <strong>Mediación gratuita:</strong> Disponible en Centros de Mediación Familiar del Estado
                     </p>
                     <p className="font-medium border-t pt-2 mt-3">
-                      <strong>DISCLAIMER:</strong> Esta calculadora es una herramienta de estimación basada en la Ley
-                      14.908. El monto final será determinado por el tribunal competente considerando todos los
-                      antecedentes del caso. Los resultados no constituyen asesoría legal ni tienen carácter vinculante.
+                      💜 <strong>El bienestar emocional de los niños es invaluable.</strong> Considera siempre el
+                      diálogo antes que el conflicto.
                     </p>
                   </CardContent>
                 </Card>
@@ -1112,10 +1034,10 @@ export default function CalculadoraPensionesPage() {
                 <CardContent className="text-center py-12">
                   <Calculator className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                   <p className="text-muted-foreground">
-                    Complete la información y haga clic en "Calcular" para ver los resultados
+                    Complete la información y haga clic en "Calcular" para ver el rango estimado
                   </p>
                   <p className="text-sm text-muted-foreground mt-2">
-                    La calculadora considera todos los factores establecidos en la Ley 14.908
+                    La calculadora aplica proporcionalidad real según ingresos familiares
                   </p>
                 </CardContent>
               </Card>
