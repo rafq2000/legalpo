@@ -105,10 +105,10 @@ export default function CalculadoraPensionesPage() {
   const [observaciones, setObservaciones] = useState<string>("")
   const [resultado, setResultado] = useState<ResultadoCalculo | null>(null)
 
-  // Constantes legales actualizadas 2024
+  // Actualizar las constantes legales según la ley real
   const INGRESO_MINIMO = 510636 // Ingreso mínimo 2024 para mayores de 18 años
-  const MINIMO_LEGAL_PORCENTAJE = 0.4 // 40% del ingreso mínimo
-  const MAXIMO_LEGAL_PORCENTAJE = 0.5 // 50% de ingresos líquidos
+  const MINIMO_LEGAL_PORCENTAJE = 0.4 // 40% del ingreso mínimo (Art. 3°)
+  const MAXIMO_LEGAL_PORCENTAJE = 0.5 // 50% de ingresos líquidos (Art. 7°)
 
   const formatMoney = (amount: number): string => {
     return new Intl.NumberFormat("es-CL", {
@@ -152,6 +152,8 @@ export default function CalculadoraPensionesPage() {
     setCuidador((prev) => ({ ...prev, [campo]: valor }))
   }
 
+  // En la función calcularPension(), reemplazar toda la lógica de cálculo con:
+
   const calcularPension = () => {
     if (ingresoLiquido <= 0) {
       alert("Por favor, ingrese un ingreso líquido válido para el alimentante.")
@@ -162,139 +164,160 @@ export default function CalculadoraPensionesPage() {
     const ingresoDisponible = ingresoTotalAlimentante - gastosPersonales - otrasObligaciones - deudas
     const ingresoTotalCuidador = cuidador.ingresoLiquido + cuidador.otrosIngresos
 
-    // Cálculo del mínimo legal según Ley 14.908
-    const minimoLegal = INGRESO_MINIMO * MINIMO_LEGAL_PORCENTAJE
-
-    // Factores base según número de alimentarios y Ley 14.908
-    let porcentajeBase = 0
-    switch (numeroAlimentarios) {
-      case 1:
-        porcentajeBase = 0.25
-        break
-      case 2:
-        porcentajeBase = 0.35
-        break
-      case 3:
-        porcentajeBase = 0.45
-        break
-      case 4:
-        porcentajeBase = 0.5
-        break
-      default:
-        porcentajeBase = 0.55
-        break
+    // Verificar que el ingreso disponible sea positivo
+    if (ingresoDisponible <= 0) {
+      alert("Los gastos y obligaciones superan los ingresos. Revise los datos ingresados.")
+      return
     }
 
-    let factorAjuste = 1
+    // MÍNIMO LEGAL según Art. 3° Ley 14.908
+    let minimoLegal = 0
+    if (numeroAlimentarios === 1) {
+      minimoLegal = INGRESO_MINIMO * MINIMO_LEGAL_PORCENTAJE // 40% para 1 menor
+    } else {
+      // Para 2 o más menores: 30% por cada uno
+      minimoLegal = INGRESO_MINIMO * 0.3 * numeroAlimentarios
+    }
+
+    // MÁXIMO LEGAL según Art. 7° Ley 14.908
+    const maximoLegal = ingresoDisponible * MAXIMO_LEGAL_PORCENTAJE // 50% máximo
+
     const factoresConsiderados: string[] = []
     const advertencias: string[] = []
     const fundamentoLegal: string[] = []
 
-    // Análisis detallado por alimentario según Art. 3° Ley 14.908
-    let gastosRealesTotal = 0
+    // Aplicar presunción del Art. 3°: "se presumirá que el alimentante tiene los medios para otorgarlos"
+    fundamentoLegal.push("Art. 3° Ley 14.908: Presunción de medios del alimentante")
+    fundamentoLegal.push(`Mínimo legal: ${numeroAlimentarios === 1 ? "40%" : "30% por cada menor"} del ingreso mínimo`)
+
+    // Cálculo base considerando capacidad económica real
+    let porcentajeBase = 0.25 // Base para 1 alimentario
+    if (numeroAlimentarios === 2) porcentajeBase = 0.35
+    else if (numeroAlimentarios === 3) porcentajeBase = 0.45
+    else if (numeroAlimentarios >= 4) porcentajeBase = 0.5
+
+    // Factores de ajuste según circunstancias específicas
+    let factorAjuste = 1
+
+    // Análisis por alimentario
     alimentarios.forEach((alimentario, index) => {
-      const gastosAlimentario =
-        alimentario.gastosAlimentacion +
-        alimentario.gastosHabitacion +
-        alimentario.gastosVestimenta +
-        alimentario.gastosSalud +
-        alimentario.gastosEducacion +
-        alimentario.gastosMovilizacion +
-        alimentario.gastosExtras
-
-      gastosRealesTotal += gastosAlimentario
-
-      // Factores por edad
+      // Menores de 2 años (mayores necesidades)
       if (alimentario.edad < 2) {
-        factorAjuste += 0.15
-        factoresConsiderados.push(`Alimentario ${index + 1}: Menor de 2 años - mayores necesidades (+15%)`)
-        fundamentoLegal.push("Art. 3° Ley 14.908: Necesidades especiales primera infancia")
-      } else if (alimentario.edad >= 18 && alimentario.edad <= 28 && alimentario.estudiaUniversidad) {
         factorAjuste += 0.1
-        factoresConsiderados.push(`Alimentario ${index + 1}: Estudiante universitario (+10%)`)
+        factoresConsiderados.push(`Alimentario ${index + 1}: Menor de 2 años (+10%)`)
+      }
+
+      // Estudiantes universitarios (Art. 3° inc. 2°)
+      if (alimentario.edad >= 18 && alimentario.edad <= 28 && alimentario.estudiaUniversidad) {
+        factorAjuste += 0.08
+        factoresConsiderados.push(`Alimentario ${index + 1}: Estudiante universitario hasta 28 años (+8%)`)
         fundamentoLegal.push("Art. 3° inc. 2° Ley 14.908: Estudios superiores hasta 28 años")
-      } else if (alimentario.edad > 28) {
-        advertencias.push(`Alimentario ${index + 1}: Mayor de 28 años - verificar si corresponde pensión`)
       }
 
       // Discapacidad
       if (alimentario.tieneDiscapacidad) {
-        factorAjuste += 0.2
-        factoresConsiderados.push(`Alimentario ${index + 1}: Con discapacidad (+20%)`)
-        fundamentoLegal.push("Art. 3° Ley 14.908: Necesidades especiales por discapacidad")
-      }
-
-      // Gastos especiales
-      if (gastosAlimentario > minimoLegal * 0.8) {
-        factorAjuste += 0.1
-        factoresConsiderados.push(`Alimentario ${index + 1}: Gastos reales elevados (+10%)`)
+        factorAjuste += 0.15
+        factoresConsiderados.push(`Alimentario ${index + 1}: Con discapacidad (+15%)`)
+        fundamentoLegal.push("Necesidades especiales por discapacidad")
       }
 
       // Convivencia con alimentante
       if (alimentario.viveConAlimentante) {
-        factorAjuste -= 0.15
-        factoresConsiderados.push(`Alimentario ${index + 1}: Vive con alimentante (-15%)`)
-        fundamentoLegal.push("Reducción por cuidado personal compartido")
+        factorAjuste -= 0.08
+        factoresConsiderados.push(`Alimentario ${index + 1}: Vive con alimentante (-8%)`)
+      }
+
+      // Advertencia para mayores de 28 años
+      if (alimentario.edad > 28 && !alimentario.tieneDiscapacidad) {
+        advertencias.push(`Alimentario ${index + 1}: Mayor de 28 años - verificar si corresponde pensión`)
       }
     })
 
-    // Análisis de capacidad económica del alimentante (Art. 4° Ley 14.908)
-    if (tipoTrabajo === "independiente") {
+    // Considerar gastos reales declarados
+    const gastosRealesTotal = alimentarios.reduce(
+      (sum, a) =>
+        sum +
+        a.gastosAlimentacion +
+        a.gastosHabitacion +
+        a.gastosVestimenta +
+        a.gastosSalud +
+        a.gastosEducacion +
+        a.gastosMovilizacion +
+        a.gastosExtras,
+      0,
+    )
+
+    if (gastosRealesTotal > minimoLegal) {
       factorAjuste += 0.05
-      factoresConsiderados.push("Trabajo independiente: Ingresos variables (+5%)")
+      factoresConsiderados.push(`Gastos reales declarados superiores al mínimo legal (+5%)`)
     }
 
-    // Análisis situación del cuidador personal
+    // Análisis de capacidad económica del cuidador (Art. 6°)
     if (ingresoTotalCuidador > 0) {
-      const proporcionIngresos = ingresoTotalCuidador / ingresoTotalAlimentante
-      if (proporcionIngresos > 0.5) {
-        factorAjuste -= 0.1
-        factoresConsiderados.push("Cuidador con ingresos significativos (-10%)")
-        fundamentoLegal.push("Art. 4° Ley 14.908: Capacidad económica de ambos padres")
+      const proporcionIngresos = (ingresoTotalCuidador / ingresoTotalAlimentante) * 100
+      factoresConsiderados.push(`Cuidador aporta ${proporcionIngresos.toFixed(1)}% de los ingresos familiares`)
+
+      // Solo reducir si el cuidador tiene ingresos muy superiores
+      if (ingresoTotalCuidador > ingresoTotalAlimentante * 1.2) {
+        factorAjuste -= 0.05
+        factoresConsiderados.push("Cuidador con ingresos superiores al alimentante (-5%)")
+        fundamentoLegal.push("Art. 6° Ley 14.908: Consideración de capacidad económica de ambos padres")
       }
+    } else {
+      factorAjuste += 0.03
+      factoresConsiderados.push("Cuidador sin ingresos propios (+3%)")
     }
 
-    if (!cuidador.trabajaFueraHogar) {
-      factorAjuste += 0.05
-      factoresConsiderados.push("Cuidador dedicado exclusivamente al cuidado (+5%)")
-    }
-
-    // Ajustes por región y costo de vida
+    // Ajustes por región
     if (regionResidencia === "metropolitana") {
-      factorAjuste += 0.12
-      factoresConsiderados.push("Región Metropolitana: Mayor costo de vida (+12%)")
+      factorAjuste += 0.06
+      factoresConsiderados.push("Región Metropolitana: Mayor costo de vida (+6%)")
     } else if (["antofagasta", "tarapaca", "magallanes"].includes(regionResidencia)) {
-      factorAjuste += 0.1
-      factoresConsiderados.push("Región extrema: Mayor costo de vida (+10%)")
+      factorAjuste += 0.05
+      factoresConsiderados.push("Región extrema: Mayor costo de vida (+5%)")
     }
 
-    // Cálculo final
+    // Cálculo del monto base
     const porcentajeFinal = Math.min(porcentajeBase * factorAjuste, MAXIMO_LEGAL_PORCENTAJE)
     const montoCalculado = ingresoDisponible * porcentajeFinal
 
-    // Aplicación de mínimos y máximos legales
-    const montoMinimo = Math.max(minimoLegal, montoCalculado * 0.8)
-    const montoMaximo = Math.min(ingresoDisponible * MAXIMO_LEGAL_PORCENTAJE, montoCalculado * 1.3)
-    const montoRecomendado = Math.max(minimoLegal, Math.min(montoCalculado, montoMaximo))
+    // Considerar gastos reales si son superiores al cálculo porcentual
+    const montoBasadoEnGastos = gastosRealesTotal > 0 ? gastosRealesTotal : 0
+    const montoBase = Math.max(montoCalculado, montoBasadoEnGastos)
 
-    // Desglose según gastos reales o estimados
+    // APLICAR LÍMITES LEGALES
+    // 1. No puede ser menor al mínimo legal (Art. 3°)
+    // 2. No puede exceder el 50% de las rentas (Art. 7°)
+    const montoRecomendado = Math.max(minimoLegal, Math.min(montoBase, maximoLegal))
+
+    // Rangos orientativos
+    const montoMinimo = minimoLegal
+    const montoMaximo = maximoLegal
+
+    // Verificaciones legales
+    if (montoRecomendado === minimoLegal) {
+      fundamentoLegal.push("Se aplica mínimo legal por presunción de medios (Art. 3°)")
+    }
+
+    if (montoRecomendado === maximoLegal) {
+      advertencias.push("Se aplica el máximo legal del 50% de los ingresos (Art. 7°)")
+      fundamentoLegal.push("Art. 7° Ley 14.908: Límite máximo del 50%")
+    }
+
+    // Advertencias adicionales
+    if (ingresoLiquido < INGRESO_MINIMO) {
+      advertencias.push("Ingreso bajo el mínimo legal - puede solicitar rebaja prudencial (Art. 3°)")
+    }
+
+    if (otrasObligaciones > ingresoTotalAlimentante * 0.3) {
+      advertencias.push("Otras obligaciones alimentarias altas - pueden afectar la capacidad de pago")
+    }
+
+    // Desglose de gastos
     let desglose
-    if (gastosRealesTotal > 0) {
-      // Usar gastos reales declarados
-      const totalGastosReales = alimentarios.reduce(
-        (sum, a) =>
-          sum +
-          a.gastosAlimentacion +
-          a.gastosHabitacion +
-          a.gastosVestimenta +
-          a.gastosSalud +
-          a.gastosEducacion +
-          a.gastosMovilizacion +
-          a.gastosExtras,
-        0,
-      )
-
-      const factor = montoRecomendado / totalGastosReales
+    if (gastosRealesTotal > 0 && gastosRealesTotal >= minimoLegal) {
+      // Usar gastos reales proporcionalmente
+      const factor = montoRecomendado / gastosRealesTotal
       desglose = {
         alimentacion: alimentarios.reduce((sum, a) => sum + a.gastosAlimentacion, 0) * factor,
         habitacion: alimentarios.reduce((sum, a) => sum + a.gastosHabitacion, 0) * factor,
@@ -305,7 +328,7 @@ export default function CalculadoraPensionesPage() {
         otros: alimentarios.reduce((sum, a) => sum + a.gastosExtras, 0) * factor,
       }
     } else {
-      // Usar distribución estándar según Art. 3° Ley 14.908
+      // Distribución estándar según necesidades básicas
       desglose = {
         alimentacion: montoRecomendado * 0.35,
         habitacion: montoRecomendado * 0.25,
@@ -317,35 +340,18 @@ export default function CalculadoraPensionesPage() {
       }
     }
 
-    // Verificaciones legales y advertencias
-    if (montoRecomendado > ingresoDisponible * MAXIMO_LEGAL_PORCENTAJE) {
-      advertencias.push("El monto excede el 50% legal máximo establecido en la Ley 14.908")
-    }
-
-    if (ingresoLiquido < INGRESO_MINIMO) {
-      advertencias.push("Ingreso bajo el mínimo legal - verificar capacidad real de pago")
-    }
-
-    if (otrasObligaciones > ingresoTotalAlimentante * 0.3) {
-      advertencias.push("Otras obligaciones muy altas - pueden afectar significativamente el cálculo")
-    }
-
-    if (montoRecomendado === minimoLegal) {
-      fundamentoLegal.push("Se aplica mínimo legal: 40% del ingreso mínimo remuneracional")
-    }
-
     // Evaluación de capacidad de pago
     const porcentajeComprometido = (montoRecomendado / ingresoDisponible) * 100
     let evaluacionCapacidad = ""
-    if (porcentajeComprometido <= 25) {
+    if (porcentajeComprometido <= 30) {
       evaluacionCapacidad = "Capacidad de pago adecuada"
     } else if (porcentajeComprometido <= 40) {
       evaluacionCapacidad = "Capacidad de pago moderada"
     } else if (porcentajeComprometido <= 50) {
-      evaluacionCapacidad = "Capacidad de pago límite"
+      evaluacionCapacidad = "Capacidad de pago en el límite legal"
     } else {
-      evaluacionCapacidad = "Capacidad de pago comprometida"
-      advertencias.push("El monto compromete más del 50% de los ingresos disponibles")
+      evaluacionCapacidad = "Excede el límite legal del 50%"
+      advertencias.push("El monto excede el 50% de los ingresos disponibles")
     }
 
     setResultado({
@@ -975,30 +981,31 @@ export default function CalculadoraPensionesPage() {
                 )}
 
                 {/* Información Legal */}
+                {/* Reemplazar el contenido del Card con información legal al final: */}
                 <Card className="border-blue-200 bg-blue-50">
                   <CardHeader>
-                    <CardTitle className="text-blue-800">Marco Legal - Ley 14.908</CardTitle>
+                    <CardTitle className="text-blue-800">Marco Legal - Ley 14.908 Actualizada</CardTitle>
                   </CardHeader>
                   <CardContent className="text-sm text-blue-700 space-y-2">
                     <p>
-                      • <strong>Art. 3°:</strong> Los alimentos comprenden la obligación de proporcionar al alimentario
-                      menor de veintiún años la enseñanza básica y media, y la de alguna profesión u oficio.
+                      • <strong>Art. 3°:</strong> Presunción de medios del alimentante. Mínimo: 40% del ingreso mínimo
+                      para 1 menor, 30% por cada uno si son 2 o más.
                     </p>
                     <p>
-                      • <strong>Art. 4°:</strong> Los alimentos se deben desde la primera demanda, y se pagarán por
-                      mesadas anticipadas.
+                      • <strong>Art. 6°:</strong> Debe considerar capacidad económica del alimentante y necesidades del
+                      alimentario, incluyendo trabajo de cuidados.
                     </p>
                     <p>
-                      • <strong>Mínimo legal:</strong> 40% del ingreso mínimo remuneracional vigente.
+                      • <strong>Art. 7°:</strong> Máximo legal: 50% de las rentas del alimentante, salvo razones
+                      fundadas.
                     </p>
                     <p>
-                      • <strong>Máximo legal:</strong> 50% de los ingresos líquidos del alimentante.
+                      • <strong>Estudios superiores:</strong> Hasta los 28 años según Art. 3° inc. 2°.
                     </p>
                     <p className="font-medium border-t pt-2 mt-3">
-                      <strong>DISCLAIMER:</strong> Esta calculadora es una herramienta de estimación. El monto final de
-                      la pensión alimenticia será determinado por el tribunal competente, considerando todos los
-                      antecedentes y pruebas presentadas en el proceso judicial. Los resultados no constituyen asesoría
-                      legal ni tienen carácter vinculante.
+                      <strong>DISCLAIMER:</strong> Esta calculadora es una herramienta de estimación basada en la Ley
+                      14.908. El monto final será determinado por el tribunal competente considerando todos los
+                      antecedentes del caso. Los resultados no constituyen asesoría legal ni tienen carácter vinculante.
                     </p>
                   </CardContent>
                 </Card>
