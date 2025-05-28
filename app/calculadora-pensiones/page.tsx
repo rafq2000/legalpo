@@ -106,7 +106,7 @@ export default function CalculadoraPensionesPage() {
   const [resultado, setResultado] = useState<ResultadoCalculo | null>(null)
 
   // Constantes legales actualizadas 2024
-  const INGRESO_MINIMO = 460000 // Ingreso mínimo 2024
+  const INGRESO_MINIMO = 510636 // Ingreso mínimo 2024 para mayores de 18 años
   const MINIMO_LEGAL_PORCENTAJE = 0.4 // 40% del ingreso mínimo
   const MAXIMO_LEGAL_PORCENTAJE = 0.5 // 50% de ingresos líquidos
 
