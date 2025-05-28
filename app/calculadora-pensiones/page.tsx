@@ -181,9 +181,37 @@ export default function CalculadoraPensionesPage() {
       factoresConsiderados.push("Alimentante subsidiario: cálculo basado en proporcionalidad")
     }
 
-    // MÁXIMO LEGAL
-    const maximoLegal = ingresoDisponibleParaPension * MAXIMO_LEGAL_PORCENTAJE
-    fundamentoLegal.push("Art. 7° Ley 14.908: Máximo 50% siempre disponible para pensión")
+    // MÁXIMO LEGAL - 50% para TODAS las pensiones alimenticias
+    const maximoLegalTotal = ingresoDisponibleParaPension * MAXIMO_LEGAL_PORCENTAJE
+    const maximoLegalDisponible = maximoLegalTotal - otrasObligaciones
+
+    // VALIDACIÓN DE PROPORCIONALIDAD DE GASTOS
+    const alimentariosConDiscapacidad = alimentarios.filter((a) => a.tieneDiscapacidad).length
+    const alimentariosSinDiscapacidad = numeroAlimentarios - alimentariosConDiscapacidad
+
+    if (numeroAlimentarios > 1 && alimentariosSinDiscapacidad > 1) {
+      // Verificar que los gastos sean proporcionales entre alimentarios sin discapacidad
+      const gastosAlimentariosSinDiscapacidad = alimentarios
+        .filter((a) => !a.tieneDiscapacidad)
+        .map((a) => a.gastosTotal)
+
+      const gastoPromedio =
+        gastosAlimentariosSinDiscapacidad.reduce((sum, gasto) => sum + gasto, 0) / alimentariosSinDiscapacidad
+      const variacionMaxima = gastoPromedio * 0.3 // 30% de variación permitida
+
+      const hayDesproporcion = gastosAlimentariosSinDiscapacidad.some(
+        (gasto) => Math.abs(gasto - gastoPromedio) > variacionMaxima,
+      )
+
+      if (hayDesproporcion) {
+        advertencias.push(
+          "Los gastos entre alimentarios sin discapacidad deben ser proporcionales. Revise la distribución.",
+        )
+        fundamentoLegal.push(
+          "Principio de proporcionalidad: gastos similares para alimentarios en condiciones similares",
+        )
+      }
+    }
 
     // CÁLCULO 1: BASADO EN GASTOS REALES Y PROPORCIONALIDAD
     const gastosRealesTotal = alimentarios.reduce((sum, a) => sum + a.gastosTotal, 0)
@@ -270,9 +298,9 @@ export default function CalculadoraPensionesPage() {
     // APLICAR LÍMITES LEGALES
     let montoRecomendado
     if (esPadre) {
-      montoRecomendado = Math.max(minimoLegal, Math.min(montoCalculado, maximoLegal))
+      montoRecomendado = Math.max(minimoLegal, Math.min(montoCalculado, maximoLegalDisponible))
     } else {
-      montoRecomendado = Math.min(montoCalculado, maximoLegal)
+      montoRecomendado = Math.min(montoCalculado, maximoLegalDisponible)
     }
 
     // CALCULAR RANGO DE PENSIÓN (más realista)
@@ -281,6 +309,7 @@ export default function CalculadoraPensionesPage() {
     let rangoMaximo = montoRecomendado * (1 + variabilidad)
 
     // Ajustar rango según límites legales
+    const maximoLegal = maximoLegalTotal // Declare maximoLegal here
     if (esPadre) {
       rangoMinimo = Math.max(rangoMinimo, minimoLegal)
     }
@@ -300,15 +329,6 @@ export default function CalculadoraPensionesPage() {
       advertencias.push(`Las deudas personales NO reducen la obligación alimentaria según jurisprudencia.`)
     }
 
-    // Verificaciones
-    if (esPadre && montoRecomendado === minimoLegal) {
-      fundamentoLegal.push("Se aplica mínimo legal por presunción de medios (Art. 3°)")
-    }
-
-    if (montoRecomendado === maximoLegal) {
-      advertencias.push("Se aplica el máximo legal del 50% de los ingresos (Art. 7°)")
-    }
-
     // Si hay gastos reales y son muy superiores al cálculo, advertir
     if (gastosRealesTotal > montoRecomendado * 1.5) {
       advertencias.push(
@@ -318,6 +338,16 @@ export default function CalculadoraPensionesPage() {
 
     // Evaluación de capacidad
     const porcentajeComprometido = (montoRecomendado / ingresoDisponibleParaPension) * 100
+
+    // Verificar si excede el 50% total de pensiones
+    const porcentajeTotalPensiones = ((montoRecomendado + otrasObligaciones) / ingresoTotalAlimentante) * 100
+    if (porcentajeTotalPensiones > 50) {
+      advertencias.push(
+        `El total de pensiones alimenticias (${porcentajeTotalPensiones.toFixed(1)}%) excede el máximo legal del 50%.`,
+      )
+      fundamentoLegal.push("Art. 7° Ley 14.908: Máximo 50% para TODAS las pensiones alimenticias")
+    }
+
     let evaluacionCapacidad = ""
     if (porcentajeComprometido <= 30) {
       evaluacionCapacidad = "Capacidad de pago adecuada"
@@ -335,7 +365,7 @@ export default function CalculadoraPensionesPage() {
       rangoMaximo,
       montoRecomendado,
       minimoLegal: esPadre ? minimoLegal : 0,
-      maximoLegal,
+      maximoLegal: maximoLegalDisponible,
       porcentajeIngreso: (montoRecomendado / ingresoTotalAlimentante) * 100,
       porcentajeProporcional: ingresoTotalCuidador > 0 ? (ingresoTotalAlimentante / ingresoFamiliarTotal) * 100 : 100,
       montoBasadoEnGastos,
@@ -466,6 +496,38 @@ export default function CalculadoraPensionesPage() {
                   Los resultados de esta calculadora <strong>no constituyen asesoría legal</strong> ni tienen valor
                   vinculante. Para casos específicos, se recomienda consultar con un abogado especialista en derecho de
                   familia.
+                </p>
+              </div>
+            </AlertDescription>
+          </Alert>
+
+          <Alert className="mb-6">
+            <InfoIcon className="h-4 w-4" />
+            <AlertTitle>Marco Legal</AlertTitle>
+            <AlertDescription>
+              <div className="text-sm space-y-1">
+                <p>
+                  • <strong>Proporcionalidad real:</strong> Cada alimentante paga según su proporción de ingresos
+                  familiares
+                </p>
+                <p>
+                  • <strong>Ejemplo:</strong> Si uno gana $1M y otro $800K, y los gastos son $600K, el primero paga
+                  $333K y el segundo $267K
+                </p>
+                <p>
+                  • <strong>Padres:</strong> Mínimo legal 40% del ingreso mínimo ($
+                  {formatMoney(INGRESO_MINIMO * MINIMO_LEGAL_PORCENTAJE)})
+                </p>
+                <p>
+                  • <strong>Abuelos:</strong> Obligación subsidiaria, sin mínimo legal
+                </p>
+                <p>
+                  • <strong>Art. 7° Ley 14.908:</strong> Máximo legal: 50% de las rentas para TODAS las pensiones
+                  alimenticias combinadas.
+                </p>
+                <p>
+                  • <strong>Proporcionalidad:</strong> Los gastos deben ser similares entre alimentarios, salvo
+                  discapacidad que justifique gastos especiales.
                 </p>
               </div>
             </AlertDescription>
@@ -816,8 +878,12 @@ export default function CalculadoraPensionesPage() {
                         </div>
                       )}
                       <div className="flex justify-between">
-                        <span className="text-sm text-muted-foreground">Máximo legal:</span>
+                        <span className="text-sm text-muted-foreground">Máximo disponible:</span>
                         <span className="font-medium">{formatMoney(resultado.maximoLegal)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Otras pensiones:</span>
+                        <span className="font-medium text-red-600">{formatMoney(otrasObligaciones)}</span>
                       </div>
                       {resultado.montoBasadoEnGastos > 0 && (
                         <div className="flex justify-between">
