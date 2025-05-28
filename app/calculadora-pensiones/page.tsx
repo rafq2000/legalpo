@@ -161,16 +161,14 @@ export default function CalculadoraPensionesPage() {
     }
 
     const ingresoTotalAlimentante = ingresoLiquido + otrosIngresos
-    const ingresoDisponible = ingresoTotalAlimentante - gastosPersonales - otrasObligaciones - deudas
     const ingresoTotalCuidador = cuidador.ingresoLiquido + cuidador.otrosIngresos
 
-    // Verificar que el ingreso disponible sea positivo
-    if (ingresoDisponible <= 0) {
-      alert("Los gastos y obligaciones superan los ingresos. Revise los datos ingresados.")
-      return
-    }
+    // PRINCIPIO FUNDAMENTAL: El 50% SIEMPRE debe estar disponible para pensión
+    // Los gastos excesivos del alimentante NO reducen esta disponibilidad
+    // Solo se descuentan otras obligaciones alimentarias legales
+    const ingresoDisponibleParaPension = ingresoTotalAlimentante - otrasObligaciones
 
-    // MÍNIMO LEGAL según Art. 3° Ley 14.908
+    // MÍNIMO LEGAL según Art. 3° Ley 14.908 - SIEMPRE SE APLICA
     let minimoLegal = 0
     if (numeroAlimentarios === 1) {
       minimoLegal = INGRESO_MINIMO * MINIMO_LEGAL_PORCENTAJE // 40% para 1 menor
@@ -180,15 +178,39 @@ export default function CalculadoraPensionesPage() {
     }
 
     // MÁXIMO LEGAL según Art. 7° Ley 14.908
-    const maximoLegal = ingresoDisponible * MAXIMO_LEGAL_PORCENTAJE // 50% máximo
+    // El 50% SIEMPRE debe estar disponible, independiente de gastos personales
+    const maximoLegal = ingresoDisponibleParaPension * MAXIMO_LEGAL_PORCENTAJE
 
     const factoresConsiderados: string[] = []
     const advertencias: string[] = []
     const fundamentoLegal: string[] = []
 
-    // Aplicar presunción del Art. 3°: "se presumirá que el alimentante tiene los medios para otorgarlos"
-    fundamentoLegal.push("Art. 3° Ley 14.908: Presunción de medios del alimentante")
+    // Aplicar presunción del Art. 3°
+    fundamentoLegal.push("Art. 3° Ley 14.908: Presunción legal de medios del alimentante")
     fundamentoLegal.push(`Mínimo legal: ${numeroAlimentarios === 1 ? "40%" : "30% por cada menor"} del ingreso mínimo`)
+    fundamentoLegal.push("Art. 7° Ley 14.908: Máximo 50% siempre disponible para pensión")
+
+    // ADVERTENCIAS sobre gastos excesivos
+    const gastosTotalesDeclarados = gastosPersonales + deudas
+    const porcentajeGastosPersonales = (gastosTotalesDeclarados / ingresoTotalAlimentante) * 100
+
+    if (porcentajeGastosPersonales > 50) {
+      advertencias.push(
+        `ATENCIÓN: Gastos personales (${porcentajeGastosPersonales.toFixed(1)}%) superan el 50% del ingreso. Esto NO reduce la obligación alimentaria.`,
+      )
+      factoresConsiderados.push("Gastos excesivos no afectan el cálculo - protección legal de alimentarios")
+    }
+
+    if (deudas > 0) {
+      advertencias.push(
+        `Las deudas personales (${formatMoney(deudas)}) NO reducen la obligación alimentaria según jurisprudencia.`,
+      )
+    }
+
+    // Lógica de equidad: quien gana más, no puede pagar menos porcentaje que quien gana el mínimo
+    if (ingresoTotalAlimentante > INGRESO_MINIMO * 2) {
+      factoresConsiderados.push("Ingresos superiores al doble del mínimo - mayor capacidad contributiva")
+    }
 
     // Cálculo base considerando capacidad económica real
     let porcentajeBase = 0.25 // Base para 1 alimentario
@@ -277,46 +299,65 @@ export default function CalculadoraPensionesPage() {
       factoresConsiderados.push("Región extrema: Mayor costo de vida (+5%)")
     }
 
-    // Cálculo del monto base
+    // Cálculo del monto base (resto del código de factores se mantiene igual)
     const porcentajeFinal = Math.min(porcentajeBase * factorAjuste, MAXIMO_LEGAL_PORCENTAJE)
-    const montoCalculado = ingresoDisponible * porcentajeFinal
+    const montoCalculado = ingresoDisponibleParaPension * porcentajeFinal
 
-    // Considerar gastos reales si son superiores al cálculo porcentual
+    // Considerar gastos reales si son superiores
     const montoBasadoEnGastos = gastosRealesTotal > 0 ? gastosRealesTotal : 0
     const montoBase = Math.max(montoCalculado, montoBasadoEnGastos)
 
-    // APLICAR LÍMITES LEGALES
-    // 1. No puede ser menor al mínimo legal (Art. 3°)
-    // 2. No puede exceder el 50% de las rentas (Art. 7°)
+    // APLICAR LÍMITES LEGALES ESTRICTOS
+    // 1. NUNCA menor al mínimo legal
+    // 2. NUNCA mayor al 50% disponible
     const montoRecomendado = Math.max(minimoLegal, Math.min(montoBase, maximoLegal))
 
-    // Rangos orientativos
-    const montoMinimo = minimoLegal
-    const montoMaximo = maximoLegal
+    // Verificación de equidad
+    const porcentajeDelIngreso = (montoRecomendado / ingresoTotalAlimentante) * 100
+    if (porcentajeDelIngreso < 40 && ingresoTotalAlimentante > INGRESO_MINIMO * 1.5) {
+      advertencias.push("Con este nivel de ingresos, el porcentaje podría ser superior para mantener equidad")
+    }
+
+    // Evaluación de capacidad considerando el principio del 50%
+    const porcentajeComprometido = (montoRecomendado / ingresoDisponibleParaPension) * 100
+    let evaluacionCapacidad = ""
+    if (porcentajeComprometido <= 30) {
+      evaluacionCapacidad = "Capacidad de pago adecuada"
+    } else if (porcentajeComprometido <= 40) {
+      evaluacionCapacidad = "Capacidad de pago moderada"
+    } else if (porcentajeComprometido <= 50) {
+      evaluacionCapacidad = "En el límite legal del 50%"
+    } else {
+      evaluacionCapacidad = "Requiere reorganización financiera obligatoria"
+      advertencias.push("El alimentante debe reorganizar sus gastos para cumplir la obligación legal")
+    }
 
     // Verificaciones legales
     if (montoRecomendado === minimoLegal) {
       fundamentoLegal.push("Se aplica mínimo legal por presunción de medios (Art. 3°)")
+      if (ingresoTotalAlimentante > INGRESO_MINIMO * 2) {
+        advertencias.push("Con este nivel de ingresos, el monto podría ser superior al mínimo legal")
+      }
     }
 
     if (montoRecomendado === maximoLegal) {
-      advertencias.push("Se aplica el máximo legal del 50% de los ingresos (Art. 7°)")
+      advertencias.push("Se aplica el máximo legal del 50% de los ingresos totales (Art. 7°)")
       fundamentoLegal.push("Art. 7° Ley 14.908: Límite máximo del 50%")
     }
 
-    // Advertencias adicionales
-    if (ingresoLiquido < INGRESO_MINIMO) {
-      advertencias.push("Ingreso bajo el mínimo legal - puede solicitar rebaja prudencial (Art. 3°)")
+    // Advertencias sobre la presunción legal
+    if (ingresoTotalAlimentante >= INGRESO_MINIMO) {
+      fundamentoLegal.push("Presunción legal: El alimentante tiene medios para pagar al menos el mínimo")
     }
 
-    if (otrasObligaciones > ingresoTotalAlimentante * 0.3) {
-      advertencias.push("Otras obligaciones alimentarias altas - pueden afectar la capacidad de pago")
+    // Mensaje sobre rebaja prudencial
+    if (ingresoTotalAlimentante < INGRESO_MINIMO * 0.8) {
+      advertencias.push("Solo con ingresos muy bajos puede solicitarse rebaja prudencial del mínimo (Art. 3°)")
     }
 
-    // Desglose de gastos
+    // Desglose de gastos (igual que antes)
     let desglose
     if (gastosRealesTotal > 0 && gastosRealesTotal >= minimoLegal) {
-      // Usar gastos reales proporcionalmente
       const factor = montoRecomendado / gastosRealesTotal
       desglose = {
         alimentacion: alimentarios.reduce((sum, a) => sum + a.gastosAlimentacion, 0) * factor,
@@ -328,7 +369,6 @@ export default function CalculadoraPensionesPage() {
         otros: alimentarios.reduce((sum, a) => sum + a.gastosExtras, 0) * factor,
       }
     } else {
-      // Distribución estándar según necesidades básicas
       desglose = {
         alimentacion: montoRecomendado * 0.35,
         habitacion: montoRecomendado * 0.25,
@@ -340,32 +380,32 @@ export default function CalculadoraPensionesPage() {
       }
     }
 
-    // Evaluación de capacidad de pago
-    const porcentajeComprometido = (montoRecomendado / ingresoDisponible) * 100
-    let evaluacionCapacidad = ""
-    if (porcentajeComprometido <= 30) {
-      evaluacionCapacidad = "Capacidad de pago adecuada"
-    } else if (porcentajeComprometido <= 40) {
-      evaluacionCapacidad = "Capacidad de pago moderada"
-    } else if (porcentajeComprometido <= 50) {
-      evaluacionCapacidad = "Capacidad de pago en el límite legal"
-    } else {
-      evaluacionCapacidad = "Excede el límite legal del 50%"
-      advertencias.push("El monto excede el 50% de los ingresos disponibles")
-    }
+    // Evaluación de capacidad de pago basada en ingreso disponible real
+    // const porcentajeComprometido = (montoRecomendado / Math.max(ingresoDisponible, ingresoTotalAlimentante * 0.5)) * 100
+    // let evaluacionCapacidad = ""
+    // if (porcentajeComprometido <= 30) {
+    //   evaluacionCapacidad = "Capacidad de pago adecuada"
+    // } else if (porcentajeComprometido <= 40) {
+    //   evaluacionCapacidad = "Capacidad de pago moderada"
+    // } else if (porcentajeComprometido <= 50) {
+    //   evaluacionCapacidad = "Capacidad de pago en el límite legal"
+    // } else {
+    //   evaluacionCapacidad = "Requiere reorganización financiera del alimentante"
+    //   advertencias.push("El alimentante debe reorganizar sus finanzas para cumplir la obligación legal")
+    // }
 
     setResultado({
-      montoMinimo,
-      montoMaximo,
+      montoMinimo: minimoLegal,
+      montoMaximo: maximoLegal,
       montoRecomendado,
       minimoLegal,
-      porcentajeIngreso: porcentajeFinal * 100,
+      porcentajeIngreso: (montoRecomendado / ingresoTotalAlimentante) * 100,
       desglose,
       factoresConsiderados,
       advertencias,
       fundamentoLegal,
       capacidadPago: {
-        ingresoDisponible,
+        ingresoDisponible: ingresoDisponibleParaPension,
         porcentajeComprometido,
         evaluacion: evaluacionCapacidad,
       },
