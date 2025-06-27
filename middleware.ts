@@ -11,6 +11,7 @@ const redirects: Record<string, string> = {
   "/consulta": "/dudas-laborales",
   "/analizar": "/analyze",
   "/contratos/personalizado": "/generador-contratos/personalizado",
+  "/o": "/", // Redirige la URL problemática a la página de inicio
 }
 
 // Redirecciones de dominio y protocolo
