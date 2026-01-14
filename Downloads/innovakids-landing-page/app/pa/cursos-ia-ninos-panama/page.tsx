@@ -1,0 +1,294 @@
+import type { Metadata } from "next"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { CheckCircle, Users, Shield, ArrowRight, MessageCircle, Brain, Rocket, Target, Award } from "lucide-react"
+import WhatsAppButton from "@/components/whatsapp-button"
+
+export const metadata: Metadata = {
+  title: "Cursos de IA para Niños en Panamá 2026 | Clases Online en Vivo | InnovaKids",
+  description:
+    "✅ Cursos de Inteligencia Artificial para niños panameños de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $200 USD por 10 clases. ¡Garantía 10 días!",
+  keywords:
+    "cursos ia niños panama, clases inteligencia artificial niños panama city, cursos programacion niños panama, ia para niños panama",
+  openGraph: {
+    title: "Cursos de IA para Niños en Panamá | InnovaKids Latam",
+    description:
+      "Clases de Inteligencia Artificial para niños panameños. Online en vivo, grupos pequeños, profesores expertos.",
+    url: "https://www.innovakidslatam.com/pa/cursos-ia-ninos-panama",
+    siteName: "InnovaKids Latam",
+    locale: "es_PA",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://www.innovakidslatam.com/pa/cursos-ia-ninos-panama",
+  },
+}
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Course",
+  name: "Curso de Inteligencia Artificial para Niños - Panamá",
+  description: "Programa completo de IA para niños panameños de 8 a 17 años con clases online en vivo",
+  provider: {
+    "@type": "Organization",
+    name: "InnovaKids Latam",
+    url: "https://www.innovakidslatam.com",
+  },
+  areaServed: {
+    "@type": "Country",
+    name: "Panamá",
+  },
+  inLanguage: "es",
+  offers: {
+    "@type": "Offer",
+    price: "200",
+    priceCurrency: "USD",
+    availability: "https://schema.org/LimitedAvailability",
+  },
+}
+
+export default function CursosIANinosPanamaPage() {
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
+
+      <div className="min-h-screen bg-background">
+        {/* Hero Section */}
+        <section className="relative py-20 overflow-hidden bg-gradient-to-b from-[#DA121A]/10 via-background to-background">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <Badge className="mb-6 bg-[#072357] text-white px-4 py-2">
+                🇵🇦 #1 en Cursos de IA para Niños en Panamá
+              </Badge>
+
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+                Tu satisfacción <br />
+                <span className="text-[#072357]">Garantizada</span>
+              </h1>
+
+              <p className="text-xl md:text-2xl text-muted-foreground mb-4 max-w-2xl mx-auto">
+                Cursos de Inteligencia Artificial para niños panameños de 8 a 17 años. Clases online en vivo con grupos
+                de máximo 5 alumnos.
+              </p>
+
+              <div className="flex flex-wrap justify-center gap-4 mb-8">
+                <div className="flex items-center gap-2 bg-card/50 px-4 py-2 rounded-full">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="font-medium">10 Clases en Vivo</span>
+                </div>
+                <div className="flex items-center gap-2 bg-card/50 px-4 py-2 rounded-full">
+                  <Users className="h-5 w-5 text-[#072357]" />
+                  <span className="font-medium">Máx 5 Niños/Grupo</span>
+                </div>
+                <div className="flex items-center gap-2 bg-card/50 px-4 py-2 rounded-full">
+                  <Shield className="h-5 w-5 text-green-500" />
+                  <span className="font-medium">Garantía 10 Días</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                <Button size="lg" className="bg-[#072357] hover:bg-[#072357]/90 text-white text-lg px-8 py-6" asChild>
+                  <Link href="/booking">
+                    Reservar Evaluación GRATIS
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="text-lg px-8 py-6 border-[#072357] text-[#072357] bg-transparent"
+                  asChild
+                >
+                  <Link href="https://wa.me/56964754219?text=Hola!%20Quiero%20información%20sobre%20los%20cursos%20de%20IA%20para%20niños%20en%20Panamá">
+                    <MessageCircle className="mr-2 h-5 w-5" />
+                    WhatsApp
+                  </Link>
+                </Button>
+              </div>
+
+              <div className="bg-[#072357]/10 border border-[#072357]/20 rounded-2xl p-6 max-w-xl mx-auto">
+                <p className="text-lg font-semibold text-[#072357]">💰 Inversión: $200 USD</p>
+                <p className="text-muted-foreground">
+                  10 clases online en vivo (90 min c/u) • Garantía de satisfacción 10 días
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Por qué Panamá */}
+        <section className="py-20 bg-card/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+                ¿Por Qué los Niños Panameños <span className="text-[#072357]">Necesitan Aprender IA</span>?
+              </h2>
+
+              <div className="grid md:grid-cols-2 gap-8">
+                <Card className="border-[#072357]/20">
+                  <CardContent className="p-6">
+                    <Brain className="h-12 w-12 text-[#072357] mb-4" />
+                    <h3 className="text-xl font-bold mb-2">Panamá Digital</h3>
+                    <p className="text-muted-foreground">
+                      Como hub tecnológico de Centroamérica, Panamá necesita jóvenes preparados en IA para liderar la
+                      transformación digital.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-[#072357]/20">
+                  <CardContent className="p-6">
+                    <Rocket className="h-12 w-12 text-[#072357] mb-4" />
+                    <h3 className="text-xl font-bold mb-2">Oportunidades Globales</h3>
+                    <p className="text-muted-foreground">
+                      Desde Ciudad de Panamá o David, tu hijo puede acceder a carreras tecnológicas internacionales bien
+                      pagadas.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-[#072357]/20">
+                  <CardContent className="p-6">
+                    <Target className="h-12 w-12 text-[#072357] mb-4" />
+                    <h3 className="text-xl font-bold mb-2">Ventaja Competitiva</h3>
+                    <p className="text-muted-foreground">
+                      Muy pocos niños en Panamá están aprendiendo IA. Tu hijo tendrá años de ventaja sobre sus
+                      compañeros.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-[#072357]/20">
+                  <CardContent className="p-6">
+                    <Award className="h-12 w-12 text-[#072357] mb-4" />
+                    <h3 className="text-xl font-bold mb-2">Metodología Probada</h3>
+                    <p className="text-muted-foreground">
+                      Aprender creando: tu hijo construirá proyectos reales con IA desde la primera clase.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Qué Incluye */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+                ¿Qué Incluye el <span className="text-[#072357]">Programa</span>?
+              </h2>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {[
+                  "10 clases online en vivo de 90 minutos",
+                  "Grupos pequeños de máximo 5 niños",
+                  "Profesor experto en IA y educación",
+                  "Proyectos prácticos con herramientas reales",
+                  "Certificado de finalización",
+                  "Acceso a comunidad de estudiantes",
+                  "Material de apoyo descargable",
+                  "Grabaciones de las clases",
+                  "Horarios flexibles para Panamá",
+                  "Garantía de satisfacción 10 días",
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-3 p-4 bg-card/50 rounded-lg">
+                    <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0" />
+                    <span className="font-medium">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Ciudades */}
+        <section className="py-20 bg-card/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-8">
+                Clases Online para <span className="text-[#072357]">Todo Panamá</span>
+              </h2>
+              <p className="text-xl text-muted-foreground mb-8">
+                Desde cualquier ciudad de Panamá, tu hijo puede tomar nuestras clases
+              </p>
+
+              <div className="flex flex-wrap justify-center gap-3">
+                {[
+                  "Ciudad de Panamá",
+                  "San Miguelito",
+                  "Colón",
+                  "David",
+                  "La Chorrera",
+                  "Arraiján",
+                  "Santiago",
+                  "Chitré",
+                  "Penonomé",
+                  "Bocas del Toro",
+                ].map((ciudad) => (
+                  <Badge key={ciudad} variant="outline" className="px-4 py-2 text-base border-[#072357]/30">
+                    {ciudad}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Final */}
+        <section className="py-20 bg-[#072357]">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">¿Listo para que tu Hijo Domine la IA?</h2>
+            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+              Reserva una evaluación gratuita y descubre el potencial de tu hijo en tecnología
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-white text-[#072357] hover:bg-white/90 text-lg px-8 py-6" asChild>
+                <Link href="/booking">
+                  Reservar Evaluación GRATIS
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+
+            <p className="text-white/80 mt-6">
+              💬 ¿Preguntas?{" "}
+              <Link href="https://wa.me/56964754219" className="underline">
+                Escríbenos por WhatsApp
+              </Link>
+            </p>
+          </div>
+        </section>
+
+        {/* Links SEO */}
+        <section className="py-12 bg-card/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <h3 className="font-semibold mb-4">Explora más sobre IA para Niños:</h3>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/pa" className="text-[#072357] hover:underline">
+                  Hub Panamá
+                </Link>
+                <Link href="/pa/clases-ia-ninos-panama-city" className="text-[#072357] hover:underline">
+                  Clases IA Ciudad de Panamá
+                </Link>
+                <Link href="/metodologia-aprender-creando" className="text-[#072357] hover:underline">
+                  Nuestra Metodología
+                </Link>
+                <Link href="/booking" className="text-[#072357] hover:underline">
+                  Reservar Clase
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <WhatsAppButton />
+    </>
+  )
+}

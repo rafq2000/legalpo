@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Main Page - Highest Priority with hreflang -->
+  <url>
+    <loc>https://www.innovakidslatam.com/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.innovakidslatam.com/"/>
+    <xhtml:link rel="alternate" hreflang="es-MX" href="https://www.innovakidslatam.com/mx"/>
+    <xhtml:link rel="alternate" hreflang="es-CO" href="https://www.innovakidslatam.com/colombia"/>
+    <xhtml:link rel="alternate" hreflang="es-AR" href="https://www.innovakidslatam.com/argentina"/>
+    <xhtml:link rel="alternate" hreflang="es-ES" href="https://www.innovakidslatam.com/espana"/>
+    <xhtml:link rel="alternate" hreflang="es-CL" href="https://www.innovakidslatam.com/chile"/>
+    <xhtml:link rel="alternate" hreflang="es-PE" href="https://www.innovakidslatam.com/peru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.innovakidslatam.com/"/>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://www.innovakidslatam.com/hero-child-learning-ai.jpg</image:loc>
+      <image:title>Cursos de IA para Niños - Innovakids</image:title>
+      <image:caption>Niños aprendiendo inteligencia artificial en Latinoamérica</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- ============================================== -->
+  <!-- MEXICO SEO PAGES - HIGHEST PRIORITY FOR SERP -->
+  <!-- ============================================== -->
+  
+  <!-- Mexico Landing Comercial - Position #1 Target -->
+  <url>
+    <loc>https://www.innovakidslatam.com/mx/cursos-ia-ninos-mexico</loc>
+    <xhtml:link rel="alternate" hreflang="es-MX" href="https://www.innovakidslatam.com/mx/cursos-ia-ninos-mexico"/>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.98</priority>
+  </url>
+  
+  <!-- Mexico Blog Article - Position #2 Target -->
+  <url>
+    <loc>https://www.innovakidslatam.com/mx/blog/cursos-inteligencia-artificial-ninos-mexico-guia</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.97</priority>
+  </url>
+  
+  <!-- Mexico Hub - Position #3 Target -->
+  <url>
+    <loc>https://www.innovakidslatam.com/mx</loc>
+    <xhtml:link rel="alternate" hreflang="es-MX" href="https://www.innovakidslatam.com/mx"/>
+    <xhtml:link rel="alternate" hreflang="es-CO" href="https://www.innovakidslatam.com/colombia"/>
+    <xhtml:link rel="alternate" hreflang="es-AR" href="https://www.innovakidslatam.com/argentina"/>
+    <xhtml:link rel="alternate" hreflang="es-ES" href="https://www.innovakidslatam.com/espana"/>
+    <xhtml:link rel="alternate" hreflang="es-CL" href="https://www.innovakidslatam.com/chile"/>
+    <xhtml:link rel="alternate" hreflang="es-PE" href="https://www.innovakidslatam.com/peru"/>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.96</priority>
+  </url>
+  
+  <!-- Mexico CDMX Local - Position #4 Target -->
+  <url>
+    <loc>https://www.innovakidslatam.com/mx/clases-ia-ninos-cdmx</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  
+  <!-- ============================================== -->
+  <!-- OTHER COUNTRY PAGES -->
+  <!-- ============================================== -->
+  
+  <!-- Updated country pages to use correct URLs -->
+  <url>
+    <loc>https://www.innovakidslatam.com/mexico</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.innovakidslatam.com/colombia</loc>
+    <xhtml:link rel="alternate" hreflang="es-CO" href="https://www.innovakidslatam.com/colombia"/>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.innovakidslatam.com/argentina</loc>
+    <xhtml:link rel="alternate" hreflang="es-AR" href="https://www.innovakidslatam.com/argentina"/>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.innovakidslatam.com/espana</loc>
+    <xhtml:link rel="alternate" hreflang="es-ES" href="https://www.innovakidslatam.com/espana"/>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.innovakidslatam.com/chile</loc>
+    <xhtml:link rel="alternate" hreflang="es-CL" href="https://www.innovakidslatam.com/chile"/>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.innovakidslatam.com/peru</loc>
+    <xhtml:link rel="alternate" hreflang="es-PE" href="https://www.innovakidslatam.com/peru"/>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  
+  <!-- ============================================== -->
+  <!-- PRIMARY SEO LANDING PAGES -->
+  <!-- ============================================== -->
+  
+  <url>
+    <loc>https://www.innovakidslatam.com/curso-ia-ninos</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/clases-ia-ninos</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.92</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/como-ensenar-ia-a-mis-hijos</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.88</priority>
+  </url>
+  
+  <!-- Secondary SEO Landing Pages -->
+  <url>
+    <loc>https://www.innovakidslatam.com/metodologia-aprender-creando</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/ia-nos-recomienda</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/grupos-pequenos-5-alumnos</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/de-usuario-a-creador</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  
+  <!-- Information Pages -->
+  <url>
+    <loc>https://www.innovakidslatam.com/que-es-innovakids</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/testimonios</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/informacion</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Blog Hub -->
+  <url>
+    <loc>https://www.innovakidslatam.com/blog</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  
+  <!-- Blog Articles -->
+  <url>
+    <loc>https://www.innovakidslatam.com/blog/futuro-trabajo-ia-preparar-hijos</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/blog/chatgpt-para-ninos-guia-padres</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/blog/beneficios-ia-educacion-infantil</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/blog/proyectos-ia-ninos-principiantes</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  
+  <!-- Lead Magnets -->
+  <url>
+    <loc>https://www.innovakidslatam.com/descargar-guia-ia-ninos</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/kit-gratuito-descarga</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/brochure-programa-ia</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Contact & Booking -->
+  <url>
+    <loc>https://www.innovakidslatam.com/contacto</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  
+  <!-- Legal Pages -->
+  <url>
+    <loc>https://www.innovakidslatam.com/privacidad</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.innovakidslatam.com/terminos</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>
