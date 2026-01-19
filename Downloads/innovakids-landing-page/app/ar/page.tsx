@@ -7,9 +7,9 @@ import { MapPin, Users, Star, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Chicos en Argentina | Buenos Aires, Córdoba, Rosario | InnovaKids",
+  title: "Curso de Inteligencia Artificial para Chicos en Argentina | InnovaKids 🇦🇷",
   description:
-    "Cursos de inteligencia artificial para chicos argentinos de 8-14 años. Clases online desde Buenos Aires, Córdoba, Rosario, Mendoza y toda Argentina. Grupos de 5 alumnos.",
+    "Clases de IA online para chicos en Argentina (Buenos Aires, Córdoba, Rosario). Tu hijo aprenderá a usar IA para programar videojuegos y apps. Grupos reducidos.",
   keywords: [
     "cursos ia chicos argentina",
     "clases inteligencia artificial chicos buenos aires",
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     "cursos programacion chicos argentina",
   ],
   openGraph: {
-    title: "Cursos de IA para Chicos en Argentina | InnovaKids",
+    title: "Curso IA Chicos Argentina $197 | Tu Hijo Crea Apps Reales",
     description:
-      "El mejor curso de inteligencia artificial para chicos argentinos. Buenos Aires, Córdoba, Rosario y toda Argentina.",
+      "Tu hijo aprende a CREAR con IA. Buenos Aires, Córdoba, Rosario. 500+ graduados. Garantía 10 días.",
     url: "https://www.innovakidslatam.com/ar",
     siteName: "InnovaKids",
     locale: "es_AR",
@@ -133,7 +133,7 @@ export default function ArgentinaHubPage() {
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Precio Accesible</h3>
                 <p className="text-gray-400">
-                  $200 USD por el programa completo de 10 clases. Aceptamos PayPal y tarjetas internacionales.
+                  $197 USD por el programa completo de 10 clases. Aceptamos PayPal y tarjetas internacionales.
                 </p>
               </div>
 
@@ -154,7 +154,7 @@ export default function ArgentinaHubPage() {
         <section className="py-24 bg-[#0a1628]">
           <div className="container mx-auto px-6 max-w-4xl text-center">
             <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
-              Próximo Inicio: Semana del 17 de Enero 2026
+              Próximo Inicio: Semana del 26 de Enero 2026
             </h2>
             <p className="text-xl text-gray-300 mb-8">
               Solo 2 cupos disponibles para Argentina. Los grupos se llenan rápido.

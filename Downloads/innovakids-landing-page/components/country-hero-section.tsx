@@ -15,7 +15,7 @@ export function CountryHeroSection({ country }: CountryHeroSectionProps) {
   const cuposTotales = 20
 
   useEffect(() => {
-    const targetDate = new Date("2026-01-17T00:00:00")
+    const targetDate = new Date("2026-01-26T00:00:00")
 
     const calculateTimeLeft = () => {
       const now = new Date()
@@ -143,9 +143,8 @@ export function CountryHeroSection({ country }: CountryHeroSectionProps) {
               {Array.from({ length: cuposTotales }).map((_, i) => (
                 <div
                   key={i}
-                  className={`w-3 h-3 rounded-full ${
-                    i < cuposTotales - cuposDisponibles ? "bg-muted-foreground/30" : "bg-primary animate-pulse"
-                  }`}
+                  className={`w-3 h-3 rounded-full ${i < cuposTotales - cuposDisponibles ? "bg-muted-foreground/30" : "bg-primary animate-pulse"
+                    }`}
                 />
               ))}
             </div>

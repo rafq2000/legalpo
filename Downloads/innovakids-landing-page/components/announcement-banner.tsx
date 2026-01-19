@@ -12,7 +12,7 @@ export function AnnouncementBanner() {
             <Clock className="h-4 w-4 xs:h-5 xs:w-5 text-yellow-300 animate-pulse" />
           </div>
           <p className="text-white font-bold text-[11px] xs:text-xs sm:text-sm md:text-base leading-tight">
-            <span className="text-yellow-300">¡ÚLTIMOS CUPOS!</span> Curso inicia semana del 11 de Enero 2026
+            <span className="text-yellow-300">¡ÚLTIMOS CUPOS!</span> Curso inicia semana del 26 de Enero 2026
           </p>
         </div>
       </div>

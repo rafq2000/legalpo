@@ -168,7 +168,7 @@ export default function ClasesIANinosMadrid() {
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#C60B1E]/20">
                   <Star className="h-8 w-8 text-[#C60B1E]" />
                 </div>
-                <h3 className="mb-2 text-xl font-bold">$200 USD Total</h3>
+                <h3 className="mb-2 text-xl font-bold">$197 USD Total</h3>
                 <p className="text-muted-foreground">Programa completo de 10 clases. Sin costes ocultos.</p>
               </div>
             </div>
@@ -227,7 +227,7 @@ export default function ClasesIANinosMadrid() {
             <div className="mx-auto max-w-md rounded-3xl bg-gradient-to-br from-[#C60B1E] to-[#8B0000] p-8 text-white shadow-2xl">
               <div className="mb-2 text-sm font-medium text-white/80">PROGRAMA COMPLETO</div>
               <div className="mb-6">
-                <span className="text-5xl font-bold">$200</span>
+                <span className="text-5xl font-bold">$197</span>
                 <span className="text-xl"> USD</span>
               </div>
 

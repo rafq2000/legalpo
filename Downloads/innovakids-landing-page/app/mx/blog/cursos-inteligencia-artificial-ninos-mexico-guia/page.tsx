@@ -271,7 +271,7 @@ export default function GuiaCompletaPage() {
                     <tbody className="text-sm">
                       <tr className="border-b border-white/5 bg-[#4DD0E1]/10">
                         <td className="py-4 px-4 text-[#4DD0E1] font-bold">InnovaKids ⭐</td>
-                        <td className="py-4 px-4 text-center text-white">$200 USD</td>
+                        <td className="py-4 px-4 text-center text-white">$197 USD</td>
                         <td className="py-4 px-4 text-center text-white">10</td>
                         <td className="py-4 px-4 text-center text-white">5 niños</td>
                         <td className="py-4 px-4 text-center text-green-400">10 días</td>
@@ -285,7 +285,7 @@ export default function GuiaCompletaPage() {
                       </tr>
                       <tr className="border-b border-white/5">
                         <td className="py-4 px-4 text-gray-300">Platzi Kids</td>
-                        <td className="py-4 px-4 text-center text-gray-400">$200 USD/año</td>
+                        <td className="py-4 px-4 text-center text-gray-400">$197 USD/año</td>
                         <td className="py-4 px-4 text-center text-gray-400">Grabadas</td>
                         <td className="py-4 px-4 text-center text-gray-400">N/A</td>
                         <td className="py-4 px-4 text-center text-gray-400">14 días</td>
@@ -359,7 +359,7 @@ export default function GuiaCompletaPage() {
                 </p>
                 <div className="bg-[#0f2744]/50 rounded-xl p-6 border border-white/10 my-6">
                   <h3 className="text-xl font-bold text-[#4DD0E1] mb-4">
-                    ¿Qué obtiene tu hijo por $200 USD en InnovaKids?
+                    ¿Qué obtiene tu hijo por $197 USD en InnovaKids?
                   </h3>
                   <ul className="space-y-3 text-gray-300">
                     <li>✅ 10 clases en vivo de 90 minutos cada una</li>

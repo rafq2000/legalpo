@@ -8,14 +8,15 @@ type PaymentOption =
   | "first"
   | "second"
   | "full"
-  | "deposit"
-  | "final"
-  | "minimal"
-  | "standard"
   | "reserve"
   | "earlybird"
   | "complete"
   | "custom360"
+  | "explorer"
+  | "start_pack"
+  | "pro_pack"
+  | "university"
+  | "promo180"
 
 interface PaymentDetails {
   title: string
@@ -24,6 +25,26 @@ interface PaymentDetails {
 }
 
 const paymentDetails: Record<PaymentOption, PaymentDetails> = {
+  explorer: {
+    title: "Innovakids Explorer",
+    price: 197,
+    description: "Módulo 1 Base - 10 Clases Fundamentales",
+  },
+  start_pack: {
+    title: "Vibe Start Pack",
+    price: 494,
+    description: "Explorer + 1 Especialidad a elección",
+  },
+  pro_pack: {
+    title: "Vibe Pro Pack",
+    price: 691,
+    description: "Explorer + 2 Especialidades (Ahorras $100)",
+  },
+  university: {
+    title: "Academy University Pass",
+    price: 788,
+    description: "Acceso Total: 4 Módulos (Ahorras $300)",
+  },
   custom360: {
     title: "Pago Personalizado",
     price: 360,
@@ -31,34 +52,18 @@ const paymentDetails: Record<PaymentOption, PaymentDetails> = {
   },
   reserve: {
     title: "Reserva tu Cupo",
-    price: 50,
-    description: "Reserva con $50 USD - Paga el resto antes de iniciar",
+    price: 20,
+    description: "Reserva con $20 USD - Paga el resto antes de iniciar",
   },
   earlybird: {
     title: "Early Bird - Primeros 10",
-    price: 247,
-    description: "Precio especial para los primeros 10 inscritos (50% OFF)",
+    price: 197,
+    description: "Precio especial para los primeros 10 inscritos (60% OFF)",
   },
   complete: {
     title: "Programa Completo",
     price: 297,
-    description: "Precio de lanzamiento 2026 (40% OFF - Valor real $497)",
-  },
-  // Legacy options for backwards compatibility
-  minimal: {
-    title: "Reserva Mínima",
-    price: 50,
-    description: "Reserva tu cupo con el pago mínimo",
-  },
-  standard: {
-    title: "Reserva Estándar",
-    price: 50,
-    description: "Asegura tu cupo con la reserva estándar",
-  },
-  deposit: {
-    title: "Depósito Inicial",
-    price: 50,
-    description: "Asegura tu cupo en el curso",
+    description: "Precio de lanzamiento 2026 (60% OFF - Valor real $497)",
   },
   first: {
     title: "Reserva",
@@ -75,6 +80,11 @@ const paymentDetails: Record<PaymentOption, PaymentDetails> = {
     price: 297,
     description: "Acceso inmediato al curso completo",
   },
+  promo180: {
+    title: "Oferta Especial Limitada",
+    price: 180,
+    description: "Acceso completo - Precio Especial",
+  },
 }
 
 export default async function PagarPage({
@@ -83,8 +93,8 @@ export default async function PagarPage({
   searchParams: Promise<{ option?: string }>
 }) {
   const params = await searchParams
-  const option = (params.option as PaymentOption) || "complete"
-  const details = paymentDetails[option] || paymentDetails.complete
+  const option = (params.option as PaymentOption) || "explorer"
+  const details = paymentDetails[option] || paymentDetails.explorer
 
   return (
     <div className="min-h-screen bg-background">

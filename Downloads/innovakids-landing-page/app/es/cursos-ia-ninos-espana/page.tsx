@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { CurriculumSection } from "@/components/curriculum-section"
+import { PricingSection } from "@/components/pricing-section"
 import { Navigation } from "@/components/navigation"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Users, Clock, Shield, Star, CheckCircle, Zap, Target } from "lucide-react"
@@ -9,7 +11,7 @@ export const metadata: Metadata = {
   description:
     "Curso de inteligencia artificial para niños 8-14 años en España. Aprende ChatGPT, Midjourney, crea apps. 10 clases, grupos de máx 5 niños. Evaluación gratis.",
   keywords:
-    "cursos de ia para niños españa, clases inteligencia artificial madrid, curso ia niños barcelona, programación ia niños valencia, innovakids españa",
+    "cursos de ia para niños españa, clases inteligencia artificial madrid, curso ia niños barcelona, programación ia niños valencia, innovakids españa, curso inteligencia artificial niños, clases online ia niños, escuela de inteligencia artificial para niños, aprender chatgpt para niños, tecnología para niños españa",
   alternates: {
     canonical: "https://www.innovakidslatam.com/es/cursos-ia-ninos-espana",
     languages: {
@@ -62,7 +64,7 @@ export default function CursosIANinosEspana() {
               <span className="font-medium">España</span>
             </div>
 
-            <h1 className="mx-auto max-w-4xl text-4xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
+            <h1 className="mx-auto max-w-4xl text-3xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl px-2">
               Cursos de Inteligencia Artificial para Niños en España
             </h1>
 
@@ -164,133 +166,10 @@ export default function CursosIANinosEspana() {
         </section>
 
         {/* WHAT THEY'LL LEARN */}
-        <section className="bg-muted/30 py-20 md:py-28">
-          <div className="container mx-auto px-4">
-            <h2 className="mb-4 text-center text-3xl font-bold md:text-4xl">¿Qué Aprenderá Tu Hijo en 10 Clases?</h2>
-            <p className="mx-auto mb-16 max-w-2xl text-center text-muted-foreground">
-              Proyectos reales que podrá enseñar con orgullo
-            </p>
-
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  icon: "📚",
-                  title: "Cómics con IA",
-                  desc: "Crearán historias ilustradas usando ChatGPT y Midjourney",
-                  tools: "ChatGPT, Midjourney, Canva",
-                },
-                {
-                  icon: "🎵",
-                  title: "Música Original",
-                  desc: "Compondrán canciones personalizadas con Suno AI",
-                  tools: "Suno AI, udio.com",
-                },
-                {
-                  icon: "🎬",
-                  title: "Vídeos Profesionales",
-                  desc: "Editarán vídeos con efectos especiales usando IA",
-                  tools: "Runway, Descript, CapCut",
-                },
-                {
-                  icon: "📱",
-                  title: "Apps Funcionales",
-                  desc: "Programarán aplicaciones reales con asistencia de IA",
-                  tools: "Cursor, Replit, Bolt.new",
-                },
-                {
-                  icon: "🤖",
-                  title: "Chatbots Inteligentes",
-                  desc: "Construirán asistentes virtuales personalizados",
-                  tools: "Make.com, GPT-4",
-                },
-                {
-                  icon: "🎮",
-                  title: "Videojuegos",
-                  desc: "Desarrollarán juegos desde cero con ayuda de IA",
-                  tools: "GPT-4, Phaser, Replit",
-                },
-              ].map((project, i) => (
-                <div key={i} className="rounded-2xl bg-card p-6 transition-all hover:shadow-lg">
-                  <div className="mb-4 text-4xl">{project.icon}</div>
-                  <h3 className="mb-2 text-xl font-bold">{project.title}</h3>
-                  <p className="mb-4 text-muted-foreground">{project.desc}</p>
-                  <div className="text-sm text-primary">Herramientas: {project.tools}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <CurriculumSection />
 
         {/* PRICING */}
-        <section className="py-20 md:py-28" id="precio">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">Inversión en el Futuro de Tu Hijo</h2>
-            <p className="mx-auto mb-12 max-w-2xl text-muted-foreground">
-              Programa completo de 10 clases en vivo con grupos de máximo 5 niños
-            </p>
-
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-[#C60B1E]/10 border border-[#C60B1E]/30 px-6 py-3">
-              <span className="text-[#C60B1E] font-bold">Próximo curso: 26 de Enero 2026</span>
-            </div>
-
-            <div className="mx-auto max-w-md rounded-3xl bg-gradient-to-br from-[#C60B1E] to-[#8B0000] p-8 text-white shadow-2xl">
-              <div className="mb-2 text-sm font-medium text-white/80">PROGRAMA COMPLETO</div>
-              <div className="mb-2 text-lg line-through text-white/60">$497 USD</div>
-              <div className="mb-6">
-                <span className="text-5xl font-bold">$297</span>
-                <span className="text-xl"> USD</span>
-                <span className="ml-2 text-sm bg-white/20 px-2 py-1 rounded">40% OFF</span>
-              </div>
-
-              <ul className="mb-8 space-y-3 text-left">
-                {[
-                  "10 clases en vivo (90 min c/u)",
-                  "Grupos de máximo 5 niños",
-                  "10+ herramientas de IA profesionales",
-                  "Proyectos reales publicables",
-                  "Certificado de finalización",
-                  "Soporte por WhatsApp",
-                  "Acceso a comunidad exclusiva",
-                  "Garantía de 10 días",
-                ].map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 shrink-0 text-white" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href={calendlyLink}
-                target="_blank"
-                className="mb-4 block w-full rounded-full bg-white py-4 text-center text-lg font-bold text-[#C60B1E] transition-all hover:scale-105 hover:shadow-lg"
-              >
-                Agendar Evaluación Gratuita
-              </Link>
-
-              <p className="text-sm text-white/70">O reserva con $50 USD y paga el resto antes de iniciar</p>
-            </div>
-
-            <div className="mt-8 mx-auto max-w-md rounded-2xl bg-card/50 border border-[#C60B1E]/30 p-6">
-              <div className="text-[#C60B1E] font-bold mb-2">🔥 EARLY BIRD - Primeros 10 inscritos</div>
-              <div className="text-3xl font-bold text-white">
-                $247 USD <span className="text-lg text-muted-foreground">(50% OFF)</span>
-              </div>
-              <p className="text-sm text-muted-foreground mt-2">Ahorra $50 USD adicionales</p>
-            </div>
-
-            {/* Payment Methods */}
-            <div className="mt-12">
-              <p className="mb-4 text-sm text-muted-foreground">Métodos de pago aceptados:</p>
-              <div className="flex flex-wrap items-center justify-center gap-4 text-muted-foreground">
-                <span className="rounded-lg bg-card px-4 py-2">💳 Tarjeta de crédito/débito</span>
-                <span className="rounded-lg bg-card px-4 py-2">📱 Bizum</span>
-                <span className="rounded-lg bg-card px-4 py-2">🏦 Transferencia bancaria</span>
-                <span className="rounded-lg bg-card px-4 py-2">🌐 PayPal</span>
-              </div>
-            </div>
-          </div>
-        </section>
+        <PricingSection />
 
         {/* TESTIMONIALS */}
         <section className="bg-muted/30 py-20 md:py-28">
@@ -369,7 +248,7 @@ export default function CursosIANinosEspana() {
                 },
                 {
                   q: "¿Cómo puedo pagar desde España?",
-                  a: "Aceptamos tarjetas de crédito/débito, Bizum, transferencia bancaria y PayPal. El precio es $200 USD (aprox. 185€) que puedes pagar con cualquier método.",
+                  a: "Aceptamos tarjetas de crédito/débito, Bizum, transferencia bancaria y PayPal. El precio es $197 USD (aprox. 185€) que puedes pagar con cualquier método.",
                 },
                 {
                   q: "¿Tenéis eventos presenciales en España?",

@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CheckCircle, Shield } from "lucide-react"
 
 export const metadata = {
   title: "Programa Acelerador de IA - Innovakids | Brochure Exclusivo",
@@ -83,10 +84,10 @@ export default function BrochurePage() {
             </CardHeader>
             <CardContent className="space-y-4">
               {[
-                { icon: "🚀", label: "Inicio", value: "Segunda semana de Enero 2026" },
+                { icon: "🚀", label: "Inicio", value: "26 de Enero, 2026" },
                 { icon: "💻", label: "Plataforma", value: "Clases en vivo vía Zoom" },
                 { icon: "⏱️", label: "Duración", value: "5 semanas (10 clases exclusivas)" },
-                { icon: "📆", label: "Frecuencia", value: "2 clases por semana (1 hr c/u)" },
+                { icon: "📆", label: "Frecuencia", value: "2 clases por semana (90 min c/u)" },
                 { icon: "👦", label: "Edad", value: "8 a 14 años" },
               ].map((item, idx) => (
                 <div key={idx} className="flex items-start gap-3 text-slate-300">
@@ -244,11 +245,55 @@ export default function BrochurePage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="p-6 bg-cyan-500/10 border-l-4 border-cyan-400 rounded-r-lg backdrop-blur-xl">
-              <p className="text-white font-semibold flex items-center gap-3 text-lg">
-                <span className="text-2xl">⚡</span>
-                Programa completo de 5 semanas con mentoría personalizada y acceso de por vida a todos los materiales y
-                comunidad privada.
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Opción 1: Pago Completo */}
+              <div className="flex flex-col justify-between p-8 bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-400/30 rounded-xl backdrop-blur-xl relative overflow-hidden group hover:border-cyan-400/60 transition-all">
+                <div className="absolute top-0 right-0 bg-cyan-500 text-slate-900 text-xs font-bold px-3 py-1 rounded-bl-lg">
+                  MEJOR VALOR
+                </div>
+                <div>
+                  <p className="text-white font-bold text-xl mb-2 flex items-center gap-2">
+                    <span className="text-2xl">⚡</span>
+                    Programa Completo
+                  </p>
+                  <p className="text-slate-400 text-sm mb-4">Inversión Única</p>
+                  <div className="text-5xl font-bold text-white mb-2">$197 <span className="text-xl text-cyan-400">USD</span></div>
+                  <ul className="text-slate-300 text-sm space-y-2 mb-8 mt-6">
+                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-cyan-400" /> 10 Clases en Vivo</li>
+                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-cyan-400" /> Grabaciones de por vida</li>
+                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-cyan-400" /> Certificado Incluido</li>
+                  </ul>
+                </div>
+                <Button asChild size="lg" className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold">
+                  <Link href="/pagar?option=explorer">Inscribir Ahora ($197)</Link>
+                </Button>
+              </div>
+
+              {/* Opción 2: Reserva */}
+              <div className="flex flex-col justify-between p-8 bg-white/5 border border-white/10 rounded-xl backdrop-blur-xl hover:bg-white/10 transition-all">
+                <div>
+                  <p className="text-white font-bold text-xl mb-2 flex items-center gap-2">
+                    <span className="text-2xl">🔒</span>
+                    Reserva Flexible
+                  </p>
+                  <p className="text-slate-400 text-sm mb-4">Asegura tu cupo hoy</p>
+                  <div className="text-5xl font-bold text-white mb-2">$20 <span className="text-xl text-cyan-400">USD</span></div>
+                  <p className="text-slate-400 text-xs mb-6">Paga el resto ($177 USD) antes de iniciar las clases.</p>
+                  <ul className="text-slate-300 text-sm space-y-2 mb-8">
+                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-slate-500" /> Asegura tu lugar</li>
+                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-slate-500" /> Acceso inmediato a comunidad</li>
+                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-slate-500" /> Cancela si cambias de opinión</li>
+                  </ul>
+                </div>
+                <Button asChild size="lg" variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                  <Link href="/pagar?option=reserve">Reservar por $20 USD</Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="mt-8 text-center">
+              <p className="text-cyan-400 text-sm font-semibold uppercase tracking-wider flex items-center justify-center gap-2">
+                <Shield className="w-4 h-4" /> Garantía de Satisfacción de 10 días
               </p>
             </div>
           </CardContent>
@@ -265,17 +310,17 @@ export default function BrochurePage() {
         {/* CTA Section */}
         <Card className="bg-gradient-to-br from-cyan-400 to-blue-500 border-0 shadow-2xl shadow-cyan-500/50">
           <CardContent className="text-center py-12 space-y-6">
-            <h2 className="text-4xl font-bold text-slate-900">¿Listo para Transformar el Futuro de tu Hijo?</h2>
+            <h2 className="text-4xl font-bold text-slate-900">¿Tu Hijo Está Listo?</h2>
             <p className="text-slate-900 text-lg max-w-2xl mx-auto">
-              Únete al programa más exclusivo de Latinoamérica. Cupos limitados a 5 alumnos por grupo.
+              Solo aceptamos 5 alumnos por grupo para garantizar resultados. El primer paso es una breve entrevista.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button
                 asChild
                 size="lg"
-                className="bg-slate-900 hover:bg-slate-800 text-white text-lg px-8 py-6 shadow-xl hover:scale-105 transition-transform"
+                className="bg-slate-900 hover:bg-slate-800 text-white text-lg px-8 py-6 shadow-xl hover:scale-105 transition-transform rounded-full"
               >
-                <Link href="/#contacto">Reservar Mi Cupo Ahora</Link>
+                <Link href="/#sesion-estrategica">Agendar Entrevista de Admisión</Link>
               </Button>
               <Button
                 asChild
@@ -293,7 +338,7 @@ export default function BrochurePage() {
 
         {/* Footer */}
         <footer className="mt-16 text-center text-slate-400 text-sm space-y-2">
-          <p>© 2025 Innovakids Latam. Todos los derechos reservados.</p>
+          <p>© 2026 Innovakids Latam. Todos los derechos reservados.</p>
           <p className="flex items-center justify-center gap-2">
             <span>📧</span> contacto@innovakidslatam.com
             <span className="mx-2">|</span>

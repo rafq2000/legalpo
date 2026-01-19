@@ -9,7 +9,7 @@ import WhatsAppButton from "@/components/whatsapp-button"
 export const metadata: Metadata = {
   title: "Clases de IA para Niños en Asunción 2026 | Cursos Online | InnovaKids",
   description:
-    "Clases de Inteligencia Artificial para niños en Asunción, Paraguay. Cursos online en vivo, grupos de máx 5 alumnos. $200 USD por 10 clases.",
+    "Clases de Inteligencia Artificial para niños en Asunción, Paraguay. Cursos online en vivo, grupos de máx 5 alumnos. $197 USD por 10 clases.",
   alternates: {
     canonical: "https://www.innovakidslatam.com/py/clases-ia-ninos-asuncion",
   },
@@ -49,7 +49,7 @@ export default function AsuncionPage() {
               </div>
 
               <div className="bg-[#D52B1E]/10 rounded-2xl p-6 max-w-xl mx-auto">
-                <p className="text-lg font-semibold text-[#D52B1E]">💰 $200 USD - 10 Clases</p>
+                <p className="text-lg font-semibold text-[#D52B1E]">💰 $197 USD - 10 Clases</p>
                 <p className="text-muted-foreground">Garantía de satisfacción 10 días • Máx 5 niños por grupo</p>
               </div>
             </div>

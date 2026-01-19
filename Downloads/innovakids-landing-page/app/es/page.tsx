@@ -5,9 +5,9 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { MapPin, ArrowRight } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "InnovaKids España | Cursos de IA para Niños Online 🇪🇸",
+  title: "Curso de Inteligencia Artificial para Niños en España | InnovaKids 🇪🇸",
   description:
-    "Cursos de inteligencia artificial para niños 8-14 años en toda España. Madrid, Barcelona, Valencia, Sevilla, Bilbao y más. 10 clases, grupos reducidos.",
+    "El curso de IA líder en España para niños. Clases online en vivo (Madrid, Barcelona, Valencia). Aprende a crear apps y videojuegos con Inteligencia Artificial.",
   keywords:
     "cursos ia niños españa, clases inteligencia artificial madrid, curso ia barcelona, programación ia valencia, innovakids españa",
   alternates: {
@@ -87,11 +87,10 @@ export default function EspanaHub() {
               {ciudades.map((ciudad, i) => (
                 <div
                   key={i}
-                  className={`rounded-2xl p-6 transition-all hover:shadow-lg ${
-                    ciudad.destacada
-                      ? "bg-gradient-to-br from-[#C60B1E]/10 to-[#FFC400]/10 border-2 border-[#C60B1E]/20"
-                      : "bg-card"
-                  }`}
+                  className={`rounded-2xl p-6 transition-all hover:shadow-lg ${ciudad.destacada
+                    ? "bg-gradient-to-br from-[#C60B1E]/10 to-[#FFC400]/10 border-2 border-[#C60B1E]/20"
+                    : "bg-card"
+                    }`}
                 >
                   <div className="mb-2 flex items-center gap-2">
                     <MapPin className={`h-5 w-5 ${ciudad.destacada ? "text-[#C60B1E]" : "text-muted-foreground"}`} />
@@ -123,7 +122,7 @@ export default function EspanaHub() {
               {[
                 { stat: "10", label: "Clases en vivo", desc: "90 minutos cada una" },
                 { stat: "5", label: "Niños máximo", desc: "Por grupo" },
-                { stat: "$200", label: "USD", desc: "Precio total del programa" },
+                { stat: "$197", label: "USD", desc: "Precio total del programa" },
                 { stat: "10", label: "Días de garantía", desc: "Devolución sin preguntas" },
               ].map((item, i) => (
                 <div key={i} className="rounded-2xl bg-card p-6 text-center">

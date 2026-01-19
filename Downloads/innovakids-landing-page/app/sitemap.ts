@@ -32,12 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    {
-      url: `${baseUrl}/mx/landing-comercial`,
-      lastModified: currentDate,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
+
     {
       url: `${baseUrl}/mx/blog/cursos-inteligencia-artificial-ninos-mexico-guia`,
       lastModified: currentDate,

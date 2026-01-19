@@ -21,7 +21,7 @@ export function ConsequencesSection() {
         <div className="max-w-5xl mx-auto space-y-12">
           {/* HOY */}
           <div className="bg-[#0f2744] rounded-2xl p-8 border-2 border-[#4DD0E1]">
-            <div className="text-2xl font-bold text-[#4DD0E1] mb-6">HOY - 7 de Enero</div>
+            <div className="text-2xl font-bold text-[#4DD0E1] mb-6">HOY - 15 de Enero</div>
 
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-green-900/20 rounded-xl p-6 border-2 border-green-500/50">
@@ -29,7 +29,7 @@ export function ConsequencesSection() {
                   <Check className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
                   <strong className="text-white text-lg">Si aseguras el cupo HOY:</strong>
                 </div>
-                <p className="text-gray-300 ml-9">Tu hijo empieza en 4 días a crear con IA</p>
+                <p className="text-gray-300 ml-9">Tu hijo empieza en 11 días a crear con IA</p>
               </div>
 
               <div className="bg-red-900/20 rounded-xl p-6 border-2 border-red-500/50">
@@ -42,9 +42,9 @@ export function ConsequencesSection() {
             </div>
           </div>
 
-          {/* 11 DE ENERO */}
+          {/* 26 DE ENERO */}
           <div className="bg-[#0f2744] rounded-2xl p-8 border-2 border-white/10">
-            <div className="text-2xl font-bold text-white mb-6">11 de Enero - Día del Inicio</div>
+            <div className="text-2xl font-bold text-white mb-6">26 de Enero - Día del Inicio</div>
 
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-green-900/20 rounded-xl p-6 border-2 border-green-500/50">
@@ -65,9 +65,9 @@ export function ConsequencesSection() {
             </div>
           </div>
 
-          {/* MEDIADOS DE FEBRERO */}
+          {/* MARZO 2026 */}
           <div className="bg-[#0f2744] rounded-2xl p-8 border-2 border-white/10">
-            <div className="text-2xl font-bold text-white mb-6">Mediados de Febrero</div>
+            <div className="text-2xl font-bold text-white mb-6">Marzo 2026</div>
 
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-green-900/20 rounded-xl p-6 border-2 border-green-500/50">

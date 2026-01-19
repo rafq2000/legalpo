@@ -162,7 +162,7 @@ export default function PanamaHub() {
         {/* FINAL CTA */}
         <section className="bg-gradient-to-br from-[#072357] to-[#041633] py-20 md:py-28">
           <div className="container mx-auto px-4 text-center text-white">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">$200 USD - Programa Completo</h2>
+            <h2 className="mb-4 text-3xl font-bold md:text-4xl">$197 USD - Programa Completo</h2>
             <p className="mx-auto mb-10 max-w-2xl text-lg text-white/80">
               10 clases en vivo, grupos de máximo 5 niños, garantía de 10 días
             </p>

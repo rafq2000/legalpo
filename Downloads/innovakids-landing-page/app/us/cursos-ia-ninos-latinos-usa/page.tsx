@@ -326,9 +326,9 @@ export default function CursosIANinosLatinosUSA() {
               <div className="mb-2 text-sm font-medium text-[#BF0A30]">PROGRAMA COMPLETO EN ESPAÑOL</div>
               <div className="mb-2 text-lg line-through text-white/60">$497 USD</div>
               <div className="mb-6">
-                <span className="text-5xl font-bold">$297</span>
+                <span className="text-5xl font-bold">$197</span>
                 <span className="text-xl"> USD</span>
-                <span className="ml-2 text-sm bg-[#BF0A30] px-2 py-1 rounded">40% OFF</span>
+                <span className="ml-2 text-sm bg-[#BF0A30] px-2 py-1 rounded">60% OFF</span>
               </div>
 
               <ul className="mb-8 space-y-3 text-left">
@@ -358,15 +358,15 @@ export default function CursosIANinosLatinosUSA() {
                 Agendar Evaluación Gratuita
               </Link>
 
-              <p className="text-sm text-white/70">O reserva con $50 USD y paga el resto antes de iniciar</p>
+              <p className="text-sm text-white/70">Pago único con tarjeta, PayPal, Zelle o Venmo</p>
             </div>
 
             <div className="mt-8 mx-auto max-w-md rounded-2xl bg-card/50 border border-[#BF0A30]/30 p-6">
               <div className="text-[#BF0A30] font-bold mb-2">🔥 EARLY BIRD - Primeros 10 inscritos</div>
               <div className="text-3xl font-bold text-white">
-                $247 USD <span className="text-lg text-muted-foreground">(50% OFF)</span>
+                $197 USD <span className="text-lg text-muted-foreground">(60% OFF)</span>
               </div>
-              <p className="text-sm text-muted-foreground mt-2">Ahorra $50 USD adicionales</p>
+              <p className="text-sm text-muted-foreground mt-2">Asegura tu cupo con precio preferencial</p>
             </div>
 
             {/* Payment Methods */}
@@ -463,7 +463,7 @@ export default function CursosIANinosLatinosUSA() {
                 },
                 {
                   q: "¿Cómo puedo pagar desde USA?",
-                  a: "Aceptamos todas las formas de pago de USA: Credit/Debit Card, PayPal, Zelle y Venmo. El precio es $200 USD.",
+                  a: "Aceptamos todas las formas de pago de USA: Credit/Debit Card, PayPal, Zelle y Venmo. El precio es $197 USD.",
                 },
               ].map((faq, i) => (
                 <div key={i} className="rounded-2xl bg-card p-6">
@@ -565,7 +565,7 @@ export default function CursosIANinosLatinosUSA() {
               },
               offers: {
                 "@type": "Offer",
-                price: "200",
+                price: "197",
                 priceCurrency: "USD",
                 availability: "https://schema.org/InStock",
               },

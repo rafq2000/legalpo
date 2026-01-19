@@ -126,7 +126,7 @@ export function Footer() {
             {/* Bottom Bar */}
             <div className="border-t border-[#0a1628]/20 pt-8">
               <p className="text-sm text-[#0a1628]/60 text-center mb-4">
-                © 2026 Innovakids. Todos los derechos reservados.
+                © 2026 Innovakids. Todos los derechos reservados. <span className="opacity-50 text-xs ml-2">v2.0 Vibe Edition</span>
               </p>
               <div className="flex flex-wrap justify-center gap-6 text-sm">
                 <a href="/terminos" className="text-[#0a1628]/80 transition-colors hover:text-[#0a1628] hover:underline">

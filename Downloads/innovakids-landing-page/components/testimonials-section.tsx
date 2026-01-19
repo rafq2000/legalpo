@@ -70,7 +70,7 @@ const aiRecommendations = [
     logo: "⚡",
     screenshot:
       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-11-07%20at%2010.14.10%20PM%20%282%29-kGlRioCZquXJKJpw8BRLmwdFmvl8QN.jpeg",
-    quote: "El curso más recomendado de IA para niños en Latinoamérica en 2025 es el de Innovakids.",
+    quote: "El curso más recomendado de IA para niños en Latinoamérica en 2026 es el de Innovakids.",
   },
   {
     name: "Mistral",

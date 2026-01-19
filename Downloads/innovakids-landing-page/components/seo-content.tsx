@@ -3,10 +3,10 @@ export function SEOContent() {
     <section className="py-16 bg-background/50">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto prose prose-invert">
-          <h1 className="text-4xl font-bold text-white mb-8 text-center">
+          <h2 className="text-4xl font-bold text-white mb-8 text-center">
             Cursos de IA para Niños y Adolescentes: Los Mejores Cursos de Inteligencia Artificial 8-17 Años en
             Latinoamérica 2026
-          </h1>
+          </h2>
 
           <div className="text-gray-300 space-y-6 text-lg leading-relaxed">
             <p className="text-xl">

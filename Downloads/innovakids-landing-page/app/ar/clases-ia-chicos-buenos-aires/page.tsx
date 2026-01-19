@@ -43,7 +43,7 @@ const jsonLd = {
   },
   offers: {
     "@type": "Offer",
-    price: "200",
+    price: "197",
     priceCurrency: "USD",
     availability: "https://schema.org/LimitedAvailability",
   },
@@ -88,7 +88,7 @@ export default function BuenosAiresClasesIAPage() {
 
             <div className="flex flex-wrap justify-center gap-4 mb-12 text-sm text-gray-400">
               <span className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-400" /> $200 USD - 10 clases
+                <Check className="w-4 h-4 text-green-400" /> $197 USD - 10 clases
               </span>
               <span className="flex items-center gap-2">
                 <Shield className="w-4 h-4 text-green-400" /> Garantía 10 días
@@ -158,7 +158,7 @@ export default function BuenosAiresClasesIAPage() {
               </div>
 
               <div className="mt-8 pt-8 border-t border-white/10 text-center">
-                <div className="text-4xl font-bold text-white mb-2">$200 USD</div>
+                <div className="text-4xl font-bold text-white mb-2">$197 USD</div>
                 <p className="text-gray-400 mb-4">Programa completo - Garantía 10 días</p>
                 <Link href="/#sesion-estrategica">
                   <Button className="bg-[#75AADB] hover:bg-[#5a8fc0] text-white px-8 py-4 text-lg font-bold rounded-full">

@@ -17,7 +17,7 @@ export default function TermsPage() {
             <FileText className="h-16 w-16 mx-auto mb-6 text-[#4DD0E1]" />
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Términos y Condiciones</h1>
             <p className="text-xl text-gray-300">Condiciones de uso de nuestros servicios</p>
-            <p className="text-sm text-gray-400 mt-2">Última actualización: Diciembre 2025</p>
+            <p className="text-sm text-gray-400 mt-2">Última actualización: Enero 2026</p>
           </div>
 
           <div className="bg-[#1a2942] rounded-2xl p-8 md:p-12 space-y-8 text-gray-200">

@@ -9,7 +9,7 @@ import WhatsAppButton from "@/components/whatsapp-button"
 export const metadata: Metadata = {
   title: "Cursos de IA para Patojos en Guatemala | Guatemala City, Quetzaltenango | InnovaKids",
   description:
-    "Cursos de Inteligencia Artificial para patojos en Guatemala. Clases online en vivo desde Guatemala City, Quetzaltenango, Mixco y todo el país. $200 USD - 10 clases.",
+    "Cursos de Inteligencia Artificial para patojos en Guatemala. Clases online en vivo desde Guatemala City, Quetzaltenango, Mixco y todo el país. $197 USD - 10 clases.",
   alternates: {
     canonical: "https://www.innovakidslatam.com/gt",
   },
@@ -61,7 +61,7 @@ export default function GuatemalaHubPage() {
               <div className="flex flex-wrap justify-center gap-4">
                 <div className="flex items-center gap-2 bg-card/50 px-4 py-2 rounded-full">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span>$200 USD - 10 Clases</span>
+                  <span>$197 USD - 10 Clases</span>
                 </div>
                 <div className="flex items-center gap-2 bg-card/50 px-4 py-2 rounded-full">
                   <CheckCircle className="h-5 w-5 text-green-500" />

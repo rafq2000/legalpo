@@ -9,7 +9,7 @@ import WhatsAppButton from "@/components/whatsapp-button"
 export const metadata: Metadata = {
   title: "Clases de IA para Niños en La Paz 2026 | Cursos Online | InnovaKids",
   description:
-    "Clases de Inteligencia Artificial para niños en La Paz, Bolivia. Cursos online en vivo, grupos de máx 5 alumnos. $200 USD por 10 clases.",
+    "Clases de Inteligencia Artificial para niños en La Paz, Bolivia. Cursos online en vivo, grupos de máx 5 alumnos. $197 USD por 10 clases.",
   alternates: {
     canonical: "https://www.innovakidslatam.com/bo/clases-ia-ninos-la-paz",
   },
@@ -49,7 +49,7 @@ export default function LaPazPage() {
               </div>
 
               <div className="bg-[#007934]/10 rounded-2xl p-6 max-w-xl mx-auto">
-                <p className="text-lg font-semibold text-[#007934]">💰 $200 USD - 10 Clases</p>
+                <p className="text-lg font-semibold text-[#007934]">💰 $197 USD - 10 Clases</p>
                 <p className="text-muted-foreground">Garantía de satisfacción 10 días • Máx 5 niños por grupo</p>
               </div>
             </div>

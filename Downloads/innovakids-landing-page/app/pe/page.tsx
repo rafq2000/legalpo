@@ -5,9 +5,9 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { MapPin, ArrowRight, Users, Clock, Shield, Zap } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños en Perú | InnovaKids 🇵🇪",
+  title: "Curso de Inteligencia Artificial para Niños en Perú | InnovaKids 🇵🇪",
   description:
-    "Cursos de inteligencia artificial para niños en todo Perú. Lima, Arequipa, Trujillo, Cusco, Chiclayo, Piura. Clases 100% online en vivo. Grupos de máx 5 niños.",
+    "Clases de Inteligencia Artificial para niños en Perú (Lima, Arequipa, Trujillo). Enseña a tu hijo a dominar la tecnología del futuro creando sus propios videojuegos y aplicaciones.",
   keywords:
     "cursos ia niños peru, clases inteligencia artificial lima, ia para niños arequipa, cursos programación trujillo, innovakids peru",
   alternates: {
@@ -92,7 +92,7 @@ export default function PeruHub() {
               </div>
               <div className="text-center">
                 <Zap className="mx-auto mb-2 h-8 w-8 text-[#D91023]" />
-                <div className="text-2xl font-bold">$200</div>
+                <div className="text-2xl font-bold">$197</div>
                 <div className="text-sm text-muted-foreground">USD total</div>
               </div>
             </div>

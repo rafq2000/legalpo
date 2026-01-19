@@ -9,7 +9,7 @@ import WhatsAppButton from "@/components/whatsapp-button"
 export const metadata: Metadata = {
   title: "Clases de IA para Patojos en Ciudad de Guatemala 2026 | Cursos Online | InnovaKids",
   description:
-    "Clases de Inteligencia Artificial para patojos en Ciudad de Guatemala. Cursos online en vivo, grupos de máx 5 alumnos. $200 USD por 10 clases. ¡Garantía 10 días!",
+    "Clases de Inteligencia Artificial para patojos en Ciudad de Guatemala. Cursos online en vivo, grupos de máx 5 alumnos. $197 USD por 10 clases. ¡Garantía 10 días!",
   alternates: {
     canonical: "https://www.innovakidslatam.com/gt/clases-ia-ninos-ciudad-guatemala",
   },
@@ -61,7 +61,7 @@ export default function CiudadGuatemalaPage() {
               </div>
 
               <div className="bg-[#4997D0]/10 rounded-2xl p-6 max-w-xl mx-auto">
-                <p className="text-lg font-semibold text-[#4997D0]">💰 $200 USD - 10 Clases</p>
+                <p className="text-lg font-semibold text-[#4997D0]">💰 $197 USD - 10 Clases</p>
                 <p className="text-muted-foreground">Garantía de satisfacción 10 días • Máx 5 patojos por grupo</p>
               </div>
             </div>

@@ -291,7 +291,7 @@ export default function ComoEnsenarIAPage() {
 
           <div className="mt-16 bg-gradient-to-r from-cyan-900/30 to-purple-900/30 p-12 rounded-3xl border-2 border-cyan-500/50 text-center">
             <h3 className="text-3xl font-bold text-white mb-4">Solo 2 de 20 Cupos Disponibles</h3>
-            <p className="text-xl text-gray-300 mb-8">Próximo ciclo inicia el 17 de enero de 2026</p>
+            <p className="text-xl text-gray-300 mb-8">Próximo ciclo inicia el 26 de enero de 2026</p>
             <Link href="/#sesion-estrategica">
               <Button
                 size="lg"

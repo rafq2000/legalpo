@@ -198,35 +198,16 @@ export function HeroSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10">
         <div className="text-center space-y-8 sm:space-y-10 max-w-5xl mx-auto">
 
-          {/* Live Viewer Counter */}
-          <LiveViewerCounter />
-
           {/* #1 Badge - Holographic */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full holographic-card"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full holographic-card mt-12 md:mt-20"
           >
             <span className="text-2xl">🏆</span>
             <span className="text-sm sm:text-base text-white font-bold relative z-10">
               #1 en Latinoamérica y España
-            </span>
-          </motion.div>
-
-          {/* Open Enrollment Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 backdrop-blur-sm"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-            </span>
-            <span className="text-sm text-primary font-medium tracking-wide">
-              INSCRIPCIONES ABIERTAS 2026
             </span>
           </motion.div>
 
@@ -237,11 +218,13 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="relative"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.05] tracking-tight font-premium">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.05] tracking-tight font-premium px-2">
+              <span className="block text-white">Cursos de IA para Niños:</span>
+              <span className="block text-white">Tu Hijo Aprende a</span>
               <span className="block premium-gradient-text"
                 style={{ textShadow: "0 0 80px rgba(77, 208, 225, 0.5)" }}
               >
-                {scrambledText}
+                CREAR con IA
               </span>
             </h1>
 
@@ -251,7 +234,7 @@ export function HeroSection() {
               transition={{ delay: 1, duration: 0.8 }}
               className="mt-6 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white/90"
             >
-              No dejes que tu hijo se quede atrás.
+              No solo consume tecnología. <span className="text-primary">La domina.</span>
             </motion.p>
 
             <div
@@ -269,8 +252,11 @@ export function HeroSection() {
             transition={{ delay: 1.2, duration: 0.6 }}
             className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto"
           >
-            Cursos de <span className="text-primary font-semibold">Inteligencia Artificial</span> para niños y
-            adolescentes de 8-14 años. Grupos de máximo 5 alumnos.
+            <span className="text-white font-semibold">10 clases en vivo</span> • Grupos de solo <span className="text-primary font-semibold">5 niños</span>
+            <br className="hidden sm:block" />
+            Crea <span className="text-white">apps, juegos y startups reales</span> con ChatGPT, Midjourney y más.
+            <br />
+            Para niños de <span className="text-primary font-semibold">8-14 años</span> • <span className="text-green-400 font-bold">$197 USD</span>
           </motion.p>
 
           {/* Countdown Timer - Premium Design */}
@@ -338,7 +324,7 @@ export function HeroSection() {
               />
               <span className="relative flex items-center gap-2">
                 <Sparkles className="w-5 h-5" />
-                ASEGURAR CUPO AHORA
+                AGENDAR ENTREVISTA ADMISIÓN
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
             </Button>
@@ -362,13 +348,14 @@ export function HeroSection() {
             className="flex flex-wrap justify-center gap-6 sm:gap-8 text-sm text-gray-400"
           >
             {[
+              { icon: Users, text: "500+ graduados", highlight: true },
+              { icon: Award, text: "4.9★ valoración", highlight: true },
               { icon: Shield, text: "Garantía 10 días" },
-              { icon: Users, text: "Grupos de 5 niños" },
-              { icon: Award, text: "Certificación" },
+              { icon: Users, text: "Grupos de 5" },
             ].map((item, i) => (
               <motion.span
                 key={i}
-                className="flex items-center gap-2 hover:text-primary transition-colors"
+                className={`flex items-center gap-2 ${item.highlight ? 'text-primary font-semibold' : ''} hover:text-primary transition-colors`}
                 whileHover={{ scale: 1.05 }}
               >
                 <item.icon className="w-4 h-4 text-primary" />

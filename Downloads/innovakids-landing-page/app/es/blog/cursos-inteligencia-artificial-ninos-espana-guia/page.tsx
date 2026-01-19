@@ -201,7 +201,7 @@ export default function GuiaCompletaEspana() {
                       </tr>
                       <tr className="border-b">
                         <td className="p-4 font-medium">Precio aprox.</td>
-                        <td className="p-4">$200 USD</td>
+                        <td className="p-4">$197 USD</td>
                         <td className="p-4">€300-600</td>
                         <td className="p-4">€50-150</td>
                       </tr>

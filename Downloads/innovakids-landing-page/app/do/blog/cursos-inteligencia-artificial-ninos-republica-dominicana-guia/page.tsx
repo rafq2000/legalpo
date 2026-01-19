@@ -83,7 +83,7 @@ export default function BlogCursosIANinosRD() {
 
               <h2>¿Cuánto Cuesta un Curso de IA para Niños en RD?</h2>
               <p>
-                El programa completo de InnovaKids cuesta <strong>$200 USD</strong> e incluye:
+                El programa completo de InnovaKids cuesta <strong>$197 USD</strong> e incluye:
               </p>
               <ul>
                 <li>10 clases en vivo de 90 minutos cada una</li>
@@ -96,7 +96,7 @@ export default function BlogCursosIANinosRD() {
               </ul>
 
               <h2>Métodos de Pago en República Dominicana</h2>
-              <p>Aceptamos tarjetas de crédito/débito, transferencia bancaria y PayPal. El precio es $200 USD.</p>
+              <p>Aceptamos tarjetas de crédito/débito, transferencia bancaria y PayPal. El precio es $197 USD.</p>
 
               <h2>Testimonios de Familias Dominicanas</h2>
               <blockquote>

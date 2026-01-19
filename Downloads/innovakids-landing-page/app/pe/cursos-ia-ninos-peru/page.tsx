@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { CurriculumSection } from "@/components/curriculum-section"
+import { PricingSection } from "@/components/pricing-section"
 import { Navigation } from "@/components/navigation"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Users, Clock, Shield, Star, CheckCircle, Zap, Target } from "lucide-react"
@@ -9,7 +11,7 @@ export const metadata: Metadata = {
   description:
     "Curso de inteligencia artificial para niños 8-14 años en Perú. Aprende ChatGPT, Midjourney, crea apps. 10 clases, grupos de máx 5 niños. Evaluación gratis.",
   keywords:
-    "cursos de ia para niños peru, clases inteligencia artificial lima, curso ia niños arequipa, programación ia niños trujillo, innovakids peru",
+    "cursos de ia para niños peru, clases inteligencia artificial lima, curso ia niños arequipa, programación ia niños trujillo, innovakids peru, curso inteligencia artificial niños, clases online ia niños, escuela de inteligencia artificial para niños, aprender chatgpt para niños, tecnología para niños peru",
   alternates: {
     canonical: "https://www.innovakidslatam.com/pe/cursos-ia-ninos-peru",
     languages: {
@@ -61,7 +63,7 @@ export default function CursosIANinosPeru() {
               <span className="font-medium">Perú</span>
             </div>
 
-            <h1 className="mx-auto max-w-4xl text-4xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
+            <h1 className="mx-auto max-w-4xl text-3xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl px-2">
               Cursos de Inteligencia Artificial para Niños en Perú
             </h1>
 
@@ -163,132 +165,10 @@ export default function CursosIANinosPeru() {
         </section>
 
         {/* WHAT THEY'LL LEARN */}
-        <section className="bg-muted/30 py-20 md:py-28">
-          <div className="container mx-auto px-4">
-            <h2 className="mb-4 text-center text-3xl font-bold md:text-4xl">¿Qué Aprenderá Tu Hijo en 10 Clases?</h2>
-            <p className="mx-auto mb-16 max-w-2xl text-center text-muted-foreground">
-              Proyectos reales que podrá mostrar con orgullo
-            </p>
-
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  icon: "📚",
-                  title: "Comics con IA",
-                  desc: "Crearán historias ilustradas usando ChatGPT y Midjourney",
-                  tools: "ChatGPT, Midjourney, Canva",
-                },
-                {
-                  icon: "🎵",
-                  title: "Música Original",
-                  desc: "Compondrán canciones personalizadas con Suno AI",
-                  tools: "Suno AI, udio.com",
-                },
-                {
-                  icon: "🎬",
-                  title: "Videos Profesionales",
-                  desc: "Editarán videos con efectos especiales usando IA",
-                  tools: "Runway, Descript, CapCut",
-                },
-                {
-                  icon: "📱",
-                  title: "Apps Funcionales",
-                  desc: "Programarán aplicaciones reales con asistencia de IA",
-                  tools: "Cursor, Replit, Bolt.new",
-                },
-                {
-                  icon: "🤖",
-                  title: "Chatbots Inteligentes",
-                  desc: "Construirán asistentes virtuales personalizados",
-                  tools: "Make.com, GPT-4",
-                },
-                {
-                  icon: "🎮",
-                  title: "Videojuegos",
-                  desc: "Desarrollarán juegos desde cero con ayuda de IA",
-                  tools: "GPT-4, Phaser, Replit",
-                },
-              ].map((project, i) => (
-                <div key={i} className="rounded-2xl bg-card p-6 transition-all hover:shadow-lg">
-                  <div className="mb-4 text-4xl">{project.icon}</div>
-                  <h3 className="mb-2 text-xl font-bold">{project.title}</h3>
-                  <p className="mb-4 text-muted-foreground">{project.desc}</p>
-                  <div className="text-sm text-primary">Herramientas: {project.tools}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <CurriculumSection />
 
         {/* PRICING */}
-        <section className="py-20 md:py-28" id="precio">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">Inversión en el Futuro de Tu Hijo</h2>
-            <p className="mx-auto mb-12 max-w-2xl text-muted-foreground">
-              Programa completo de 10 clases en vivo con grupos de máximo 5 niños
-            </p>
-
-            <div className="mx-auto max-w-md rounded-3xl bg-gradient-to-br from-[#D91023] to-[#8B0000] p-8 text-white shadow-2xl">
-              <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-green-500/20 px-4 py-1 text-sm font-medium text-green-400">
-                <Zap className="h-4 w-4" />
-                Oferta Lanzamiento 2026 - 40% OFF
-              </div>
-              <div className="mb-6">
-                <div className="text-xl text-white/50 line-through">$497 USD</div>
-                <span className="text-5xl font-bold">$297</span>
-                <span className="text-xl"> USD</span>
-                <p className="mt-2 text-yellow-400 font-medium">Ahorra $200 USD</p>
-              </div>
-
-              <ul className="mb-8 space-y-3 text-left">
-                {[
-                  "10 clases en vivo (90 min c/u)",
-                  "Grupos de máximo 5 niños",
-                  "Portafolio web con 10 proyectos",
-                  "Kit de Prompts exclusivos ($97 valor)",
-                  "Masterclass Seguridad para Padres ($150)",
-                  "Acceso de por vida a grabaciones",
-                  "Garantía de aprendizaje con tutoría 1-1",
-                  "Garantía de 10 días - devolución total",
-                ].map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 shrink-0 text-white" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href={calendlyLink}
-                target="_blank"
-                className="mb-4 block w-full rounded-full bg-white py-4 text-center text-lg font-bold text-[#D91023] transition-all hover:scale-105 hover:shadow-lg"
-              >
-                Reservar Mi Lugar Ahora
-              </Link>
-
-              <p className="text-sm text-white/70">O reserva con $50 USD y paga el resto antes de iniciar</p>
-
-              {/* Early Bird */}
-              <div className="mt-6 pt-6 border-t border-white/20">
-                <p className="text-yellow-400 font-medium mb-1">Early Bird: Primeros 10 inscritos</p>
-                <p className="text-white text-xl font-bold">
-                  $247 USD <span className="text-white/60 text-sm font-normal">(50% OFF)</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Payment Methods */}
-            <div className="mt-12">
-              <p className="mb-4 text-sm text-muted-foreground">Métodos de pago aceptados:</p>
-              <div className="flex flex-wrap items-center justify-center gap-4 text-muted-foreground">
-                <span className="rounded-lg bg-card px-4 py-2">💳 Tarjeta de crédito/débito</span>
-                <span className="rounded-lg bg-card px-4 py-2">📱 Yape</span>
-                <span className="rounded-lg bg-card px-4 py-2">📱 Plin</span>
-                <span className="rounded-lg bg-card px-4 py-2">🌐 PayPal</span>
-              </div>
-            </div>
-          </div>
-        </section>
+        <PricingSection />
 
         {/* TESTIMONIALS */}
         <section className="bg-muted/30 py-20 md:py-28">
@@ -367,7 +247,7 @@ export default function CursosIANinosPeru() {
                 },
                 {
                   q: "¿Cuánto cuesta el curso?",
-                  a: "El programa completo tiene un valor de $497 USD, pero actualmente tenemos oferta de lanzamiento 2026 por $297 USD (40% de descuento). Incluye 10 clases, portafolio web, todos los bonos y garantía de 10 días. Puedes reservar con solo $50 USD.",
+                  a: "El programa completo tiene un valor de $497 USD, pero actualmente tenemos oferta de lanzamiento 2026 por $197 USD (60% de descuento). Incluye 10 clases, portafolio web, todos los bonos y garantía de 10 días. Puedes reservar con solo $50 USD.",
                 },
                 {
                   q: "¿Tienen eventos presenciales en Perú?",
@@ -472,7 +352,7 @@ export default function CursosIANinosPeru() {
             },
             offers: {
               "@type": "Offer",
-              price: "297",
+              price: "197",
               priceCurrency: "USD",
               availability: "https://schema.org/InStock",
             },

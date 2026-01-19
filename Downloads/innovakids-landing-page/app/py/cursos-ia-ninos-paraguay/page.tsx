@@ -9,7 +9,7 @@ import WhatsAppButton from "@/components/whatsapp-button"
 export const metadata: Metadata = {
   title: "Cursos de IA para Niños en Paraguay 2026 | Clases Online en Vivo | InnovaKids",
   description:
-    "✅ Cursos de Inteligencia Artificial para mitã'i paraguayos de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $200 USD por 10 clases. ¡Garantía 10 días!",
+    "✅ Cursos de Inteligencia Artificial para mitã'i paraguayos de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $197 USD por 10 clases. ¡Garantía 10 días!",
   keywords:
     "cursos ia niños paraguay, clases inteligencia artificial niños asuncion, cursos programacion niños paraguay",
   openGraph: {
@@ -82,7 +82,7 @@ export default function CursosIANinosParaguayPage() {
               </div>
 
               <div className="bg-[#D52B1E]/10 border border-[#D52B1E]/20 rounded-2xl p-6 max-w-xl mx-auto">
-                <p className="text-lg font-semibold text-[#D52B1E]">💰 Inversión: $200 USD</p>
+                <p className="text-lg font-semibold text-[#D52B1E]">💰 Inversión: $197 USD</p>
                 <p className="text-muted-foreground">
                   10 clases online en vivo (90 min c/u) • Garantía de satisfacción 10 días
                 </p>

@@ -31,14 +31,14 @@ export function StickyFooterCTA() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left">
             <p className="text-white font-bold text-lg">🚨 Solo 2 de 20 cupos disponibles</p>
-            <p className="text-gray-400 text-sm">Inicia: 17 de Enero</p>
+            <p className="text-gray-400 text-sm">Inicia: 26 de Enero</p>
           </div>
           <Button
             size="lg"
             onClick={() => scrollToSection("sesion-estrategica")}
             className="bg-[#4DD0E1] hover:bg-[#3BBFD1] text-[#0a1628] px-10 py-6 text-lg font-bold rounded-full shadow-xl hover:shadow-2xl transition-all"
           >
-            Asegurar Cupo Ahora →
+            Agendar Entrevista 1 a 1 →
           </Button>
         </div>
       </div>

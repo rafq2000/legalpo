@@ -10,7 +10,7 @@ import { createMercadoPagoCheckout } from "@/app/actions/mercadopago"
 import { Loader2 } from "lucide-react"
 
 interface MercadoPagoCheckoutProps {
-  paymentOption: "reserve" | "remaining" | "full"
+  paymentOption: string
   amount: number
 }
 

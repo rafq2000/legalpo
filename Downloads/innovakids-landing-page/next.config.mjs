@@ -132,6 +132,37 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      // SEO FIX: Redirect duplicate country pages to canonical short URLs
+      {
+        source: '/mexico',
+        destination: '/mx',
+        permanent: true,
+      },
+      {
+        source: '/colombia',
+        destination: '/co',
+        permanent: true,
+      },
+      {
+        source: '/argentina',
+        destination: '/ar',
+        permanent: true,
+      },
+      {
+        source: '/chile',
+        destination: '/cl',
+        permanent: true,
+      },
+      {
+        source: '/peru',
+        destination: '/pe',
+        permanent: true,
+      },
+      {
+        source: '/espana',
+        destination: '/es',
+        permanent: true,
+      },
     ]
   },
 }

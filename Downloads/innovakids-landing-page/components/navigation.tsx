@@ -77,7 +77,7 @@ export function Navigation() {
             className="relative"
           >
             <Image
-              src="/logo-innovakids.png"
+              src="/logo-innovakids-v4.png"
               alt="Innovakids"
               width={240}
               height={80}
@@ -87,36 +87,38 @@ export function Navigation() {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link, index) => (
-              <motion.a
-                key={link.href}
-                href={link.href}
-                className={`relative text-white hover:text-primary font-medium transition-colors group ${activeSection === link.section ? "text-primary" : ""
-                  }`}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                {link.label}
-                {/* Animated underline - always visible when active */}
-                <motion.span
-                  className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-primary to-[#8b5cf6]"
-                  initial={{ width: 0 }}
-                  animate={{ width: activeSection === link.section ? "100%" : 0 }}
-                  whileHover={{ width: "100%" }}
-                  transition={{ duration: 0.3 }}
-                />
-                {/* Active dot indicator */}
-                {activeSection === link.section && (
+          <div className="hidden md:flex items-center gap-6 xl:gap-8">
+            <div className="flex items-center gap-6">
+              {navLinks.map((link, index) => (
+                <motion.a
+                  key={link.href}
+                  href={link.href}
+                  className={`relative text-sm xl:text-base text-white hover:text-primary font-medium transition-colors group ${activeSection === link.section ? "text-primary" : ""
+                    }`}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  {link.label}
+                  {/* Animated underline - always visible when active */}
                   <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary"
+                    className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-primary to-[#8b5cf6]"
+                    initial={{ width: 0 }}
+                    animate={{ width: activeSection === link.section ? "100%" : 0 }}
+                    whileHover={{ width: "100%" }}
+                    transition={{ duration: 0.3 }}
                   />
-                )}
-              </motion.a>
-            ))}
+                  {/* Active dot indicator */}
+                  {activeSection === link.section && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute -top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary"
+                    />
+                  )}
+                </motion.a>
+              ))}
+            </div>
 
             {/* Premium CTA Button */}
             <motion.div
@@ -126,10 +128,11 @@ export function Navigation() {
             >
               <Button
                 asChild
-                className="magnetic-btn relative overflow-hidden bg-gradient-to-r from-primary to-[#26C6DA] hover:from-[#26C6DA] hover:to-primary text-[#0a1628] px-6 py-3 font-bold text-sm uppercase tracking-wide rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
+                className="magnetic-btn relative overflow-hidden bg-gradient-to-r from-primary to-[#26C6DA] hover:from-[#26C6DA] hover:to-primary text-[#0a1628] px-5 py-2 xl:px-6 xl:py-3 font-bold text-xs xl:text-sm uppercase tracking-wide rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
               >
                 <a href={calendlyUrl} target="_blank" rel="noopener noreferrer">
-                  <span className="relative z-10">AGENDAR EVALUACIÓN</span>
+                  <span className="relative z-10 hidden lg:inline">AGENDAR EVALUACIÓN</span>
+                  <span className="relative z-10 lg:hidden">AGENDAR</span>
                   <span className="absolute inset-0 shimmer opacity-0 hover:opacity-100" />
                 </a>
               </Button>
@@ -164,8 +167,8 @@ export function Navigation() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
                   className={`font-medium transition-colors py-3 px-4 rounded-lg min-h-[44px] flex items-center ${activeSection === link.section
-                      ? "text-primary bg-primary/10"
-                      : "text-white hover:text-primary hover:bg-primary/5"
+                    ? "text-primary bg-primary/10"
+                    : "text-white hover:text-primary hover:bg-primary/5"
                     }`}
                   onClick={() => setIsOpen(false)}
                 >

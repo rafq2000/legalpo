@@ -138,7 +138,7 @@ export function KeyFeaturesSection() {
           className="mt-16 flex flex-wrap justify-center gap-8"
         >
           {[
-            { icon: Award, value: "250+", label: "Familias Felices" },
+            { icon: Award, value: "252", label: "Familias Felices" },
             { icon: Sparkles, value: "5.0", label: "Rating Promedio" },
             { icon: Heart, value: "100%", label: "Recomendación" },
           ].map((stat, i) => (

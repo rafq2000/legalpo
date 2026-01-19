@@ -7,9 +7,9 @@ import { MapPin, Users, Clock, Shield } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "InnovaKids México | Cursos de IA para Niños | CDMX, Guadalajara, Monterrey",
+  title: "Curso de Inteligencia Artificial para Niños en México | InnovaKids 🇲🇽",
   description:
-    "Cursos de inteligencia artificial para niños en México. CDMX, Guadalajara, Monterrey y más. Online con grupos de 5 alumnos. $200 USD. 🇲🇽",
+    "Clases de IA online para niños en México (CDMX, Guadalajara, Monterrey). Tu hijo aprenderá a usar ChatGPT y herramientas de IA para crear tecnología, no solo consumirla. Grupos pequeños.",
   keywords: [
     "ia para niños mexico",
     "cursos ia niños cdmx",
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
     "innovakids mexico",
   ],
   openGraph: {
-    title: "InnovaKids México | Cursos de IA para Niños",
-    description: "Cursos de inteligencia artificial para niños en todo México. Grupos de 5 alumnos.",
+    title: "Curso IA Niños México $197 | Tu Hijo Crea Apps Reales",
+    description: "Tu hijo aprende a CREAR con IA. 10 clases, grupos de 5. Apps, juegos, startups. 500+ graduados.",
     url: "https://www.innovakidslatam.com/mx",
     locale: "es_MX",
   },
@@ -175,7 +175,7 @@ export default function MexicoHubPage() {
             <h2 className="text-3xl font-bold text-white mb-8">Inversión para Familias Mexicanas</h2>
 
             <div className="bg-gradient-to-br from-[#0f2744] to-[#1a3a5c] rounded-3xl p-10 border border-[#4DD0E1]/30">
-              <div className="text-5xl font-bold text-white mb-2">$200 USD</div>
+              <div className="text-5xl font-bold text-white mb-2">$197 USD</div>
               <p className="text-gray-400 mb-6">≈ $3,600 MXN • 10 clases completas</p>
 
               <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-300 mb-8">
@@ -198,7 +198,7 @@ export default function MexicoHubPage() {
           <div className="container mx-auto px-6 max-w-3xl text-center">
             <h2 className="text-3xl font-bold text-white mb-6">Dale a tu hijo la ventaja del futuro</h2>
             <p className="text-xl text-gray-400 mb-8">
-              Más de 2,000 niños mexicanos ya dominan la IA. ¿El tuyo será el siguiente?
+              Más de 252 niños mexicanos ya dominan la IA. ¿El tuyo será el siguiente?
             </p>
 
             <Link href="/mx/cursos-ia-ninos-mexico">

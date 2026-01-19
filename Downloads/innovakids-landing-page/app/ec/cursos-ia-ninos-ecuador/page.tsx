@@ -9,7 +9,7 @@ import WhatsAppButton from "@/components/whatsapp-button"
 export const metadata: Metadata = {
   title: "Cursos de IA para Niños en Ecuador 2026 | Clases Online en Vivo | InnovaKids",
   description:
-    "✅ Cursos de Inteligencia Artificial para niños ecuatorianos de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $200 USD por 10 clases. ¡Garantía 10 días!",
+    "✅ Cursos de Inteligencia Artificial para niños ecuatorianos de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $197 USD por 10 clases. ¡Garantía 10 días!",
   keywords:
     "cursos ia niños ecuador, clases inteligencia artificial niños quito, cursos programacion niños guayaquil, ia para niños ecuador",
   openGraph: {
@@ -82,7 +82,7 @@ export default function CursosIANinosEcuadorPage() {
               </div>
 
               <div className="bg-[#0033A0]/10 border border-[#0033A0]/20 rounded-2xl p-6 max-w-xl mx-auto">
-                <p className="text-lg font-semibold text-[#0033A0]">💰 Inversión: $200 USD</p>
+                <p className="text-lg font-semibold text-[#0033A0]">💰 Inversión: $197 USD</p>
                 <p className="text-muted-foreground">
                   10 clases online en vivo (90 min c/u) • Garantía de satisfacción 10 días
                 </p>

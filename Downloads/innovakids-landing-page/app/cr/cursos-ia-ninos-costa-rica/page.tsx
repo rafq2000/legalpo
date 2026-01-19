@@ -9,7 +9,7 @@ import WhatsAppButton from "@/components/whatsapp-button"
 export const metadata: Metadata = {
   title: "Cursos de IA para Niños en Costa Rica 2026 | Clases Online en Vivo | InnovaKids",
   description:
-    "✅ Cursos de Inteligencia Artificial para niños ticos de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $200 USD por 10 clases. ¡Garantía 10 días! ¡Pura vida!",
+    "✅ Cursos de Inteligencia Artificial para niños ticos de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $197 USD por 10 clases. ¡Garantía 10 días! ¡Pura vida!",
   keywords:
     "cursos ia niños costa rica, clases inteligencia artificial niños san jose, cursos programacion niños costa rica, ia para niños ticos",
   openGraph: {
@@ -43,7 +43,7 @@ const schemaData = {
   inLanguage: "es",
   offers: {
     "@type": "Offer",
-    price: "200",
+    price: "197",
     priceCurrency: "USD",
     availability: "https://schema.org/LimitedAvailability",
   },
@@ -109,7 +109,7 @@ export default function CursosIANinosCostaRicaPage() {
               </div>
 
               <div className="bg-[#002B7F]/10 border border-[#002B7F]/20 rounded-2xl p-6 max-w-xl mx-auto">
-                <p className="text-lg font-semibold text-[#002B7F]">💰 Inversión: $200 USD</p>
+                <p className="text-lg font-semibold text-[#002B7F]">💰 Inversión: $197 USD</p>
                 <p className="text-muted-foreground">
                   10 clases online en vivo (90 min c/u) • Garantía de satisfacción 10 días
                 </p>

@@ -202,7 +202,7 @@ export default function GuiaCursosIAColombia() {
                     {[
                       { criteria: "Herramientas IA", innovakids: "10+", others: "2-4" },
                       { criteria: "Tamaño Clase", innovakids: "Máx 5", others: "15-30" },
-                      { criteria: "Precio", innovakids: "$200 USD", others: "$300-500 USD" },
+                      { criteria: "Precio", innovakids: "$197 USD", others: "$300-500 USD" },
                       { criteria: "Garantía", innovakids: "10 días", others: "No" },
                       { criteria: "Proyectos Reales", innovakids: "10+", others: "3-5" },
                     ].map((row, i) => (
@@ -220,7 +220,7 @@ export default function GuiaCursosIAColombia() {
                 <div className="mb-2 text-sm text-[#FCD116]">🏆 RECOMENDADO</div>
                 <h3 className="mb-2 text-xl font-bold">InnovaKids - Mejor Opción para Colombia</h3>
                 <p className="mb-4 text-white/80">
-                  Programa completo de 10 clases, grupos de máximo 5 niños, 10+ herramientas de IA, $200 USD con
+                  Programa completo de 10 clases, grupos de máximo 5 niños, 10+ herramientas de IA, $197 USD con
                   garantía de 10 días.
                 </p>
                 <Link
@@ -367,7 +367,7 @@ export default function GuiaCursosIAColombia() {
                 <CheckCircle className="h-4 w-4" /> Garantía 10 días
               </span>
               <span className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4" /> $200 USD total
+                <CheckCircle className="h-4 w-4" /> $197 USD total
               </span>
             </div>
           </div>

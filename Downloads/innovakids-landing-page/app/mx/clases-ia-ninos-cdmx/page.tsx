@@ -9,7 +9,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Clases de IA para Niños en CDMX 2026 | Ciudad de México | InnovaKids",
   description:
-    "Clases de inteligencia artificial para niños en Ciudad de México. Horarios CDMX, testimonios locales, prueba gratis. Polanco, Roma, Condesa. $200 USD 🏙️",
+    "Clases de inteligencia artificial para niños en Ciudad de México. Horarios CDMX, testimonios locales, prueba gratis. Polanco, Roma, Condesa. $197 USD 🏙️",
   keywords: [
     "clases de ia para niños cdmx",
     "cursos ia niños ciudad de mexico",
@@ -51,7 +51,7 @@ const jsonLd = {
     ratingValue: "4.9",
     reviewCount: "312",
   },
-  priceRange: "$200 USD",
+  priceRange: "$197 USD",
 }
 
 export default function CDMXPage() {
@@ -208,7 +208,7 @@ export default function CDMXPage() {
             <div className="bg-gradient-to-br from-[#0f2744] to-[#1a3a5c] rounded-3xl p-10 border border-[#4DD0E1]/30">
               <h2 className="text-2xl font-bold text-white mb-6">Programa Completo para Niños de CDMX</h2>
 
-              <div className="text-5xl font-bold text-white mb-2">$200 USD</div>
+              <div className="text-5xl font-bold text-white mb-2">$197 USD</div>
               <p className="text-gray-400 mb-6">≈ $3,600 MXN • 10 clases en vivo</p>
 
               <div className="grid grid-cols-2 gap-3 max-w-md mx-auto mb-8 text-left text-sm">
@@ -242,7 +242,7 @@ export default function CDMXPage() {
         <section className="py-24 bg-[#0a1628]">
           <div className="container mx-auto px-6 max-w-3xl text-center">
             <h2 className="text-3xl font-bold text-white mb-6">¿Tu hijo será el próximo creador de IA en CDMX?</h2>
-            <p className="text-xl text-gray-400 mb-8">Solo quedan 2 cupos para el grupo que inicia el 17 de Enero.</p>
+            <p className="text-xl text-gray-400 mb-8">Cupos limitados para el grupo que inicia el 26 de Enero.</p>
 
             <Link href="/#sesion-estrategica">
               <Button className="bg-white hover:bg-gray-100 text-[#0a1628] px-16 py-8 text-2xl font-bold rounded-full shadow-2xl hover:scale-105 transition-all">

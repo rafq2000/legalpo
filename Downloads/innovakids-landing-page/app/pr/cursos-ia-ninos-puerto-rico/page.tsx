@@ -7,7 +7,7 @@ import Link from "next/link"
 
 export const metadata: Metadata = {
     title: "Cursos de IA para Niños en Puerto Rico 2026 | InnovaKids 🇵🇷",
-    description: "Cursos de inteligencia artificial para niños boricuas. ChatGPT, videojuegos, arte digital. $297 USD.",
+    description: "Cursos de inteligencia artificial para niños boricuas. ChatGPT, videojuegos, arte digital. $197 USD.",
     keywords: ["cursos ia niños puerto rico", "clases ia san juan", "aprender ia niños boricuas"],
     alternates: { canonical: "https://www.innovakidslatam.com/pr/cursos-ia-ninos-puerto-rico" },
 }

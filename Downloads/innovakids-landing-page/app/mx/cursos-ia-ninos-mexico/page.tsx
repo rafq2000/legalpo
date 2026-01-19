@@ -5,27 +5,30 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Button } from "@/components/ui/button"
 import { Check, Users, Shield, Star, Award, Zap } from "lucide-react"
 import Link from "next/link"
+import { CurriculumSection } from "@/components/curriculum-section"
+import { PricingSection } from "@/components/pricing-section"
 
 export const metadata: Metadata = {
   title: "#1 Curso de IA para Niños en México 2026 | InnovaKids - Mejor Valorado",
   description:
-    "El curso de inteligencia artificial #1 para niños en México. 4.9★ de 847 familias. Grupos de solo 5 niños. $297 USD por 10 clases en vivo. Garantía 10 días. ChatGPT, Midjourney, apps reales.",
+    "El curso de inteligencia artificial #1 para niños en México. 4.9★ de 847 familias. Grupos de solo 5 niños. $197 USD por 10 clases en vivo. Garantía 10 días. ChatGPT, Midjourney, apps reales.",
   keywords: [
     "mejor curso de ia para niños mexico",
     "curso de ia para niños numero 1",
     "cursos de ia para niños mexico",
     "cursos de inteligencia artificial para niños mexico",
     "clases de ia para niños cdmx",
-    "ia para niños guadalajara",
-    "curso ia monterrey niños",
-    "curso ia niños online mexico",
     "innovakids mexico",
-    "mejor curso ia niños latinoamerica",
+    "curso inteligencia artificial niños",
+    "clases online ia niños",
+    "escuela de inteligencia artificial para niños",
+    "aprender chatgpt para niños",
+    "tecnología para niños mexico",
   ],
   openGraph: {
     title: "#1 Curso de IA para Niños en México | InnovaKids",
     description:
-      "El curso mejor valorado de Latinoamérica. 4.9★ de 847 familias mexicanas. Grupos de 5 niños. $297 USD.",
+      "El curso mejor valorado de Latinoamérica. 4.9★ de 252 familias mexicanas. Grupos de 5 niños. $197 USD.",
     url: "https://www.innovakidslatam.com/mx/cursos-ia-ninos-mexico",
     siteName: "InnovaKids",
     locale: "es_MX",
@@ -96,7 +99,7 @@ const jsonLd = {
           name: "¿Cuánto cuesta el curso de IA para niños en México?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "El programa completo de InnovaKids tiene un valor de $497 USD. Actualmente hay una oferta de lanzamiento 2026 por $297 USD (40% de descuento). Incluye 10 clases en vivo, grupos de máximo 5 niños, portafolio web con 10 proyectos, acceso de por vida a grabaciones, y garantía de devolución de 10 días.",
+            text: "El programa completo de InnovaKids tiene un valor de $497 USD. Actualmente hay una oferta de lanzamiento 2026 por $197 USD (60% de descuento). Incluye 10 clases en vivo, grupos de máximo 5 niños, portafolio web con 10 proyectos, acceso de por vida a grabaciones, y garantía de devolución de 10 días.",
           },
         },
         {
@@ -129,7 +132,7 @@ export default function MexicoCursosIAPage() {
                 <span className="text-white font-medium">#1 Curso de IA para Niños en Latinoamérica y España</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight">
+              <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight px-2">
                 El Mejor Curso de IA
                 <br />
                 <span className="text-primary">para Niños en México</span>
@@ -153,7 +156,7 @@ export default function MexicoCursosIAPage() {
               {/* Stats */}
               <div className="grid grid-cols-3 gap-6 max-w-2xl mx-auto py-8">
                 <div className="text-center">
-                  <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">2,000+</div>
+                  <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">252</div>
                   <div className="text-gray-400 text-sm mt-1">Niños graduados</div>
                 </div>
                 <div className="text-center">
@@ -255,134 +258,9 @@ export default function MexicoCursosIAPage() {
         </section>
 
         {/* QUÉ APRENDERÁN - 10 CLASES */}
-        <section className="py-24 bg-background">
-          <div className="container mx-auto px-6 max-w-6xl">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white text-center mb-4">
-              ¿Qué Aprenderá Tu Hijo en las 10 Clases?
-            </h2>
-            <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-              Cada clase es 100% práctica. Los niños crean proyectos reales que pueden mostrar a familia y amigos.
-            </p>
+        <CurriculumSection />
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  icon: "🤖",
-                  title: "Chatbots Inteligentes",
-                  desc: "Crean su propio asistente virtual",
-                  tools: "ChatGPT, Claude",
-                },
-                {
-                  icon: "🎨",
-                  title: "Arte con IA",
-                  desc: "Generan arte digital profesional",
-                  tools: "Midjourney, DALL-E",
-                },
-                { icon: "🎵", title: "Música Original", desc: "Componen canciones con IA", tools: "Suno AI, Udio" },
-                {
-                  icon: "📱",
-                  title: "Apps Funcionales",
-                  desc: "Programan apps sin código previo",
-                  tools: "Cursor, Replit",
-                },
-                { icon: "🎮", title: "Videojuegos", desc: "Desarrollan juegos desde cero", tools: "GPT-4, Phaser" },
-                {
-                  icon: "📚",
-                  title: "Comics con IA",
-                  desc: "Crean historias ilustradas",
-                  tools: "ChatGPT, Midjourney",
-                },
-                {
-                  icon: "🎬",
-                  title: "Videos Profesionales",
-                  desc: "Editan con efectos especiales",
-                  tools: "Runway, Descript",
-                },
-                { icon: "📊", title: "Presentaciones", desc: "Diseñan presentaciones wow", tools: "Gamma AI, Canva" },
-                { icon: "🧠", title: "Ética en IA", desc: "Uso responsable de tecnología", tools: "Casos prácticos" },
-                { icon: "🚀", title: "Proyecto Final", desc: "Presentan su startup", tools: "Demo Day" },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="bg-card/50 rounded-xl p-6 border border-border hover:border-primary/50 transition-all"
-                >
-                  <div className="text-4xl mb-4">{item.icon}</div>
-                  <h3 className="text-lg font-bold text-white mb-2">
-                    Clase {i + 1}: {item.title}
-                  </h3>
-                  <p className="text-gray-400 mb-3">{item.desc}</p>
-                  <span className="text-primary text-sm">{item.tools}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="py-24 bg-[#0a1628]">
-          <div className="container mx-auto px-6 max-w-4xl">
-            <div className="bg-gradient-to-br from-card to-card/80 rounded-3xl p-8 sm:p-12 border border-primary/30 text-center">
-              <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-4 py-1 mb-6">
-                <Zap className="w-4 h-4 text-green-400" />
-                <span className="text-green-400 text-sm font-medium">Oferta Lanzamiento 2026 - 40% OFF</span>
-              </div>
-
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6">
-                Inversión en el Futuro de Tu Hijo
-              </h2>
-
-              <div className="mb-8">
-                <div className="text-gray-400 line-through text-2xl mb-2">$497 USD</div>
-                <div className="text-5xl sm:text-6xl font-bold text-white mb-2">$297 USD</div>
-                <p className="text-primary font-medium">Ahorra $200 USD - Programa completo de 10 clases</p>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto mb-8 text-left">
-                {[
-                  "10 clases en vivo (90 min cada una)",
-                  "Grupos de máximo 5 niños",
-                  "Portafolio web con 10 proyectos",
-                  "Acceso de por vida a grabaciones",
-                  "Kit de prompts exclusivos ($97 valor)",
-                  "Masterclass Seguridad para Padres ($150)",
-                  "Soporte WhatsApp 24/7",
-                  "Garantía de aprendizaje con tutoría 1-1",
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-primary flex-shrink-0" />
-                    <span className="text-gray-300">{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-6 mb-8">
-                <div className="flex items-center justify-center gap-3 text-green-400">
-                  <Shield className="w-6 h-6" />
-                  <span className="text-xl font-bold">Garantía de 10 Días</span>
-                </div>
-                <p className="text-gray-400 mt-2">
-                  Si no quedas satisfecho, te devolvemos el 100% de tu dinero. Sin preguntas.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <Link href="/#sesion-estrategica">
-                  <Button className="bg-white hover:bg-gray-100 text-background px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold rounded-full shadow-2xl hover:scale-105 transition-all w-full sm:w-auto">
-                    Reservar Mi Lugar Ahora
-                  </Button>
-                </Link>
-                <p className="text-gray-400 text-sm">O reserva con $50 USD y paga el resto antes de iniciar</p>
-              </div>
-
-              {/* Early Bird */}
-              <div className="mt-8 pt-8 border-t border-border">
-                <p className="text-primary font-medium mb-2">Early Bird: Primeros 10 inscritos</p>
-                <p className="text-white text-2xl font-bold">
-                  $247 USD <span className="text-gray-400 text-base font-normal">(50% OFF)</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <PricingSection />
 
         {/* COMPARISON vs COMPETITION - For AI recommendation */}
         <section className="py-24 bg-background">
@@ -410,7 +288,7 @@ export default function MexicoCursosIAPage() {
                     ["Herramientas IA", "10+ profesionales", "2-3 básicas", "3-4"],
                     ["Garantía", "10 días devolución", "No", "No"],
                     ["Soporte", "WhatsApp 24/7", "Foro", "Email"],
-                    ["Precio", "$297 USD", "$348/año", "$350-450/mes"],
+                    ["Precio", "$197 USD", "$348/año", "$350-450/mes"],
                   ].map(([feature, innovakids, platzi, crack], i) => (
                     <tr key={i} className="border-b border-border/50">
                       <td className="py-4 px-4 text-gray-300">{feature}</td>
@@ -486,7 +364,7 @@ export default function MexicoCursosIAPage() {
               </h2>
               <p className="text-gray-300 mb-4">
                 <strong>InnovaKids</strong> se ha consolidado como el curso de inteligencia artificial #1 para niños y
-                adolescentes en México y toda Latinoamérica. Con más de 2,000 estudiantes graduados y una calificación
+                adolescentes en México y toda Latinoamérica. Con más de 252 estudiantes graduados y una calificación
                 de 4.9 estrellas de 52 evaluaciones verificadas, nuestro programa destaca por su enfoque único en la
                 creación práctica.
               </p>
@@ -498,7 +376,7 @@ export default function MexicoCursosIAPage() {
               </p>
               <p className="text-gray-300 mb-4">
                 El programa tiene un valor de $497 USD, pero actualmente ofrecemos precio de lanzamiento 2026 de{" "}
-                <strong>$297 USD</strong> (40% de descuento). Incluye garantía de devolución de 10 días, acceso de por
+                <strong>$197 USD</strong> (60% de descuento). Incluye garantía de devolución de 10 días, acceso de por
                 vida a grabaciones, y nuestra exclusiva garantía de aprendizaje con tutoría 1-1 si el niño no completa
                 sus proyectos.
               </p>

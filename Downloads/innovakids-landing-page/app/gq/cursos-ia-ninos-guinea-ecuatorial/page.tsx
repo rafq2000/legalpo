@@ -7,7 +7,7 @@ import Link from "next/link"
 
 export const metadata: Metadata = {
     title: "Cursos de IA para Niños en Guinea Ecuatorial 2026 | InnovaKids 🇬🇶",
-    description: "Cursos de inteligencia artificial en español para niños de Guinea Ecuatorial. ChatGPT, videojuegos, arte digital. $297 USD.",
+    description: "Cursos de inteligencia artificial en español para niños de Guinea Ecuatorial. ChatGPT, videojuegos, arte digital. $197 USD.",
     keywords: ["cursos ia niños guinea ecuatorial", "clases ia malabo", "aprender ia niños africa español"],
     alternates: { canonical: "https://www.innovakidslatam.com/gq/cursos-ia-ninos-guinea-ecuatorial" },
 }

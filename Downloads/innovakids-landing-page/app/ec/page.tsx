@@ -7,9 +7,9 @@ import { CheckCircle, ArrowRight, MessageCircle, MapPin } from "lucide-react"
 import WhatsAppButton from "@/components/whatsapp-button"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños en Ecuador | Quito, Guayaquil | InnovaKids",
+  title: "Curso IA Niños Ecuador $197 | Tu Hijo Crea Apps Reales | InnovaKids 🇪🇨",
   description:
-    "Cursos de Inteligencia Artificial para niños en Ecuador. Clases online en vivo desde Quito, Guayaquil, Cuenca y todo el país. $200 USD - 10 clases.",
+    "Tu hijo aprende a CREAR con IA en Ecuador. 10 clases en vivo, grupos de 5 niños. Quito, Guayaquil, Cuenca. Crea apps, juegos, startups. 500+ graduados. Garantía 10 días.",
   alternates: {
     canonical: "https://www.innovakidslatam.com/ec",
   },
@@ -58,7 +58,7 @@ export default function EcuadorHubPage() {
               <div className="flex flex-wrap justify-center gap-4">
                 <div className="flex items-center gap-2 bg-card/50 px-4 py-2 rounded-full">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span>$200 USD - 10 Clases</span>
+                  <span>$197 USD - 10 Clases</span>
                 </div>
                 <div className="flex items-center gap-2 bg-card/50 px-4 py-2 rounded-full">
                   <CheckCircle className="h-5 w-5 text-green-500" />

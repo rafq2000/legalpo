@@ -9,7 +9,7 @@ import WhatsAppButton from "@/components/whatsapp-button"
 export const metadata: Metadata = {
   title: "Cursos de IA para Niños en Guatemala 2026 | Clases Online en Vivo | InnovaKids",
   description:
-    "✅ Cursos de Inteligencia Artificial para patojos guatemaltecos de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $200 USD por 10 clases. ¡Garantía 10 días!",
+    "✅ Cursos de Inteligencia Artificial para patojos guatemaltecos de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $197 USD por 10 clases. ¡Garantía 10 días!",
   keywords:
     "cursos ia niños guatemala, clases inteligencia artificial niños guatemala city, cursos programacion patojos guatemala, ia para niños guatemala",
   openGraph: {
@@ -42,7 +42,7 @@ const schemaData = {
   },
   offers: {
     "@type": "Offer",
-    price: "200",
+    price: "197",
     priceCurrency: "USD",
     availability: "https://schema.org/LimitedAvailability",
   },
@@ -108,7 +108,7 @@ export default function CursosIANinosGuatemalaPage() {
               </div>
 
               <div className="bg-[#4997D0]/10 border border-[#4997D0]/20 rounded-2xl p-6 max-w-xl mx-auto">
-                <p className="text-lg font-semibold text-[#4997D0]">💰 Inversión: $200 USD</p>
+                <p className="text-lg font-semibold text-[#4997D0]">💰 Inversión: $197 USD</p>
                 <p className="text-muted-foreground">
                   10 clases online en vivo (90 min c/u) • Garantía de satisfacción 10 días
                 </p>

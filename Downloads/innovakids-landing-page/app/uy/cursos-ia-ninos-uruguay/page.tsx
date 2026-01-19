@@ -64,7 +64,7 @@ const jsonLd = {
       },
       offers: {
         "@type": "Offer",
-        price: "297",
+        price: "197",
         priceCurrency: "USD",
         availability: "https://schema.org/LimitedAvailability",
         validFrom: "2026-01-01",
@@ -106,7 +106,7 @@ const jsonLd = {
           name: "¿Cuánto cuesta el curso de IA para niños en Uruguay?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "El programa completo tiene un valor de $497 USD. Actualmente hay una oferta de lanzamiento 2026 por $297 USD (40% OFF). Los primeros 10 inscritos obtienen el precio Early Bird de $247 USD (50% OFF). Incluye 10 clases en vivo, grupos de máximo 5 niños, acceso a grabaciones, certificado y garantía de devolución de 10 días.",
+            text: "El programa completo tiene un valor de $497 USD. Actualmente hay una oferta de lanzamiento 2026 por $197 USD (60% OFF). Incluye 10 clases en vivo, grupos de máximo 5 niños, acceso a grabaciones, certificado y garantía de devolución de 10 días.",
           },
         },
         {
@@ -162,7 +162,7 @@ export default function UruguayCursosIAPage() {
               {/* Stats */}
               <div className="grid grid-cols-3 gap-6 max-w-2xl mx-auto py-8">
                 <div className="text-center">
-                  <div className="text-4xl lg:text-5xl font-bold text-[#0038A8]">2,000+</div>
+                  <div className="text-4xl lg:text-5xl font-bold text-[#0038A8]">252</div>
                   <div className="text-gray-400 text-sm mt-1">Niños graduados</div>
                 </div>
                 <div className="text-center">
@@ -411,7 +411,7 @@ export default function UruguayCursosIAPage() {
 
               <div className="mb-8">
                 <div className="text-xl text-gray-400 line-through mb-2">$497 USD</div>
-                <div className="text-6xl font-bold text-white mb-2">$297 USD</div>
+                <div className="text-6xl font-bold text-white mb-2">$197 USD</div>
                 <span className="bg-[#0038A8] text-white px-3 py-1 rounded-full text-sm font-bold">40% OFF</span>
                 <p className="text-gray-400 mt-2">Programa completo de 10 clases</p>
               </div>
@@ -437,9 +437,9 @@ export default function UruguayCursosIAPage() {
               <div className="bg-[#FCD116]/10 border border-[#FCD116]/30 rounded-xl p-6 mb-8">
                 <div className="text-[#FCD116] font-bold mb-2">🔥 EARLY BIRD - Primeros 10 inscritos</div>
                 <div className="text-3xl font-bold text-white">
-                  $247 USD <span className="text-lg text-gray-400">(50% OFF)</span>
+                  $197 USD <span className="text-lg text-gray-400">(60% OFF)</span>
                 </div>
-                <p className="text-gray-400 mt-2">Ahorra $50 USD adicionales</p>
+                <p className="text-gray-400 mt-2">Aprovecha el precio de lanzamiento</p>
               </div>
 
               <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-6 mb-8">
@@ -539,7 +539,7 @@ export default function UruguayCursosIAPage() {
               <span className="text-[#0038A8]">domine la IA</span>?
             </h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Reservá una clase demo gratuita y descubrí por qué más de 2,000 familias confían en InnovaKids.
+              Reservá una clase demo gratuita y descubrí por qué más de 252 familias confían en InnovaKids.
             </p>
             <Link href="/#sesion-estrategica">
               <Button className="bg-[#FCD116] hover:bg-[#e5bc14] text-[#0a1628] px-12 py-8 text-xl font-bold rounded-full shadow-2xl hover:scale-105 transition-all">

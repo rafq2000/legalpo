@@ -5,9 +5,9 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { ArrowRight, CheckCircle, Target } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "InnovaKids Colombia | IA para Niños | Todas las Ciudades 🇨🇴",
+  title: "Curso de Inteligencia Artificial para Niños en Colombia | InnovaKids 🇨🇴",
   description:
-    "InnovaKids en Colombia: cursos de inteligencia artificial para niños en Bogotá, Medellín, Cali y más. 10 clases, grupos de 5 niños, $200 USD. Evaluación gratis.",
+    "El primer curso de IA para niños en Colombia. Clases online en vivo (Bogotá, Medellín, Cali). Transforma el tiempo de pantalla en habilidades de programación y creatividad con IA.",
   alternates: {
     canonical: "https://www.innovakidslatam.com/co",
   },
@@ -93,7 +93,7 @@ export default function ColombiaHub() {
                 <div className="text-sm text-white/80">Niños máx/grupo</div>
               </div>
               <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
-                <div className="text-3xl font-bold md:text-4xl">$200</div>
+                <div className="text-3xl font-bold md:text-4xl">$197</div>
                 <div className="text-sm text-white/80">USD total</div>
               </div>
             </div>
@@ -172,9 +172,8 @@ export default function ColombiaHub() {
                 <Link
                   key={i}
                   href={city.link}
-                  className={`group rounded-2xl bg-card p-6 transition-all hover:shadow-lg ${
-                    city.featured ? "border-2 border-[#FCD116] md:col-span-2 lg:col-span-1" : ""
-                  }`}
+                  className={`group rounded-2xl bg-card p-6 transition-all hover:shadow-lg ${city.featured ? "border-2 border-[#FCD116] md:col-span-2 lg:col-span-1" : ""
+                    }`}
                 >
                   <div className="mb-4 flex items-center justify-between">
                     <h3 className="text-xl font-bold">

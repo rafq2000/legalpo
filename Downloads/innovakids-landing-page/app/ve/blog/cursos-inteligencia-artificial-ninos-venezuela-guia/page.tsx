@@ -68,7 +68,7 @@ export default function BlogVenezuelaGuiaPage() {
                             <ul className="list-disc list-inside text-gray-300 space-y-2 mb-8">
                                 <li><strong className="text-white">Academias tradicionales:</strong> $400-800 USD por módulo</li>
                                 <li><strong className="text-white">Cursos grabados:</strong> $50-150 USD (sin interacción)</li>
-                                <li><strong className="text-primary">InnovaKids:</strong> $297 USD (10 clases en vivo, grupos de 5)</li>
+                                <li><strong className="text-primary">InnovaKids:</strong> $197 USD (10 clases en vivo, grupos de 5)</li>
                             </ul>
 
                             <h2 className="text-2xl font-bold text-white mt-12 mb-4">¿Por Qué InnovaKids es la Mejor Opción?</h2>

@@ -162,7 +162,7 @@ export default function ArgentinaBlogGuiaPage() {
                       ["Proyectos reales", "10 proyectos", "1-3 ejercicios"],
                       ["Herramientas", "10+ IAs profesionales", "1-2 básicas"],
                       ["Garantía", "10 días devolución", "Sin garantía"],
-                      ["Precio", "$200 USD", "$150-400 USD"],
+                      ["Precio", "$197 USD", "$150-400 USD"],
                       ["Certificado", "Internacional", "Local o ninguno"],
                     ].map(([aspect, innovakids, others], i) => (
                       <tr key={i} className="border-b border-white/5">

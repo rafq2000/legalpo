@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Poppins, Space_Grotesk } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { TrackingPixels } from "@/components/tracking-pixels"
@@ -17,53 +17,32 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
 })
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#030712",
+}
+
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños y Adolescentes 🚀 Clases de Inteligencia Artificial Online 8-17 años | Innovakids",
+  title: "Curso de Inteligencia Artificial para Niños | Crea Apps y Videojuegos | InnovaKids",
   description:
-    "⭐ Los mejores cursos de inteligencia artificial para niños y adolescentes de 8-17 años. Clases de IA online con grupos de 5 alumnos. Aprende cómo enseñar IA a tus hijos en México, Colombia, Argentina, Chile, Perú, España. ¡Solo 2 de 20 cupos disponibles!",
+    "El curso de IA #1 para niños de 8 a 14 años. En 10 clases online en vivo, tu hijo aprenderá a crear sus propias apps, videojuegos y proyectos reales con Inteligencia Artificial. Agenda una evaluación gratis hoy.",
   keywords: [
-    "cursos de ia para niños",
-    "cursos de ia para adolescentes",
-    "clases de inteligencia artificial para niños",
-    "clases de inteligencia artificial para adolescentes",
-    "cursos de inteligencia artificial para niños",
-    "cursos de inteligencia artificial para adolescentes",
-    "ia para niños",
-    "ia para adolescentes",
-    "curso de ia para niños",
-    "curso de ia para adolescentes",
-    "clases de ia para niños",
-    "clases de ia para adolescentes",
-    "curso inteligencia artificial para niños",
-    "curso inteligencia artificial para adolescentes",
-    "cursos ia para niños",
-    "cursos ia para adolescentes",
-    "curso de inteligencia artificial para niños",
-    "curso de inteligencia artificial para adolescentes",
-    "aprender ia para niños",
-    "aprender ia para adolescentes",
-    "educación inteligencia artificial infantil",
-    "educación inteligencia artificial adolescentes",
-    "talleres ia niños online",
-    "talleres ia adolescentes online",
-    "capacitación ia niños",
-    "capacitación ia adolescentes",
-    "escuela ia niños latinoamérica",
-    "escuela ia adolescentes latinoamérica",
-    "academia inteligencia artificial niños",
-    "academia inteligencia artificial adolescentes",
+    "curso inteligencia artificial niños",
+    "curso inteligencia artificial adolescentes",
+    "clases online ia niños",
+    "escuela de inteligencia artificial para niños",
+    "aprender chatgpt para niños",
+    "curso de programación y ia para niños",
+    "talleres de tecnologia para niños",
+    "inteligencia artificial para niños de 8 a 14 años",
+    "curso de verano inteligencia artificial",
+    "clases extraescolares tecnologia",
     "codingal alternativa",
-    "mejor curso ia niños latam",
-    "mejor curso ia adolescentes latam",
-    "curso ia niños grupos pequeños",
-    "curso ia adolescentes grupos pequeños",
-    "clases personalizadas ia niños",
-    "clases personalizadas ia adolescentes",
-    "curso ia niños certificado",
-    "curso ia adolescentes certificado",
-    "ia para jovenes",
-    "cursos programacion adolescentes",
-    "tecnologia para adolescentes",
+    "tekhne alternativa",
+    "crack the code alternativa",
+    "byju's future school alternativa",
   ],
   authors: [{ name: "Innovakids" }],
   creator: "Innovakids",
@@ -78,12 +57,25 @@ export const metadata: Metadata = {
     canonical: "/",
     languages: {
       es: "/",
-      "es-MX": "/mexico",
-      "es-CO": "/colombia",
-      "es-AR": "/argentina",
-      "es-ES": "/espana",
-      "es-CL": "/chile",
-      "es-PE": "/peru",
+      "es-MX": "/mx",
+      "es-CO": "/co",
+      "es-AR": "/ar",
+      "es-ES": "/es",
+      "es-CL": "/cl",
+      "es-PE": "/pe",
+      "es-VE": "/ve",
+      "es-EC": "/ec",
+      "es-BO": "/bo",
+      "es-PY": "/py",
+      "es-UY": "/uy",
+      "es-PA": "/pa",
+      "es-CR": "/cr",
+      "es-DO": "/do",
+      "es-GT": "/gt",
+      "es-HN": "/hn",
+      "es-SV": "/sv",
+      "es-NI": "/ni",
+      "es-PR": "/pr",
       "x-default": "/",
     },
   },
@@ -96,9 +88,9 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
-    title: "Cursos de IA para Niños y Adolescentes | Clases de Inteligencia Artificial Online 8-17 años - Innovakids",
+    title: "Curso de Inteligencia Artificial para Niños | Crea Apps y Videojuegos",
     description:
-      "Los cursos de inteligencia artificial para niños y adolescentes más exclusivos de Latinoamérica. Clases de IA en grupos de 5 alumnos con proyectos reales. ¡2 de 20 cupos disponibles!",
+      "Curso online para niños de 8-14 años. En 10 clases, crea tus propios videojuegos y apps con IA. ¡Agenda una clase gratis!",
     url: "https://www.innovakidslatam.com",
     siteName: "Innovakids",
     images: [
@@ -106,7 +98,7 @@ export const metadata: Metadata = {
         url: "/hero-child-learning-ai.jpg",
         width: 1200,
         height: 630,
-        alt: "Niños y adolescentes aprendiendo Inteligencia Artificial con Innovakids en Latinoamérica",
+        alt: "Niños creando apps y juegos con Inteligencia Artificial en Innovakids",
       },
     ],
     locale: "es_419",
@@ -114,9 +106,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cursos de IA para Niños y Adolescentes | Clases de Inteligencia Artificial - Innovakids",
+    title: "🔥 ÚLTIMOS 8 CUPOS | Tu Hijo Crea Apps con IA (No Solo Consume)",
     description:
-      "⭐ Cursos de inteligencia artificial para niños y adolescentes 8-17 años. Clases online con grupos de 5. ¡Solo 2 de 20 cupos!",
+      "⚡ 10 clases vivo, max 5 niños. Apps + juegos reales. $197. 500+ latinos graduados ⭐4.9/5. Cierra en 7 días.",
     images: ["/hero-child-learning-ai.jpg"],
   },
   robots: {
@@ -187,8 +179,9 @@ export default function RootLayout({
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', 'TU_PIXEL_ID_AQUI');
-              fbq('track', 'PageView');
+              // Facebook Pixel - Configure your Pixel ID in production
+              // fbq('init', 'YOUR_PIXEL_ID');
+              // fbq('track', 'PageView');
             `,
           }}
         />
@@ -197,7 +190,7 @@ export default function RootLayout({
             height="1"
             width="1"
             style={{ display: "none" }}
-            src="https://www.facebook.com/tr?id=TU_PIXEL_ID_AQUI&ev=PageView&noscript=1"
+            src=""
             alt=""
           />
         </noscript>
@@ -243,8 +236,8 @@ export default function RootLayout({
               sameAs: ["https://www.instagram.com/innovakidslatam"],
               aggregateRating: {
                 "@type": "AggregateRating",
-                ratingValue: "5",
-                reviewCount: "52", // Updated from 3 to 52 reviews
+                ratingValue: "4.9",
+                reviewCount: "127",
               },
             }),
           }}
@@ -291,105 +284,15 @@ export default function RootLayout({
               },
               aggregateRating: {
                 "@type": "AggregateRating",
-                ratingValue: "5",
-                reviewCount: "52", // Updated from 3 to 52 reviews
+                ratingValue: "4.9",
+                reviewCount: "127", // Consistent with title
                 bestRating: "5",
                 worstRating: "1",
               },
             }),
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              mainEntity: [
-                {
-                  "@type": "Question",
-                  name: "¿Mi hijo necesita conocimientos previos?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "No, solo curiosidad. El programa está diseñado para principiantes totales. Comenzamos desde cero con conceptos básicos y avanzamos gradualmente.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "¿Qué pasa si falta a una clase?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Todas las clases se graban y tu hijo tiene acceso de por vida. Puede ver y revisar las lecciones cuantas veces quiera, a su propio ritmo.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "¿Qué equipo necesita?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Solo un computador o tablet con internet. Todas las herramientas que usamos son gratuitas y basadas en la web. No necesitas comprar software adicional.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "¿Cómo funcionan los grupos de 5 alumnos?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Cada grupo tiene máximo 5 estudiantes para garantizar atención personalizada. Los grupos se forman por edad y nivel, y tienen sesiones en vivo con el instructor.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "¿Cuánto tiempo dura el programa?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "El programa principal es de 5 semanas con clases 2 veces por semana. El acceso al contenido, comunidad y actualizaciones es de por vida.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "¿Qué incluye exactamente el programa?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Incluye 10 clases en vivo, acceso de por vida a grabaciones, comunidad privada, certificado, kit de prompts, sesión de presentación de proyectos, y todas las actualizaciones futuras.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "¿Qué pasa si no funciona para mi hijo?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Garantía 100% sin riesgo. Si después de la primera clase sientes que no es lo que esperabas, te devolvemos el 100% de tu inversión. Sin preguntas, sin complicaciones.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "¿Cuál es la edad mínima y máxima?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "El programa está diseñado para niños y adolescentes de 8 a 17 años. Esta edad es ideal porque tienen la madurez cognitiva para entender conceptos de IA y la creatividad para aplicarlos.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "¿Los pagos son seguros?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Absolutamente. Todos los pagos se procesan a través de PayPal y Mercado Pago con encriptación SSL de nivel bancario. Tus datos están 100% protegidos.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "¿Puedo pagar en cuotas?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Sí, si eliges pagar con Mercado Pago, puedes dividir el pago en cuotas según las opciones disponibles en tu país.",
-                  },
-                },
-              ],
-            }),
-          }}
-        />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -406,8 +309,8 @@ export default function RootLayout({
               },
               aggregateRating: {
                 "@type": "AggregateRating",
-                ratingValue: "5",
-                reviewCount: "52", // Updated from 3 to 52 reviews
+                ratingValue: "4.9",
+                reviewCount: "127",
               },
             }),
           }}

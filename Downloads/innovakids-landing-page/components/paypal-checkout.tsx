@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 interface PayPalCheckoutProps {
-  paymentOption: "first" | "second" | "full" | "deposit" | "final" | "minimal"
+  paymentOption: string
   amount: number
 }
 

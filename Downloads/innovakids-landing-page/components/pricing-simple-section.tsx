@@ -31,7 +31,7 @@ function useAnimatedCounter(end: number, duration: number = 2000) {
 export function PricingSimpleSection() {
   const sectionRef = useRef(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
-  const { count: priceCount, ref: priceRef } = useAnimatedCounter(297, 1500)
+  const { count: priceCount, ref: priceRef } = useAnimatedCounter(197, 1500)
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -75,7 +75,7 @@ export function PricingSimpleSection() {
       feature: "Inversión",
       youtube: "Tiempo perdido",
       academias: "+$800 USD / mes",
-      innovakids: "$297 USD (pago único)",
+      innovakids: "$197 USD (pago único)",
       isPrice: true,
     },
   ]
@@ -222,7 +222,7 @@ export function PricingSimpleSection() {
                   <div className="flex-grow">
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <h4 className="text-white font-bold text-lg">10 Sesiones En Vivo</h4>
-                      <span className="text-gray-500 line-through text-lg">$200 USD</span>
+                      <span className="text-gray-500 line-through text-lg">$497 USD</span>
                     </div>
                     <p className="text-gray-400 text-sm mt-1">
                       Creación de Videojuegos, Arte Digital & IA Generativa (grupos de máx. 5 niños)
@@ -282,9 +282,9 @@ export function PricingSimpleSection() {
                     <Sparkles className="w-6 h-6 text-primary" />
                     <p className="text-white font-black text-xl font-premium">EARLY BIRD - Solo primeros 10 inscritos</p>
                   </div>
-                  <p className="premium-gradient-text text-5xl font-black mb-2 font-premium">$247 USD</p>
+                  <p className="premium-gradient-text text-5xl font-black mb-2 font-premium">$197 USD</p>
                   <div className="inline-block bg-gradient-to-r from-primary to-[#8b5cf6] text-background px-4 py-1 rounded-full font-bold text-sm mb-2">
-                    50% OFF - Ahorras $250 USD
+                    ¡Asegura tu cupo ahora!
                   </div>
                   <p className="text-gray-400 text-sm">Vence en 72 horas o al llenar 10 cupos</p>
                 </motion.div>
@@ -309,7 +309,7 @@ export function PricingSimpleSection() {
 
                 <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-[#8b5cf6] text-background px-8 py-3 rounded-full font-bold text-xl mb-4">
                   <Star className="w-5 h-5" />
-                  Ahorras $200 USD (40% OFF)
+                  Ahorras $300 USD (60% OFF)
                 </div>
               </div>
 
@@ -318,7 +318,7 @@ export function PricingSimpleSection() {
                 <p className="text-white font-bold text-lg mb-4 text-center font-premium">Opciones de Pago</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
                   <div className="bg-white/[0.03] rounded-xl p-4 border border-white/10 hover:border-primary/30 transition-colors">
-                    <p className="text-primary font-bold text-2xl">$297 USD</p>
+                    <p className="text-primary font-bold text-2xl">$197 USD</p>
                     <p className="text-gray-400 text-sm">pago completo con tarjeta</p>
                   </div>
                   <div className="bg-primary/10 rounded-xl p-4 border border-primary/30 hover:border-primary/50 transition-colors">

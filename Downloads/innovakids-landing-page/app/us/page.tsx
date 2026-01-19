@@ -5,9 +5,9 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { MapPin, Users, Clock, Shield, ArrowRight, Globe } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Cursos IA para Niños Latinos en USA | Clases en Español | InnovaKids 🇺🇸",
+  title: "Curso IA Niños Latinos USA $197 | Tu Hijo Crea Apps Reales | InnovaKids 🇺🇸",
   description:
-    "Cursos de inteligencia artificial en español para niños latinos en Estados Unidos. Miami, LA, Houston, NYC, Chicago. 10 clases, grupos de 5 niños. Evaluación gratis.",
+    "Tu hijo aprende a CREAR con IA en español en USA. 10 clases en vivo, grupos de 5 niños. Miami, LA, Houston, NYC. Crea apps, juegos, startups. 500+ graduados. Garantía 10 días.",
   keywords:
     "cursos ia niños latinos usa, clases inteligencia artificial español estados unidos, curso ia niños miami, curso ia niños los angeles, curso ia niños houston",
 }
@@ -149,7 +149,7 @@ export default function USAHub() {
         {/* PRICING QUICK */}
         <section className="py-20">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="mb-8 text-3xl font-bold">Inversión: $200 USD</h2>
+            <h2 className="mb-8 text-3xl font-bold">Inversión: $197 USD</h2>
             <p className="mx-auto mb-8 max-w-xl text-muted-foreground">
               10 clases en vivo • Grupos de máximo 5 niños • 100% en español • Garantía 10 días
             </p>

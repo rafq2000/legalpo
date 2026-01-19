@@ -9,7 +9,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
     title: "InnovaKids Puerto Rico | Cursos de IA para Niños | San Juan 🇵🇷",
     description:
-        "Cursos de inteligencia artificial para niños en Puerto Rico. San Juan, Bayamón, Ponce. Clases online con grupos de 5 alumnos. $297 USD. 🇵🇷",
+        "Cursos de inteligencia artificial para niños en Puerto Rico. San Juan, Bayamón, Ponce. Clases online con grupos de 5 alumnos. $197 USD. 🇵🇷",
     keywords: [
         "ia para niños puerto rico",
         "cursos ia niños san juan",
@@ -111,7 +111,7 @@ export default function PuertoRicoHubPage() {
                         <div className="holographic-card p-10">
                             <div className="relative z-10">
                                 <h2 className="text-3xl font-bold text-white mb-4 font-premium">Inversión</h2>
-                                <div className="text-5xl font-bold text-white mb-2">$297 USD</div>
+                                <div className="text-5xl font-bold text-white mb-2">$197 USD</div>
                                 <p className="text-gray-400 mb-6">Pago único • 10 clases completas</p>
                                 <Link href="/#sesion-estrategica">
                                     <Button className="bg-white hover:bg-gray-100 text-[#0a1628] px-10 py-6 text-lg font-bold rounded-full">

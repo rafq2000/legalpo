@@ -5,9 +5,9 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { MapPin, Users, Clock, Shield, Target, CheckCircle } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños en Chile | InnovaKids 🇨🇱",
+  title: "Curso de Inteligencia Artificial para Niños en Chile | InnovaKids 🇨🇱",
   description:
-    "Clases de inteligencia artificial para niños 8-14 años en todo Chile: Santiago, Viña del Mar, Concepción, Valparaíso, Antofagasta. 10 clases, grupos de 5 niños.",
+    "Curso online de IA para niños y adolescentes en Chile. Aprende a crear apps y videojuegos con Inteligencia Artificial. Clases en vivo, grupos pequeños y proyectos prácticos.",
   keywords:
     "cursos ia niños chile, clases ia santiago, ia para niños viña del mar, curso inteligencia artificial concepción, innovakids chile",
   alternates: {
@@ -166,7 +166,7 @@ export default function ChileHub() {
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#D52B1E]/20">
                   <Target className="h-8 w-8 text-[#0039A6]" />
                 </div>
-                <h3 className="mb-2 text-xl font-bold">$200 USD</h3>
+                <h3 className="mb-2 text-xl font-bold">$197 USD</h3>
                 <p className="text-muted-foreground">10 clases completas con certificado</p>
               </div>
             </div>

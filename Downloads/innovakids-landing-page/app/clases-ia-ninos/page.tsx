@@ -151,7 +151,7 @@ export default function ClasesIANinos() {
                   Agenda una sesión de diagnóstico gratuita y descubre cómo tu hijo puede aprender IA
                 </p>
                 <p className="text-lg text-cyan-300 mb-8">
-                  ⏰ Próximo grupo inicia el 11 de enero de 2026 • Solo 5 cupos disponibles
+                  ⏰ Próximo grupo inicia el 26 de enero de 2026 • Cupos limitados
                 </p>
                 <Link href="/#sesion-estrategica">
                   <Button

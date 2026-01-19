@@ -65,7 +65,7 @@ export default function ClasesIANinosSanJose() {
                 <div className="text-sm text-white/80">Niños máx/grupo</div>
               </div>
               <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
-                <div className="text-3xl font-bold md:text-4xl">$200</div>
+                <div className="text-3xl font-bold md:text-4xl">$197</div>
                 <div className="text-sm text-white/80">USD total</div>
               </div>
             </div>
@@ -196,7 +196,7 @@ export default function ClasesIANinosSanJose() {
           <div className="container mx-auto px-4 text-center text-white">
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">Inscribe a Tu Hijo Hoy</h2>
             <p className="mx-auto mb-10 max-w-2xl text-lg text-white/80">
-              $200 USD - 10 clases en vivo - Grupos de máximo 5 niños - Garantía 10 días
+              $197 USD - 10 clases en vivo - Grupos de máximo 5 niños - Garantía 10 días
             </p>
 
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">

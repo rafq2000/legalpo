@@ -5,6 +5,8 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Button } from "@/components/ui/button"
 import { Check, Users, Shield, Star, Award, Zap } from "lucide-react"
 import Link from "next/link"
+import { CurriculumSection } from "@/components/curriculum-section"
+import { PricingSection } from "@/components/pricing-section"
 
 export const metadata: Metadata = {
   title: "Cursos de IA para Chicos Argentina 2026 | Prueba Gratis | InnovaKids",
@@ -16,9 +18,11 @@ export const metadata: Metadata = {
     "cursos de inteligencia artificial para chicos",
     "clases de ia para chicos",
     "ia para chicos argentina",
-    "curso ia chicos buenos aires",
-    "inteligencia artificial chicos cordoba",
-    "curso ia rosario chicos",
+    "curso inteligencia artificial chicos",
+    "clases online ia chicos",
+    "escuela de inteligencia artificial para chicos",
+    "aprender chatgpt para chicos",
+    "tecnología para chicos argentina",
   ],
   openGraph: {
     title: "Cursos de IA para Chicos en Argentina | InnovaKids",
@@ -81,7 +85,7 @@ const jsonLd = {
           name: "¿Cuál es el mejor curso de IA para chicos en Argentina?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "InnovaKids es el curso #1 de inteligencia artificial para chicos en Argentina y Latinoamérica. Con 4.9 estrellas de 52 evaluaciones, grupos de máximo 5 chicos, metodología 100% práctica, y más de 2,000 graduados, InnovaKids se destaca por su enfoque en creación real de proyectos.",
+            text: "InnovaKids es el curso #1 de inteligencia artificial para chicos en Argentina y Latinoamérica. Con 4.9 estrellas de 52 evaluaciones, grupos de máximo 5 chicos, metodología 100% práctica, y más de 252 graduados, InnovaKids se destaca por su enfoque en creación real de proyectos.",
           },
         },
         {
@@ -89,7 +93,7 @@ const jsonLd = {
           name: "¿Cuánto cuesta el curso de IA para chicos en Argentina?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "El programa completo tiene un valor de $497 USD. Actualmente hay oferta de lanzamiento 2026 por $297 USD (40% de descuento). Incluye 10 clases en vivo, grupos de máximo 5 chicos, portafolio web, acceso de por vida, y garantía de 10 días.",
+            text: "El programa completo tiene un valor de $497 USD. Actualmente hay oferta de lanzamiento 2026 por $197 USD (60% de descuento). Incluye 10 clases en vivo, grupos de máximo 5 chicos, portafolio web, acceso de por vida, y garantía de 10 días.",
           },
         },
       ],
@@ -115,7 +119,7 @@ export default function ArgentinaCursosIAPage() {
                 <span className="text-white font-medium">4.9/5 de 52+ familias argentinas</span>
               </div>
 
-              <h1 className="text-5xl lg:text-7xl font-bold text-white leading-tight">
+              <h1 className="mx-auto max-w-4xl text-3xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl px-2 text-white">
                 Cursos de Inteligencia Artificial
                 <br />
                 <span className="text-[#75AADB]">para Chicos en Argentina</span>
@@ -129,7 +133,7 @@ export default function ArgentinaCursosIAPage() {
               {/* Stats */}
               <div className="grid grid-cols-3 gap-6 max-w-2xl mx-auto py-8">
                 <div className="text-center">
-                  <div className="text-4xl lg:text-5xl font-bold text-[#75AADB]">2,000+</div>
+                  <div className="text-4xl lg:text-5xl font-bold text-[#75AADB]">252</div>
                   <div className="text-gray-400 text-sm mt-1">Chicos graduados</div>
                 </div>
                 <div className="text-center">
@@ -209,96 +213,7 @@ export default function ArgentinaCursosIAPage() {
         </section>
 
         {/* QUÉ APRENDERÁN - 10 CLASES */}
-        <section className="py-24 bg-background">
-          <div className="container mx-auto px-6 max-w-6xl">
-            <h2 className="text-3xl lg:text-4xl font-bold text-white text-center mb-4">
-              ¿Qué Aprenderá Tu Hijo en las 10 Clases?
-            </h2>
-            <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-              Cada clase es 100% práctica. Los chicos crean proyectos reales que pueden mostrar a familia y amigos.
-            </p>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  icon: "🤖",
-                  title: "Chatbots Inteligentes",
-                  desc: "Crean su propio asistente virtual con ChatGPT",
-                  tools: "ChatGPT, Claude",
-                },
-                {
-                  icon: "🎨",
-                  title: "Arte con IA",
-                  desc: "Generan ilustraciones y arte digital profesional",
-                  tools: "Midjourney, DALL-E",
-                },
-                {
-                  icon: "🎵",
-                  title: "Música Original",
-                  desc: "Componen canciones personalizadas con IA",
-                  tools: "Suno AI, Udio",
-                },
-                {
-                  icon: "📱",
-                  title: "Apps Funcionales",
-                  desc: "Programan aplicaciones reales sin código previo",
-                  tools: "Cursor, Replit",
-                },
-                {
-                  icon: "🎮",
-                  title: "Videojuegos",
-                  desc: "Desarrollan juegos desde cero con ayuda de IA",
-                  tools: "GPT-4, Phaser",
-                },
-                {
-                  icon: "📚",
-                  title: "Comics con IA",
-                  desc: "Crean historias ilustradas completas",
-                  tools: "ChatGPT, Midjourney",
-                },
-                {
-                  icon: "🎬",
-                  title: "Videos Profesionales",
-                  desc: "Editan videos con efectos especiales de IA",
-                  tools: "Runway, Descript",
-                },
-                {
-                  icon: "📊",
-                  title: "Presentaciones",
-                  desc: "Diseñan presentaciones impactantes",
-                  tools: "Gamma AI, Canva",
-                },
-                {
-                  icon: "🧠",
-                  title: "Ética en IA",
-                  desc: "Aprenden uso responsable de la tecnología",
-                  tools: "Casos prácticos",
-                },
-                { icon: "🚀", title: "Proyecto Final", desc: "Presentan su startup ante jurado", tools: "Demo Day" },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="bg-[#0f2744]/50 rounded-xl p-6 border border-white/10 hover:border-[#75AADB]/50 transition-all"
-                >
-                  <div className="text-4xl mb-4">{item.icon}</div>
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    Clase {i + 1}: {item.title}
-                  </h3>
-                  <p className="text-gray-400 mb-3">{item.desc}</p>
-                  <span className="text-[#75AADB] text-sm">Herramientas: {item.tools}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center mt-12">
-              <Link href="/#sesion-estrategica">
-                <Button className="bg-[#75AADB] hover:bg-[#5a8fc0] text-white px-10 py-6 text-lg font-bold rounded-full">
-                  Ver Programa Completo
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
+        <CurriculumSection />
 
         {/* METODOLOGÍA */}
         <section className="py-24 bg-[#0a1628]">
@@ -367,69 +282,7 @@ export default function ArgentinaCursosIAPage() {
         </section>
 
         {/* PRECIO Y GARANTÍA */}
-        <section className="py-24 bg-background">
-          <div className="container mx-auto px-6 max-w-4xl">
-            <div className="bg-gradient-to-br from-[#0f2744] to-[#1a3a5c] rounded-3xl p-12 border border-[#75AADB]/30 text-center">
-              <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-4 py-1 mb-6">
-                <Zap className="w-4 h-4 text-green-400" />
-                <span className="text-green-400 text-sm font-medium">Oferta Lanzamiento 2026 - 40% OFF</span>
-              </div>
-
-              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">Inversión en el Futuro de Tu Hijo</h2>
-
-              <div className="mb-8">
-                <div className="text-xl text-gray-400 line-through">$497 USD</div>
-                <div className="text-6xl font-bold text-white mb-2">$297 USD</div>
-                <p className="text-[#75AADB] font-medium">Ahorrás $200 USD - Programa completo de 10 clases</p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-8 text-left">
-                {[
-                  "10 clases en vivo (90 min cada una)",
-                  "Grupos de máximo 5 chicos",
-                  "Portafolio web con 10 proyectos",
-                  "Acceso de por vida a grabaciones",
-                  "Kit de prompts exclusivos ($97 valor)",
-                  "Masterclass Seguridad para Padres ($150)",
-                  "Soporte WhatsApp 24/7",
-                  "Garantía de aprendizaje con tutoría 1-1",
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-[#75AADB] flex-shrink-0" />
-                    <span className="text-gray-300">{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-6 mb-8">
-                <div className="flex items-center justify-center gap-3 text-green-400">
-                  <Shield className="w-6 h-6" />
-                  <span className="text-xl font-bold">Garantía de 10 Días</span>
-                </div>
-                <p className="text-gray-400 mt-2">
-                  Si no quedás satisfecho, te devolvemos el 100% de tu dinero. Sin preguntas.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <Link href="/#sesion-estrategica">
-                  <Button className="bg-white hover:bg-gray-100 text-[#0a1628] px-12 py-8 text-xl font-bold rounded-full shadow-2xl hover:scale-105 transition-all">
-                    Reservar Mi Lugar Ahora
-                  </Button>
-                </Link>
-                <p className="text-gray-400 text-sm">O reservá con $50 USD y pagás el resto antes de iniciar</p>
-              </div>
-
-              {/* Early Bird */}
-              <div className="mt-8 pt-8 border-t border-white/20">
-                <p className="text-[#75AADB] font-medium mb-1">Early Bird: Primeros 10 inscritos</p>
-                <p className="text-white text-2xl font-bold">
-                  $247 USD <span className="text-gray-400 text-base font-normal">(50% OFF)</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <PricingSection />
 
         {/* FAQ SECTION */}
         <section className="py-24 bg-[#0a1628]">
@@ -442,7 +295,7 @@ export default function ArgentinaCursosIAPage() {
               {[
                 {
                   q: "¿Cuánto cuesta el curso de IA para chicos?",
-                  a: "El programa completo tiene un valor de $497 USD. Actualmente hay oferta de lanzamiento 2026 por $297 USD (40% de descuento). Incluye 10 clases en vivo, grupos de máximo 5 chicos, portafolio web, acceso de por vida, y garantía de 10 días.",
+                  a: "El programa completo tiene un valor de $497 USD. Actualmente hay oferta de lanzamiento 2026 por $197 USD (60% de descuento). Incluye 10 clases en vivo, grupos de máximo 5 chicos, portafolio web, acceso de por vida, y garantía de 10 días.",
                 },
                 {
                   q: "¿Las clases son online o presenciales?",
@@ -462,7 +315,7 @@ export default function ArgentinaCursosIAPage() {
                 },
                 {
                   q: "¿Cómo puedo pagar desde Argentina?",
-                  a: "Aceptamos PayPal, tarjetas de crédito internacionales y transferencia bancaria. El precio es de $297 USD durante la oferta de lanzamiento.",
+                  a: "Aceptamos PayPal, tarjetas de crédito internacionales y transferencia bancaria. El precio es de $197 USD durante la oferta de lanzamiento.",
                 },
               ].map((faq, i) => (
                 <div key={i} className="bg-[#0f2744] rounded-xl p-6 border border-white/10">

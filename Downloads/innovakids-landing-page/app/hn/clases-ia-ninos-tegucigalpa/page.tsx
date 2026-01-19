@@ -9,7 +9,7 @@ import WhatsAppButton from "@/components/whatsapp-button"
 export const metadata: Metadata = {
   title: "Clases de IA para Niños en Tegucigalpa 2026 | Cursos Online | InnovaKids",
   description:
-    "Clases de Inteligencia Artificial para niños en Tegucigalpa. Cursos online en vivo, grupos de máx 5 alumnos. $200 USD por 10 clases. ¡Garantía 10 días!",
+    "Clases de Inteligencia Artificial para niños en Tegucigalpa. Cursos online en vivo, grupos de máx 5 alumnos. $197 USD por 10 clases. ¡Garantía 10 días!",
   keywords:
     "clases ia niños tegucigalpa, cursos inteligencia artificial niños tegucigalpa, ia para niños honduras capital",
   alternates: {
@@ -63,7 +63,7 @@ export default function TegucigalpaPage() {
               </div>
 
               <div className="bg-[#0073CF]/10 rounded-2xl p-6 max-w-xl mx-auto">
-                <p className="text-lg font-semibold text-[#0073CF]">💰 $200 USD - 10 Clases</p>
+                <p className="text-lg font-semibold text-[#0073CF]">💰 $197 USD - 10 Clases</p>
                 <p className="text-muted-foreground">Garantía de satisfacción 10 días • Máx 5 niños por grupo</p>
               </div>
             </div>

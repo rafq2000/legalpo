@@ -195,14 +195,14 @@ export default function ClasesIANinosMiami() {
         {/* PRICING */}
         <section className="py-20" id="precio">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="mb-4 text-3xl font-bold">Inversión: $200 USD</h2>
+            <h2 className="mb-4 text-3xl font-bold">Inversión: $197 USD</h2>
             <p className="mx-auto mb-12 max-w-2xl text-muted-foreground">
               Programa completo de 10 clases en vivo • 100% en español • Grupos de máximo 5 niños
             </p>
 
             <div className="mx-auto max-w-md rounded-3xl bg-gradient-to-br from-[#004E89] to-[#002d52] p-8 text-white shadow-2xl">
               <div className="mb-6">
-                <span className="text-5xl font-bold">$200</span>
+                <span className="text-5xl font-bold">$197</span>
                 <span className="text-xl"> USD</span>
               </div>
 
@@ -298,7 +298,7 @@ export default function ClasesIANinosMiami() {
                 "Clases de inteligencia artificial en español para niños latinos en Miami. 10 clases, grupos de 5 niños.",
               provider: { "@type": "Organization", name: "InnovaKids" },
               areaServed: { "@type": "City", name: "Miami", addressRegion: "FL", addressCountry: "US" },
-              offers: { "@type": "Offer", price: "200", priceCurrency: "USD" },
+              offers: { "@type": "Offer", price: "197", priceCurrency: "USD" },
               inLanguage: "es",
             }),
           }}

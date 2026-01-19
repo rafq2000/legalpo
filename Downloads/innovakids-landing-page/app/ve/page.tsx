@@ -7,9 +7,9 @@ import { MapPin, Users, Clock, Shield } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-    title: "InnovaKids Venezuela | Cursos de IA para Niños | Caracas, Maracaibo, Valencia 🇻🇪",
+    title: "Curso IA Niños Venezuela $197 | Tu Hijo Crea Apps Reales | InnovaKids 🇻🇪",
     description:
-        "Cursos de inteligencia artificial para niños en Venezuela. Caracas, Maracaibo, Valencia y toda Venezuela. Clases online con grupos de 5 alumnos. Pago en USD. 🇻🇪",
+        "Tu hijo aprende a CREAR con IA en Venezuela. 10 clases en vivo, grupos de 5 niños. Caracas, Maracaibo, Valencia. Crea apps, juegos, startups. 500+ graduados. Garantía 10 días.",
     keywords: [
         "ia para niños venezuela",
         "cursos ia niños caracas",
@@ -19,8 +19,8 @@ export const metadata: Metadata = {
         "programación para niños venezuela",
     ],
     openGraph: {
-        title: "InnovaKids Venezuela | Cursos de IA para Niños",
-        description: "Cursos de inteligencia artificial para niños en toda Venezuela. Grupos de 5 alumnos.",
+        title: "Curso IA Niños Venezuela $197 | Tu Hijo Crea Apps Reales",
+        description: "Tu hijo aprende a CREAR con IA. Caracas, Maracaibo, Valencia. 500+ graduados. Garantía 10 días.",
         url: "https://www.innovakidslatam.com/ve",
         locale: "es_VE",
     },
@@ -150,7 +150,7 @@ export default function VenezuelaHubPage() {
 
                         <div className="holographic-card p-10">
                             <div className="relative z-10">
-                                <div className="text-5xl font-bold text-white mb-2 font-premium">$297 USD</div>
+                                <div className="text-5xl font-bold text-white mb-2 font-premium">$197 USD</div>
                                 <p className="text-gray-400 mb-6">Pago único • 10 clases completas</p>
 
                                 <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-300 mb-8">

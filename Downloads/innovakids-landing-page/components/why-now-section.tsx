@@ -37,7 +37,7 @@ const reasons = [
     icon: Calendar,
     emoji: "📅",
     number: 4,
-    title: "Termina en Febrero",
+    title: "Termina en Marzo",
     description: "5 semanas intensivas. Tu hijo tendrá certificación y proyectos antes de volver al colegio.",
     color: "from-primary/20 to-[#8b5cf6]/20",
     borderColor: "border-primary/30",

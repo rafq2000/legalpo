@@ -8,7 +8,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
     title: "Cursos de IA para Niños en Venezuela 2026 | Clases Online | InnovaKids 🇻🇪",
     description:
-        "Aprende inteligencia artificial desde Venezuela. Cursos online para niños de 8-14 años. ChatGPT, creación de videojuegos, arte digital. Grupos de 5 alumnos. $297 USD.",
+        "Aprende inteligencia artificial desde Venezuela. Cursos online para niños de 8-14 años. ChatGPT, creación de videojuegos, arte digital. Grupos de 5 alumnos. $197 USD.",
     keywords: [
         "cursos ia niños venezuela",
         "clases inteligencia artificial niños caracas",

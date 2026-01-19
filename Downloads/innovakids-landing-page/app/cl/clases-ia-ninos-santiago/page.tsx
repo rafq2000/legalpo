@@ -176,7 +176,7 @@ export default function ClasesIANinosSantiago() {
             <div className="mx-auto max-w-md rounded-3xl bg-gradient-to-br from-[#0039A6] to-[#001d53] p-8 text-white shadow-2xl">
               <div className="mb-2 text-sm font-medium text-[#D52B1E]">PROGRAMA COMPLETO</div>
               <div className="mb-6">
-                <span className="text-5xl font-bold">$200</span>
+                <span className="text-5xl font-bold">$197</span>
                 <span className="text-xl"> USD</span>
               </div>
 

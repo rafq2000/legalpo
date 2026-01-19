@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   keywords:
     "guía ia niños gratis, libro inteligencia artificial niños, descargar guía ia, chatgpt para niños pdf, enseñar ia niños",
   openGraph: {
-    title: "Descarga GRATIS: Guía de IA para Niños 2025",
+    title: "Descarga GRATIS: Guía de IA para Niños 2026",
     description:
       "Guía completa y gratuita para enseñar Inteligencia Artificial a niños de 8-14 años. Incluye proyectos prácticos y ejercicios.",
     type: "website",
@@ -140,7 +140,7 @@ export default function DescargarGuiaPage() {
                 y certificación. <span className="font-bold text-primary">¡Ahora con descuento especial!</span>
               </p>
               <Button size="lg" variant="default" asChild>
-                <a href="/#inversion">Ver Oferta Especial $300 USD</a>
+                <a href="/#inversion">Ver Oferta Especial $197 USD</a>
               </Button>
             </div>
           </div>

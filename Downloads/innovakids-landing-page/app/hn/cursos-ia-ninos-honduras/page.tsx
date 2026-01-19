@@ -9,7 +9,7 @@ import WhatsAppButton from "@/components/whatsapp-button"
 export const metadata: Metadata = {
   title: "Cursos de IA para Niños en Honduras 2026 | Clases Online en Vivo | InnovaKids",
   description:
-    "✅ Cursos de Inteligencia Artificial para niños hondureños de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $200 USD por 10 clases. ¡Garantía 10 días!",
+    "✅ Cursos de Inteligencia Artificial para niños hondureños de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $197 USD por 10 clases. ¡Garantía 10 días!",
   keywords:
     "cursos ia niños honduras, clases inteligencia artificial niños tegucigalpa, cursos programacion niños honduras, ia para niños san pedro sula",
   openGraph: {
@@ -47,7 +47,7 @@ const schemaData = {
   inLanguage: "es",
   offers: {
     "@type": "Offer",
-    price: "200",
+    price: "197",
     priceCurrency: "USD",
     availability: "https://schema.org/LimitedAvailability",
   },
@@ -113,7 +113,7 @@ export default function CursosIANinosHondurasPage() {
               </div>
 
               <div className="bg-[#0073CF]/10 border border-[#0073CF]/20 rounded-2xl p-6 max-w-xl mx-auto">
-                <p className="text-lg font-semibold text-[#0073CF]">💰 Inversión: $200 USD</p>
+                <p className="text-lg font-semibold text-[#0073CF]">💰 Inversión: $197 USD</p>
                 <p className="text-muted-foreground">
                   10 clases online en vivo (90 min c/u) • Garantía de satisfacción 10 días
                 </p>

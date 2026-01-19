@@ -7,9 +7,9 @@ import { MapPin, Users, Star, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "InnovaKids Uruguay | Cursos de IA para Niños en Todo el País 🇺🇾",
+  title: "Curso IA Niños Uruguay $197 | Tu Hijo Crea Apps Reales | InnovaKids 🇺🇾",
   description:
-    "Cursos de inteligencia artificial para niños en Uruguay. Clases online desde Montevideo, Punta del Este, Maldonado, Salto y todo el país. Primera clase GRATIS.",
+    "Tu hijo aprende a CREAR con IA en Uruguay. 10 clases en vivo, grupos de 5 niños. Montevideo, Punta del Este. Crea apps, juegos, startups. 500+ graduados. Garantía 10 días.",
   keywords: [
     "cursos ia niños uruguay",
     "clases ia niños montevideo",
@@ -19,8 +19,8 @@ export const metadata: Metadata = {
     "cursos programación niños uruguay",
   ],
   openGraph: {
-    title: "InnovaKids Uruguay | Cursos de IA para Niños",
-    description: "Cursos de inteligencia artificial para niños en todo Uruguay. Primera clase gratis.",
+    title: "Curso IA Niños Uruguay $197 | Tu Hijo Crea Apps Reales",
+    description: "Tu hijo aprende a CREAR con IA. Montevideo, Punta del Este. 500+ graduados. Garantía 10 días.",
     url: "https://www.innovakidslatam.com/uy",
     siteName: "InnovaKids",
     locale: "es_UY",
@@ -144,7 +144,7 @@ export default function UruguayHubPage() {
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Pagos en USD</h3>
                 <p className="text-gray-400">
-                  Pagá con tarjeta de crédito, débito o transferencia. $200 USD el programa completo.
+                  Pagá con tarjeta de crédito, débito o transferencia. $197 USD el programa completo.
                 </p>
               </div>
               <div className="text-center">

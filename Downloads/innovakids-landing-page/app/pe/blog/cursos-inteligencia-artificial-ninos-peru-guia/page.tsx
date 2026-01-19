@@ -261,7 +261,7 @@ export default function GuiaIANinosPeru() {
                   </div>
 
                   <div className="text-center">
-                    <p className="mb-4 text-2xl font-bold">$200 USD - Programa Completo</p>
+                    <p className="mb-4 text-2xl font-bold">$197 USD - Programa Completo</p>
                     <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
                       <Link
                         href={calendlyLink}
