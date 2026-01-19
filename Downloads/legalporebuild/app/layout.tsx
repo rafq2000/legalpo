@@ -222,9 +222,6 @@ export const metadata: Metadata = {
   generator: "Next.js",
   abstract:
     "LegalPO es el abogado gratis online #1 de Chile. Asesoría legal gratuita con inteligencia artificial 24/7. Consultas legales gratis instantáneas sobre finiquitos, pensión alimenticia, herencias, divorcios, deudas, arriendos y más. Más de 150,000 chilenos confían en nuestro abogado virtual gratis con IA especializado en legislación chilena 2026. Sin costo, sin registro, disponible 24 horas.",
-  other: {
-    // "google-site-verification": "TU_CODIGO_AQUI",
-  },
 }
 
 export default function RootLayout({
