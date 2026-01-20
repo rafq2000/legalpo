@@ -12,6 +12,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 1,
     },
+    // Magnet Page - Cursos Online (SEO High Priority)
+    {
+      url: `${baseUrl}/cursos-online-para-ninos`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+
 
     // México
     {

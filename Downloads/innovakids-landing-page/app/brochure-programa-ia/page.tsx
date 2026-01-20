@@ -6,10 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle, Shield } from "lucide-react"
 
 export const metadata = {
-  title: "Programa Acelerador de IA - Innovakids | Brochure Exclusivo",
+  title: "Programa de IA para Niños | Temario Completo y Precio | InnovaKids",
   description:
-    "Brochure detallado del Programa Acelerador de IA para niños de 8-14 años. Formando a los líderes tecnológicos del mañana.",
-  robots: "noindex, nofollow",
+    "Descubre el temario completo del curso de Inteligencia Artificial para niños. Aprende a crear videojuegos, apps y más. ¡Reserva tu cupo hoy!",
 }
 
 export default function BrochurePage() {

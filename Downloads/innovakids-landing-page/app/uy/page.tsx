@@ -7,9 +7,9 @@ import { MapPin, Users, Star, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Curso IA Niños Uruguay $197 | Tu Hijo Crea Apps Reales | InnovaKids 🇺🇾",
+  title: "Curso de Inteligencia Artificial para Niños en Uruguay | InnovaKids 🇺🇾",
   description:
-    "Tu hijo aprende a CREAR con IA en Uruguay. 10 clases en vivo, grupos de 5 niños. Montevideo, Punta del Este. Crea apps, juegos, startups. 500+ graduados. Garantía 10 días.",
+    "Clases online de IA para niños en Uruguay (Montevideo, Punta del Este). Aprende a programar videojuegos y apps. Precio en USD accesible.",
   keywords: [
     "cursos ia niños uruguay",
     "clases ia niños montevideo",
@@ -19,8 +19,8 @@ export const metadata: Metadata = {
     "cursos programación niños uruguay",
   ],
   openGraph: {
-    title: "Curso IA Niños Uruguay $197 | Tu Hijo Crea Apps Reales",
-    description: "Tu hijo aprende a CREAR con IA. Montevideo, Punta del Este. 500+ graduados. Garantía 10 días.",
+    title: "Curso de Inteligencia Artificial para Niños en Uruguay | InnovaKids",
+    description: "Clases online de IA para niños. Aprende a programar videojuegos y apps. ¡Reserva hoy!",
     url: "https://www.innovakidslatam.com/uy",
     siteName: "InnovaKids",
     locale: "es_UY",
