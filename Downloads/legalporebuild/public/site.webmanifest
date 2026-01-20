@@ -1,0 +1,52 @@
+{
+  "name": "LegalPO - Calculadora de Finiquito Chile #1",
+  "short_name": "LegalPO",
+  "description": "La calculadora de finiquito más precisa de Chile. Calcula tu indemnización por años de servicio, vacaciones proporcionales y más. 100% gratis.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#059669",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["legal", "finance", "productivity"],
+  "lang": "es-CL",
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Calculadora de Finiquito",
+      "short_name": "Finiquito",
+      "description": "Calcula tu finiquito laboral",
+      "url": "/calculators/finiquito",
+      "icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }]
+    },
+    {
+      "name": "Consulta Legal",
+      "short_name": "Consulta",
+      "description": "Haz una consulta legal gratis",
+      "url": "/ask",
+      "icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }]
+    }
+  ]
+}

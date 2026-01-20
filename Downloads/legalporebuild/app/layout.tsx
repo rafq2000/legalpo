@@ -213,7 +213,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://legalpo.cl",
+    canonical: "./",
   },
   category: "Legal Services",
   classification: "Free Legal Advice and AI Legal Assistant",

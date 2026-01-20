@@ -52,6 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/calculadora-pensiones`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.9 },
     { url: `${baseUrl}/como-calcular-pension-alimentos`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.85 },
     { url: `${baseUrl}/como-calcular-herencia`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.85 },
+    { url: `${baseUrl}/calculadora-sueldo-liquido`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
   ]
 
   // FAQ and Guide pages - High priority for SEO
