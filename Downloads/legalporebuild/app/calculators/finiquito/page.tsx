@@ -1130,13 +1130,13 @@ Calcula el tuyo GRATIS en LegalPO.cl
                                     expandedDetails.length
                                       ? []
                                       : [
-                                          "remuneraciones",
-                                          "indemnizacionAviso",
-                                          "indemnizacionAnos",
-                                          "vacaciones",
-                                          "feriado",
-                                          "gratificaciones",
-                                        ],
+                                        "remuneraciones",
+                                        "indemnizacionAviso",
+                                        "indemnizacionAnos",
+                                        "vacaciones",
+                                        "feriado",
+                                        "gratificaciones",
+                                      ],
                                   )
                                 }
                                 className="text-slate-300 hover:text-white"
@@ -1356,6 +1356,31 @@ Calcula el tuyo GRATIS en LegalPO.cl
               </div>
             </CardContent>
           </Card>
+
+          {/* Promo Sueldo Líquido */}
+          <div className="mt-8 bg-gradient-to-br from-emerald-900/40 to-slate-900 border border-emerald-500/20 rounded-xl p-6 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-16 -mt-16 transition-all group-hover:bg-emerald-500/20" />
+
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 bg-emerald-500/20 rounded-full px-3 py-1 text-xs font-medium text-emerald-300">
+                  <Star className="w-3 h-3" />
+                  <span>Nueva Herramienta</span>
+                </div>
+                <h3 className="text-xl font-bold text-white">¿Buscas nuevo trabajo? Calcula tu Sueldo Real</h3>
+                <p className="text-slate-300 text-sm max-w-lg">
+                  Usa nuestra nueva calculadora de Sueldo Líquido 2026. Descuenta AFP (con comisiones exactas), Salud e Impuesto automáticamente.
+                </p>
+              </div>
+
+              <Link href="/calculadora-sueldo-liquido">
+                <Button className="bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/20 transition-all hover:scale-105">
+                  Calcular Sueldo Líquido
+                  <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
+                </Button>
+              </Link>
+            </div>
+          </div>
 
           {/* SEO Content Section - Optimizado para "calculadora de finiquito" */}
           <div className="mt-12 space-y-8">

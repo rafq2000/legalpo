@@ -23,10 +23,18 @@ import {
     AlertTriangle,
     Info,
     RefreshCw,
-    Share2
+    RefreshCw,
+    Share2,
+    Printer
 } from "lucide-react"
 import { ShareButton } from "@/components/share-button"
 import WhatsAppButton from "@/components/whatsapp-button"
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
 
 // Tipos
 interface SalaryState {
@@ -212,9 +220,74 @@ export default function CalculadoraSueldoLiquido() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-900 text-white">
+        <div className="min-h-screen bg-slate-900 text-white print:bg-white print:text-black">
+            {/* Schema.org - SoftwareApp + FAQ */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@graph": [
+                            {
+                                "@type": "SoftwareApplication",
+                                "name": "Calculadora de Sueldo Líquido Chile 2026",
+                                "applicationCategory": "FinanceApplication",
+                                "operatingSystem": "Any",
+                                "offers": {
+                                    "@type": "Offer",
+                                    "price": "0",
+                                    "priceCurrency": "CLP"
+                                },
+                                "description": "Calcula tu sueldo líquido exacto en Chile con nuestra calculadora gratuita. Incluye descuentos de AFP, Salud, Cesantía e Impuesto Único actualizado a 2026.",
+                                "author": {
+                                    "@type": "Organization",
+                                    "name": "LegalPO"
+                                }
+                            },
+                            {
+                                "@type": "FAQPage",
+                                "mainEntity": [
+                                    {
+                                        "@type": "Question",
+                                        "name": "¿Por qué mi sueldo líquido es más bajo de lo esperado?",
+                                        "acceptedAnswer": {
+                                            "@type": "Answer",
+                                            "text": "El sueldo líquido es siempre menor al bruto porque se deben descontar obligatoriamente la AFP (aprox 11-12%), Salud (7% o pactado Isapre), Seguro de Cesantía (0.6% si es indefinido) y el Impuesto Único si ganas sobre $900.000 aprox."
+                                        }
+                                    },
+                                    {
+                                        "@type": "Question",
+                                        "name": "¿Cómo afecta el tipo de contrato en mi sueldo?",
+                                        "acceptedAnswer": {
+                                            "@type": "Answer",
+                                            "text": "Si tienes contrato indefinido, te descuentan 0.6% para el Seguro de Cesantía. Si es a plazo fijo, ese costo lo asume completamente tu empleador, por lo que tu líquido aumenta levemente."
+                                        }
+                                    },
+                                    {
+                                        "@type": "Question",
+                                        "name": "¿Qué es el tope imponible y cómo me afecta?",
+                                        "acceptedAnswer": {
+                                            "@type": "Answer",
+                                            "text": "El tope imponible (84.3 UF para 2025/2026) es el monto máximo sobre el cual te pueden calcular descuentos de AFP y Salud. Si ganas más que eso, tus descuentos se congelan en ese tope, aumentando proporcionalmente tu sueldo líquido."
+                                        }
+                                    },
+                                    {
+                                        "@type": "Question",
+                                        "name": "¿Cuándo debo pagar Impuesto Único?",
+                                        "acceptedAnswer": {
+                                            "@type": "Answer",
+                                            "text": "Pagas Impuesto Único solo si tu base tributable (sueldo menos AFP, Salud y Cesantía) supera las 13.5 UTM mensuales (aprox. $900.000). Es un impuesto progresivo: mientras más ganas, mayor es el porcentaje del tramo."
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    })
+                }}
+            />
+
             {/* Header SEO */}
-            <section className="py-12 bg-gradient-to-b from-slate-800/50 to-transparent border-b border-white/5">
+            <section className="py-12 bg-gradient-to-b from-slate-800/50 to-transparent border-b border-white/5 print:hidden">
                 <div className="container max-w-5xl mx-auto px-4">
                     <Link href="/">
                         <Button variant="ghost" className="mb-6 -ml-4 text-slate-300 hover:text-white">
@@ -239,7 +312,7 @@ export default function CalculadoraSueldoLiquido() {
                     <div className="grid lg:grid-cols-12 gap-8 items-start">
 
                         {/* INPUTS - Columna Izquierda */}
-                        <div className="lg:col-span-7 space-y-6">
+                        <div className="lg:col-span-7 space-y-6 print:hidden">
                             <Card className="bg-white/5 border-white/10 backdrop-blur-xl">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2 text-xl">
@@ -398,9 +471,9 @@ export default function CalculadoraSueldoLiquido() {
                         </div>
 
                         {/* RESULTS UI - Columna Derecha (Sticky) */}
-                        <div className="lg:col-span-5 relative">
-                            <div className="sticky top-24">
-                                <Card className="bg-gradient-to-b from-emerald-900/20 to-slate-900 border-emerald-500/30 overflow-hidden shadow-2xl relative">
+                        <div className="lg:col-span-5 relative print:w-full print:absolute print:top-0 print:left-0">
+                            <div className="sticky top-24 print:static">
+                                <Card className="bg-gradient-to-b from-emerald-900/20 to-slate-900 border-emerald-500/30 overflow-hidden shadow-2xl relative print:bg-white print:border-black print:text-black print:shadow-none">
                                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-emerald-300" />
 
                                     <CardContent className="p-6 md:p-8 space-y-6">
@@ -441,13 +514,23 @@ export default function CalculadoraSueldoLiquido() {
                                             )}
                                         </div>
 
-                                        {result && (
-                                            <ShareButton
-                                                title="Mi Sueldo Líquido"
-                                                text={getShareText()}
-                                                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
-                                            />
-                                        )}
+                                        <div className="flex gap-3 print:hidden">
+                                            {result && (
+                                                <ShareButton
+                                                    title="Mi Sueldo Líquido"
+                                                    text={getShareText()}
+                                                    className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
+                                                />
+                                            )}
+                                            <Button
+                                                onClick={() => window.print()}
+                                                variant="outline"
+                                                className="flex-1 border-white/10 hover:bg-white/5 hover:text-white text-slate-300"
+                                            >
+                                                <Printer className="h-4 w-4 mr-2" />
+                                                Imprimir
+                                            </Button>
+                                        </div>
                                     </CardContent>
                                 </Card>
 
@@ -460,14 +543,16 @@ export default function CalculadoraSueldoLiquido() {
 
                             </div>
                         </div>
-
                     </div>
-                </div>
-            </section>
 
-            {/* SEO Content */}
-            <section className="py-16 bg-slate-900 border-t border-white/5">
-                <div className="container max-w-4xl px-4 prose prose-invert">
+                </div>
+        </div>
+            </section >
+
+        {/* SEO Content & FAQ */ }
+        < section className = "py-16 bg-slate-900 border-t border-white/5 print:hidden" >
+            <div className="container max-w-4xl px-4">
+                <div className="prose prose-invert mb-12">
                     <h2>¿Cómo calcular el sueldo líquido en Chile?</h2>
                     <p>
                         Para pasar de <strong>sueldo bruto a líquido</strong> se deben restar los descuentos legales obligatorios en Chile.
@@ -480,18 +565,67 @@ export default function CalculadoraSueldoLiquido() {
                         <li><strong>Seguro de Cesantía:</strong> 0.6% si tienes contrato indefinido (a costo del trabajador).</li>
                     </ul>
                 </div>
-            </section>
+
+                {/* FAQ Accordion */}
+                <div className="max-w-3xl mx-auto">
+                    <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                        <HelpCircle className="h-6 w-6 text-emerald-400" />
+                        Preguntas Frecuentes sobre tu Sueldo
+                    </h3>
+
+                    <Accordion type="single" collapsible className="space-y-4">
+                        <AccordionItem value="item-1" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
+                            <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
+                                ¿Por qué mi sueldo líquido es más bajo de lo esperado?
+                            </AccordionTrigger>
+                            <AccordionContent className="text-slate-400">
+                                El sueldo líquido es siempre menor al bruto porque se deben descontar obligatoriamente la AFP (aprox 11-12%), Salud (7% o pactado Isapre), Seguro de Cesantía (0.6% si es indefinido) y el Impuesto Único si ganas sobre $900.000 aprox.
+                            </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="item-2" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
+                            <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
+                                ¿Cómo afecta el tipo de contrato (Indefinido vs Fijo)?
+                            </AccordionTrigger>
+                            <AccordionContent className="text-slate-400">
+                                Si tienes contrato <strong>indefinido</strong>, te descuentan 0.6% de tu sueldo para el Seguro de Cesantía. Si es a <strong>plazo fijo</strong>, ese costo lo asume completamente tu empleador, por lo que tu líquido aumenta levemente al no tener ese descuento.
+                            </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="item-3" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
+                            <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
+                                ¿Qué es el tope imponible y cómo me afecta?
+                            </AccordionTrigger>
+                            <AccordionContent className="text-slate-400">
+                                El tope imponible (84.3 UF para 2025/2026) es el monto máximo sobre el cual te pueden calcular descuentos de AFP y Salud. Si ganas más que eso (aprox $3.2 millones), tus descuentos se "congelan" en ese tope, haciendo que el porcentaje real de descuento sea menor mientras más ganas.
+                            </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="item-4" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
+                            <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
+                                ¿Cuándo debo pagar Impuesto Único?
+                            </AccordionTrigger>
+                            <AccordionContent className="text-slate-400">
+                                Pagas Impuesto Único solo si tu base tributable (sueldo menos AFP, Salud y Cesantía) supera las 13.5 UTM mensuales (aprox. $900.000 líquidos). Es un impuesto progresivo: mientras más ganas, mayor es el porcentaje del tramo, empezando desde un 4% hasta un 40%.
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                </div>
+            </div>
+            </section >
+        <div className="print:hidden">
             <WhatsAppButton phoneNumber="+56931772346" message="Hola, necesito ayuda con el cálculo de mi sueldo líquido" />
         </div>
+        </div >
     )
 }
 
 function Row({ label, value, isNegative, strong, highlight, className }: any) {
     if (value === undefined) return null
     return (
-        <div className={`flex justify-between items-center ${strong ? 'font-semibold text-white' : 'text-slate-300'} ${className}`}>
+        <div className={`flex justify-between items-center ${strong ? 'font-semibold text-white print:text-black' : 'text-slate-300 print:text-black'} ${className}`}>
             <span>{label}</span>
-            <span className={`${isNegative ? 'text-rose-400' : ''} ${highlight ? 'text-amber-400 font-medium' : ''}`}>
+            <span className={`${isNegative ? 'text-rose-400 print:text-black' : ''} ${highlight ? 'text-amber-400 font-medium print:text-black' : ''}`}>
                 {isNegative && "-"}${value.toLocaleString("es-CL")}
             </span>
         </div>

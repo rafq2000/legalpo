@@ -39,6 +39,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/calculadora-sueldo-liquido"
+                  className="text-slate-400 hover:text-emerald-400 transition-colors text-sm"
+                >
+                  Calculadora Sueldo Líquido
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/calculators/herencia"
                   className="text-slate-400 hover:text-emerald-400 transition-colors text-sm"
                 >
