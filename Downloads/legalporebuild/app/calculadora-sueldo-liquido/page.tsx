@@ -26,6 +26,7 @@ import {
     Share2
 } from "lucide-react"
 import { ShareButton } from "@/components/share-button"
+import WhatsAppButton from "@/components/whatsapp-button"
 
 // Tipos
 interface SalaryState {
@@ -480,6 +481,7 @@ export default function CalculadoraSueldoLiquido() {
                     </ul>
                 </div>
             </section>
+            <WhatsAppButton phoneNumber="+56931772346" message="Hola, necesito ayuda con el cálculo de mi sueldo líquido" />
         </div>
     )
 }
