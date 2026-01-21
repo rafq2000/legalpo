@@ -11,7 +11,7 @@ import { PricingSection } from "@/components/pricing-section"
 export const metadata: Metadata = {
   title: "Cursos de IA para Chicos Argentina 2026 | Prueba Gratis | InnovaKids",
   description:
-    "Curso de inteligencia artificial para chicos 8-14 años en Argentina. Aprende ChatGPT, Midjourney, creá apps. Primera clase GRATIS. 10 clases en vivo. ¡Inscribite hoy! 🚀",
+    "🚀 ¡Que tu hijo cree tecnología! Curso IA para Chicos 8-14 años Argentina. Clases en vivo, grupos pequeños. 🎁 Clase de Prueba GRATIS. ¡Cupos Limitados!",
   keywords: [
     "cursos de ia para chicos",
     "cursos de ia para chicos argentina",

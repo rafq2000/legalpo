@@ -25,9 +25,9 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: "Curso de Inteligencia Artificial para Niños | Crea Apps y Videojuegos | InnovaKids",
+  title: "Curso IA para Niños: Crea Apps y Videojuegos (8-14 Años) | InnovaKids",
   description:
-    "El curso de IA #1 para niños de 8 a 14 años. En 10 clases online en vivo, tu hijo aprenderá a crear sus propias apps, videojuegos y proyectos reales con Inteligencia Artificial. Agenda una evaluación gratis hoy.",
+    "🚀 ¿Tu hijo solo consume tecnología? ¡Haz que la CREE! Curso IA para niños 8-14 años. Clases en vivo, grupos pequeños. 🎁 Clase de Prueba GRATIS. ¡Cupos Limitados!",
   keywords: [
     "curso inteligencia artificial niños",
     "curso inteligencia artificial adolescentes",
@@ -106,9 +106,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "🔥 ÚLTIMOS 8 CUPOS | Tu Hijo Crea Apps con IA (No Solo Consume)",
+    title: "🔥 CUPOS LIMITADOS | Tu Hijo Crea Apps con IA (No Solo Consume)",
     description:
-      "⚡ 10 clases vivo, max 5 niños. Apps + juegos reales. $197. 500+ latinos graduados ⭐4.9/5. Cierra en 7 días.",
+      "⚡ Clases en vivo 8-14 años. ChatGPT, Apps + Juegos. ⭐ 4.9/5 Reseñas de Padres. 🎁 ¡Reserva Clase Gratis HOY!",
     images: ["/hero-child-learning-ai.jpg"],
   },
   robots: {

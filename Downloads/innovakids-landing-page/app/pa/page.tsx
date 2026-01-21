@@ -7,7 +7,7 @@ import { MapPin, Users, Clock, Shield, Target } from "lucide-react"
 export const metadata: Metadata = {
   title: "Cursos de IA para Niños en Panamá | Todas las Ciudades | InnovaKids 🇵🇦",
   description:
-    "Cursos de inteligencia artificial para niños en todo Panamá. Ciudad de Panamá, Colón, David, Santiago. Clases online en vivo. Grupos de máx 5 niños.",
+    "🚀 Curso de IA para Niños Panamá. Aprende a CREAR Tecnología (8-14 años). Clases en vivo desde Ciudad de Panamá y todo el país. 🎁 ¡Prueba GRATIS!",
   keywords:
     "cursos ia niños panama, clases ia panama city, curso inteligencia artificial niños colon, ia niños david chiriqui, innovakids panama",
 }

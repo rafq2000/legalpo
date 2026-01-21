@@ -8,7 +8,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
     title: "Cursos de IA para Niños en Nicaragua 2026 | Clases Online | InnovaKids 🇳🇮",
     description:
-        "Cursos de inteligencia artificial para niños en Nicaragua. ChatGPT, videojuegos, arte digital. Grupos de 5 alumnos. $197 USD.",
+        "🚀 Curso de IA para Niños Nicaragua. Aprende a CREAR Apps y Juegos (8-14 años). Clases en vivo. ⭐ 4.9/5. 🎁 ¡Agenda tu Clase GRATIS hoy!",
     keywords: ["cursos ia niños nicaragua", "clases inteligencia artificial managua", "aprender ia niños nicaragua"],
     alternates: { canonical: "https://www.innovakidslatam.com/ni/cursos-ia-ninos-nicaragua" },
 }
