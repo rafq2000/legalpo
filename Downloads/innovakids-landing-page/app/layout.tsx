@@ -25,9 +25,9 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: "Curso IA para Niños: Crea Apps y Videojuegos (8-14 Años) | InnovaKids",
+  title: "Curso de Inteligencia Artificial para Niños y Adolescentes | InnovaKids",
   description:
-    "🚀 ¿Tu hijo solo consume tecnología? ¡Haz que la CREE! Curso IA para niños 8-14 años. Clases en vivo, grupos pequeños. 🎁 Clase de Prueba GRATIS. ¡Cupos Limitados!",
+    "Formación líder en inteligencia artificial para niños de 8 a 14 años. Clases en vivo online, grupos pequeños y certificación internacional. Prepara a tu hijo para el futuro tecnológico.",
   keywords: [
     "curso inteligencia artificial niños",
     "curso inteligencia artificial adolescentes",
@@ -38,6 +38,7 @@ export const metadata: Metadata = {
     "talleres de tecnologia para niños",
     "inteligencia artificial para niños de 8 a 14 años",
     "curso de verano inteligencia artificial",
+
     "clases extraescolares tecnologia",
     "codingal alternativa",
     "tekhne alternativa",
