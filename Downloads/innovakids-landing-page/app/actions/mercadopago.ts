@@ -2,13 +2,37 @@
 
 import { mercadoPagoClient } from "@/lib/mercadopago"
 
-type PaymentOption = "reserve" | "remaining" | "full" | "promo180"
+type PaymentOption =
+  | "first"
+  | "second"
+  | "full"
+  | "reserve"
+  | "earlybird"
+  | "complete"
+  | "custom360"
+  | "explorer"
+  | "start_pack"
+  | "pro_pack"
+  | "university"
+  | "promo180"
+  | "restante177"
+  | "remaining"
 
 const paymentTitles: Record<PaymentOption, string> = {
   reserve: "Innovakids - Reserva de Cupo",
   remaining: "Innovakids - Pago Restante",
   full: "Innovakids - Curso Completo",
   promo180: "Innovakids - Oferta Especial",
+  first: "Innovakids - Reserva",
+  second: "Innovakids - Pago Restante",
+  earlybird: "Innovakids - Early Bird",
+  complete: "Innovakids - Programa Completo",
+  custom360: "Innovakids - Pago Personalizado",
+  explorer: "Innovakids Explorer",
+  start_pack: "Vibe Start Pack",
+  pro_pack: "Vibe Pro Pack",
+  university: "Academy University Pass",
+  restante177: "Innovakids - Pago Restante $177",
 }
 
 const paymentDescriptions: Record<PaymentOption, string> = {
@@ -16,6 +40,16 @@ const paymentDescriptions: Record<PaymentOption, string> = {
   remaining: "Completa tu pago del Curso de IA para Niños",
   full: "Curso Completo de IA para Niños - 12 clases + Proyectos + Certificado",
   promo180: "Acceso Completo al Curso de IA para Niños - Precio Especial",
+  first: "Reserva de cupo",
+  second: "Pago restante del programa",
+  earlybird: "Precio especial primeros inscritos",
+  complete: "Programa completo Innovakids",
+  custom360: "Pago único programa completo",
+  explorer: "Módulo 1 Base - 10 Clases",
+  start_pack: "Explorer + 1 Especialidad",
+  pro_pack: "Explorer + 2 Especialidades",
+  university: "Acceso Total 4 Módulos",
+  restante177: "Pago restante de $177 USD",
 }
 
 export async function createMercadoPagoCheckout(
