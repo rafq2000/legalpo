@@ -5,9 +5,9 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { ArrowRight, CheckCircle, Target } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Curso de Inteligencia Artificial para Niños en Colombia | InnovaKids 🇨🇴",
+  title: "Curso de IA para Niños en Colombia 🇨🇴 | ¡Clase GRATIS! InnovaKids",
   description:
-    "El primer curso de IA para niños en Colombia. Clases online en vivo (Bogotá, Medellín, Cali). Transforma el tiempo de pantalla en habilidades de programación y creatividad con IA.",
+    "⭐ 500+ niños colombianos ya crean apps y videojuegos con IA. Grupos de solo 5 niños. Bogotá, Medellín, Cali y todo Colombia. WhatsApp: +56 9 6475 4219 ¡Clase gratis!",
   alternates: {
     canonical: "https://www.innovakidslatam.com/co",
   },

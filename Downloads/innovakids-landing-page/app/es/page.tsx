@@ -5,9 +5,9 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { MapPin, ArrowRight } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Curso de Inteligencia Artificial para Niños en España | InnovaKids 🇪🇸",
+  title: "Curso de IA para Niños en España 🇪🇸 | ¡Clase GRATIS! InnovaKids",
   description:
-    "El curso de IA líder en España para niños. Clases online en vivo (Madrid, Barcelona, Valencia). Aprende a crear apps y videojuegos con Inteligencia Artificial.",
+    "🚀 Tu hijo crea videojuegos, apps y proyectos reales con IA. Madrid, Barcelona, Valencia y toda España. Solo 5 niños/grupo. WhatsApp: +56 9 6475 4219 ¡Últimas plazas!",
   keywords:
     "cursos ia niños españa, clases inteligencia artificial madrid, curso ia barcelona, programación ia valencia, innovakids españa",
   alternates: {

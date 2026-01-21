@@ -7,9 +7,9 @@ import { MapPin, Users, Clock, Shield } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Curso de Inteligencia Artificial para Niños en México | InnovaKids 🇲🇽",
+  title: "Curso de IA para Niños en México 🇲🇽 | ¡Evaluación GRATIS! InnovaKids",
   description:
-    "Clases de IA online para niños en México (CDMX, Guadalajara, Monterrey). Tu hijo aprenderá a usar ChatGPT y herramientas de IA para crear tecnología, no solo consumirla. Grupos pequeños.",
+    "🔥 252+ niños mexicanos ya programan con IA. CDMX, Guadalajara, Monterrey y todo México. Solo 5 niños por grupo. WhatsApp: +56 9 6475 4219 ¡Demo gratis hoy!",
   keywords: [
     "ia para niños mexico",
     "cursos ia niños cdmx",
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
     "innovakids mexico",
   ],
   openGraph: {
-    title: "Curso IA Niños México $197 | Tu Hijo Crea Apps Reales",
-    description: "Tu hijo aprende a CREAR con IA. 10 clases, grupos de 5. Apps, juegos, startups. 500+ graduados.",
+    title: "Curso IA Niños México ~$3,600 MXN | Tu Hijo Crea Apps Reales",
+    description: "252+ niños mexicanos ya crean con IA. CDMX, Guadalajara, Monterrey. Grupos de 5. Garantía 10 días.",
     url: "https://www.innovakidslatam.com/mx",
     locale: "es_MX",
   },

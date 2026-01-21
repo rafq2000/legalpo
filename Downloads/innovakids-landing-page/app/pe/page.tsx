@@ -5,9 +5,9 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { MapPin, ArrowRight, Users, Clock, Shield, Zap } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Curso de Inteligencia Artificial para Niños en Perú | InnovaKids 🇵🇪",
+  title: "Curso de IA para Niños en Perú 🇵🇪 | ¡Evaluación GRATIS! InnovaKids",
   description:
-    "Clases de Inteligencia Artificial para niños en Perú (Lima, Arequipa, Trujillo). Enseña a tu hijo a dominar la tecnología del futuro creando sus propios videojuegos y aplicaciones.",
+    "🚀 Tu hijo crea videojuegos y apps con IA en solo 10 clases. Lima, Arequipa, Trujillo y todo Perú. Máximo 5 niños por grupo. WhatsApp: +56 9 6475 4219 ¡Últimos cupos!",
   keywords:
     "cursos ia niños peru, clases inteligencia artificial lima, ia para niños arequipa, cursos programación trujillo, innovakids peru",
   alternates: {

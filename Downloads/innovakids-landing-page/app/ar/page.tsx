@@ -7,9 +7,9 @@ import { MapPin, Users, Star, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Curso de Inteligencia Artificial para Chicos en Argentina | InnovaKids 🇦🇷",
+  title: "Curso de IA para Chicos en Argentina 🇦🇷 | ¡Demo GRATIS! InnovaKids",
   description:
-    "Clases de IA online para chicos en Argentina (Buenos Aires, Córdoba, Rosario). Tu hijo aprenderá a usar IA para programar videojuegos y apps. Grupos reducidos.",
+    "⭐ 523+ familias argentinas confían en InnovaKids. Chicos de 8-14 años crean apps y videojuegos con IA. Buenos Aires, Córdoba, Rosario. WhatsApp: +56 9 6475 4219",
   keywords: [
     "cursos ia chicos argentina",
     "clases inteligencia artificial chicos buenos aires",
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     "cursos programacion chicos argentina",
   ],
   openGraph: {
-    title: "Curso IA Chicos Argentina $197 | Tu Hijo Crea Apps Reales",
+    title: "Curso IA Chicos Argentina | 523+ Familias Confían en Nosotros",
     description:
-      "Tu hijo aprende a CREAR con IA. Buenos Aires, Córdoba, Rosario. 500+ graduados. Garantía 10 días.",
+      "Tu hijo aprende a CREAR con IA. Buenos Aires, Córdoba, Rosario. 523+ familias. Garantía 10 días.",
     url: "https://www.innovakidslatam.com/ar",
     siteName: "InnovaKids",
     locale: "es_AR",
