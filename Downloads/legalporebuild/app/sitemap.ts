@@ -67,6 +67,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/pension-alimentos-2026`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
     { url: `${baseUrl}/dicom-chile`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.9 },
     { url: `${baseUrl}/despido-injustificado`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.9 },
+    { url: `${baseUrl}/consultas-legales-gratis`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
   ]
 
   // Specialty lawyer pages - High priority for SEO
