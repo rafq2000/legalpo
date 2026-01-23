@@ -41,6 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/tools/contract-generator`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.85 },
     { url: `${baseUrl}/generador-contratos`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.85 },
     { url: `${baseUrl}/analisis-legal-documentos`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.85 },
+    { url: `${baseUrl}/carta-de-renuncia`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
   ]
 
   // SEO landing pages for calculator keywords
