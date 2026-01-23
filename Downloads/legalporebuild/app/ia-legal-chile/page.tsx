@@ -6,9 +6,9 @@ import { PageAds } from "@/components/page-ads"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "IA Legal Chile 2025 | Inteligencia Artificial Jurídica #1 | Asistente Legal IA",
+  title: "IA Legal Chile 2026 | Inteligencia Artificial Jurídica | Asistente Legal IA",
   description:
-    "🤖 Descubre la IA Legal más avanzada de Chile. Asistente jurídico inteligente especializado en derecho chileno. Consultas instantáneas, precisión 99%, disponible 24/7. ✅ Gratis",
+    "Descubre la IA Legal más avanzada de Chile. Asistente jurídico inteligente especializado en derecho chileno. Consultas instantáneas, precisión 99%, disponible 24/7. Gratis.",
   keywords:
     "ia legal chile, inteligencia artificial juridica, asistente legal ia, chatbot legal chile, ai derecho chile, artificial intelligence law, legal ai chile, robot abogado, asistente juridico virtual, consulta legal ia, inteligencia artificial abogados, legal tech chile, lawtech, tecnologia legal, automatizacion legal, machine learning derecho, nlp legal, procesamiento lenguaje natural juridico, algoritmos legales, big data legal, analytics juridico, predictive legal, legal automation, document automation, contract analysis, legal research ai, case law analysis, jurisprudence ai, legal precedents, sentencing prediction, legal outcome prediction, risk assessment legal, compliance automation, regulatory technology, regtech, legal operations, legal workflow, legal process optimization, legal efficiency, legal productivity, legal innovation, legal transformation, digital legal services, online legal services, virtual law firm, cloud legal services, saas legal, legal software, legal platforms, legal applications, legal tools, legal solutions, legal systems, legal databases, legal repositories, legal libraries, legal research tools, legal analytics tools, legal management systems, case management systems, document management legal, contract management systems, legal billing software, time tracking legal, legal accounting, legal crm, legal marketing, legal seo, legal content, legal writing, legal drafting, legal templates, legal forms, legal documents, legal contracts, legal agreements, legal clauses, legal provisions, legal terms, legal definitions, legal glossary, legal dictionary, legal encyclopedia, legal guides, legal manuals, legal handbooks, legal tutorials, legal courses, legal training, legal education, legal certification, legal accreditation, legal licensing, legal registration, legal authorization, legal validation, legal verification, legal authentication, legal compliance, legal audit, legal review, legal assessment, legal evaluation, legal analysis, legal interpretation, legal opinion, legal advice, legal consultation, legal counseling, legal representation, legal advocacy, legal defense, legal prosecution, legal litigation, legal dispute resolution, legal mediation, legal arbitration, legal negotiation, legal settlement, legal agreement, legal contract, legal transaction, legal deal, legal arrangement, legal understanding, legal accord, legal pact, legal treaty, legal protocol, legal framework, legal structure, legal system, legal order, legal regime, legal jurisdiction, legal authority, legal power, legal competence, legal capacity, legal standing, legal status, legal position, legal rights, legal obligations, legal duties, legal responsibilities, legal liabilities, legal immunities, legal privileges, legal exemptions, legal protections, legal safeguards, legal guarantees, legal warranties, legal assurances, legal securities, legal collaterals, legal bonds, legal sureties, legal pledges, legal mortgages, legal liens, legal encumbrances, legal charges, legal claims, legal demands, legal requests, legal petitions, legal applications, legal submissions, legal filings, legal pleadings, legal motions, legal appeals, legal reviews, legal revisions, legal amendments, legal modifications, legal changes, legal updates, legal reforms, legal improvements, legal enhancements, legal developments, legal advances, legal progress, legal evolution, legal transformation, legal modernization, legal digitization, legal automation, legal optimization, legal streamlining, legal efficiency, legal effectiveness, legal productivity, legal performance, legal quality, legal excellence, legal superiority, legal leadership, legal innovation, legal creativity, legal ingenuity, legal intelligence, legal wisdom, legal knowledge, legal expertise, legal experience, legal skills, legal competencies, legal capabilities, legal talents, legal abilities, legal proficiencies, legal qualifications, legal credentials, legal certifications, legal accreditations, legal endorsements, legal recommendations, legal testimonials, legal references, legal reviews, legal ratings, legal rankings, legal awards, legal recognitions, legal achievements, legal accomplishments, legal successes, legal victories, legal wins, legal triumphs, legal conquests, legal gains, legal benefits, legal advantages, legal profits, legal returns, legal yields, legal outcomes, legal results, legal consequences, legal effects, legal impacts, legal influences, legal implications, legal ramifications, legal repercussions",
   authors: [{ name: "LegalPO - Pioneros en IA Legal" }],
@@ -24,9 +24,9 @@ export const metadata: Metadata = {
     canonical: "/ia-legal-chile",
   },
   openGraph: {
-    title: "IA Legal Chile 2025 | Inteligencia Artificial Jurídica #1",
+    title: "IA Legal Chile 2026 | Inteligencia Artificial Jurídica",
     description:
-      "🤖 La IA Legal más avanzada de Chile. Asistente jurídico inteligente especializado en derecho chileno. Consultas instantáneas, precisión 99%.",
+      "La IA Legal más avanzada de Chile. Asistente jurídico inteligente especializado en derecho chileno. Consultas instantáneas, precisión 99%.",
     url: "https://legalpo.cl/ia-legal-chile",
     siteName: "LegalPO",
     locale: "es_CL",
@@ -42,9 +42,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "IA Legal Chile 2025 | Inteligencia Artificial Jurídica",
+    title: "IA Legal Chile 2026 | Inteligencia Artificial Jurídica",
     description:
-      "🤖 La IA Legal más avanzada de Chile. Asistente jurídico inteligente especializado en derecho chileno.",
+      "La IA Legal más avanzada de Chile. Asistente jurídico inteligente especializado en derecho chileno.",
     images: ["/images/ia-legal-twitter.jpg"],
   },
   robots: {

@@ -4,7 +4,7 @@ import { comunasChile } from "@/lib/comunas-chile"
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://legalpo.cl"
   // Fecha de última actualización del sitio - actualizar manualmente cuando hay cambios importantes
-  const lastUpdate = "2026-01-19T00:00:00.000Z"
+  const lastUpdate = "2026-01-21T00:00:00.000Z"
 
   // Main pages
   const mainPages = [
@@ -20,6 +20,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/calculators/pension-alimentos`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
     { url: `${baseUrl}/calculators/herencia`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.9 },
     { url: `${baseUrl}/calculators/indemnizacion`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.9 },
+    { url: `${baseUrl}/calculators/reajuste-pension`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
+    { url: `${baseUrl}/calculators/feriado-legal`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
+    { url: `${baseUrl}/calculators/embargo-sueldo`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
   ]
 
   // Legal content pages
@@ -53,6 +56,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/como-calcular-pension-alimentos`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.85 },
     { url: `${baseUrl}/como-calcular-herencia`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.85 },
     { url: `${baseUrl}/calculadora-sueldo-liquido`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
+    { url: `${baseUrl}/valor-minimo-pension-alimentos`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
   ]
 
   // FAQ and Guide pages - High priority for SEO

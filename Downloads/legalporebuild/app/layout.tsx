@@ -14,11 +14,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://legalpo.cl"),
   title: {
     default:
-      "🥇 Abogado Gratis Online Chile 2026 | Asesoría Legal Gratis con IA 24/7 | Consultas Legales Gratis | LegalPO",
-    template: "%s | Abogado Gratis Online - LegalPO Chile",
+      "Abogado Gratis Online Chile 2026 | Asesoría Legal con IA 24/7 | LegalPO",
+    template: "%s | LegalPO Chile - Abogado Gratis Online",
   },
   description:
-    "🤖 ABOGADO GRATIS ONLINE #1 EN CHILE - Asesoría legal gratis con inteligencia artificial 24/7. Consultas legales gratis instantáneas, abogado virtual gratis, asistente legal IA. +150,000 chilenos ya recibieron asesoría jurídica gratuita. Sin costo, sin registro. Especializado en legislación chilena 2026: finiquitos, pensión alimenticia, herencias, divorcios, deudas, arriendos.",
+    "Abogado gratis online en Chile con inteligencia artificial 24/7. Consultas legales gratis instantáneas, calculadora de finiquito y pensión alimenticia. +150.000 chilenos asesorados. Sin costo, sin registro. Especializado en legislación chilena 2026.",
   keywords: [
     "abogado gratis online",
     "abogado gratis online chile",
@@ -177,9 +177,9 @@ export const metadata: Metadata = {
     url: "https://legalpo.cl",
     siteName: "LegalPO - Abogado Gratis Online Chile",
     title:
-      "🥇 Abogado Gratis Online Chile 2026 | Asesoría Legal Gratis con IA 24/7 | Consultas Legales Gratis Instantáneas",
+      "Abogado Gratis Online Chile 2026 | Asesoría Legal con IA 24/7 | LegalPO",
     description:
-      "🤖 ABOGADO GRATIS ONLINE #1 en Chile. Asesoría legal gratis con inteligencia artificial 24/7. Consultas legales gratuitas instantáneas sobre finiquitos, pensión alimenticia, herencias, divorcios. +150,000 chilenos confían en nuestro abogado virtual gratis con IA. Sin costo, sin registro, disponible 24 horas.",
+      "Abogado gratis online en Chile. Asesoría legal con inteligencia artificial 24/7. Consultas sobre finiquitos, pensión alimenticia, herencias, divorcios. +150.000 chilenos confían en LegalPO. Sin costo, sin registro.",
     images: [
       {
         url: "/images/legalpo-abogado-gratis-online-og.jpg",
@@ -192,9 +192,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "🥇 Abogado Gratis Online Chile | Asesoría Legal Gratis con IA 24/7",
+    title: "Abogado Gratis Online Chile | Asesoría Legal con IA 24/7 | LegalPO",
     description:
-      "🤖 ABOGADO GRATIS ONLINE más usado en Chile. Asesoría legal gratuita con inteligencia artificial 24/7. 150,000+ consultas legales gratis respondidas. Abogado virtual IA especializado en legislación chilena.",
+      "Abogado gratis online en Chile. Asesoría legal con inteligencia artificial 24/7. +150.000 consultas respondidas. Especializado en legislación chilena 2026.",
     images: ["/images/legalpo-abogado-gratis-online-twitter.jpg"],
     creator: "@LegalPO_Chile",
     site: "@LegalPO_Chile",

@@ -23,7 +23,6 @@ import {
     AlertTriangle,
     Info,
     RefreshCw,
-    RefreshCw,
     Share2,
     Printer
 } from "lucide-react"
@@ -546,77 +545,76 @@ export default function CalculadoraSueldoLiquido() {
                     </div>
 
                 </div>
-        </div>
-            </section >
+            </section>
 
-        {/* SEO Content & FAQ */ }
-        < section className = "py-16 bg-slate-900 border-t border-white/5 print:hidden" >
-            <div className="container max-w-4xl px-4">
-                <div className="prose prose-invert mb-12">
-                    <h2>¿Cómo calcular el sueldo líquido en Chile?</h2>
-                    <p>
-                        Para pasar de <strong>sueldo bruto a líquido</strong> se deben restar los descuentos legales obligatorios en Chile.
-                        Nuestra calculadora automática realiza este proceso considerando:
-                    </p>
-                    <ul>
-                        <li><strong>AFP:</strong> 10% obligatorio + comisión de la administradora (entre 0.49% y 1.45%).</li>
-                        <li><strong>Salud:</strong> 7% obligatorio para Fonasa, o el precio de tu plan Isapre (con un mínimo del 7%).</li>
-                        <li><strong>Impuesto Único:</strong> Tributo progresivo que se aplica a sueldos más altos (sobre 13.5 UTM mensuales).</li>
-                        <li><strong>Seguro de Cesantía:</strong> 0.6% si tienes contrato indefinido (a costo del trabajador).</li>
-                    </ul>
+            {/* SEO Content & FAQ */}
+            <section className="py-16 bg-slate-900 border-t border-white/5 print:hidden">
+                <div className="container max-w-4xl px-4">
+                    <div className="prose prose-invert mb-12">
+                        <h2>¿Cómo calcular el sueldo líquido en Chile?</h2>
+                        <p>
+                            Para pasar de <strong>sueldo bruto a líquido</strong> se deben restar los descuentos legales obligatorios en Chile.
+                            Nuestra calculadora automática realiza este proceso considerando:
+                        </p>
+                        <ul>
+                            <li><strong>AFP:</strong> 10% obligatorio + comisión de la administradora (entre 0.49% y 1.45%).</li>
+                            <li><strong>Salud:</strong> 7% obligatorio para Fonasa, o el precio de tu plan Isapre (con un mínimo del 7%).</li>
+                            <li><strong>Impuesto Único:</strong> Tributo progresivo que se aplica a sueldos más altos (sobre 13.5 UTM mensuales).</li>
+                            <li><strong>Seguro de Cesantía:</strong> 0.6% si tienes contrato indefinido (a costo del trabajador).</li>
+                        </ul>
+                    </div>
+
+                    {/* FAQ Accordion */}
+                    <div className="max-w-3xl mx-auto">
+                        <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                            <HelpCircle className="h-6 w-6 text-emerald-400" />
+                            Preguntas Frecuentes sobre tu Sueldo
+                        </h3>
+
+                        <Accordion type="single" collapsible className="space-y-4">
+                            <AccordionItem value="item-1" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
+                                <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
+                                    ¿Por qué mi sueldo líquido es más bajo de lo esperado?
+                                </AccordionTrigger>
+                                <AccordionContent className="text-slate-400">
+                                    El sueldo líquido es siempre menor al bruto porque se deben descontar obligatoriamente la AFP (aprox 11-12%), Salud (7% o pactado Isapre), Seguro de Cesantía (0.6% si es indefinido) y el Impuesto Único si ganas sobre $900.000 aprox.
+                                </AccordionContent>
+                            </AccordionItem>
+
+                            <AccordionItem value="item-2" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
+                                <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
+                                    ¿Cómo afecta el tipo de contrato (Indefinido vs Fijo)?
+                                </AccordionTrigger>
+                                <AccordionContent className="text-slate-400">
+                                    Si tienes contrato <strong>indefinido</strong>, te descuentan 0.6% de tu sueldo para el Seguro de Cesantía. Si es a <strong>plazo fijo</strong>, ese costo lo asume completamente tu empleador, por lo que tu líquido aumenta levemente al no tener ese descuento.
+                                </AccordionContent>
+                            </AccordionItem>
+
+                            <AccordionItem value="item-3" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
+                                <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
+                                    ¿Qué es el tope imponible y cómo me afecta?
+                                </AccordionTrigger>
+                                <AccordionContent className="text-slate-400">
+                                    El tope imponible (84.3 UF para 2025/2026) es el monto máximo sobre el cual te pueden calcular descuentos de AFP y Salud. Si ganas más que eso (aprox $3.2 millones), tus descuentos se "congelan" en ese tope, haciendo que el porcentaje real de descuento sea menor mientras más ganas.
+                                </AccordionContent>
+                            </AccordionItem>
+
+                            <AccordionItem value="item-4" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
+                                <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
+                                    ¿Cuándo debo pagar Impuesto Único?
+                                </AccordionTrigger>
+                                <AccordionContent className="text-slate-400">
+                                    Pagas Impuesto Único solo si tu base tributable (sueldo menos AFP, Salud y Cesantía) supera las 13.5 UTM mensuales (aprox. $900.000 líquidos). Es un impuesto progresivo: mientras más ganas, mayor es el porcentaje del tramo, empezando desde un 4% hasta un 40%.
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                    </div>
                 </div>
-
-                {/* FAQ Accordion */}
-                <div className="max-w-3xl mx-auto">
-                    <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                        <HelpCircle className="h-6 w-6 text-emerald-400" />
-                        Preguntas Frecuentes sobre tu Sueldo
-                    </h3>
-
-                    <Accordion type="single" collapsible className="space-y-4">
-                        <AccordionItem value="item-1" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
-                            <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
-                                ¿Por qué mi sueldo líquido es más bajo de lo esperado?
-                            </AccordionTrigger>
-                            <AccordionContent className="text-slate-400">
-                                El sueldo líquido es siempre menor al bruto porque se deben descontar obligatoriamente la AFP (aprox 11-12%), Salud (7% o pactado Isapre), Seguro de Cesantía (0.6% si es indefinido) y el Impuesto Único si ganas sobre $900.000 aprox.
-                            </AccordionContent>
-                        </AccordionItem>
-
-                        <AccordionItem value="item-2" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
-                            <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
-                                ¿Cómo afecta el tipo de contrato (Indefinido vs Fijo)?
-                            </AccordionTrigger>
-                            <AccordionContent className="text-slate-400">
-                                Si tienes contrato <strong>indefinido</strong>, te descuentan 0.6% de tu sueldo para el Seguro de Cesantía. Si es a <strong>plazo fijo</strong>, ese costo lo asume completamente tu empleador, por lo que tu líquido aumenta levemente al no tener ese descuento.
-                            </AccordionContent>
-                        </AccordionItem>
-
-                        <AccordionItem value="item-3" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
-                            <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
-                                ¿Qué es el tope imponible y cómo me afecta?
-                            </AccordionTrigger>
-                            <AccordionContent className="text-slate-400">
-                                El tope imponible (84.3 UF para 2025/2026) es el monto máximo sobre el cual te pueden calcular descuentos de AFP y Salud. Si ganas más que eso (aprox $3.2 millones), tus descuentos se "congelan" en ese tope, haciendo que el porcentaje real de descuento sea menor mientras más ganas.
-                            </AccordionContent>
-                        </AccordionItem>
-
-                        <AccordionItem value="item-4" className="border-white/10 bg-white/5 rounded-lg px-4 border-b-0">
-                            <AccordionTrigger className="text-slate-200 hover:text-white hover:no-underline">
-                                ¿Cuándo debo pagar Impuesto Único?
-                            </AccordionTrigger>
-                            <AccordionContent className="text-slate-400">
-                                Pagas Impuesto Único solo si tu base tributable (sueldo menos AFP, Salud y Cesantía) supera las 13.5 UTM mensuales (aprox. $900.000 líquidos). Es un impuesto progresivo: mientras más ganas, mayor es el porcentaje del tramo, empezando desde un 4% hasta un 40%.
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                </div>
+            </section>
+            <div className="print:hidden">
+                <WhatsAppButton phoneNumber="+56931772346" message="Hola, necesito ayuda con el cálculo de mi sueldo líquido" />
             </div>
-            </section >
-        <div className="print:hidden">
-            <WhatsAppButton phoneNumber="+56931772346" message="Hola, necesito ayuda con el cálculo de mi sueldo líquido" />
         </div>
-        </div >
     )
 }
 
@@ -631,3 +629,4 @@ function Row({ label, value, isNegative, strong, highlight, className }: any) {
         </div>
     )
 }
+
