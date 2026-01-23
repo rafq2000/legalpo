@@ -4,100 +4,246 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import Link from "next/link"
-import { CreditCard, Calculator, CheckCircle, Clock, Scale, FileText, MessageCircle, Shield, Gavel, XCircle, AlertTriangle, DollarSign } from "lucide-react"
+import { CreditCard, Calculator, CheckCircle, Clock, Scale, FileText, MessageCircle, Shield, Gavel, XCircle, AlertTriangle, DollarSign, ArrowRight } from "lucide-react"
+import QuizQuiebra from "./quiz-quiebra"
+import EmbargoClient from "@/app/calculators/embargo-sueldo/embargo-client"
 
 export const metadata: Metadata = {
-    title: "Abogado Deudas Chile 2026 | DICOM, Prescripción, Embargo | Consulta Gratis | LegalPO",
-    description: "💳 ABOGADO DEUDAS en Chile. Especialistas en DICOM, prescripción de deudas, embargo, Ley de Quiebras personales, renegociación. Asesoría gratis 24/7.",
+    title: "Abogado Deudas Chile 2026 | Ley de Quiebras, Embargos y DICOM | LegalPO",
+    description: "🛡️ ABOGADO DEUDAS. ¿Te demandaron? ¿Tienes DICOM? Guía definitiva: Ley de Quiebras (20.720), Tercerías, Eliminación de DICOM y Calculadora de Embargo GRATIS.",
     keywords: [
         "abogado deudas chile",
-        "salir de dicom",
-        "prescripcion deudas chile",
-        "embargo bienes chile",
-        "ley quiebras personal",
-        "renegociar deudas",
-        "cobranza judicial",
-        "abogado dicom chile",
-        "bienes inembargables",
-        "deudas prescritas chile",
+        "ley de quiebras persona natural",
+        "defensa deudores chile",
+        "tercerias de posesion",
+        "embargo de bienes",
+        "salir de dicom gratis",
+        "prescripcion deudas",
+        "renegociacion deudas",
+        "abogado quiebras",
+        "como evitar embargo",
     ],
     openGraph: {
-        title: "Abogado Deudas Chile | DICOM y Prescripción | LegalPO",
-        description: "Especialistas en deudas, DICOM, prescripción y embargos. Asesoría 24/7.",
+        title: "Abogado Deudas Chile | Soluciones Legales a tu Insolvencia",
+        description: "Recupera tu tranquilidad. Guía completa sobre Ley de Quiebras, Embargos y Prescripción. Herramientas gratis incluidas.",
         type: "website",
     },
 }
 
 const faqs = [
-    { q: "¿Cuándo prescriben las deudas en Chile?", a: "La mayoría de deudas (bancarias, tarjetas, créditos) prescriben en 5 años. Cheques y pagarés en 1 año. Deudas tributarias en 3 años. El plazo se cuenta desde que la deuda se hizo exigible." },
-    { q: "¿Cuándo me sacan de DICOM?", a: "Automáticamente después de 5 años sin pagar. Si pagas, el acreedor debe solicitar tu eliminación en máximo 7 días hábiles tras recibir el pago." },
-    { q: "¿Qué bienes no pueden embargarme?", a: "Son inembargables: el lecho del deudor, ropa necesaria, herramientas de trabajo (hasta 2 UTM), alimentos para un mes, el sueldo mínimo completo, y el 50% del sueldo sobre el mínimo." },
-    { q: "¿Qué es la Ley de Quiebras personales?", a: "La Ley 20.720 permite a personas naturales renegociar o liquidar deudas ordenadamente. Durante el proceso estás protegido de embargos y cobranzas." },
-    { q: "¿Me pueden embargar el sueldo?", a: "Solo por orden judicial y con límites: máximo 50% del sueldo que exceda el mínimo. El sueldo mínimo ($539.000) está 100% protegido." },
-]
-
-const servicios = [
-    { icon: XCircle, titulo: "Salir de DICOM", desc: "Asesoría para eliminar registros de morosidad" },
-    { icon: Clock, titulo: "Prescripción de Deudas", desc: "Análisis y defensa por deudas prescritas" },
-    { icon: Shield, titulo: "Defensa ante Embargos", desc: "Protección de bienes inembargables" },
-    { icon: Scale, titulo: "Ley de Quiebras", desc: "Procedimiento concursal para personas naturales" },
+    { q: "¿En qué consiste la Ley de Quiebras (20.720)?", a: "Es un procedimiento legal que permite a personas y empresas declarar su insolvencia. Si cumples los requisitos, puedes entregar tus bienes (aunque sean pocos) para pagar lo que alcances, y el resto de la deuda SE EXTINGUE legalmente, quedando limpio de DICOM." },
+    { q: "¿Qué es una Tercería de Posesión?", a: "Es una defensa clave cuando te quieren embargar bienes que no son tuyos (por ejemplo, si vives con tus padres o pareja y la deuda es tuya). Se prueba que los bienes son de un tercero para evitar el remate." },
+    { q: "¿Cuándo prescriben realmente las deudas?", a: "La acción ejecutiva (para embargarte) prescribe en 3 años desde que se hace exigible (usualmente desde que dejas de pagar). La acción ordinaria en 5 años. OJO: La prescripción debe ser DECLARADA por un juez, no es automática." },
+    { q: "¿Me pueden embargar si no tengo nada a mi nombre?", a: "Si no tienes bienes registrales (casa, auto) a tu nombre, podrían intentar embargar los bienes muebles de tu domicilio (TV, muebles), presumiendo que son tuyos. Ahí es donde entra la Tercería de Posesión." },
+    { q: "¿Cómo borro mis antecedentes comerciales (Dicom)?", a: "1) Pagando la deuda. 2) Si la deuda prescribió (declarado por juez). 3) Si te acogiste a la Ley de Quiebras y obtuviste la Resolución de Término." },
 ]
 
 export default function AbogadoDeudasPage() {
     return (
-        <div className="min-h-screen bg-slate-900 text-white">
-            <section className="py-16 bg-gradient-to-b from-slate-800/50 to-transparent border-b border-white/5">
-                <div className="container max-w-5xl mx-auto px-4 text-center">
-                    <Badge className="mb-4 bg-amber-500/20 text-amber-300 border-amber-500/30">
-                        <CreditCard className="w-4 h-4 mr-2" />Especialista en Deudas
+        <div className="min-h-screen bg-slate-900 text-white font-sans">
+            {/* Hero Section */}
+            <section className="relative py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-amber-900/40 overflow-hidden">
+                <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
+                <div className="container max-w-6xl mx-auto px-4 relative z-10 text-center">
+                    <Badge className="mb-6 bg-amber-500/20 text-amber-300 border-amber-500/30 px-4 py-1 text-sm rounded-full">
+                        <Shield className="w-4 h-4 mr-2" />
+                        Defensa Deudores y Ley de Quiebras
                     </Badge>
-                    <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-300 bg-clip-text text-transparent">
-                        Abogado Deudas Chile 2026
+                    <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight bg-gradient-to-r from-white via-amber-100 to-amber-400 bg-clip-text text-transparent">
+                        Recupera tu Tranquilidad Financiera
                     </h1>
-                    <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
-                        DICOM, prescripción de deudas, embargos, Ley de Quiebras. Conoce tus derechos y opciones legales para manejar tus deudas. Consulta gratis 24/7.
+                    <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+                        No dejes que las deudas controlen tu vida. Especialistas en <strong>Ley de Quiebras, Tercerías y Prescripción</strong>.
                     </p>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><Clock className="h-6 w-6 text-green-400 mx-auto mb-2" /><div className="text-xl font-bold">5 años</div><div className="text-sm text-slate-400">Prescripción</div></CardContent></Card>
-                        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><Shield className="h-6 w-6 text-blue-400 mx-auto mb-2" /><div className="text-xl font-bold">50%</div><div className="text-sm text-slate-400">Máx. embargo</div></CardContent></Card>
-                        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><DollarSign className="h-6 w-6 text-emerald-400 mx-auto mb-2" /><div className="text-xl font-bold">$539k</div><div className="text-sm text-slate-400">Protegido</div></CardContent></Card>
-                        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><MessageCircle className="h-6 w-6 text-purple-400 mx-auto mb-2" /><div className="text-xl font-bold">24/7</div><div className="text-sm text-slate-400">Asesoría</div></CardContent></Card>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto mb-12">
+                        <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-colors">
+                            <Gavel className="w-8 h-8 text-amber-400 mx-auto mb-2" />
+                            <div className="font-bold">Ley de Quiebras</div>
+                            <div className="text-sm text-slate-400">Borrón y cuenta nueva</div>
+                        </div>
+                        <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-colors">
+                            <Shield className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                            <div className="font-bold">Defensa Embargo</div>
+                            <div className="text-sm text-slate-400">Protege tus bienes</div>
+                        </div>
+                        <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-colors">
+                            <Clock className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                            <div className="font-bold">Prescripción</div>
+                            <div className="text-sm text-slate-400">Extingue deudas antiguas</div>
+                        </div>
+                        <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-colors">
+                            <XCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
+                            <div className="font-bold">Salir de DICOM</div>
+                            <div className="text-sm text-slate-400">Limpieza legal</div>
+                        </div>
                     </div>
+
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link href="/"><Button size="lg" className="bg-amber-600 hover:bg-amber-700"><MessageCircle className="h-5 w-5 mr-2" />Consultar Abogado IA</Button></Link>
-                        <Link href="/dicom-chile"><Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10"><FileText className="h-5 w-5 mr-2" />Guía Salir de DICOM</Button></Link>
+                        <Link href="/">
+                            <Button size="lg" className="bg-amber-600 hover:bg-amber-700 text-lg px-8 h-12 shadow-lg shadow-amber-900/20">
+                                <MessageCircle className="h-5 w-5 mr-2" />
+                                Hablar con Abogado IA
+                            </Button>
+                        </Link>
+                        <Link href="#quiz">
+                            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 text-lg px-8 h-12">
+                                <CheckCircle className="h-5 w-5 mr-2" />
+                                ¿Califico para Quiebra?
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </section>
-            <section className="py-12">
+
+            {/* Quiz Section */}
+            <section id="quiz" className="py-20 bg-slate-50 text-slate-900">
                 <div className="container max-w-4xl mx-auto px-4">
-                    <h2 className="text-2xl font-bold text-center mb-8">Servicios de Derecho de Deudas</h2>
-                    <div className="grid md:grid-cols-2 gap-6 mb-12">
-                        {servicios.map((s, i) => (
-                            <Card key={i} className="bg-white/5 border-white/10"><CardContent className="p-6 flex items-start gap-4"><div className="p-3 bg-amber-500/20 rounded-xl"><s.icon className="h-6 w-6 text-amber-400" /></div><div><h3 className="font-semibold text-white mb-1">{s.titulo}</h3><p className="text-sm text-slate-400">{s.desc}</p></div></CardContent></Card>
-                        ))}
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900">¿Es la Ley de Quiebras para ti?</h2>
+                        <p className="text-lg text-slate-600">Responde este breve diagnóstico y descubre si puedes eliminar tus deudas legalmente.</p>
                     </div>
-                    <Card className="bg-white/5 border-white/10 mb-8">
-                        <CardHeader><CardTitle className="text-xl text-white">Preguntas Frecuentes - Deudas</CardTitle></CardHeader>
-                        <CardContent className="p-0">
-                            <Accordion type="single" collapsible className="w-full">
-                                {faqs.map((faq, i) => (
-                                    <AccordionItem key={i} value={`faq-${i}`} className="border-white/10 px-6">
-                                        <AccordionTrigger className="text-left text-white hover:text-amber-400 py-4">{faq.q}</AccordionTrigger>
-                                        <AccordionContent className="text-slate-300 pb-4">{faq.a}</AccordionContent>
-                                    </AccordionItem>
-                                ))}
-                            </Accordion>
-                        </CardContent>
-                    </Card>
-                    <div className="bg-gradient-to-r from-amber-600/20 to-orange-600/20 rounded-2xl p-8 text-center">
-                        <h2 className="text-2xl font-bold mb-4">¿Tienes problemas de deudas?</h2>
-                        <p className="text-slate-300 mb-6">Consulta sobre DICOM, prescripción, embargos y tus opciones legales.</p>
-                        <Link href="/"><Button size="lg" className="bg-amber-600 hover:bg-amber-700"><MessageCircle className="h-5 w-5 mr-2" />Consultar Ahora</Button></Link>
+                    <QuizQuiebra />
+                </div>
+            </section>
+
+            {/* Interactive Calculator Integration */}
+            <section className="py-20 bg-white border-y border-slate-200">
+                <div className="container max-w-5xl mx-auto px-4">
+                    <div className="mb-12 text-center">
+                        <Badge className="bg-red-100 text-red-700 border-red-200 mb-3 hover:bg-red-200">Herramienta Gratuita</Badge>
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Calculadora de Embargo</h2>
+                        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                            Muchos clientes llegan con miedo a perderlo todo. Usa nuestra herramienta para saber exactamente cuánto de tu sueldo es intocable por ley.
+                        </p>
+                    </div>
+                    {/* Reuse existing client component */}
+                    <EmbargoClient />
+                </div>
+            </section>
+
+            {/* Skyscraper Content - Guía Definitiva */}
+            <section className="py-24 bg-slate-900">
+                <div className="container max-w-4xl mx-auto px-4">
+                    <h2 className="text-3xl md:4xl font-bold mb-12 text-center bg-gradient-to-r from-amber-200 to-amber-500 bg-clip-text text-transparent">
+                        Guía Definitiva: Defensa de Deudas en Chile
+                    </h2>
+
+                    <div className="space-y-12">
+                        {/* Ley de Quiebras */}
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors">
+                            <h3 className="text-2xl font-bold text-amber-400 mb-4 flex items-center gap-2">
+                                <Gavel className="h-6 w-6" /> 1. Ley de Quiebras (Ley 20.720)
+                            </h3>
+                            <p className="text-slate-300 mb-4 leading-relaxed">
+                                Conocida legalmente como "Procedimiento de Liquidación Voluntaria", esta ley es el "botón de reinicio" financiero.
+                                Está diseñada para personas que ya no pueden pagar sus deudas (insolvencia).
+                            </p>
+                            <ul className="space-y-3 mb-6">
+                                <li className="flex items-start gap-3 text-slate-300">
+                                    <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                                    <span><strong>Extinción Total:</strong> Al terminar el proceso, los saldos de tus deudas se eliminan legalmente.</span>
+                                </li>
+                                <li className="flex items-start gap-3 text-slate-300">
+                                    <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                                    <span><strong>Adiós DICOM:</strong> Con la resolución de término, tienes derecho a que te borren de todos los registros de morosidad.</span>
+                                </li>
+                                <li className="flex items-start gap-3 text-slate-300">
+                                    <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                                    <span><strong>Suspensión de Juicios:</strong> Se paralizan los embargos y juicios ejecutivos en tu contra.</span>
+                                </li>
+                            </ul>
+                            <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-lg">
+                                <p className="text-amber-200 text-sm">
+                                    <strong>Requisito Clave:</strong> Debes tener más de una deuda vencida y estar dispuesto a entregar tus bienes (si los tienes) al liquidador.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Tercerías */}
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors">
+                            <h3 className="text-2xl font-bold text-blue-400 mb-4 flex items-center gap-2">
+                                <Shield className="h-6 w-6" /> 2. Defensa ante Embargos: La Tercería
+                            </h3>
+                            <p className="text-slate-300 mb-4 leading-relaxed">
+                                Un error común es pensar que "si no tengo nada a mi nombre, no me pueden hacer nada".
+                                <strong> Falso.</strong> El receptor judicial puede embargar bienes del domicilio donde vives (casa de tus padres, pareja, abuelos), presumiendo que son tuyos.
+                            </p>
+                            <h4 className="font-semibold text-white mb-2">¿Cómo funciona la Tercería de Posesión?</h4>
+                            <p className="text-slate-300 mb-4">
+                                Es una demanda que interpone el verdadero dueño de los bienes (tu mamá, tu pareja) contra el banco y contra ti, diciéndole al juez:
+                                <em> "Estos bienes son míos, no del deudor. No los embarguen."</em>
+                            </p>
+                            <p className="text-slate-300">
+                                Es la herramienta más efectiva para salvar los muebles, electrodomésticos y enseres de la casa familiar.
+                            </p>
+                        </div>
+
+                        {/* Prescripción */}
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors">
+                            <h3 className="text-2xl font-bold text-green-400 mb-4 flex items-center gap-2">
+                                <Clock className="h-6 w-6" /> 3. La Prescripción de Deudas
+                            </h3>
+                            <p className="text-slate-300 mb-4 leading-relaxed">
+                                Las deudas no son eternas. Si el acreedor (banco/empresa) dejó pasar el tiempo sin demandarte o abandonó el juicio,
+                                la deuda puede declararse "prescrita".
+                            </p>
+                            <div className="grid md:grid-cols-2 gap-4 mt-6">
+                                <Card className="bg-slate-800 border-slate-700">
+                                    <CardContent className="p-4">
+                                        <div className="font-bold text-white mb-1">Pagaré / Letra</div>
+                                        <div className="text-2xl font-bold text-amber-500">1 Año</div>
+                                        <div className="text-xs text-slate-400">Desde vencimiento</div>
+                                    </CardContent>
+                                </Card>
+                                <Card className="bg-slate-800 border-slate-700">
+                                    <CardContent className="p-4">
+                                        <div className="font-bold text-white mb-1">Acción Ejecutiva</div>
+                                        <div className="text-2xl font-bold text-amber-500">3 Años</div>
+                                        <div className="text-xs text-slate-400">Regla general deudas bancarias</div>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "LegalService", name: "LegalPO - Abogado Deudas Chile", description: "Especialistas en deudas: DICOM, prescripción, embargos, Ley de Quiebras.", serviceType: "Derecho de Deudas", areaServed: { "@type": "Country", name: "Chile" }, priceRange: "Gratis" }) }} />
+
+            {/* FAQs */}
+            <section className="py-20 bg-slate-950">
+                <div className="container max-w-3xl mx-auto px-4">
+                    <h2 className="text-3xl font-bold text-center mb-10">Preguntas Frecuentes sobre Deudas</h2>
+                    <Accordion type="single" collapsible className="w-full">
+                        {faqs.map((faq, i) => (
+                            <AccordionItem key={i} value={`faq-${i}`} className="border-white/10 px-4 mb-4 bg-white/5 rounded-lg overflow-hidden">
+                                <AccordionTrigger className="text-left text-white hover:text-amber-400 py-4 px-2 text-lg font-medium">
+                                    {faq.q}
+                                </AccordionTrigger>
+                                <AccordionContent className="text-slate-300 pb-6 px-2 text-base leading-relaxed">
+                                    {faq.a}
+                                </AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
+                </div>
+            </section>
+
+            {/* Final CTA */}
+            <section className="py-20 bg-amber-600 text-white text-center">
+                <div className="container px-4">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-6">No enfrentes a los bancos solo</h2>
+                    <p className="text-xl max-w-2xl mx-auto mb-8 text-amber-100">
+                        Tenemos las herramientas legales para proteger tu patrimonio y ayudarte a empezar de cero.
+                    </p>
+                    <Link href="/">
+                        <Button size="lg" className="bg-white text-amber-700 hover:bg-amber-50 font-bold text-lg px-8 h-14 shadow-xl">
+                            Consulta Gratis con Abogado IA
+                        </Button>
+                    </Link>
+                </div>
+            </section>
+
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "LegalService", name: "LegalPO - Abogado Deudas y Quiebras", description: "Expertos en Ley de Quiebras, Tercerías y Prescripción de deudas en Chile.", serviceType: "Derecho Concursal", areaServed: { "@type": "Country", name: "Chile" }, priceRange: "Cobro contra resultados / Cuotas" }) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map(f => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) }) }} />
         </div>
     )
