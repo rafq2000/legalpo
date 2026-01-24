@@ -21,11 +21,14 @@ export default function NeuroPage() {
                     <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
                         Terapia intensiva basada en la neuroplasticidad para maximizar la recuperación de funciones tras un daño neurológico.
                     </p>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg rounded-full"
-                        onClick={() => window.open("https://wa.me/56999679593?text=Hola, me interesa neurorehabilitación", "_blank")}
+                    <a
+                        href="https://wa.me/56999679593?text=Hola, me interesa neurorehabilitación"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg rounded-full font-medium transition-colors duration-200"
                     >
                         Consultar con Especialista
-                    </Button>
+                    </a>
                 </div>
             </section>
 

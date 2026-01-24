@@ -22,11 +22,14 @@ export default function GeriatricPage() {
                         Mantenga la independencia y vitalidad. Programas especializados para combatir la sarcopenia,
                         mejorar el equilibrio y rehabilitar lesiones en el adulto mayor.
                     </p>
-                    <Button className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-6 text-lg rounded-full"
-                        onClick={() => window.open("https://wa.me/56999679593?text=Hola, consulto por kinesiología geriátrica", "_blank")}
+                    <a
+                        href="https://wa.me/56999679593?text=Hola, consulto por kinesiología geriátrica"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center bg-amber-600 hover:bg-amber-700 text-white px-8 py-6 text-lg rounded-full font-medium transition-colors duration-200"
                     >
                         Evaluación Geriátrica
-                    </Button>
+                    </a>
                 </div>
             </section>
 

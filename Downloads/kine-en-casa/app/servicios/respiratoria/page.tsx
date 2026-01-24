@@ -24,11 +24,14 @@ export default function RespiratoryPage() {
                         Recuperación pulmonar experta en la comodidad de su hogar.
                         Tratamientos para bebés (KTR), niños y adultos mayores con patologías agudas o crónicas.
                     </p>
-                    <Button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg rounded-full"
-                        onClick={() => window.open("https://wa.me/56999679593?text=Hola, necesito kinesiología respiratoria", "_blank")}
+                    <a
+                        href="https://wa.me/56999679593?text=Hola, necesito kinesiología respiratoria"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg rounded-full font-medium transition-colors duration-200"
                     >
                         Agendar KTR a Domicilio
-                    </Button>
+                    </a>
                 </div>
             </section>
 

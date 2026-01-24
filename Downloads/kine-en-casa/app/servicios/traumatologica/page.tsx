@@ -21,11 +21,14 @@ export default function TraumaPage() {
                     <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
                         Vuelva a moverse sin dolor. Tratamiento experto para lesiones agudas, post-operatorios y dolor crónico.
                     </p>
-                    <Button className="bg-red-600 hover:bg-red-700 text-white px-8 py-6 text-lg rounded-full"
-                        onClick={() => window.open("https://wa.me/56999679593?text=Hola, necesito kine traumatológica", "_blank")}
+                    <a
+                        href="https://wa.me/56999679593?text=Hola, necesito kine traumatológica"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center bg-red-600 hover:bg-red-700 text-white px-8 py-6 text-lg rounded-full font-medium transition-colors duration-200"
                     >
                         Evaluación Traumatológica
-                    </Button>
+                    </a>
                 </div>
             </section>
 
