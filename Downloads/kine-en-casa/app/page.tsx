@@ -28,6 +28,7 @@ import {
   Package,
   TrendingUp,
   Database,
+  BookOpen,
 } from "lucide-react"
 
 export default function HomePage() {
@@ -164,22 +165,22 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="bg-amber-600 p-2 rounded-xl shadow-lg">
-                <Home className="h-8 w-8 text-white" />
+                <Activity className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold font-serif text-white">KineEnCasa</h1>
-                <p className="text-sm text-slate-300">Rehabilitación Profesional</p>
+                <h1 className="text-3xl font-bold font-serif text-white tracking-widest">KINEUM</h1>
+                <p className="text-xs text-slate-300 uppercase tracking-widest">Clinical Home Care</p>
               </div>
             </div>
             <nav className="hidden md:flex space-x-8">
               <a href="#servicios" className="hover:text-amber-400 transition-colors font-medium text-slate-200">
-                Servicios
+                Especialidades
               </a>
               <a href="#planes" className="hover:text-amber-400 transition-colors font-medium text-slate-200">
-                Planes
+                Membresías
               </a>
               <a href="#nosotros" className="hover:text-amber-400 transition-colors font-medium text-slate-200">
-                Nosotros
+                Expertise
               </a>
               <a href="#contacto" className="hover:text-amber-400 transition-colors font-medium text-slate-200">
                 Contacto
@@ -190,7 +191,7 @@ export default function HomePage() {
               className="font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-white text-slate-900 hover:bg-slate-100 border border-slate-300"
             >
               <Phone className="h-4 w-4 mr-2" />
-              +56 9 9967 9593
+              Agendar Evaluación
             </Button>
           </div>
         </div>
@@ -206,19 +207,18 @@ export default function HomePage() {
             <div className="mb-8">
               <Badge className="mb-6 px-6 py-2 text-sm font-medium bg-slate-900 text-white border-slate-800">
                 <Sparkles className="h-4 w-4 mr-2 text-amber-400" />
-                Kinesiología Premium + AI
+                The Future of Recovery
               </Badge>
               <h2 className="text-5xl md:text-7xl font-bold text-slate-900 mb-8 font-serif leading-tight">
-                Kinesiología <span className="text-amber-700">Profesional</span>
+                Rehabilitación <span className="text-amber-700">Clínica</span>
                 <br />
-                <span className="text-4xl md:text-5xl text-slate-600">Potenciada con Tecnología</span>
+                <span className="text-4xl md:text-5xl text-slate-600">en su Espacio Personal</span>
               </h2>
             </div>
 
             <p className="text-xl md:text-2xl text-slate-700 mb-12 leading-relaxed max-w-4xl mx-auto">
-              La evolución de la <strong>kinesiología a domicilio</strong> en Santiago.
-              Combinamos terapia manual experta con <strong>Inteligencia Artificial</strong> y monitoreo digital
-              para acelerar tu recuperación.
+              <strong>KINEUM</strong> redefine la kinesiología domiciliaria.
+              Fusionamos la excelencia clínica con <strong>tecnología de monitoreo avanzada</strong> para acelerar su recuperación con precisión y confort.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
@@ -736,6 +736,98 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Blog Section - New for Kineum */}
+      <section className="py-24 bg-white relative">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Badge className="mb-6 px-6 py-2 text-sm font-medium bg-slate-100 text-slate-800 border-slate-200">
+              <BookOpen className="h-4 w-4 mr-2" />
+              Journal Clínico
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 font-serif">
+              Ciencia y <span className="text-amber-700">Bienestar</span>
+            </h2>
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+              Insights médicos, guías de recuperación y novedades sobre tecnología aplicada a la salud.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div className="group cursor-pointer">
+              <div className="relative overflow-hidden rounded-2xl mb-6 aspect-[4/3] bg-slate-100">
+                <img
+                  src="/placeholder.svg?height=400&width=600"
+                  alt="Recovery Science"
+                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-white/90 text-slate-900 backdrop-blur-sm shadow-sm">
+                    Rehabilitación
+                  </Badge>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-amber-700 transition-colors font-serif">
+                Neuroplasticidad: Acelerando la recuperación post-ACV
+              </h3>
+              <p className="text-slate-600 leading-relaxed mb-4">
+                Cómo la tecnología y los ejercicios cognitivos específicos pueden potenciar la capacidad del cerebro para sanar.
+              </p>
+              <span className="text-sm font-semibold text-emerald-600 flex items-center">
+                Leer artículo <TrendingUp className="h-3 w-3 ml-2" />
+              </span>
+            </div>
+
+            <div className="group cursor-pointer">
+              <div className="relative overflow-hidden rounded-2xl mb-6 aspect-[4/3] bg-slate-100">
+                <img
+                  src="/placeholder.svg?height=400&width=600"
+                  alt="Ergonomics"
+                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-white/90 text-slate-900 backdrop-blur-sm shadow-sm">
+                    Prevención
+                  </Badge>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-amber-700 transition-colors font-serif">
+                Ergonomía Home Office: Guía definitiva 2024
+              </h3>
+              <p className="text-slate-600 leading-relaxed mb-4">
+                Protocolos clínicos para prevenir el dolor lumbar y cervical en jornadas de trabajo extensas.
+              </p>
+              <span className="text-sm font-semibold text-emerald-600 flex items-center">
+                Leer artículo <TrendingUp className="h-3 w-3 ml-2" />
+              </span>
+            </div>
+
+            <div className="group cursor-pointer">
+              <div className="relative overflow-hidden rounded-2xl mb-6 aspect-[4/3] bg-slate-100">
+                <img
+                  src="/placeholder.svg?height=400&width=600"
+                  alt="Elderly Care"
+                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-white/90 text-slate-900 backdrop-blur-sm shadow-sm">
+                    Geriatría
+                  </Badge>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-amber-700 transition-colors font-serif">
+                Sarcopenia: Por qué la fuerza es salud
+              </h3>
+              <p className="text-slate-600 leading-relaxed mb-4">
+                Estrategias nutricionales y kinésicas para mantener la vitalidad muscular en la tercera edad.
+              </p>
+              <span className="text-sm font-semibold text-emerald-600 flex items-center">
+                Leer artículo <TrendingUp className="h-3 w-3 ml-2" />
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section for SEO Rich Snippets */}
       <section id="faq" className="py-20 bg-white">
         <div className="container mx-auto px-4">
@@ -779,82 +871,86 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="bg-slate-950 text-slate-300 py-16 border-t border-slate-800">
-
+      <footer className="bg-slate-950 text-slate-400 py-20 border-t border-slate-900">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             <div>
               <div className="flex items-center space-x-3 mb-6">
-                <div className="bg-amber-600 p-2 rounded-xl">
-                  <Home className="h-6 w-6 text-white" />
+                <div className="bg-slate-900 p-2 rounded-xl border border-slate-800">
+                  <Activity className="h-6 w-6 text-amber-500" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white font-serif">KineEnCasa</h3>
-                  <p className="text-sm text-slate-400">Rehabilitación Profesional</p>
+                  <h3 className="text-xl font-bold text-white font-serif tracking-widest">KINEUM</h3>
+                  <p className="text-xs text-slate-500 uppercase">Clinical Home Care</p>
                 </div>
               </div>
-              <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                Servicios profesionales de kinesiología a domicilio en Santiago. Tu recuperación, nuestra prioridad.
+              <p className="text-slate-500 text-sm leading-relaxed mb-6">
+                Redefiniendo el estándar de la rehabilitación domiciliaria en Chile mediante la integración de expertos clínicos y tecnología de vanguardia.
               </p>
-              <div className="flex space-x-2">
-                <div className="bg-slate-800 p-2 rounded-lg border border-slate-700">
-                  <Star className="h-4 w-4 text-amber-400" />
+              <div className="flex space-x-3">
+                <div className="bg-slate-900 p-2 rounded-lg border border-slate-800 hover:border-amber-900/50 transition-colors">
+                  <Star className="h-4 w-4 text-amber-500" />
                 </div>
-                <div className="bg-slate-800 p-2 rounded-lg border border-slate-700">
-                  <Shield className="h-4 w-4 text-emerald-400" />
-                </div>
-                <div className="bg-slate-800 p-2 rounded-lg border border-slate-700">
-                  <Award className="h-4 w-4 text-slate-400" />
+                <div className="bg-slate-900 p-2 rounded-lg border border-slate-800 hover:border-emerald-900/50 transition-colors">
+                  <Shield className="h-4 w-4 text-emerald-500" />
                 </div>
               </div>
             </div>
             <div>
-              <h4 className="font-bold text-white mb-6 text-lg">Servicios</h4>
+              <h4 className="font-bold text-white mb-6 text-sm uppercase tracking-wider">Especialidades</h4>
               <ul className="space-y-3 text-sm">
-                <li className="hover:text-amber-400 transition-colors cursor-pointer">Kinesiología Geriátrica</li>
+                <li className="hover:text-amber-400 transition-colors cursor-pointer">Neurorrehabilitación</li>
                 <li className="hover:text-amber-400 transition-colors cursor-pointer">Kinesiología Respiratoria</li>
-                <li className="hover:text-amber-400 transition-colors cursor-pointer">Rehabilitación Traumatológica</li>
-                <li className="hover:text-amber-400 transition-colors cursor-pointer">Kinesiología Neurológica</li>
-                <li className="hover:text-amber-400 transition-colors cursor-pointer">Educación Familiar</li>
+                <li className="hover:text-amber-400 transition-colors cursor-pointer">Traumatología Avanzada</li>
+                <li className="hover:text-amber-400 transition-colors cursor-pointer">Geriatría Activa</li>
+                <li className="hover:text-amber-400 transition-colors cursor-pointer">Training Cognitivo</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold text-white mb-6 text-lg">Contacto</h4>
+              <h4 className="font-bold text-white mb-6 text-sm uppercase tracking-wider">Paciente</h4>
               <ul className="space-y-3 text-sm">
-                <li className="flex items-center space-x-2">
-                  <Phone className="h-4 w-4 text-amber-400" />
-                  <span>+56 9 9967 9593</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <MapPin className="h-4 w-4 text-amber-400" />
-                  <span>Santiago, Chile</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <MessageCircle className="h-4 w-4 text-amber-400" />
-                  <span>Respuesta inmediata por WhatsApp</span>
-                </li>
+                <li className="hover:text-amber-400 transition-colors cursor-pointer">Portal de Pacientes</li>
+                <li className="hover:text-amber-400 transition-colors cursor-pointer">Journal Clínico</li>
+                <li className="hover:text-amber-400 transition-colors cursor-pointer">Preguntas Frecuentes</li>
+                <li className="hover:text-amber-400 transition-colors cursor-pointer">Convenios Isapre</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold text-white mb-6 text-lg">Horarios</h4>
-              <ul className="space-y-3 text-sm">
-                <li>
-                  <span className="font-medium">Lunes - Viernes:</span> 8:00 - 20:00
+              <h4 className="font-bold text-white mb-6 text-sm uppercase tracking-wider">Contacto</h4>
+              <ul className="space-y-4 text-sm">
+                <li className="flex items-start space-x-3">
+                  <Phone className="h-5 w-5 text-amber-500 mt-0.5" />
+                  <div>
+                    <span className="block text-white font-medium">+56 9 9967 9593</span>
+                    <span className="text-xs">Línea Exclusiva Pacientes</span>
+                  </div>
                 </li>
-                <li>
-                  <span className="font-medium">Sábados:</span> 9:00 - 18:00
+                <li className="flex items-start space-x-3">
+                  <MapPin className="h-5 w-5 text-amber-500 mt-0.5" />
+                  <div>
+                    <span className="block text-white font-medium">Santiago, Chile</span>
+                    <span className="text-xs">Sector Oriente & Zona Central</span>
+                  </div>
                 </li>
-                <li>
-                  <span className="font-medium">Domingos:</span> 10:00 - 16:00
+                <li className="flex items-start space-x-3">
+                  <MessageCircle className="h-5 w-5 text-amber-500 mt-0.5" />
+                  <div>
+                    <span className="block text-white font-medium">Chat AI 24/7</span>
+                    <span className="text-xs">Soporte Continuo</span>
+                  </div>
                 </li>
-                <li className="text-amber-400 font-medium">Emergencias 24/7</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-slate-800 mt-12 pt-8 text-center">
-            <p className="text-sm text-slate-400">
-              © 2024 KineEnCasa. Todos los derechos reservados. | Kinesiología profesional a domicilio en Santiago
+          <div className="border-t border-slate-900 mt-16 pt-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
+            <p className="text-xs text-slate-600">
+              © 2024 KINEUM Clinical Home Care. Todos los derechos reservados.
             </p>
+            <div className="flex space-x-6 mt-4 md:mt-0 text-xs text-slate-600">
+              <span className="hover:text-slate-400 cursor-pointer">Privacidad</span>
+              <span className="hover:text-slate-400 cursor-pointer">Términos</span>
+              <span className="hover:text-slate-400 cursor-pointer">Sitemap</span>
+            </div>
           </div>
         </div>
       </footer>

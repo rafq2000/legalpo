@@ -15,37 +15,28 @@ const manrope = Manrope({
   variable: "--font-manrope",
 })
 
-const siteUrl = "https://kineencasa.cl"
+const siteUrl = "https://kineum.cl"
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Kinesiólogo a Domicilio Sector Oriente Santiago | KineEnCasa",
-    template: "%s | KineEnCasa - Kinesiología a Domicilio",
+    default: "Kinesiología a Domicilio Premium Santiago | KINEUM",
+    template: "%s | KINEUM - Clinical Home Care",
   },
   description:
-    "Kinesiólogo a domicilio en Las Condes, Vitacura, Providencia, Ñuñoa, La Reina y Lo Barnechea. Rehabilitación profesional en tu hogar: traumatológica, respiratoria, neurológica y geriátrica. Agenda tu evaluación gratis ☎ +56 9 9967 9593",
+    "KINEUM: Rehabilitación clínica de precisión en su hogar. Kinesiólogos especialistas en Las Condes, Vitacura, Providencia, Lo Barnechea. Tecnología avanzada + Atención experta. ☎ +56 9 9967 9593",
   keywords: [
     "kinesiólogo a domicilio",
-    "kinesiología a domicilio Santiago",
-    "kine a domicilio sector oriente",
-    "fisioterapia a domicilio",
-    "kinesiólogo a domicilio Las Condes",
-    "kinesiología a domicilio Vitacura",
-    "kinesiólogo a domicilio Providencia",
-    "kine a domicilio Ñuñoa",
-    "kinesiología a domicilio La Reina",
-    "kinesiólogo a domicilio Lo Barnechea",
-    "kinesiología geriátrica adulto mayor",
-    "kinesiología respiratoria a domicilio",
-    "rehabilitación traumatológica casa",
-    "kinesiología neurológica ACV",
-    "rehabilitación postoperatoria domicilio",
-    "kinesiólogo adulto mayor Santiago",
+    "kinesiología premium santiago",
+    "kineum",
+    "rehabilitación a domicilio las condes",
+    "kinesiología respiratoria vitacura",
+    "neurorehabilitación a domicilio",
+    "fisioterapia geriatrica santiago",
   ],
-  authors: [{ name: "KineEnCasa" }],
-  creator: "KineEnCasa",
-  publisher: "KineEnCasa",
+  authors: [{ name: "KINEUM" }],
+  creator: "KINEUM",
+  publisher: "KINEUM",
   robots: {
     index: true,
     follow: true,
@@ -58,27 +49,27 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Kinesiólogo a Domicilio Sector Oriente Santiago | KineEnCasa",
+    title: "KINEUM | Kinesiología Clínica a Domicilio",
     description:
-      "Rehabilitación profesional en tu hogar. Especialistas en kinesiología geriátrica, respiratoria, traumatológica y neurológica. Cobertura: Las Condes, Vitacura, Providencia, Ñuñoa y más.",
+      "El nuevo estándar en recuperación domiciliaria. Kinesiología de precisión, monitoreo digital y atención experta en Santiago Oriente.",
     type: "website",
     locale: "es_CL",
     url: siteUrl,
-    siteName: "KineEnCasa",
+    siteName: "KINEUM",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "KineEnCasa - Kinesiología Profesional a Domicilio en Santiago",
+        alt: "KINEUM - Clinical Home Care",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kinesiólogo a Domicilio Sector Oriente | KineEnCasa",
+    title: "KINEUM | Rehabilitación Premium",
     description:
-      "Rehabilitación profesional en tu hogar. Las Condes, Vitacura, Providencia, Ñuñoa. ☎ +56 9 9967 9593",
+      "Kinesiología clínica en su hogar. Las Condes, Vitacura, Providencia. ☎ +56 9 9967 9593",
     images: ["/og-image.jpg"],
   },
   alternates: {
@@ -96,13 +87,13 @@ const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "MedicalBusiness",
   "@id": `${siteUrl}/#organization`,
-  name: "KineEnCasa",
-  alternateName: "Kine en Casa Santiago",
+  name: "KINEUM",
+  alternateName: "Kineum Clinical Home Care",
   description:
-    "Servicios profesionales de kinesiología a domicilio en el sector oriente de Santiago. Especialistas en rehabilitación geriátrica, respiratoria, traumatológica y neurológica.",
+    "Servicios de kinesiología clínica a domicilio en el sector oriente de Santiago. Rehabilitación de precisión con tecnología y expertos.",
   url: siteUrl,
   telephone: "+56999679593",
-  email: "contacto@kineencasa.cl",
+  email: "contacto@kineum.cl",
   image: `${siteUrl}/og-image.jpg`,
   logo: `${siteUrl}/logo.png`,
   priceRange: "$$",
