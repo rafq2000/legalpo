@@ -10,9 +10,28 @@ export const blogPosts = [
     date: "24 Enero, 2024",
     readTime: "5 min lectura",
     category: "Rehabilitación Neurológica",
-    image: "/placeholder.svg?height=600&width=1200",
+    image: "/images/neuroplasticidad_acv_hero_1769277615017.png",
     icon: Brain,
-    content: `<p class="lead">La recuperación después de un ACV depende de la neuroplasticidad...</p>`
+    content: `<p class="lead">La recuperación después de un Accidente Cerebrovascular (ACV) no termina en el alta hospitalaria. De hecho, es ahí donde comienza el verdadero desafío de la neuroplasticidad: la capacidad del cerebro para reconfigurarse y recuperar funciones perdidas.</p>
+
+      <h2>¿Qué es la Neuroplasticidad?</h2>
+      <p>Tradicionalmente se creía que el cerebro adulto era estático. Hoy sabemos que es maleable. La neuroplasticidad es el mecanismo biológico mediante el cual el cerebro genera nuevas conexiones neuronales para compensar las áreas dañadas.</p>
+
+      <h2>El Protocolo KINEUM</h2>
+      <p>En Kineum utilizamos un enfoque basado en la evidencia para maximizar este proceso:</p>
+      <ul>
+        <li><strong>Repetición Intensiva:</strong> La práctica masiva de movimientos específicos es clave para fijar nuevas rutas neuronales.</li>
+        <li><strong>Imaginería Motora:</strong> Entrenamos al paciente para visualizar el movimiento, activando las mismas áreas corticales que al ejecutarlo.</li>
+        <li><strong>Tecnología Asistiva:</strong> Uso de tablets y apps especializadas para estimular la cognición junto con la movilidad.</li>
+      </ul>
+
+      <blockquote>
+        "La ventana de recuperación más crítica son los primeros 6 meses, pero la neuroplasticidad puede estimularse durante toda la vida con el estímulo correcto."
+      </blockquote>
+
+      <h2>Ejercicios para el Hogar</h2>
+      <p>Nuestros kinesiólogos diseñan rutinas que integran tareas cotidianas (como alcanzar un vaso) convertidas en ejercicios terapéuticos de alta repetición, asegurando que la rehabilitación sea continua y significativa.</p>
+    `
   },
   {
     slug: "ergonomia-home-office-guia-2024",
@@ -22,7 +41,7 @@ export const blogPosts = [
     date: "22 Enero, 2024",
     readTime: "7 min lectura",
     category: "Prevención & Ergonomía",
-    image: "/placeholder.svg?height=600&width=1200",
+    image: "/images/ergonomia_home_office_hero_1769277626584.png",
     icon: TrendingUp,
     content: `<p class="lead">El trabajo remoto exige una configuración ergonómica perfecta...</p>`
   },
@@ -34,7 +53,7 @@ export const blogPosts = [
     date: "20 Enero, 2024",
     readTime: "6 min lectura",
     category: "Geriatría Activa",
-    image: "/placeholder.svg?height=600&width=1200",
+    image: "/images/sarcopenia_elderly_hero_1769277646207.png",
     icon: Users,
     content: `<p class="lead">La pérdida de masa muscular es reversible con el estímulo correcto...</p>`
   },
