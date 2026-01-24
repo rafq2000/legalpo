@@ -32,6 +32,8 @@ import {
   BookOpen,
 } from "lucide-react"
 
+import { WhatsAppButton } from "@/components/whatsapp-button"
+
 export default function HomePage() {
   const services = [
     {
@@ -146,20 +148,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="fixed bottom-6 right-6 z-50">
-        <Button
-          size="lg"
-          className="rounded-full w-16 h-16 bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xl hover:shadow-3xl transition-all duration-300 animate-pulse hover:animate-none hover:scale-110 border-2 border-emerald-500"
-          onClick={() =>
-            window.open(
-              "https://wa.me/56999679593?text=Hola, me interesa información sobre kinesiología a domicilio",
-              "_blank",
-            )
-          }
-        >
-          <MessageCircle className="h-8 w-8" />
-        </Button>
-      </div>
+      <WhatsAppButton />
 
       <header className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl sticky top-0 z-50 backdrop-blur-sm border-b border-slate-700">
         <div className="container mx-auto px-4 py-6">
