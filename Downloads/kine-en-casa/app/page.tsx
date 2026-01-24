@@ -29,10 +29,13 @@ import {
   Package,
   TrendingUp,
   Database,
+  Database,
   BookOpen,
+  ArrowRight,
 } from "lucide-react"
 
 import { WhatsAppButton } from "@/components/whatsapp-button"
+import Link from 'next/link'
 
 export default function HomePage() {
   const services = [
@@ -41,6 +44,7 @@ export default function HomePage() {
       description: "Mejoramos la movilidad y prevenimos caídas en adultos mayores",
       icon: Users,
       image: "/elderly-physio-home.png",
+      href: "/servicios/geriatrica",
       features: [
         "Prevención de caídas",
         "Rehabilitación post hospitalización",
@@ -53,6 +57,7 @@ export default function HomePage() {
       description: "Tratamiento especializado para problemas respiratorios",
       icon: Stethoscope,
       image: "/respiratory-therapy-baby.png",
+      href: "/servicios/respiratoria",
       features: ["Recuperación post COVID", "Tratamiento EPOC", "Rehabilitación neumonía", "Técnicas de respiración"],
     },
     {
@@ -60,6 +65,7 @@ export default function HomePage() {
       description: "Rehabilitación de lesiones y fracturas en casa",
       icon: Dumbbell,
       image: "/knee-rehabilitation.png",
+      href: "/servicios/traumatologica",
       features: [
         "Recuperación de fracturas",
         "Rehabilitación esguinces",
@@ -72,6 +78,7 @@ export default function HomePage() {
       description: "Recuperación especializada después de cirugías",
       icon: Heart,
       image: "/home-rehab-guidance.png",
+      href: "/servicios/traumatologica", // Fits here too
       features: [
         "Post cirugías ortopédicas",
         "Rehabilitación abdominal",
@@ -84,6 +91,7 @@ export default function HomePage() {
       description: "Tratamiento para condiciones neurológicas",
       icon: Brain,
       image: "/neurological-physiotherapy.png",
+      href: "/servicios/neurologica",
       features: ["Rehabilitación ACV", "Tratamiento Parkinson", "Terapia Alzheimer", "Esclerosis múltiple"],
     },
     {
@@ -91,6 +99,7 @@ export default function HomePage() {
       description: "Capacitamos a familiares y cuidadores",
       icon: GraduationCap,
       image: "/physiotherapy-elderly-care.png",
+      href: "/servicios/geriatrica", // Education is part of geriatric
       features: ["Entrenamiento cuidadores", "Ejercicios simples", "Técnicas de movilización", "Cuidados preventivos"],
     },
   ]

@@ -9,6 +9,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const routes = [
         '',
         '/ejercicios',
+        '/servicios/respiratoria',
+        '/servicios/geriatrica',
+        '/servicios/neurologica',
+        '/servicios/traumatologica',
     ].map((route) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
