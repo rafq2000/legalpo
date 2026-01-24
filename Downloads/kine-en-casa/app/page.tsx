@@ -283,55 +283,56 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
-              <Card
-                key={index}
-                className="group hover:shadow-2xl transition-all duration-500 border border-slate-200 shadow-lg bg-white hover:-translate-y-2"
-              >
-                <div className="relative overflow-hidden rounded-t-xl">
-                  <img
-                    src={service.image || "/placeholder.svg"}
-                    alt={service.title}
-                    className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                  <div className="absolute top-4 left-4">
-                    <Badge className="bg-slate-900 text-white shadow-lg border-slate-800">
-                      <service.icon className="h-4 w-4 mr-2" />
-                      Especializado
-                    </Badge>
-                  </div>
-                  <div className="absolute bottom-4 right-4">
-                    <div className="bg-white/95 backdrop-blur-sm rounded-full p-2 shadow-lg">
-                      <service.icon className="h-6 w-6 text-slate-700" />
+              <Link href={service.href || "#contacto"} key={index} className="block h-full group">
+                <Card
+                  className="hover:shadow-2xl transition-all duration-500 border border-slate-200 shadow-lg bg-white hover:-translate-y-2 h-full"
+                >
+                  <div className="relative overflow-hidden rounded-t-xl">
+                    <img
+                      src={service.image || "/placeholder.svg"}
+                      alt={service.title}
+                      className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    <div className="absolute top-4 left-4">
+                      <Badge className="bg-slate-900 text-white shadow-lg border-slate-800">
+                        <service.icon className="h-4 w-4 mr-2" />
+                        Especializado
+                      </Badge>
+                    </div>
+                    <div className="absolute bottom-4 right-4">
+                      <div className="bg-white/95 backdrop-blur-sm rounded-full p-2 shadow-lg">
+                        <service.icon className="h-6 w-6 text-slate-700" />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-xl font-bold text-slate-900 font-serif group-hover:text-amber-700 transition-colors">
-                    {service.title}
-                  </CardTitle>
-                  <CardDescription className="text-slate-600 text-base leading-relaxed">
-                    {service.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3 mb-6">
-                    {service.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center text-sm">
-                        <div className="h-2 w-2 bg-slate-700 rounded-full mr-3 flex-shrink-0"></div>
-                        <span className="font-medium text-slate-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white transition-all duration-300 border border-emerald-500"
-                    onClick={() => window.open("https://wa.me/56999679593", "_blank")}
-                  >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Consultar por WhatsApp
-                  </Button>
-                </CardContent>
-              </Card>
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-xl font-bold text-slate-900 font-serif group-hover:text-amber-700 transition-colors">
+                      {service.title}
+                    </CardTitle>
+                    <CardDescription className="text-slate-600 text-base leading-relaxed">
+                      {service.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3 mb-6">
+                      {service.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-center text-sm">
+                          <div className="h-2 w-2 bg-slate-700 rounded-full mr-3 flex-shrink-0"></div>
+                          <span className="font-medium text-slate-700">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Button
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white transition-all duration-300 border border-emerald-500"
+                      onClick={() => window.open("https://wa.me/56999679593", "_blank")}
+                    >
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Consultar por WhatsApp
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>
