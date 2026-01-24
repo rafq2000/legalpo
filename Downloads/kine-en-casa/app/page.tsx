@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -753,7 +754,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            <div className="group cursor-pointer">
+            <Link href="/blog/neuroplasticidad-recuperacion-acv" className="group cursor-pointer block">
               <div className="relative overflow-hidden rounded-2xl mb-6 aspect-[4/3] bg-slate-100">
                 <img
                   src="/placeholder.svg?height=400&width=600"
@@ -775,9 +776,9 @@ export default function HomePage() {
               <span className="text-sm font-semibold text-emerald-600 flex items-center">
                 Leer artículo <TrendingUp className="h-3 w-3 ml-2" />
               </span>
-            </div>
+            </Link>
 
-            <div className="group cursor-pointer">
+            <Link href="/blog/ergonomia-home-office-guia-2024" className="group cursor-pointer block">
               <div className="relative overflow-hidden rounded-2xl mb-6 aspect-[4/3] bg-slate-100">
                 <img
                   src="/placeholder.svg?height=400&width=600"
@@ -799,9 +800,9 @@ export default function HomePage() {
               <span className="text-sm font-semibold text-emerald-600 flex items-center">
                 Leer artículo <TrendingUp className="h-3 w-3 ml-2" />
               </span>
-            </div>
+            </Link>
 
-            <div className="group cursor-pointer">
+            <Link href="/blog/sarcopenia-fuerza-es-salud" className="group cursor-pointer block">
               <div className="relative overflow-hidden rounded-2xl mb-6 aspect-[4/3] bg-slate-100">
                 <img
                   src="/placeholder.svg?height=400&width=600"
@@ -823,7 +824,7 @@ export default function HomePage() {
               <span className="text-sm font-semibold text-emerald-600 flex items-center">
                 Leer artículo <TrendingUp className="h-3 w-3 ml-2" />
               </span>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -910,6 +911,7 @@ export default function HomePage() {
               <h4 className="font-bold text-white mb-6 text-sm uppercase tracking-wider">Paciente</h4>
               <ul className="space-y-3 text-sm">
                 <li className="hover:text-amber-400 transition-colors cursor-pointer">Portal de Pacientes</li>
+                <a href="/ejercicios" className="hover:text-amber-400 transition-colors cursor-pointer block">Biblioteca de Ejercicios</a>
                 <li className="hover:text-amber-400 transition-colors cursor-pointer">Journal Clínico</li>
                 <li className="hover:text-amber-400 transition-colors cursor-pointer">Preguntas Frecuentes</li>
                 <li className="hover:text-amber-400 transition-colors cursor-pointer">Convenios Isapre</li>
