@@ -1,16 +1,12 @@
-import { MetadataRoute } from "next"
+import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-    const baseUrl = "https://kineencasa.cl"
-
     return {
-        rules: [
-            {
-                userAgent: "*",
-                allow: "/",
-                disallow: ["/api/", "/_next/", "/admin/"],
-            },
-        ],
-        sitemap: `${baseUrl}/sitemap.xml`,
+        rules: {
+            userAgent: '*',
+            allow: '/',
+            disallow: '/private/',
+        },
+        sitemap: 'https://kineum.cl/sitemap.xml',
     }
 }
