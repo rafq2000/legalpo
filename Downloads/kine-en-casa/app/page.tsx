@@ -29,13 +29,11 @@ import {
   Package,
   TrendingUp,
   Database,
-  Database,
   BookOpen,
   ArrowRight,
 } from "lucide-react"
 
 import { WhatsAppButton } from "@/components/whatsapp-button"
-import Link from 'next/link'
 
 export default function HomePage() {
   const services = [
