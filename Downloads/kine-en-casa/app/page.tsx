@@ -202,7 +202,7 @@ export default function HomePage() {
               <h2 className="text-5xl md:text-7xl font-bold text-slate-900 mb-8 font-serif leading-tight">
                 Rehabilitación <span className="text-amber-700">Clínica</span>
                 <br />
-                <span className="text-4xl md:text-5xl text-slate-600">en su Espacio Personal</span>
+                <span className="text-4xl md:text-5xl text-slate-600">a Domicilio</span>
               </h2>
             </div>
 
