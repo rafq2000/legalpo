@@ -184,7 +184,7 @@ export function ValueStackSection() {
                             Sí, quiero todo esto por $197 →
                         </Link>
                     </Button>
-                    <p className="mt-4 text-gray-500 text-sm">Solo 2 cupos disponibles • Inicia 26 de Enero</p>
+                    <p className="mt-4 text-gray-500 text-sm">Solo 2 cupos disponibles • Inicia 16 de Febrero</p>
                 </motion.div>
             </div>
         </section>

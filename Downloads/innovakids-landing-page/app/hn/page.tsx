@@ -7,13 +7,22 @@ import { CheckCircle, ArrowRight, MessageCircle, MapPin } from "lucide-react"
 import WhatsAppButton from "@/components/whatsapp-button"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños en Honduras | Tegucigalpa, San Pedro Sula | InnovaKids",
+  title: "Curso de Inteligencia Artificial para Niños en Honduras | InnovaKids",
   description:
-    "Cursos de Inteligencia Artificial para niños en Honduras. Clases online en vivo desde Tegucigalpa, San Pedro Sula, La Ceiba y todo el país. $197 USD - 10 clases.",
+    "Formación líder en inteligencia artificial para niños de 8 a 14 años en Honduras. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
   keywords:
     "cursos ia niños honduras, clases ia tegucigalpa, cursos programacion niños san pedro sula, ia niños la ceiba",
   alternates: {
     canonical: "https://www.innovakidslatam.com/hn",
+  },
+  openGraph: {
+    title: "Curso de Inteligencia Artificial para Niños en Honduras | InnovaKids",
+    description:
+      "Formación líder en inteligencia artificial para niños de 8 a 14 años en Honduras. Clases online en vivo, grupos de 5 alumnos.",
+    url: "https://www.innovakidslatam.com/hn",
+    locale: "es_HN",
+    siteName: "InnovaKids",
+    type: "website",
   },
 }
 

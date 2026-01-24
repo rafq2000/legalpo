@@ -5,9 +5,9 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { MapPin, Users, Clock, Shield, Target, CheckCircle } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Curso de IA para Niños en Chile 🇨🇱 | ¡Clase GRATIS! InnovaKids",
+  title: "Curso de Inteligencia Artificial para Niños en Chile | InnovaKids",
   description:
-    "⭐ Niños chilenos crean apps, videojuegos y startups con IA. Grupos de 5 niños máximo. Santiago, Viña, Concepción y todo Chile. WhatsApp: +56 9 6475 4219 ¡Cupos limitados!",
+    "Formación líder en inteligencia artificial para niños de 8 a 14 años en Chile. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
   keywords:
     "cursos ia niños chile, clases ia santiago, ia para niños viña del mar, curso inteligencia artificial concepción, innovakids chile",
   alternates: {
@@ -20,6 +20,15 @@ export const metadata: Metadata = {
       "es-PE": "https://www.innovakidslatam.com/pe",
       "es-ES": "https://www.innovakidslatam.com/es",
     },
+  },
+  openGraph: {
+    title: "Curso de Inteligencia Artificial para Niños en Chile | InnovaKids",
+    description:
+      "Formación líder en inteligencia artificial para niños de 8 a 14 años en Chile. Clases online en vivo, grupos de 5 alumnos.",
+    url: "https://www.innovakidslatam.com/cl",
+    locale: "es_CL",
+    siteName: "InnovaKids",
+    type: "website",
   },
 }
 

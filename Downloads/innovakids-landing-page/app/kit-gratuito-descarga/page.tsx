@@ -9,7 +9,6 @@ export const metadata: Metadata = {
   title: "Descarga tu Kit Gratuito - InnovaKids",
   description:
     "Descarga el Kit Esencial para el Padre Moderno y descubre cómo introducir a tu hijo en el mundo de la IA.",
-  robots: "noindex, nofollow",
 }
 
 export default function KitDownloadPage() {

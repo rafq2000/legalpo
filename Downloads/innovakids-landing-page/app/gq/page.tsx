@@ -7,9 +7,9 @@ import { MapPin, Users, Clock, Shield } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-    title: "InnovaKids Guinea Ecuatorial | Cursos de IA para Niños | Malabo, Bata 🇬🇶",
+    title: "Curso de Inteligencia Artificial para Niños en Guinea Ecuatorial | InnovaKids",
     description:
-        "Cursos de inteligencia artificial para niños en Guinea Ecuatorial. Malabo, Bata. Clases online en español con grupos de 5 alumnos. $197 USD. 🇬🇶",
+        "Formación líder en inteligencia artificial para niños de 8 a 14 años en Guinea Ecuatorial. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
     keywords: [
         "ia para niños guinea ecuatorial",
         "cursos ia niños malabo",
@@ -19,10 +19,13 @@ export const metadata: Metadata = {
         "cursos ia español africa",
     ],
     openGraph: {
-        title: "InnovaKids Guinea Ecuatorial | Cursos de IA para Niños",
-        description: "Cursos de inteligencia artificial para niños en Guinea Ecuatorial.",
+        title: "Curso de Inteligencia Artificial para Niños en Guinea Ecuatorial | InnovaKids",
+        description:
+            "Formación líder en inteligencia artificial para niños de 8 a 14 años en Guinea Ecuatorial. Clases online en vivo, grupos de 5 alumnos.",
         url: "https://www.innovakidslatam.com/gq",
         locale: "es_GQ",
+        siteName: "InnovaKids",
+        type: "website",
     },
     alternates: {
         canonical: "https://www.innovakidslatam.com/gq",

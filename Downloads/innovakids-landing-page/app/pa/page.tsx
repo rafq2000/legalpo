@@ -5,11 +5,23 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { MapPin, Users, Clock, Shield, Target } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños en Panamá | Todas las Ciudades | InnovaKids 🇵🇦",
+  title: "Curso de Inteligencia Artificial para Niños en Panamá | InnovaKids",
   description:
-    "🚀 Curso de IA para Niños Panamá. Aprende a CREAR Tecnología (8-14 años). Clases en vivo desde Ciudad de Panamá y todo el país. 🎁 ¡Prueba GRATIS!",
+    "Formación líder en inteligencia artificial para niños de 8 a 14 años en Panamá. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
   keywords:
     "cursos ia niños panama, clases ia panama city, curso inteligencia artificial niños colon, ia niños david chiriqui, innovakids panama",
+  alternates: {
+    canonical: "https://www.innovakidslatam.com/pa",
+  },
+  openGraph: {
+    title: "Curso de Inteligencia Artificial para Niños en Panamá | InnovaKids",
+    description:
+      "Formación líder en inteligencia artificial para niños de 8 a 14 años en Panamá. Clases online en vivo, grupos de 5 alumnos.",
+    url: "https://www.innovakidslatam.com/pa",
+    locale: "es_PA",
+    siteName: "InnovaKids",
+    type: "website",
+  },
 }
 
 export default function PanamaHub() {

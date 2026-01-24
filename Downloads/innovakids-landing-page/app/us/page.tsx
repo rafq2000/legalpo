@@ -5,11 +5,23 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { MapPin, Users, Clock, Shield, ArrowRight, Globe } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Curso de IA en Español para Niños Latinos en USA 🇺🇸 | ¡GRATIS! InnovaKids",
+  title: "Curso de Inteligencia Artificial en Español para Niños en USA | InnovaKids",
   description:
-    "🌟 Tu hijo domina IA sin perder el español. Miami, LA, Houston, NY y todo USA. Solo 5 niños/grupo. WhatsApp: +56 9 6475 4219 ¡Preserva su cultura mientras aprende el futuro!",
+    "Formación líder en inteligencia artificial en español para niños latinos en Estados Unidos. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
   keywords:
     "cursos ia niños latinos usa, clases inteligencia artificial español estados unidos, curso ia niños miami, curso ia niños los angeles, curso ia niños houston",
+  openGraph: {
+    title: "Curso de Inteligencia Artificial en Español para Niños en USA | InnovaKids",
+    description:
+      "Formación líder en inteligencia artificial en español para niños latinos en Estados Unidos. Clases online en vivo, grupos de 5 alumnos.",
+    url: "https://www.innovakidslatam.com/us",
+    locale: "es_US",
+    siteName: "InnovaKids",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://www.innovakidslatam.com/us",
+  },
 }
 
 export default function USAHub() {

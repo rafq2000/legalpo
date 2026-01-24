@@ -5,8 +5,29 @@ import Script from "next/script"
 export function TrackingPixels() {
   return (
     <>
-      {/* Meta Pixel */}
-      <Script id="meta-pixel" strategy="afterInteractive">
+      {/* Google Ads / GTM - Optimized Load */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=AW-796498700"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-796498700');
+          
+          // Conversion Event from original layout.tsx
+          gtag('event', 'conversion', {
+            'send_to': 'AW-796498700/sY1fCLaiq9sbEIy25vsC',
+            'value': 1.0,
+            'currency': 'CLP'
+          });
+        `}
+      </Script>
+
+      {/* Facebook Pixel - Optimized Load */}
+      <Script id="facebook-pixel" strategy="afterInteractive">
         {`
           !function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -17,22 +38,9 @@ export function TrackingPixels() {
           s.parentNode.insertBefore(t,s)}(window, document,'script',
           'https://connect.facebook.net/en_US/fbevents.js');
           
-          // TODO: Replace 'YOUR_PIXEL_ID' with your actual Meta Pixel ID
-          fbq('init', 'YOUR_PIXEL_ID');
-          fbq('track', 'PageView');
-        `}
-      </Script>
-
-      {/* Google Analytics */}
-      <Script src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_ID" strategy="afterInteractive" />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          
-          // TODO: Replace 'YOUR_GA_ID' with your actual Google Analytics ID
-          gtag('config', 'YOUR_GA_ID');
+          // Config placeholder preserved from original file
+          // fbq('init', 'YOUR_PIXEL_ID');
+          // fbq('track', 'PageView');
         `}
       </Script>
     </>

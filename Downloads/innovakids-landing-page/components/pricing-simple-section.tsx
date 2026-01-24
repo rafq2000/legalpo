@@ -120,7 +120,7 @@ export function PricingSimpleSection() {
                 <Calendar className="w-6 h-6 text-primary" />
                 <p className="text-white font-bold text-xl font-premium">Próximo Curso Inicia</p>
               </div>
-              <p className="premium-gradient-text text-4xl font-black font-premium">26 de Enero, 2026</p>
+              <p className="premium-gradient-text text-4xl font-black font-premium">16 de Febrero, 2026</p>
               <p className="text-gray-400 text-sm mt-2">Cupos limitados - Solo 5 niños por grupo</p>
             </div>
           </div>

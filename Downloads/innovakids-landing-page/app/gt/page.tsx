@@ -7,11 +7,20 @@ import { CheckCircle, ArrowRight, MessageCircle, MapPin } from "lucide-react"
 import WhatsAppButton from "@/components/whatsapp-button"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Patojos en Guatemala | Guatemala City, Quetzaltenango | InnovaKids",
+  title: "Curso de Inteligencia Artificial para Niños en Guatemala | InnovaKids",
   description:
-    "Cursos de Inteligencia Artificial para patojos en Guatemala. Clases online en vivo desde Guatemala City, Quetzaltenango, Mixco y todo el país. $197 USD - 10 clases.",
+    "Formación líder en inteligencia artificial para niños de 8 a 14 años en Guatemala. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
   alternates: {
     canonical: "https://www.innovakidslatam.com/gt",
+  },
+  openGraph: {
+    title: "Curso de Inteligencia Artificial para Niños en Guatemala | InnovaKids",
+    description:
+      "Formación líder en inteligencia artificial para niños de 8 a 14 años en Guatemala. Clases online en vivo, grupos de 5 alumnos.",
+    url: "https://www.innovakidslatam.com/gt",
+    locale: "es_GT",
+    siteName: "InnovaKids",
+    type: "website",
   },
 }
 

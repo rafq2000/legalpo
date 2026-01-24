@@ -96,7 +96,7 @@ export function HeroSection() {
   }, [mouseX, mouseY])
 
   useEffect(() => {
-    const startDate = new Date("2026-01-26T00:00:00")
+    const startDate = new Date("2026-02-16T00:00:00")
     const updateCountdown = () => {
       const now = new Date()
       const diff = startDate.getTime() - now.getTime()
@@ -213,10 +213,11 @@ export function HeroSection() {
 
           {/* Main Headline with Scramble Effect */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
             className="relative"
+            // LCP Optimization: Removed initial opacity/y animation to ensure immediate text rendering
+            initial={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
           >
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.05] tracking-tight font-premium px-2">
               <span className="block text-white">Cursos de IA para Niños:</span>
@@ -302,7 +303,7 @@ export function HeroSection() {
               </div>
 
               <p className="text-white font-semibold mt-6 text-lg font-premium">
-                Próximo curso: <span className="text-primary">26 de Enero, 2026</span>
+                Próximo curso: <span className="text-primary">16 de Febrero, 2026</span>
               </p>
             </div>
           </motion.div>

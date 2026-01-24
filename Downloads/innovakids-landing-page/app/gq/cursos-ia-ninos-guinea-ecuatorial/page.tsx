@@ -4,12 +4,16 @@ import { Footer } from "@/components/footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { generateHreflangs } from "@/lib/seo-config"
 
 export const metadata: Metadata = {
     title: "Cursos de IA para Niños en Guinea Ecuatorial 2026 | InnovaKids 🇬🇶",
     description: "Cursos de inteligencia artificial en español para niños de Guinea Ecuatorial. ChatGPT, videojuegos, arte digital. $197 USD.",
     keywords: ["cursos ia niños guinea ecuatorial", "clases ia malabo", "aprender ia niños africa español"],
-    alternates: { canonical: "https://www.innovakidslatam.com/gq/cursos-ia-ninos-guinea-ecuatorial" },
+    alternates: {
+        canonical: "https://www.innovakidslatam.com/gq/cursos-ia-ninos-guinea-ecuatorial",
+        languages: generateHreflangs("sales"),
+    },
 }
 
 export default function CursosGuineaPage() {

@@ -5,15 +5,16 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle, Users, Shield, ArrowRight, MessageCircle, Brain, Rocket, Target, Award } from "lucide-react"
 import WhatsAppButton from "@/components/whatsapp-button"
+import { generateHreflangs } from "@/lib/seo-config"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños en Costa Rica 2026 | Clases Online en Vivo | InnovaKids",
+  title: "Curso Inteligencia Artificial Niños Costa Rica 2026 | InnovaKids 🇨🇷",
   description:
-    "✅ Cursos de Inteligencia Artificial para niños ticos de 8-17 años. Clases online en vivo, grupos de máx 5 alumnos. $197 USD por 10 clases. ¡Garantía 10 días! ¡Pura vida!",
+    "El mejor curso de IA y programación para niños en Costa Rica. Clases online 100% en vivo. Grupos pequeños. Certificación incluida.",
   keywords:
-    "cursos ia niños costa rica, clases inteligencia artificial niños san jose, cursos programacion niños costa rica, ia para niños ticos",
+    "curso ia niños costa rica, clases inteligencia artificial san jose, programación niños costa rica, innovakids costa rica, campamento tecnologico niños",
   openGraph: {
-    title: "Cursos de IA para Niños en Costa Rica | InnovaKids Latam",
+    title: "Curso de IA para Niños en Costa Rica | InnovaKids Latam",
     description:
       "Clases de Inteligencia Artificial para niños ticos. Online en vivo, grupos pequeños, profesores expertos.",
     url: "https://www.innovakidslatam.com/cr/cursos-ia-ninos-costa-rica",

@@ -5,6 +5,7 @@ import { PricingSection } from "@/components/pricing-section"
 import { Navigation } from "@/components/navigation"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Users, Clock, Shield, Star, CheckCircle, Zap, Target } from "lucide-react"
+import { generateHreflangs } from "@/lib/seo-config"
 
 export const metadata: Metadata = {
   title: "Cursos de IA para Niños Colombia 2026 | Evaluación Gratis | InnovaKids 🇨🇴",
@@ -14,12 +15,7 @@ export const metadata: Metadata = {
     "cursos de ia para niños colombia, clases inteligencia artificial bogotá, curso ia niños medellín, programación ia niños cali, innovakids colombia, curso inteligencia artificial niños, clases online ia niños, escuela de inteligencia artificial para niños, aprender chatgpt para niños, tecnología para niños colombia",
   alternates: {
     canonical: "https://www.innovakidslatam.com/co/cursos-ia-ninos-colombia",
-    languages: {
-      "es-CO": "https://www.innovakidslatam.com/co/cursos-ia-ninos-colombia",
-      "es-MX": "https://www.innovakidslatam.com/mx/cursos-ia-ninos-mexico",
-      "es-CL": "https://www.innovakidslatam.com/cl/cursos-ia-ninos-chile",
-      "es-AR": "https://www.innovakidslatam.com/ar/cursos-ia-chicos-argentina",
-    },
+    languages: generateHreflangs("sales"),
   },
   openGraph: {
     title: "Cursos de IA para Niños en Colombia | InnovaKids",

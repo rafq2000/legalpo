@@ -7,6 +7,7 @@ import { Check, Users, Shield, Star, Award, Zap } from "lucide-react"
 import Link from "next/link"
 import { CurriculumSection } from "@/components/curriculum-section"
 import { PricingSection } from "@/components/pricing-section"
+import { generateHreflangs } from "@/lib/seo-config"
 
 export const metadata: Metadata = {
   title: "#1 Curso de IA para Niños en México 2026 | InnovaKids - Mejor Valorado",
@@ -36,6 +37,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.innovakidslatam.com/mx/cursos-ia-ninos-mexico",
+    languages: generateHreflangs("sales"),
   },
 }
 

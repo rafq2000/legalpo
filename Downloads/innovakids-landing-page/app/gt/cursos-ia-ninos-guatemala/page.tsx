@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle, Users, Shield, ArrowRight, MessageCircle, Brain, Rocket, Target, Award } from "lucide-react"
 import WhatsAppButton from "@/components/whatsapp-button"
+import { generateHreflangs } from "@/lib/seo-config"
 
 export const metadata: Metadata = {
   title: "Cursos de IA para Niños en Guatemala 2026 | Clases Online en Vivo | InnovaKids",

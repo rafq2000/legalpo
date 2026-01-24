@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Poppins, Space_Grotesk } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { TrackingPixels } from "@/components/tracking-pixels"
+import { generateHreflangs } from "@/lib/seo-config"
 import "./globals.css"
 
 const poppins = Poppins({
@@ -56,29 +57,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.innovakidslatam.com"),
   alternates: {
     canonical: "/",
-    languages: {
-      es: "/",
-      "es-MX": "/mx",
-      "es-CO": "/co",
-      "es-AR": "/ar",
-      "es-ES": "/es",
-      "es-CL": "/cl",
-      "es-PE": "/pe",
-      "es-VE": "/ve",
-      "es-EC": "/ec",
-      "es-BO": "/bo",
-      "es-PY": "/py",
-      "es-UY": "/uy",
-      "es-PA": "/pa",
-      "es-CR": "/cr",
-      "es-DO": "/do",
-      "es-GT": "/gt",
-      "es-HN": "/hn",
-      "es-SV": "/sv",
-      "es-NI": "/ni",
-      "es-PR": "/pr",
-      "x-default": "/",
-    },
+    languages: generateHreflangs("home"),
   },
   icons: {
     icon: [
@@ -89,9 +68,9 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
-    title: "Curso de Inteligencia Artificial para Niños | Crea Apps y Videojuegos",
+    title: "Curso de Inteligencia Artificial para Niños | InnovaKids",
     description:
-      "Curso online para niños de 8-14 años. En 10 clases, crea tus propios videojuegos y apps con IA. ¡Agenda una clase gratis!",
+      "Formación líder en inteligencia artificial para niños de 8 a 14 años. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
     url: "https://www.innovakidslatam.com",
     siteName: "Innovakids",
     images: [
@@ -107,9 +86,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "🔥 CUPOS LIMITADOS | Tu Hijo Crea Apps con IA (No Solo Consume)",
+    title: "Curso de Inteligencia Artificial para Niños | InnovaKids",
     description:
-      "⚡ Clases en vivo 8-14 años. ChatGPT, Apps + Juegos. ⭐ 4.9/5 Reseñas de Padres. 🎁 ¡Reserva Clase Gratis HOY!",
+      "Formación líder en inteligencia artificial para niños de 8 a 14 años. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
     images: ["/hero-child-learning-ai.jpg"],
   },
   robots: {
@@ -139,53 +118,7 @@ export default function RootLayout({
   return (
     <html lang="es-419">
       <head>
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://connect.facebook.net" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://connect.facebook.net" />
-
-        <script async defer src="https://www.googletagmanager.com/gtag/js?id=AW-796498700"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'AW-796498700');
-            `,
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              gtag('event', 'conversion', {
-                'send_to': 'AW-796498700/sY1fCLaiq9sbEIy25vsC',
-                'value': 1.0,
-                'currency': 'CLP'
-              });
-            `,
-          }}
-        />
-        {/* End of Google Ads gtag tracking */}
-        <script
-          id="facebook-pixel"
-          defer
-          dangerouslySetInnerHTML={{
-            __html: `
-              !function(f,b,e,v,n,t,s)
-              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-              n.queue=[];t=b.createElement(e);t.async=!0;
-              t.src=v;s=b.getElementsByTagName(e)[0];
-              s.parentNode.insertBefore(t,s)}(window, document,'script',
-              'https://connect.facebook.net/en_US/fbevents.js');
-              // Facebook Pixel - Configure your Pixel ID in production
-              // fbq('init', 'YOUR_PIXEL_ID');
-              // fbq('track', 'PageView');
-            `,
-          }}
-        />
+        {/* Scripts moved to components/tracking-pixels.tsx for performance */}
         <noscript>
           <img
             height="1"

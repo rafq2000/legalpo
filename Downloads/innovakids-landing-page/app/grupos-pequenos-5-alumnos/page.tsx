@@ -209,7 +209,7 @@ export default function GruposPequenosPage() {
             <h2 className="text-5xl lg:text-6xl font-bold text-white leading-tight">Solo quedan 5 cupos disponibles</h2>
 
             <p className="text-2xl text-gray-300 max-w-3xl mx-auto">
-              Para el grupo que inicia el 26 de Enero 2026. Una vez llenos, no hay más espacio hasta el próximo grupo.
+              Para el grupo que inicia el 16 de Febrero 2026. Una vez llenos, no hay más espacio hasta el próximo grupo.
             </p>
 
             <Button

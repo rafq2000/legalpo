@@ -7,11 +7,20 @@ import { CheckCircle, ArrowRight, MessageCircle, MapPin } from "lucide-react"
 import WhatsAppButton from "@/components/whatsapp-button"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Cipotes en El Salvador | San Salvador, Santa Ana | InnovaKids",
+  title: "Curso de Inteligencia Artificial para Niños en El Salvador | InnovaKids",
   description:
-    "Cursos de Inteligencia Artificial para cipotes en El Salvador. Clases online en vivo desde San Salvador, Santa Ana, San Miguel y todo el país. $197 USD - 10 clases.",
+    "Formación líder en inteligencia artificial para niños de 8 a 14 años en El Salvador. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
   alternates: {
     canonical: "https://www.innovakidslatam.com/sv",
+  },
+  openGraph: {
+    title: "Curso de Inteligencia Artificial para Niños en El Salvador | InnovaKids",
+    description:
+      "Formación líder en inteligencia artificial para niños de 8 a 14 años en El Salvador. Clases online en vivo, grupos de 5 alumnos.",
+    url: "https://www.innovakidslatam.com/sv",
+    locale: "es_SV",
+    siteName: "InnovaKids",
+    type: "website",
   },
 }
 

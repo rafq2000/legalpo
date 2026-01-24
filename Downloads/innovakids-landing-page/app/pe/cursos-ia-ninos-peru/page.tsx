@@ -5,22 +5,17 @@ import { PricingSection } from "@/components/pricing-section"
 import { Navigation } from "@/components/navigation"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Users, Clock, Shield, Star, CheckCircle, Zap, Target } from "lucide-react"
+import { generateHreflangs } from "@/lib/seo-config"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños Perú 2026 | Evaluación Gratis | InnovaKids 🇵🇪",
+  title: "Cursos de IA para Niños Perú 2026 | InnovaKids 🇵🇪",
   description:
-    "Curso de inteligencia artificial para niños 8-14 años en Perú. Aprende ChatGPT, Midjourney, crea apps. 10 clases, grupos de máx 5 niños. Evaluación gratis.",
+    "Curso de IA para niños 8-14 años en Perú. Clases online en vivo desde Lima, Arequipa, Trujillo. Aprende a crear apps con inteligencia artificial.",
   keywords:
-    "cursos de ia para niños peru, clases inteligencia artificial lima, curso ia niños arequipa, programación ia niños trujillo, innovakids peru, curso inteligencia artificial niños, clases online ia niños, escuela de inteligencia artificial para niños, aprender chatgpt para niños, tecnología para niños peru",
+    "curso ia niños peru, clases inteligencia artificial lima, programación para niños perú, innovakids peru, curso verano niños peru, tecnologia niños peru",
   alternates: {
     canonical: "https://www.innovakidslatam.com/pe/cursos-ia-ninos-peru",
-    languages: {
-      "es-PE": "https://www.innovakidslatam.com/pe/cursos-ia-ninos-peru",
-      "es-MX": "https://www.innovakidslatam.com/mx/cursos-ia-ninos-mexico",
-      "es-CO": "https://www.innovakidslatam.com/co/cursos-ia-ninos-colombia",
-      "es-AR": "https://www.innovakidslatam.com/ar/cursos-ia-chicos-argentina",
-      "es-CL": "https://www.innovakidslatam.com",
-    },
+    languages: generateHreflangs("sales"),
   },
   openGraph: {
     title: "Cursos de IA para Niños en Perú | InnovaKids",

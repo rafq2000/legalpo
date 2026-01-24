@@ -48,7 +48,7 @@ export function ModulePreviewSection() {
                     <p className="text-lg text-gray-400 max-w-2xl mx-auto">
                         10 clases en vivo de 90 minutos cada una. Grupos de máximo 5 niños.
                         <br />
-                        <span className="text-white font-semibold">Empieza: Sábado 26 de Enero, 2025</span>
+                        <span className="text-white font-semibold">Empieza: Semana del 16 de Febrero, 2026</span>
                     </p>
                 </motion.div>
 

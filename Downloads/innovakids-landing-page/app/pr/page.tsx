@@ -7,9 +7,9 @@ import { MapPin, Users, Clock, Shield } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-    title: "InnovaKids Puerto Rico | Cursos de IA para Niños | San Juan 🇵🇷",
+    title: "Curso de Inteligencia Artificial para Niños en Puerto Rico | InnovaKids",
     description:
-        "Cursos de inteligencia artificial para niños en Puerto Rico. San Juan, Bayamón, Ponce. Clases online con grupos de 5 alumnos. $197 USD. 🇵🇷",
+        "Formación líder en inteligencia artificial para niños de 8 a 14 años en Puerto Rico. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
     keywords: [
         "ia para niños puerto rico",
         "cursos ia niños san juan",
@@ -18,10 +18,13 @@ export const metadata: Metadata = {
         "programación niños boricuas",
     ],
     openGraph: {
-        title: "InnovaKids Puerto Rico | Cursos de IA para Niños",
-        description: "Cursos de inteligencia artificial para niños en Puerto Rico.",
+        title: "Curso de Inteligencia Artificial para Niños en Puerto Rico | InnovaKids",
+        description:
+            "Formación líder en inteligencia artificial para niños de 8 a 14 años en Puerto Rico. Clases online en vivo, grupos de 5 alumnos.",
         url: "https://www.innovakidslatam.com/pr",
         locale: "es_PR",
+        siteName: "InnovaKids",
+        type: "website",
     },
     alternates: {
         canonical: "https://www.innovakidslatam.com/pr",

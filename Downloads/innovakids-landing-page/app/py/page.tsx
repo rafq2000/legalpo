@@ -7,11 +7,20 @@ import { CheckCircle, ArrowRight, MessageCircle, MapPin } from "lucide-react"
 import WhatsAppButton from "@/components/whatsapp-button"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños en Paraguay | Asunción, Ciudad del Este | InnovaKids",
+  title: "Curso de Inteligencia Artificial para Niños en Paraguay | InnovaKids",
   description:
-    "Cursos de Inteligencia Artificial para niños en Paraguay. Clases online en vivo desde Asunción, Ciudad del Este y todo el país. $197 USD - 10 clases.",
+    "Formación líder en inteligencia artificial para niños de 8 a 14 años en Paraguay. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
   alternates: {
     canonical: "https://www.innovakidslatam.com/py",
+  },
+  openGraph: {
+    title: "Curso de Inteligencia Artificial para Niños en Paraguay | InnovaKids",
+    description:
+      "Formación líder en inteligencia artificial para niños de 8 a 14 años en Paraguay. Clases online en vivo, grupos de 5 alumnos.",
+    url: "https://www.innovakidslatam.com/py",
+    locale: "es_PY",
+    siteName: "InnovaKids",
+    type: "website",
   },
 }
 

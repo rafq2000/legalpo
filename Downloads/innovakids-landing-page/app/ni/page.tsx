@@ -7,9 +7,9 @@ import { MapPin, Users, Clock, Shield } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-    title: "InnovaKids Nicaragua | Cursos de IA para Niños | Managua 🇳🇮",
+    title: "Curso de Inteligencia Artificial para Niños en Nicaragua | InnovaKids",
     description:
-        "Cursos de inteligencia artificial para niños en Nicaragua. Managua, León, Granada. Clases online con grupos de 5 alumnos. $197 USD. 🇳🇮",
+        "Formación líder en inteligencia artificial para niños de 8 a 14 años en Nicaragua. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
     keywords: [
         "ia para niños nicaragua",
         "cursos ia niños managua",
@@ -18,10 +18,13 @@ export const metadata: Metadata = {
         "programación niños managua",
     ],
     openGraph: {
-        title: "InnovaKids Nicaragua | Cursos de IA para Niños",
-        description: "Cursos de inteligencia artificial para niños en Nicaragua. Grupos de 5 alumnos.",
+        title: "Curso de Inteligencia Artificial para Niños en Nicaragua | InnovaKids",
+        description:
+            "Formación líder en inteligencia artificial para niños de 8 a 14 años en Nicaragua. Clases online en vivo, grupos de 5 alumnos.",
         url: "https://www.innovakidslatam.com/ni",
         locale: "es_NI",
+        siteName: "InnovaKids",
+        type: "website",
     },
     alternates: {
         canonical: "https://www.innovakidslatam.com/ni",

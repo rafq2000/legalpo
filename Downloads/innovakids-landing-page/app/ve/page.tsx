@@ -7,9 +7,9 @@ import { MapPin, Users, Clock, Shield } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-    title: "Curso de Inteligencia Artificial para Niños en Venezuela | InnovaKids 🇻🇪",
+    title: "Curso de Inteligencia Artificial para Niños en Venezuela | InnovaKids",
     description:
-        "Formación tecnológica para niños en Venezuela. Clases online en vivo (Caracas, Maracaibo, Valencia). Crea apps y proyectos reales.",
+        "Formación líder en inteligencia artificial para niños de 8 a 14 años en Venezuela. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
     keywords: [
         "ia para niños venezuela",
         "cursos ia niños caracas",
@@ -20,9 +20,12 @@ export const metadata: Metadata = {
     ],
     openGraph: {
         title: "Curso de Inteligencia Artificial para Niños en Venezuela | InnovaKids",
-        description: "Formación tecnológica para niños en Venezuela. Clases online en vivo. ¡Reserva hoy!",
+        description:
+            "Formación líder en inteligencia artificial para niños de 8 a 14 años en Venezuela. Clases online en vivo, grupos de 5 alumnos.",
         url: "https://www.innovakidslatam.com/ve",
         locale: "es_VE",
+        siteName: "InnovaKids",
+        type: "website",
     },
     alternates: {
         canonical: "https://www.innovakidslatam.com/ve",

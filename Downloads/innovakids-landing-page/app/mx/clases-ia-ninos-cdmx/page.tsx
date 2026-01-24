@@ -242,7 +242,7 @@ export default function CDMXPage() {
         <section className="py-24 bg-[#0a1628]">
           <div className="container mx-auto px-6 max-w-3xl text-center">
             <h2 className="text-3xl font-bold text-white mb-6">¿Tu hijo será el próximo creador de IA en CDMX?</h2>
-            <p className="text-xl text-gray-400 mb-8">Cupos limitados para el grupo que inicia el 26 de Enero.</p>
+            <p className="text-xl text-gray-400 mb-8">Cupos limitados para el grupo que inicia el 16 de Febrero.</p>
 
             <Link href="/#sesion-estrategica">
               <Button className="bg-white hover:bg-gray-100 text-[#0a1628] px-16 py-8 text-2xl font-bold rounded-full shadow-2xl hover:scale-105 transition-all">

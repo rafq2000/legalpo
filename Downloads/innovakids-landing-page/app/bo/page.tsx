@@ -7,11 +7,20 @@ import { CheckCircle, ArrowRight, MessageCircle, MapPin } from "lucide-react"
 import WhatsAppButton from "@/components/whatsapp-button"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños en Bolivia | La Paz, Santa Cruz | InnovaKids",
+  title: "Curso de Inteligencia Artificial para Niños en Bolivia | InnovaKids",
   description:
-    "Cursos de Inteligencia Artificial para niños en Bolivia. Clases online en vivo desde La Paz, Santa Cruz, Cochabamba y todo el país. $197 USD - 10 clases.",
+    "Formación líder en inteligencia artificial para niños de 8 a 14 años en Bolivia. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
   alternates: {
     canonical: "https://www.innovakidslatam.com/bo",
+  },
+  openGraph: {
+    title: "Curso de Inteligencia Artificial para Niños en Bolivia | InnovaKids",
+    description:
+      "Formación líder en inteligencia artificial para niños de 8 a 14 años en Bolivia. Clases online en vivo, grupos de 5 alumnos.",
+    url: "https://www.innovakidslatam.com/bo",
+    locale: "es_BO",
+    siteName: "InnovaKids",
+    type: "website",
   },
 }
 

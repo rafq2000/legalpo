@@ -7,6 +7,7 @@ import { Check, Users, Shield, Star, Award, Zap } from "lucide-react"
 import Link from "next/link"
 import { CurriculumSection } from "@/components/curriculum-section"
 import { PricingSection } from "@/components/pricing-section"
+import { generateHreflangs } from "@/lib/seo-config"
 
 export const metadata: Metadata = {
   title: "Cursos de IA para Chicos Argentina 2026 | Prueba Gratis | InnovaKids",
@@ -42,14 +43,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.innovakidslatam.com/ar/cursos-ia-chicos-argentina",
-    languages: {
-      "es-AR": "https://www.innovakidslatam.com/ar/cursos-ia-chicos-argentina",
-      "es-MX": "https://www.innovakidslatam.com/mx/cursos-ia-ninos-mexico",
-      "es-CO": "https://www.innovakidslatam.com/co/cursos-ia-ninos-colombia",
-      "es-CL": "https://www.innovakidslatam.com/cl/cursos-ia-ninos-chile",
-      "es-PE": "https://www.innovakidslatam.com/pe/cursos-ia-ninos-peru",
-      "es-ES": "https://www.innovakidslatam.com/es/cursos-ia-ninos-espana",
-    },
+    languages: generateHreflangs("sales"),
   },
 }
 

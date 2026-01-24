@@ -334,6 +334,54 @@ export default function CursosOnlineNinosPage() {
                                 <p className="text-gray-400">No, nuestros cursos online para niños empiezan desde cero. La IA facilita el aprendizaje técnico, permitiendo que creen proyectos avanzados sin frustración.</p>
                             </div>
                         </div>
+                        {/* COUNTRY SELECTION SECTION - SEO HUB */}
+                        <section id="paises" className="py-20 bg-slate-900 border-t border-slate-800">
+                            <div className="container mx-auto px-6 max-w-6xl">
+                                <div className="text-center mb-12">
+                                    <h2 className="text-3xl font-bold text-white mb-4">
+                                        Encuentra el Curso de IA en tu País
+                                    </h2>
+                                    <p className="text-gray-400">
+                                        Horarios adaptados y moneda local en toda Latinoamérica y España
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                    {[
+                                        { name: "Chile", code: "cl", flag: "🇨🇱", slug: "/cl/cursos-ia-ninos-chile" },
+                                        { name: "México", code: "mx", flag: "🇲🇽", slug: "/mx/cursos-ia-ninos-mexico" },
+                                        { name: "Colombia", code: "co", flag: "🇨🇴", slug: "/co/cursos-ia-ninos-colombia" },
+                                        { name: "Argentina", code: "ar", flag: "🇦🇷", slug: "/ar/cursos-ia-chicos-argentina" },
+                                        { name: "Perú", code: "pe", flag: "🇵🇪", slug: "/pe/cursos-ia-ninos-peru" },
+                                        { name: "España", code: "es", flag: "🇪🇸", slug: "/es/cursos-ia-ninos-espana" },
+                                        { name: "USA Latinos", code: "us", flag: "🇺🇸", slug: "/us/cursos-ia-ninos-latinos-usa" },
+                                        { name: "Ecuador", code: "ec", flag: "🇪🇨", slug: "/ec/cursos-ia-ninos-ecuador" },
+                                        { name: "Uruguay", code: "uy", flag: "🇺🇾", slug: "/uy/cursos-ia-ninos-uruguay" },
+                                        { name: "Costa Rica", code: "cr", flag: "🇨🇷", slug: "/cr/cursos-ia-ninos-costa-rica" },
+                                        { name: "Panamá", code: "pa", flag: "🇵🇦", slug: "/pa/cursos-ia-ninos-panama" },
+                                        { name: "R. Dominicana", code: "do", flag: "🇩🇴", slug: "/do/cursos-ia-ninos-republica-dominicana" },
+                                        { name: "Honduras", code: "hn", flag: "🇭🇳", slug: "/hn/cursos-ia-ninos-honduras" },
+                                        { name: "El Salvador", code: "sv", flag: "🇸🇻", slug: "/sv/cursos-ia-ninos-el-salvador" },
+                                        { name: "Guatemala", code: "gt", flag: "🇬🇹", slug: "/gt/cursos-ia-ninos-guatemala" },
+                                        { name: "Paraguay", code: "py", flag: "🇵🇾", slug: "/py/cursos-ia-ninos-paraguay" },
+                                        { name: "Bolivia", code: "bo", flag: "🇧🇴", slug: "/bo/cursos-ia-ninos-bolivia" },
+                                        { name: "Venezuela", code: "ve", flag: "🇻🇪", slug: "/ve/cursos-ia-ninos-venezuela" },
+                                        { name: "Nicaragua", code: "ni", flag: "🇳🇮", slug: "/ni/cursos-ia-ninos-nicaragua" },
+                                        { name: "Puerto Rico", code: "pr", flag: "🇵🇷", slug: "/pr/cursos-ia-ninos-puerto-rico" },
+                                    ].map((country) => (
+                                        <Link
+                                            key={country.code}
+                                            href={country.slug}
+                                            className="flex items-center gap-3 p-4 rounded-xl bg-[#1a2942] hover:bg-cyan-900/30 border border-slate-700 hover:border-cyan-500/50 transition-all group"
+                                        >
+                                            <span className="text-2xl">{country.flag}</span>
+                                            <span className="text-gray-300 group-hover:text-white font-medium text-sm">{country.name}</span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+
                         <div className="mt-10 text-center">
                             <Link href="/" className="text-cyan-400 hover:text-cyan-300 font-semibold inline-flex items-center gap-2">
                                 Ver todas las preguntas frecuentes <ArrowRight className="w-4 h-4" />

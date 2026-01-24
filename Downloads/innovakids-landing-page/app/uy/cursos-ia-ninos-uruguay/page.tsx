@@ -1,24 +1,20 @@
 import type { Metadata } from "next"
+import Link from "next/link"
+import { CurriculumSection } from "@/components/curriculum-section"
+import { PricingSection } from "@/components/pricing-section"
 import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Button } from "@/components/ui/button"
-import { Check, Users, Shield, Star, Award } from "lucide-react"
-import Link from "next/link"
+import { Check, Users, Shield, Star, Award, CheckCircle, Zap } from "lucide-react"
+import { Footer } from "@/components/footer"
+import { generateHreflangs } from "@/lib/seo-config"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños Uruguay 2026 | Prueba Gratis | InnovaKids",
+  title: "Curso Inteligencia Artificial Niños Uruguay 2026 | InnovaKids 🇺🇾",
   description:
-    "Curso de inteligencia artificial para niños de 8-14 años en Uruguay. Aprende ChatGPT, Midjourney, creá apps. Primera clase GRATIS. 10 clases en vivo. ¡Inscribite hoy! 🇺🇾",
-  keywords: [
-    "cursos de ia para niños",
-    "cursos de ia para niños uruguay",
-    "cursos de inteligencia artificial para niños",
-    "clases de ia para niños",
-    "ia para niños uruguay",
-    "curso ia niños montevideo",
-    "inteligencia artificial niños punta del este",
-  ],
+    "Curso de IA para niños en Uruguay (Montevideo y todo el país). Aprende a programar con inteligencia artificial. Desde 8 años.",
+  keywords:
+    "curso ia niños uruguay, clases inteligencia artificial montevideo, programación niños uruguay, innovakids uruguay, talleres tecnologia niños",
   openGraph: {
     title: "Cursos de IA para Niños en Uruguay | InnovaKids",
     description: "Curso de IA para niños 8-14 años. ChatGPT, Midjourney, apps. Primera clase gratis.",
@@ -406,7 +402,7 @@ export default function UruguayCursosIAPage() {
               <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">Inversión en el Futuro de Tu Hijo</h2>
 
               <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[#0038A8]/20 border border-[#0038A8]/50 px-6 py-3">
-                <span className="text-[#0038A8] font-bold">Próximo curso: 26 de Enero 2026</span>
+                <span className="text-[#0038A8] font-bold">Próximo curso: 16 de Febrero 2026</span>
               </div>
 
               <div className="mb-8">

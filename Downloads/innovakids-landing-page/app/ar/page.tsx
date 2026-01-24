@@ -7,20 +7,20 @@ import { MapPin, Users, Star, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Curso de IA para Chicos en Argentina 🇦🇷 | ¡Demo GRATIS! InnovaKids",
+  title: "Curso de Inteligencia Artificial para Niños en Argentina | InnovaKids",
   description:
-    "⭐ 523+ familias argentinas confían en InnovaKids. Chicos de 8-14 años crean apps y videojuegos con IA. Buenos Aires, Córdoba, Rosario. WhatsApp: +56 9 6475 4219",
+    "Formación líder en inteligencia artificial para niños de 8 a 14 años en Argentina. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
   keywords: [
-    "cursos ia chicos argentina",
-    "clases inteligencia artificial chicos buenos aires",
-    "curso ia chicos cordoba",
-    "ia para chicos rosario",
-    "cursos programacion chicos argentina",
+    "cursos ia niños argentina",
+    "clases inteligencia artificial niños buenos aires",
+    "curso ia niños cordoba",
+    "ia para niños rosario",
+    "cursos programacion niños argentina",
   ],
   openGraph: {
-    title: "Curso IA Chicos Argentina | 523+ Familias Confían en Nosotros",
+    title: "Curso de Inteligencia Artificial para Niños en Argentina | InnovaKids",
     description:
-      "Tu hijo aprende a CREAR con IA. Buenos Aires, Córdoba, Rosario. 523+ familias. Garantía 10 días.",
+      "Formación líder en inteligencia artificial para niños de 8 a 14 años en Argentina. Clases online en vivo, grupos de 5 alumnos.",
     url: "https://www.innovakidslatam.com/ar",
     siteName: "InnovaKids",
     locale: "es_AR",
@@ -154,7 +154,7 @@ export default function ArgentinaHubPage() {
         <section className="py-24 bg-[#0a1628]">
           <div className="container mx-auto px-6 max-w-4xl text-center">
             <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
-              Próximo Inicio: Semana del 26 de Enero 2026
+              Próximo Inicio: Semana del 16 de Febrero 2026
             </h2>
             <p className="text-xl text-gray-300 mb-8">
               Solo 2 cupos disponibles para Argentina. Los grupos se llenan rápido.

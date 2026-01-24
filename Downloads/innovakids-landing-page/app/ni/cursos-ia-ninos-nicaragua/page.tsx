@@ -4,13 +4,17 @@ import { Footer } from "@/components/footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { generateHreflangs } from "@/lib/seo-config"
 
 export const metadata: Metadata = {
     title: "Cursos de IA para Niños en Nicaragua 2026 | Clases Online | InnovaKids 🇳🇮",
     description:
         "🚀 Curso de IA para Niños Nicaragua. Aprende a CREAR Apps y Juegos (8-14 años). Clases en vivo. ⭐ 4.9/5. 🎁 ¡Agenda tu Clase GRATIS hoy!",
     keywords: ["cursos ia niños nicaragua", "clases inteligencia artificial managua", "aprender ia niños nicaragua"],
-    alternates: { canonical: "https://www.innovakidslatam.com/ni/cursos-ia-ninos-nicaragua" },
+    alternates: {
+        canonical: "https://www.innovakidslatam.com/ni/cursos-ia-ninos-nicaragua",
+        languages: generateHreflangs("sales"),
+    },
 }
 
 export default function CursosNicaraguaPage() {

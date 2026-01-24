@@ -83,7 +83,7 @@ export default function BrochurePage() {
             </CardHeader>
             <CardContent className="space-y-4">
               {[
-                { icon: "🚀", label: "Inicio", value: "26 de Enero, 2026" },
+                { icon: "🚀", label: "Inicio", value: "16 de Febrero, 2026" },
                 { icon: "💻", label: "Plataforma", value: "Clases en vivo vía Zoom" },
                 { icon: "⏱️", label: "Duración", value: "5 semanas (10 clases exclusivas)" },
                 { icon: "📆", label: "Frecuencia", value: "2 clases por semana (90 min c/u)" },

@@ -2,7 +2,7 @@ export const faqs = [
     {
         question: "¿Cuándo inicia el programa?",
         answer:
-            "Sábado 26 de Enero, 2026. Duración: 5 semanas (10 clases de 2 por semana). Termina: Marzo 2026.",
+            "Semana del 16 de Febrero, 2026. Duración: 5 semanas (10 clases de 2 por semana). Termina: Marzo 2026.",
     },
     {
         question: "¿Cuánto cuesta?",

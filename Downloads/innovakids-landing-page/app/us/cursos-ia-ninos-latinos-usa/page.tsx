@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Navigation } from "@/components/navigation"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Users, Clock, Shield, Star, CheckCircle, Zap, Target, Globe } from "lucide-react"
+import { generateHreflangs } from "@/lib/seo-config"
 
 export const metadata: Metadata = {
   title: "Cursos de IA para Niños Latinos en USA 2026 | En Español | InnovaKids 🇺🇸",
@@ -12,15 +13,7 @@ export const metadata: Metadata = {
     "cursos de ia para niños en español usa, clases inteligencia artificial niños latinos, curso ia niños miami, programación ia niños houston, clases ia español los angeles, innovakids usa",
   alternates: {
     canonical: "https://www.innovakidslatam.com/us/cursos-ia-ninos-latinos-usa",
-    languages: {
-      "es-US": "https://www.innovakidslatam.com/us/cursos-ia-ninos-latinos-usa",
-      "es-MX": "https://www.innovakidslatam.com/mx/cursos-ia-ninos-mexico",
-      "es-CO": "https://www.innovakidslatam.com/co/cursos-ia-ninos-colombia",
-      "es-AR": "https://www.innovakidslatam.com/ar/cursos-ia-chicos-argentina",
-      "es-PE": "https://www.innovakidslatam.com/pe/cursos-ia-ninos-peru",
-      "es-ES": "https://www.innovakidslatam.com/es/cursos-ia-ninos-espana",
-      "es-CL": "https://www.innovakidslatam.com/cl/cursos-ia-ninos-chile",
-    },
+    languages: generateHreflangs("sales"),
   },
   openGraph: {
     title: "Cursos de IA para Niños Latinos en USA | En Español | InnovaKids",
@@ -319,7 +312,7 @@ export default function CursosIANinosLatinosUSA() {
             </p>
 
             <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-[#BF0A30]/10 border border-[#BF0A30]/30 px-6 py-3">
-              <span className="text-[#BF0A30] font-bold">Próximo curso: 26 de Enero 2026</span>
+              <span className="text-[#BF0A30] font-bold">Próximo curso: 16 de Febrero 2026</span>
             </div>
 
             <div className="mx-auto max-w-md rounded-3xl bg-gradient-to-br from-[#002868] to-[#001744] p-8 text-white shadow-2xl">

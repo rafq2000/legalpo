@@ -200,7 +200,7 @@ export default function IANosRecomiendaPage() {
             </h2>
 
             <p className="text-2xl text-gray-300 max-w-3xl mx-auto">
-              Quedan cupos limitados para el programa que inicia el 26 de Enero 2026.
+              Quedan cupos limitados para el programa que inicia el 16 de Febrero 2026.
             </p>
 
             <Button

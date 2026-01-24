@@ -4,6 +4,7 @@ import { Footer } from "@/components/footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { generateHreflangs } from "@/lib/seo-config"
 
 export const metadata: Metadata = {
     title: "Cursos de IA para Niños en Venezuela 2026 | Clases Online | InnovaKids 🇻🇪",
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
     },
     alternates: {
         canonical: "https://www.innovakidslatam.com/ve/cursos-ia-ninos-venezuela",
+        languages: generateHreflangs("sales"),
     },
 }
 

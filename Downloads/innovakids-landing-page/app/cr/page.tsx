@@ -5,9 +5,21 @@ import { WhatsAppButton } from "@/components/whatsapp-button"
 import { MapPin, Users, Clock, Shield, Target } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Cursos de IA para Niños en Costa Rica | Todas las Provincias | InnovaKids 🇨🇷",
+  title: "Curso de Inteligencia Artificial para Niños en Costa Rica | InnovaKids",
   description:
-    "Cursos de inteligencia artificial para niños en todo Costa Rica. San José, Heredia, Alajuela, Cartago. Clases online en vivo. Grupos de máx 5 niños.",
+    "Formación líder en inteligencia artificial para niños de 8 a 14 años en Costa Rica. Clases online en vivo, grupos de 5 alumnos. WhatsApp: +56 9 6475 4219",
+  alternates: {
+    canonical: "https://www.innovakidslatam.com/cr",
+  },
+  openGraph: {
+    title: "Curso de Inteligencia Artificial para Niños en Costa Rica | InnovaKids",
+    description:
+      "Formación líder en inteligencia artificial para niños de 8 a 14 años en Costa Rica. Clases online en vivo, grupos de 5 alumnos.",
+    url: "https://www.innovakidslatam.com/cr",
+    locale: "es_CR",
+    siteName: "InnovaKids",
+    type: "website",
+  },
 }
 
 export default function CostaRicaHub() {

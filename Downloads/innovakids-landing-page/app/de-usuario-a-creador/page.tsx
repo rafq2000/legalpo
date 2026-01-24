@@ -210,7 +210,7 @@ export default function DeUsuarioACreadorPage() {
             <h2 className="text-5xl lg:text-6xl font-bold text-white leading-tight">Transforma a tu hijo en creador</h2>
 
             <p className="text-2xl text-gray-300 max-w-3xl mx-auto">
-              Quedan cupos limitados para el grupo que inicia el 26 de Enero 2026. No dejes que siga siendo solo un usuario
+              Quedan cupos limitados para el grupo que inicia el 16 de Febrero 2026. No dejes que siga siendo solo un usuario
               más.
             </p>
 

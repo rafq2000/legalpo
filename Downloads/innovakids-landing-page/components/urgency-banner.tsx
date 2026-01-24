@@ -42,7 +42,7 @@ export function UrgencyBanner() {
         <div className="flex items-center gap-2">
           <AlertCircle className="w-5 h-5 md:w-6 md:h-6 text-red-500 animate-pulse flex-shrink-0" />
           <h3 className="text-base md:text-xl lg:text-2xl font-bold text-white text-center">
-            ¡Curso inicia la semana del 26 de Enero 2026!
+            ¡Curso inicia la semana del 16 de Febrero 2026!
           </h3>
         </div>
 
