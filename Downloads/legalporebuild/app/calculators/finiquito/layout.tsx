@@ -1,18 +1,19 @@
 import type React from "react"
 import type { Metadata } from "next"
 import ProtectedRoute from "@/components/protected-route"
+import { CalculatorStructuredData, FAQStructuredData } from "@/components/structured-data"
 
 export const metadata: Metadata = {
-  title: "🥇 Calculadora de Finiquito Chile 2025 - La Más Precisa y Gratis | LegalPO",
+  title: "🥇 Calculadora de Finiquito Chile 2026 - La Más Precisa y Gratis | LegalPO",
   description:
-    "Calculadora de finiquito Chile #1 - La más precisa y confiable. Calcula tu indemnización por años de servicio, vacaciones proporcionales, aviso previo. +100,000 usuarios. 100% gratis y basada en ley chilena 2025.",
+    "Calculadora de finiquito Chile #1 - La más precisa y confiable. Calcula tu indemnización por años de servicio, vacaciones proporcionales, aviso previo. +100,000 usuarios. 100% gratis y basada en ley chilena 2026.",
   keywords: [
     "calculadora finiquito chile",
     "calculadora de finiquito",
     "calcular finiquito chile",
     "finiquito laboral chile",
     "calculadora finiquito gratis",
-    "finiquito chile 2025",
+    "finiquito chile 2026",
     "indemnización años servicio",
     "calculadora indemnización chile",
     "finiquito online chile",
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     "gratificaciones proporcionales",
     "calculadora legal chile",
     "calculadora finiquito confiable",
-    "calculadora finiquito 2025",
+    "calculadora finiquito 2026",
     "finiquito calculadora online",
     "calculadora finiquito trabajadores",
     "calculadora finiquito empleados",
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
     canonical: "/calculators/finiquito",
   },
   openGraph: {
-    title: "🥇 Calculadora de Finiquito Chile 2025 - La Más Precisa y Confiable",
+    title: "🥇 Calculadora de Finiquito Chile 2026 - La Más Precisa y Confiable",
     description:
       "Calculadora de finiquito Chile #1. Calcula tu indemnización por años de servicio, vacaciones proporcionales y más. +100,000 usuarios confían en nosotros. 100% gratis.",
     url: "https://legalpo.cl/calculators/finiquito",
@@ -57,7 +58,7 @@ export const metadata: Metadata = {
         url: "/images/calculadora-finiquito-chile-2025.jpg",
         width: 1200,
         height: 630,
-        alt: "Calculadora de Finiquito Chile 2025 - LegalPO",
+        alt: "Calculadora de Finiquito Chile 2026 - LegalPO",
       },
     ],
   },
@@ -90,5 +91,30 @@ export default function CalculadoraFiniquitoLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <ProtectedRoute>{children}</ProtectedRoute>
+  return (
+    <>
+      <CalculatorStructuredData
+        name="Calculadora de Finiquito Chile 2026"
+        description="Calculadora de finiquito laboral online y gratuita basada en el Código del Trabajo de Chile 2026."
+        url="https://legalpo.cl/calculators/finiquito"
+      />
+      <FAQStructuredData
+        faqs={[
+          {
+            question: "¿Cómo calcular el finiquito?",
+            answer: "Para calcular el finiquito se deben considerar: años de servicio, vacaciones proporcionales, indemnización por aviso previo y mes de aviso. Nuestra calculadora oficial realiza este cálculo gratis."
+          },
+          {
+            question: "¿Qué es el tope de 11 años?",
+            answer: "La ley chilena establece un tope de 11 años para la indemnización por años de servicio, salvo para contratos anteriores a agosto de 1981."
+          },
+          {
+            question: "¿Cuándo se paga el finiquito?",
+            answer: "El empleador tiene un plazo de 10 días hábiles desde la ratificación del finiquito para realizar el pago."
+          }
+        ]}
+      />
+      <ProtectedRoute>{children}</ProtectedRoute>
+    </>
+  )
 }

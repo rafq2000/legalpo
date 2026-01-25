@@ -79,6 +79,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/abogado-deudas`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
     { url: `${baseUrl}/abogado-herencias`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
     { url: `${baseUrl}/abogado-accidentes`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
+    { url: `${baseUrl}/abogado-tercera-edad`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
+    { url: `${baseUrl}/abogado-padres`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
+    { url: `${baseUrl}/reclamos-licencias-medicas`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
+    { url: `${baseUrl}/ciberacoso-funas`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
+    { url: `${baseUrl}/ley-cholito-mascotas`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
+    { url: `${baseUrl}/ruidos-molestos-vecinos`, lastModified: lastUpdate, changeFrequency: "weekly" as const, priority: 0.95 },
   ]
 
 
