@@ -8,7 +8,7 @@ import Header from "@/components/header"
 import { AdsenseScript } from "@/components/adsense-script"
 import { AdsenseAutoAds } from "@/components/adsense-auto-ads"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"], display: "swap" })
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://legalpo.cl"),
